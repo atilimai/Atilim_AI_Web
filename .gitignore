@@ -1,0 +1,17 @@
+# İşletim sistemi
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editör
+.vscode/
+.idea/
+*.swp
+
+# Bağımlılıklar ve loglar (ileride Next.js'e geçilirse)
+node_modules/
+.next/
+dist/
+*.log
+.env
+.env.local

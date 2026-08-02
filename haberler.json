@@ -1,0 +1,32 @@
+{
+  "_aciklama": "Sayılar en yeniden eskiye doğru sıralanır. Site sayilar[0] gösterir, Discord botu da onu gönderir. Yeni sayı eklerken dizinin BAŞINA ekleyin.",
+  "sayilar": [
+    {
+      "sayi": 12,
+      "tarih": "2026-08-03",
+      "haberler": [
+        {
+          "etiket": "Model",
+          "tarih": "28 Tem",
+          "baslik": "Açık ağırlıklı modellerde bağlam penceresi yarışı",
+          "ozet": "Üç ayrı ekip aynı hafta içinde uzun bağlam sürümleri yayımladı. Karşılaştırmalı ölçümler henüz bağımsız olarak tekrarlanmadı.",
+          "link": ""
+        },
+        {
+          "etiket": "Araştırma",
+          "tarih": "29 Tem",
+          "baslik": "Küçük modellerde damıtmanın sınırı üzerine yeni bulgular",
+          "ozet": "Öğretmen modelin boyutu belli bir eşiği geçtiğinde öğrencinin kazancı düzleşiyor. Kod ve ağırlıklar paylaşıldı.",
+          "link": ""
+        },
+        {
+          "etiket": "Politika",
+          "tarih": "31 Tem",
+          "baslik": "Değerlendirme raporlaması için ortak standart önerisi",
+          "ozet": "Birkaç kurum, model kartlarında hangi ölçümlerin zorunlu olacağına dair ortak bir taslak yayımladı.",
+          "link": ""
+        }
+      ]
+    }
+  ]
+}

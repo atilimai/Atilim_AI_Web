@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atılım AI — Topluluk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#070A14;
+  --deep:#0C1020;
+  --line:rgba(146,170,235,.14);
+  --line-hi:rgba(146,170,235,.32);
+  --ink:#E9EDF8;
+  --dim:#8792AE;
+  --blue:#3D6BFF;
+  --blue-soft:#8DA4FF;
+  --red:#E63A4B;
+  --display:"Space Grotesk",system-ui,sans-serif;
+  --body:"Inter",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--ink);font-family:var(--body);
+  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body.pointer-fine{cursor:none}
+body.pointer-fine a,body.pointer-fine button{cursor:none}
+
+#scene{position:fixed;inset:0;z-index:0;display:block}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 45%,transparent 30%,rgba(7,10,20,.55) 78%,rgba(7,10,20,.9) 100%)}
+body.no-webgl #scene{display:none}
+
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;z-index:90;pointer-events:none;
+  border-radius:50%;opacity:0;transition:opacity .3s}
+.cursor-dot{width:5px;height:5px;background:var(--red);margin:-2.5px 0 0 -2.5px}
+.cursor-ring{width:30px;height:30px;border:1px solid var(--line-hi);margin:-15px 0 0 -15px;
+  transition:width .25s,height .25s,margin .25s,border-color .25s,opacity .3s}
+body.pointer-fine .cursor-dot,body.pointer-fine .cursor-ring{opacity:1}
+.cursor-ring.grab{width:56px;height:56px;margin:-28px 0 0 -28px;border-color:var(--red)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;
+  justify-content:space-between;padding:18px clamp(1.25rem,5vw,3.5rem);
+  border-bottom:1px solid transparent;transition:border-color .4s,background .4s,backdrop-filter .4s}
+.nav.stuck{border-bottom-color:var(--line);background:rgba(7,10,20,.6);backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand i{width:15px;height:15px;border-radius:50%;background:var(--red);display:block;flex:none}
+.brand span{font-family:var(--display);font-size:13px;letter-spacing:.2em;font-weight:500}
+.nav ul{display:flex;gap:26px;list-style:none}
+.nav a.link{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dim);
+  text-decoration:none;text-transform:uppercase;transition:color .3s;position:relative;padding:4px 0}
+.nav a.link:hover,.nav a.link.on{color:var(--ink)}
+.nav a.link.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--red)}
+@media(max-width:820px){.nav ul{display:none}}
+
+/* ---------- rail ---------- */
+.rail{position:fixed;right:clamp(1rem,2.5vw,2rem);top:50%;transform:translateY(-50%);
+  z-index:60;display:flex;flex-direction:column;gap:14px}
+.rail b{font-family:var(--mono);font-size:10px;color:var(--dim);opacity:.4;
+  font-weight:400;letter-spacing:.12em;transition:color .3s,opacity .3s}
+.rail b.on{color:var(--red);opacity:1}
+@media(max-width:820px){.rail{display:none}}
+
+/* ---------- audio control ---------- */
+.audio{position:fixed;right:clamp(1rem,2.5vw,2rem);bottom:22px;z-index:70;
+  display:flex;align-items:center;gap:11px;padding:8px 14px 8px 12px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(10,14,28,.62);backdrop-filter:blur(14px);
+  transition:border-color .4s}
+.audio:hover{border-color:var(--line-hi)}
+.audio.nudge{animation:nudge 2.6s ease-in-out 3}
+@keyframes nudge{0%,100%{border-color:var(--line)}50%{border-color:rgba(230,58,75,.5)}}
+.audio button{background:none;border:0;padding:3px;display:flex;align-items:flex-end;gap:2px;height:20px}
+.audio button i{display:block;width:3px;height:3px;border-radius:1px;background:var(--dim);
+  transition:background .35s,height .35s}
+.audio.on button i{background:var(--red)}
+.audio.on button i:nth-child(1){animation:eq .82s -.10s ease-in-out infinite alternate}
+.audio.on button i:nth-child(2){animation:eq .64s -.35s ease-in-out infinite alternate}
+.audio.on button i:nth-child(3){animation:eq .95s -.22s ease-in-out infinite alternate}
+.audio.on button i:nth-child(4){animation:eq .73s -.48s ease-in-out infinite alternate}
+@keyframes eq{from{height:3px}to{height:14px}}
+.audio .pct{font-family:var(--mono);font-size:10px;color:var(--dim);width:20px;text-align:right}
+.audio input[type=range]{-webkit-appearance:none;appearance:none;width:72px;height:14px;
+  background:transparent;margin:0}
+.audio input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line-hi);border-radius:2px}
+.audio input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;
+  border-radius:50%;background:var(--ink);margin-top:-4px}
+.audio input[type=range]::-moz-range-track{height:2px;background:var(--line-hi);border-radius:2px}
+.audio input[type=range]::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:var(--ink)}
+body.pointer-fine .audio input[type=range]{cursor:none}
+@media(max-width:560px){.audio{bottom:16px;gap:8px}.audio input[type=range]{width:52px}.audio .pct{display:none}}
+
+/* ---------- layout ---------- */
+section{position:relative;z-index:2;min-height:100svh;display:flex;align-items:center;
+  padding:120px clamp(1.25rem,5vw,3.5rem) 100px}
+.wrap{width:100%;max-width:1180px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--blue-soft);display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--blue);flex:none}
+h1{font-family:var(--display);font-weight:500;font-size:clamp(2.5rem,6.6vw,5rem);
+  line-height:.99;letter-spacing:-.035em;max-width:15ch}
+h2{font-family:var(--display);font-weight:500;font-size:clamp(1.85rem,3.9vw,3rem);
+  line-height:1.08;letter-spacing:-.03em;max-width:18ch}
+h3{font-family:var(--display);font-weight:500;font-size:1.2rem;letter-spacing:-.01em}
+.lead{color:var(--dim);max-width:46ch;margin-top:22px;font-size:clamp(.95rem,1.15vw,1.05rem)}
+
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:38px}
+.btn{font-family:var(--body);font-size:14px;padding:13px 24px;border-radius:8px;
+  text-decoration:none;border:1px solid transparent;transition:.35s cubic-bezier(.16,1,.3,1);display:inline-block}
+.btn.solid{background:var(--red);color:#2A0509;font-weight:500}
+.btn.solid:hover{background:#FF4E5E;transform:translateY(-2px)}
+.btn.ghost{border-color:var(--line-hi);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--blue-soft);background:rgba(61,107,255,.08);transform:translateY(-2px)}
+
+.hint{position:absolute;bottom:38px;left:clamp(1.25rem,5vw,3.5rem);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);display:flex;align-items:center;gap:10px}
+.hint em{display:block;width:1px;height:34px;background:linear-gradient(var(--blue),transparent);
+  animation:drop 2.2s infinite;font-style:normal}
+@keyframes drop{0%{opacity:0;transform:scaleY(.2)}40%{opacity:1}100%{opacity:0;transform:scaleY(1)}}
+
+.two{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(2rem,6vw,6rem);align-items:center}
+@media(max-width:900px){.two{grid-template-columns:1fr;gap:2.5rem}}
+
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:34px}
+.stats div{background:var(--void);padding:22px 24px}
+.stats strong{font-family:var(--display);font-size:2rem;font-weight:500;display:block;letter-spacing:-.02em}
+.stats span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+/* ---------- projects ---------- */
+.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+@media(max-width:900px){.projects{grid-template-columns:1fr}}
+.card{padding:26px 26px 22px;border-radius:14px;border:1px solid var(--line);
+  background:rgba(10,14,28,.5);backdrop-filter:blur(16px);
+  transition:border-color .4s,background .4s;transform-style:preserve-3d;will-change:transform}
+.card:hover{border-color:var(--line-hi);background:rgba(14,20,40,.66)}
+.card .state{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:7px;color:var(--dim);margin-bottom:18px}
+.card .state i{width:6px;height:6px;border-radius:50%;background:var(--dim);display:block}
+.card .state.live i{background:var(--red);box-shadow:0 0 0 3px rgba(230,58,75,.16)}
+.card .state.live{color:var(--ink)}
+.card p{color:var(--dim);font-size:.92rem;margin-top:12px;min-height:76px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.tags i{font-family:var(--mono);font-size:10px;font-style:normal;color:var(--blue-soft);
+  border:1px solid rgba(61,107,255,.28);border-radius:5px;padding:3px 8px}
+
+/* ---------- timeline ---------- */
+.tl{list-style:none;margin-top:10px}
+.tl li{display:grid;grid-template-columns:96px 1fr auto;gap:20px;align-items:baseline;
+  padding:22px 0;border-top:1px solid var(--line);transition:border-color .4s}
+.tl li:last-child{border-bottom:1px solid var(--line)}
+.tl li:hover{border-top-color:var(--line-hi)}
+.tl time{font-family:var(--mono);font-size:12px;color:var(--red);letter-spacing:.06em}
+.tl em{font-family:var(--mono);font-size:11px;font-style:normal;color:var(--dim);letter-spacing:.06em}
+@media(max-width:760px){.tl li{grid-template-columns:1fr;gap:6px}}
+
+/* ---------- news ---------- */
+.news{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.5rem,4vw,3rem);margin-top:40px;align-items:start}
+@media(max-width:960px){.news{grid-template-columns:1fr}}
+.feed{padding:8px 28px 20px;border-radius:14px;border:1px solid var(--line);
+  background:rgba(10,14,28,.55);backdrop-filter:blur(16px)}
+.feed article{padding:22px 0;border-bottom:1px solid var(--line)}
+.feed article:last-child{border-bottom:0}
+.feed h4{font-family:var(--display);font-size:1rem;font-weight:500;letter-spacing:-.01em}
+.feed p{color:var(--dim);font-size:.88rem;margin-top:7px}
+.feed .src{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-soft)}
+
+.discord{border-radius:14px;border:1px solid var(--line);background:rgba(10,14,28,.62);
+  backdrop-filter:blur(16px);padding:20px;font-family:var(--body)}
+.discord .top{display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.discord .av{width:32px;height:32px;border-radius:50%;background:var(--blue);flex:none;
+  display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:11px;color:#04102E}
+.discord .who{font-size:13px;font-weight:500}
+.discord .bot{font-family:var(--mono);font-size:9px;background:var(--blue);color:#04102E;
+  padding:2px 5px;border-radius:3px;letter-spacing:.08em;margin-left:6px}
+.embed{margin-top:16px;border-left:3px solid var(--red);border-radius:0 6px 6px 0;
+  background:rgba(255,255,255,.03);padding:14px 16px}
+.embed strong{display:block;font-family:var(--display);font-size:.95rem;font-weight:500;color:var(--blue-soft)}
+.embed ul{list-style:none;margin-top:12px;display:grid;gap:9px}
+.embed li{font-size:.83rem;color:var(--dim);padding-left:14px;position:relative}
+.embed li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;
+  border-radius:50%;background:var(--line-hi)}
+.embed .foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+
+/* ---------- close ---------- */
+.close{text-align:center}
+.close h2{margin:0 auto;max-width:20ch}
+.close .lead{margin-left:auto;margin-right:auto}
+.close .btns{justify-content:center}
+footer{position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  padding:26px clamp(1.25rem,5vw,3.5rem);border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(26px);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+:focus-visible{outline:2px solid var(--blue-soft);outline-offset:3px;border-radius:4px}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .hint em{animation:none}
+  .audio.on button i{animation:none;height:9px}
+  .audio.nudge{animation:none}
+  .cursor-dot,.cursor-ring{display:none}
+  body.pointer-fine{cursor:auto}
+}
+</style>
+</head>
+<body>
+
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#s0" data-magnet><i></i><span>ATILIM AI</span></a>
+  <nav><ul>
+    <li><a class="link" href="#s1" data-nav="1">Hakkımızda</a></li>
+    <li><a class="link" href="#s2" data-nav="2">Etkinlikler</a></li>
+    <li><a class="link" href="#s3" data-nav="3">Haftalık Rapor</a></li>
+    <li><a class="link" href="#s4" data-nav="4">Projeler</a></li>
+  </ul></nav>
+</header>
+
+<div class="rail" id="rail" aria-hidden="true">
+  <b data-r="0">01</b><b data-r="1">02</b><b data-r="2">03</b>
+  <b data-r="3">04</b><b data-r="4">05</b>
+</div>
+
+<div class="audio" id="audio">
+  <button id="sndBtn" type="button" aria-pressed="false" aria-label="Sesi aç">
+    <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
+  </button>
+  <input id="sndVol" type="range" min="0" max="100" step="1" value="55" aria-label="Ses düzeyi">
+  <span class="pct" id="sndPct">55</span>
+</div>
+
+<main>
+
+<section id="s0">
+  <div class="wrap">
+    <p class="eyebrow reveal">Atılım Üniversitesi · Yapay zekâ topluluğu</p>
+    <h1 class="reveal">Yapay zekâyı birlikte öğreniyor, birlikte üretiyoruz.</h1>
+    <p class="lead reveal">Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.</p>
+    <div class="btns reveal">
+      <a class="btn solid" href="https://discord.gg/" data-magnet>Topluluğa katıl</a>
+      <a class="btn ghost" href="#s4" data-magnet>Projelere göz at</a>
+    </div>
+  </div>
+  <p class="hint"><em></em>Uzayda ilerlemek için kaydır</p>
+</section>
+
+<section id="s1">
+  <div class="wrap two">
+    <div>
+      <p class="eyebrow reveal">Hakkımızda</p>
+      <h2 class="reveal">Haftada bir akşam, aynı masada.</h2>
+    </div>
+    <div>
+      <p class="lead reveal" style="max-width:52ch;margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Ortak sorun basitti: dersler teoriyi veriyordu, ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
+      <p class="lead reveal" style="max-width:52ch">Şimdi her hafta Perşembe akşamı toplanıyoruz. Kimi zaman bir makaleyi birlikte okuyup söküyoruz, kimi zaman biri ekranını paylaşıp tıkandığı yeri gösteriyor. Bölüm ayrımı yok — hukuktan da, psikolojiden de üyemiz var.</p>
+      <div class="stats reveal">
+        <div><strong>140+</strong><span>Kayıtlı üye</span></div>
+        <div><strong>6</strong><span>Aktif proje</span></div>
+        <div><strong>24</strong><span>Atölye</span></div>
+        <div><strong>3</strong><span>Hackathon derecesi</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="wrap two" style="grid-template-columns:.8fr 1.4fr">
+    <div>
+      <p class="eyebrow reveal">Etkinlikler</p>
+      <h2 class="reveal">Yaklaşan etkinlikler.</h2>
+      <p class="lead reveal">Hepsi herkese açık, kayıt gerekmiyor. Sadece gel.</p>
+    </div>
+    <ul class="tl reveal">
+      <li><time>12 Eyl</time><span>Sıfırdan transformer: dikkat mekanizmasını elle kurmak</span><em>Mühendislik B-204</em></li>
+      <li><time>26 Eyl</time><span>Konuk sohbet — üretimde dil modelleri neyi kırıyor</span><em>Konferans salonu</em></li>
+      <li><time>10 Eki</time><span>Proje eşleşme gecesi: fikri olanla kodu olanı tanıştırma</span><em>Kulüpler binası</em></li>
+      <li><time>24 Eki</time><span>Kampüs içi hackathon — 24 saat, dört kategori</span><em>Kütüphane 3. kat</em></li>
+    </ul>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="wrap">
+    <p class="eyebrow reveal">Haftalık Rapor</p>
+    <h2 class="reveal">Bu hafta ne oldu?</h2>
+    <p class="lead reveal">Her Pazartesi sabahı derliyoruz. Aynı içerik otomatik olarak Discord kanalına da düşüyor.</p>
+    <div class="news">
+      <div class="feed reveal" id="feed">
+        <article>
+          <p class="src">Model · 28 Tem</p>
+          <h4>Açık ağırlıklı modellerde bağlam penceresi yarışı</h4>
+          <p>Üç ayrı ekip aynı hafta içinde uzun bağlam sürümleri yayımladı. Karşılaştırmalı ölçümler henüz bağımsız olarak tekrarlanmadı.</p>
+        </article>
+        <article>
+          <p class="src">Araştırma · 29 Tem</p>
+          <h4>Küçük modellerde damıtmanın sınırı üzerine yeni bulgular</h4>
+          <p>Öğretmen modelin boyutu belli bir eşiği geçtiğinde öğrencinin kazancı düzleşiyor. Kod ve ağırlıklar paylaşıldı.</p>
+        </article>
+        <article>
+          <p class="src">Politika · 31 Tem</p>
+          <h4>Değerlendirme raporlaması için ortak standart önerisi</h4>
+          <p>Birkaç kurum, model kartlarında hangi ölçümlerin zorunlu olacağına dair ortak bir taslak yayımladı.</p>
+        </article>
+      </div>
+
+      <div class="discord reveal">
+        <div class="top">
+          <div class="av">AI</div>
+          <div>
+            <span class="who">Atılım AI Rapor<span class="bot">BOT</span></span>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--dim)">#haftalik-rapor · Bugün 09:00</div>
+          </div>
+        </div>
+        <div class="embed">
+          <strong id="embedTitle">Haftalık Rapor · 12. sayı</strong>
+          <ul id="embedList">
+            <li>Açık ağırlıklı modellerde bağlam penceresi yarışı</li>
+            <li>Küçük modellerde damıtmanın sınırı üzerine yeni bulgular</li>
+            <li>Değerlendirme raporlaması için ortak standart önerisi</li>
+          </ul>
+          <p class="foot">Perşembe 18:00 · B-204 — hepsini birlikte konuşuyoruz</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="wrap">
+    <p class="eyebrow reveal">Projeler</p>
+    <h2 class="reveal">Üyelerimizin yürüttüğü işler.</h2>
+    <div class="projects">
+      <div class="card reveal tilt">
+        <p class="state live"><i></i>Yayında</p>
+        <h3>Kampüs Asistanı</h3>
+        <p>Ders programı, yemekhane menüsü ve yönetmelikleri tek yerden yanıtlayan bir asistan. Kaynak göstermeden cevap vermiyor.</p>
+        <div class="tags"><i>Python</i><i>FastAPI</i><i>pgvector</i></div>
+      </div>
+      <div class="card reveal tilt">
+        <p class="state"><i></i>Geliştirmede</p>
+        <h3>Görü</h3>
+        <p>Laboratuvar kameralarında koruyucu ekipman tespiti. Kamera görüntüsü cihazdan çıkmıyor, model uçta çalışıyor.</p>
+        <div class="tags"><i>PyTorch</i><i>YOLO</i><i>ONNX</i></div>
+      </div>
+      <div class="card reveal tilt">
+        <p class="state live"><i></i>Yayında</p>
+        <h3>Bülten</h3>
+        <p>Haftanın yapay zekâ gelişmelerini derleyip siteye ve Discord kanalımıza taşıyan otomasyon. Bu sayfadaki akışı o besliyor.</p>
+        <div class="tags"><i>Next.js</i><i>GitHub Actions</i><i>Webhook</i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>Atılım AI · Ankara</span>
+  <span><a href="https://discord.gg/" style="color:var(--red);text-decoration:none">Discord'a katıl</a> · Prototip, içerik örnektir</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var fine    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+var mobile  = window.innerWidth < 900;
+if (fine && !reduced) document.body.classList.add("pointer-fine");
+
+/* ============================================================
+   1. Sound — everything here is synthesised at runtime, no files.
+
+   Layers:  drone  detuned triangles + sub through a slowly swept lowpass
+            pad    chord tones, each breathing on its own slow LFO
+            bells  sparse pentatonic plucks, mostly reverb
+            sfx    hover / click blips, section swell
+   The chord root follows the scroll section, so the harmony moves
+   with the morph instead of looping underneath it.
+   ============================================================ */
+var Sound = (function(){
+  var ctx, master, dry, conv, filt, droneG, padG, bellDry, noiseBuf;
+  var oscs = [], pads = [];
+  var live = false, vol = 0.55, timer = null, cur = 0;
+
+  /* No thirds anywhere. Sus2/add9 voicings read as open and calm instead of
+     major-cheerful or minor-sad, and the bells use a major pentatonic so no
+     flat third or flat seventh can creep in. */
+  var ROOT  = [0, 5, 3, 7, 0];               // semitones from A1, one per section
+  var CHORD = [0, 7, 12, 14];
+  var PENT  = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
+
+  function hz(semi){ return 55 * Math.pow(2, semi/12); }
+
+  function impulse(sec, decay){
+    var n = Math.floor(ctx.sampleRate * sec);
+    var b = ctx.createBuffer(2, n, ctx.sampleRate);
+    for (var c = 0; c < 2; c++){
+      var d = b.getChannelData(c);
+      for (var i = 0; i < n; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/n, decay);
+    }
+    return b;
+  }
+
+  function build(){
+    master = ctx.createGain();
+    master.gain.value = 0.0001;
+    /* Rolls the top off the whole mix so nothing can turn brittle. */
+    var soften = ctx.createBiquadFilter();
+    soften.type = "lowpass"; soften.frequency.value = 5200; soften.Q.value = 0.7;
+    master.connect(soften); soften.connect(ctx.destination);
+
+    conv = ctx.createConvolver();
+    conv.buffer = impulse(5.2, 3.1);
+    var wet = ctx.createGain(); wet.gain.value = 0.92;
+    conv.connect(wet); wet.connect(master);
+
+    dry = ctx.createGain(); dry.gain.value = 1;
+    dry.connect(master);
+
+    /* drone */
+    filt = ctx.createBiquadFilter();
+    filt.type = "lowpass"; filt.frequency.value = 430; filt.Q.value = 0.8;
+    droneG = ctx.createGain(); droneG.gain.value = 0.115;
+    filt.connect(droneG); droneG.connect(dry); droneG.connect(conv);
+
+    [[-6,"triangle",1], [6,"triangle",1], [0,"sine",0.5]].forEach(function(cfg){
+      var o = ctx.createOscillator();
+      o.type = cfg[1];
+      o.detune.value = cfg[0];
+      o.frequency.value = hz(ROOT[0] + 12) * cfg[2];
+      o.connect(filt); o.start();
+      oscs.push({ osc:o, mul:cfg[2] });
+    });
+
+    var lfo = ctx.createOscillator(); lfo.frequency.value = 0.04;
+    var lg  = ctx.createGain();       lg.gain.value = 150;
+    lfo.connect(lg); lg.connect(filt.frequency); lfo.start();
+
+    /* pad */
+    padG = ctx.createGain(); padG.gain.value = 0.085;
+    padG.connect(dry); padG.connect(conv);
+    CHORD.forEach(function(iv, k){
+      var o = ctx.createOscillator();
+      o.type = "sine";
+      o.frequency.value = hz(ROOT[0] + iv + 24);
+      var g = ctx.createGain(); g.gain.value = 0.2;
+      var l = ctx.createOscillator(); l.frequency.value = 0.022 + k * 0.013;
+      var a = ctx.createGain();       a.gain.value = 0.15;
+      l.connect(a); a.connect(g.gain); l.start();
+      o.connect(g); g.connect(padG); o.start();
+      pads.push({ osc:o, iv:iv });
+    });
+
+    bellDry = ctx.createGain(); bellDry.gain.value = 0.32;
+    bellDry.connect(dry);
+
+    /* one noise buffer, reused by every section swell */
+    var n = Math.floor(ctx.sampleRate * 2);
+    noiseBuf = ctx.createBuffer(1, n, ctx.sampleRate);
+    var nd = noiseBuf.getChannelData(0);
+    for (var i = 0; i < n; i++) nd[i] = Math.random()*2 - 1;
+  }
+
+  function bell(){
+    if (!live) { timer = null; return; }
+    var t = ctx.currentTime;
+    var o = ctx.createOscillator();
+    o.type = "sine";
+    o.frequency.value = hz(ROOT[cur] + PENT[Math.floor(Math.random()*PENT.length)] + 24);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.075, t + 0.09);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 4.6);
+    o.connect(g); g.connect(conv); g.connect(bellDry);
+    o.start(t); o.stop(t + 4.8);
+    timer = setTimeout(bell, 3200 + Math.random()*5200);
+  }
+
+  function blip(freq, dur, level){
+    if (!live) return;
+    var t = ctx.currentTime;
+    var o = ctx.createOscillator();
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, t);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(level, t + 0.035);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(dry); g.connect(conv);
+    o.start(t); o.stop(t + dur + 0.03);
+  }
+
+  function swell(){
+    if (!live) return;
+    var t = ctx.currentTime, dur = 1.9;
+    var src = ctx.createBufferSource(); src.buffer = noiseBuf;
+    var bp = ctx.createBiquadFilter();
+    bp.type = "lowpass"; bp.Q.value = 0.7;
+    bp.frequency.setValueAtTime(260, t);
+    bp.frequency.exponentialRampToValueAtTime(900, t + dur*0.5);
+    bp.frequency.exponentialRampToValueAtTime(300, t + dur);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.028, t + 0.55);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(bp); bp.connect(g); g.connect(conv); g.connect(dry);
+    src.start(t); src.stop(t + dur);
+  }
+
+  return {
+    isOn: function(){ return live; },
+    enable: function(){
+      if (!ctx){
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return false;
+        try { ctx = new AC(); build(); } catch(e){ ctx = null; return false; }
+      }
+      if (ctx.state === "suspended" && ctx.resume) ctx.resume();
+      live = true;
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setTargetAtTime(vol, ctx.currentTime, 0.45);
+      if (!timer) timer = setTimeout(bell, 700);
+      return true;
+    },
+    disable: function(){
+      live = false;
+      if (timer){ clearTimeout(timer); timer = null; }
+      if (!ctx) return;
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.3);
+    },
+    volume: function(v){
+      vol = Math.max(0.0001, Math.min(1, v));
+      if (live && ctx) master.gain.setTargetAtTime(vol, ctx.currentTime, 0.12);
+    },
+    duck: function(down){
+      if (!ctx || !live) return;
+      master.gain.setTargetAtTime(down ? 0.0001 : vol, ctx.currentTime, 0.25);
+    },
+    section: function(i){
+      cur = Math.max(0, Math.min(ROOT.length-1, i));
+      if (!live || !ctx) return;
+      var t = ctx.currentTime;
+      oscs.forEach(function(x){ x.osc.frequency.setTargetAtTime(hz(ROOT[cur] + 12) * x.mul, t, 1.4); });
+      pads.forEach(function(x){ x.osc.frequency.setTargetAtTime(hz(ROOT[cur] + x.iv + 24), t, 1.7); });
+      swell();
+    },
+    hover: function(){ blip(1046, 0.26, 0.020); },
+    click: function(){ blip(587, 0.34, 0.036); setTimeout(function(){ blip(880, 0.30, 0.026); }, 90); }
+  };
+})();
+
+/* ============================================================
+   2. Scroll progress + section state (works with or without 3D)
+   ============================================================ */
+var progress = 0, smooth = 0, section = 0;
+var railBits = [].slice.call(document.querySelectorAll("#rail b"));
+var navLinks = [].slice.call(document.querySelectorAll(".link"));
+var nav = document.getElementById("nav");
+
+function readScroll(){
+  var max = document.documentElement.scrollHeight - window.innerHeight;
+  progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  nav.classList.toggle("stuck", window.scrollY > 40);
+  var s = Math.round(progress * 4);
+  if (s !== section){
+    section = s;
+    railBits.forEach(function(b,i){ b.classList.toggle("on", i === section); });
+    navLinks.forEach(function(a){ a.classList.toggle("on", +a.dataset.nav === section); });
+    Sound.section(section);
+  }
+}
+window.addEventListener("scroll", readScroll, {passive:true});
+window.addEventListener("resize", readScroll);
+readScroll();
+smooth = progress;
+
+/* ============================================================
+   3. Reveal on scroll
+   ============================================================ */
+var revealables = [].slice.call(document.querySelectorAll(".reveal"));
+if ("IntersectionObserver" in window && !reduced){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, {threshold:.18, rootMargin:"0px 0px -8% 0px"});
+  [].slice.call(document.querySelectorAll("section")).forEach(function(sec){
+    [].slice.call(sec.querySelectorAll(".reveal")).forEach(function(el, i){
+      el.style.transitionDelay = (Math.min(i, 6) * 75) + "ms";
+      io.observe(el);
+    });
+  });
+} else {
+  revealables.forEach(function(el){ el.classList.add("in"); });
+}
+
+/* ============================================================
+   4. Audio controls
+
+   Sound stays off until the visitor asks for it. That is also what
+   satisfies the browser autoplay rules — the AudioContext is created
+   inside the click, so it is allowed to make noise straight away.
+   ============================================================ */
+var sndWrap = document.getElementById("audio");
+var sndBtn  = document.getElementById("sndBtn");
+var sndVol  = document.getElementById("sndVol");
+var sndPct  = document.getElementById("sndPct");
+var touched = false;
+
+function paintAudio(on){
+  sndWrap.classList.toggle("on", on);
+  sndBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  sndBtn.setAttribute("aria-label", on ? "Sesi kapat" : "Sesi aç");
+}
+
+sndBtn.addEventListener("click", function(){
+  touched = true;
+  sndWrap.classList.remove("nudge");
+  if (Sound.isOn()){
+    Sound.disable();
+    paintAudio(false);
+  } else {
+    Sound.volume(sndVol.value / 100);
+    if (Sound.enable()){
+      paintAudio(true);
+      Sound.section(section);
+    } else {
+      sndWrap.style.display = "none";   // no Web Audio support, hide the control
+    }
+  }
+});
+
+sndVol.addEventListener("input", function(){
+  touched = true;
+  sndPct.textContent = sndVol.value;
+  Sound.volume(sndVol.value / 100);
+});
+
+/* One quiet nudge so the control is noticed, then never again. */
+if (!reduced) setTimeout(function(){
+  if (!touched) sndWrap.classList.add("nudge");
+}, 5200);
+
+document.addEventListener("visibilitychange", function(){
+  Sound.duck(document.hidden);
+});
+
+if (fine){
+  var HOVERABLE = ".link,.btn,.brand,.card,.tl li,.feed article";
+  var lastHovered = null;
+  document.addEventListener("pointerover", function(e){
+    var el = e.target && e.target.closest ? e.target.closest(HOVERABLE) : null;
+    if (el === lastHovered) return;
+    lastHovered = el;
+    if (el) Sound.hover();
+  });
+  document.addEventListener("click", function(e){
+    if (e.target && e.target.closest && e.target.closest(".link,.btn,.brand")) Sound.click();
+  });
+}
+
+/* ============================================================
+   5. Custom cursor + magnetic buttons + card tilt
+   ============================================================ */
+var mx = window.innerWidth/2, my = window.innerHeight/2;
+var nx = 0, ny = 0;
+
+if (fine && !reduced){
+  var dot  = document.querySelector(".cursor-dot");
+  var ring = document.querySelector(".cursor-ring");
+  var rx = mx, ry = my;
+
+  window.addEventListener("mousemove", function(e){
+    mx = e.clientX; my = e.clientY;
+    nx = (mx / window.innerWidth)  * 2 - 1;
+    ny = -((my / window.innerHeight) * 2 - 1);
+    dot.style.transform = "translate(" + mx + "px," + my + "px)";
+  });
+
+  (function cursorLoop(){
+    rx += (mx - rx) * .16;
+    ry += (my - ry) * .16;
+    ring.style.transform = "translate(" + rx + "px," + ry + "px)";
+    requestAnimationFrame(cursorLoop);
+  })();
+
+  [].slice.call(document.querySelectorAll("[data-magnet]")).forEach(function(el){
+    el.addEventListener("mouseenter", function(){ ring.classList.add("grab"); });
+    el.addEventListener("mouseleave", function(){
+      ring.classList.remove("grab");
+      el.style.transform = "";
+    });
+    el.addEventListener("mousemove", function(e){
+      var r = el.getBoundingClientRect();
+      var dx = (e.clientX - (r.left + r.width/2)) * .22;
+      var dy = (e.clientY - (r.top + r.height/2)) * .22;
+      el.style.transform = "translate(" + dx + "px," + dy + "px)";
+    });
+  });
+
+  [].slice.call(document.querySelectorAll(".tilt")).forEach(function(card){
+    card.style.transition = "transform .5s cubic-bezier(.16,1,.3,1),border-color .4s,background .4s";
+    card.addEventListener("mousemove", function(e){
+      var r = card.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width  - .5;
+      var py = (e.clientY - r.top)  / r.height - .5;
+      card.style.transition = "transform .12s linear,border-color .4s,background .4s";
+      card.style.transform = "perspective(900px) rotateY(" + (px*8).toFixed(2) +
+                             "deg) rotateX(" + (-py*8).toFixed(2) + "deg) translateZ(6px)";
+    });
+    card.addEventListener("mouseleave", function(){
+      card.style.transition = "transform .5s cubic-bezier(.16,1,.3,1),border-color .4s,background .4s";
+      card.style.transform = "";
+    });
+  });
+}
+
+/* ============================================================
+   6. Weekly report
+
+   Rendered from content/haberler.json so the site and the Discord
+   bot read the same file — one place to edit, not two.
+
+   If the fetch fails the markup already in the page stays put. That
+   is what you get opening index.html straight off disk, since fetch
+   cannot read local files over file://.
+   ============================================================ */
+(function(){
+  var feed  = document.getElementById("feed");
+  var eTtl  = document.getElementById("embedTitle");
+  var eList = document.getElementById("embedList");
+  if (!feed || !window.fetch) return;
+
+  function article(h){
+    var art = document.createElement("article");
+
+    var src = document.createElement("p");
+    src.className = "src";
+    src.textContent = [h.etiket, h.tarih].filter(Boolean).join(" · ");
+
+    var ttl = document.createElement("h4");
+    if (h.link){
+      var a = document.createElement("a");
+      a.href = h.link;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.style.color = "inherit";
+      a.style.textDecoration = "none";
+      a.textContent = h.baslik || "";
+      ttl.appendChild(a);
+    } else {
+      ttl.textContent = h.baslik || "";
+    }
+
+    var sum = document.createElement("p");
+    sum.textContent = h.ozet || "";
+
+    art.appendChild(src); art.appendChild(ttl); art.appendChild(sum);
+    return art;
+  }
+
+  fetch("content/haberler.json", { cache: "no-cache" })
+    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(d){
+      var issue = d && d.sayilar && d.sayilar[0];
+      if (!issue || !issue.haberler || !issue.haberler.length) return;
+
+      feed.textContent = "";
+      issue.haberler.forEach(function(h){ feed.appendChild(article(h)); });
+
+      if (eTtl && issue.sayi) eTtl.textContent = "Haftalık Rapor · " + issue.sayi + ". sayı";
+      if (eList){
+        eList.textContent = "";
+        issue.haberler.slice(0, 5).forEach(function(h){
+          var li = document.createElement("li");
+          li.textContent = h.baslik || "";
+          eList.appendChild(li);
+        });
+      }
+    })
+    .catch(function(){ /* sayfadaki içerik olduğu gibi kalır */ });
+})();
+
+/* ============================================================
+   7. The 3D field
+   ============================================================ */
+var canvas = document.getElementById("scene");
+if (typeof THREE === "undefined"){ document.body.classList.add("no-webgl"); return; }
+
+var renderer;
+try {
+  renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:false, alpha:true, powerPreference:"high-performance"});
+} catch(err){
+  document.body.classList.add("no-webgl");
+  return;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x070A14, 1);
+
+var scene  = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 400);
+camera.position.set(0, 0, 80);
+
+var COUNT = mobile ? 9000 : 26000;
+
+/* ---- helpers ---- */
+function rnd(a,b){ return a + Math.random()*(b-a); }
+function gauss(){ return (Math.random()+Math.random()+Math.random()-1.5)/1.5; }
+
+/* ---- target 0: hero — breathing sphere shell ---- */
+function makeSphere(i, out){
+  var y  = 1 - (i / (COUNT-1)) * 2;
+  var r  = Math.sqrt(Math.max(0, 1 - y*y));
+  var th = i * 2.39996;
+  var rad = 22 * (0.86 + Math.random()*0.22);
+  out[0] = Math.cos(th) * r * rad;
+  out[1] = y * rad;
+  out[2] = Math.sin(th) * r * rad;
+}
+
+/* ---- target 1: neural network graph ---- */
+var LAYERS = [5, 8, 8, 4];
+var nodes = [], layerIdx = [];
+(function buildNodes(){
+  var span = 58, x0 = -span/2;
+  for (var l = 0; l < LAYERS.length; l++){
+    var n = LAYERS[l], list = [];
+    var x = x0 + (span / (LAYERS.length - 1)) * l;
+    for (var k = 0; k < n; k++){
+      var y = (n === 1) ? 0 : (k/(n-1) - .5) * (n * 3.6);
+      list.push([x, y, rnd(-3,3)]);
+    }
+    nodes.push(list); layerIdx.push(n);
+  }
+})();
+function makeNet(i, out){
+  var atNode = (i % 5) < 2;
+  if (atNode){
+    var l = Math.floor(Math.random()*nodes.length);
+    var p = nodes[l][Math.floor(Math.random()*nodes[l].length)];
+    out[0] = p[0] + gauss()*1.5;
+    out[1] = p[1] + gauss()*1.5;
+    out[2] = p[2] + gauss()*1.5;
+  } else {
+    var la = Math.floor(Math.random()*(nodes.length-1));
+    var a  = nodes[la][Math.floor(Math.random()*nodes[la].length)];
+    var b  = nodes[la+1][Math.floor(Math.random()*nodes[la+1].length)];
+    var t  = Math.random();
+    out[0] = a[0] + (b[0]-a[0])*t + gauss()*0.5;
+    out[1] = a[1] + (b[1]-a[1])*t + gauss()*0.5;
+    out[2] = a[2] + (b[2]-a[2])*t + gauss()*0.5;
+  }
+}
+
+/* ---- target 2: floating project frames ---- */
+var FRAMES = [];
+(function buildFrames(){
+  var w = 17, h = 11;
+  for (var r = 0; r < 2; r++){
+    for (var c = 0; c < 3; c++){
+      FRAMES.push({ x:(c-1)*22, y:(r===0?9:-9), z:rnd(-9,9), w:w, h:h });
+    }
+  }
+})();
+function makeFrames(i, out){
+  var f = FRAMES[i % FRAMES.length];
+  var onEdge = (i % 4) !== 0;
+  var u, v;
+  if (onEdge){
+    var side = Math.floor(Math.random()*4);
+    var t = Math.random();
+    if (side === 0){ u = -f.w/2 + f.w*t; v =  f.h/2; }
+    else if (side === 1){ u = -f.w/2 + f.w*t; v = -f.h/2; }
+    else if (side === 2){ u = -f.w/2; v = -f.h/2 + f.h*t; }
+    else { u = f.w/2; v = -f.h/2 + f.h*t; }
+  } else {
+    u = rnd(-f.w/2, f.w/2); v = rnd(-f.h/2, f.h/2);
+  }
+  out[0] = f.x + u + gauss()*0.35;
+  out[1] = f.y + v + gauss()*0.35;
+  out[2] = f.z + gauss()*0.8;
+}
+
+/* ---- target 3: timeline helix ---- */
+function makeHelix(i, out){
+  var t = i / COUNT;
+  var a = t * Math.PI * 11;
+  var rad = 13 + Math.sin(t * 22) * 1.6;
+  var tick = (i % 9 === 0);
+  out[0] = Math.cos(a) * rad + gauss()*0.7;
+  out[1] = Math.sin(a) * rad + gauss()*0.7;
+  out[2] = -68 + t * 104 + (tick ? 0 : gauss()*1.4);
+}
+
+/* ---- target 4: tunnel walls (centre kept clear) ---- */
+function makeTunnel(i, out){
+  var a = Math.random() * Math.PI * 2;
+  var rad = rnd(30, 44);
+  out[0] = Math.cos(a) * rad;
+  out[1] = Math.sin(a) * rad * 0.72;
+  out[2] = rnd(-72, 26);
+}
+
+/* ---- target 5: the wordmark, sampled from a canvas ---- */
+function sampleWord(){
+  var c = document.createElement("canvas");
+  c.width = 640; c.height = 160;
+  var g = c.getContext("2d");
+  if (!g) return null;
+  g.fillStyle = "#fff";
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  g.font = "700 96px 'Space Grotesk', Arial, sans-serif";
+  g.fillText("ATILIM AI", 320, 82);
+  var d;
+  try { d = g.getImageData(0, 0, c.width, c.height).data; } catch(e){ return null; }
+  var pts = [];
+  for (var y = 0; y < c.height; y += 2){
+    for (var x = 0; x < c.width; x += 2){
+      if (d[(y*c.width + x)*4 + 3] > 128){
+        pts.push([ (x - c.width/2) * 0.115, -(y - c.height/2) * 0.115 ]);
+      }
+    }
+  }
+  return pts.length > 200 ? pts : null;
+}
+var glyphs = sampleWord();
+function makeWord(i, out){
+  if (!glyphs){ makeSphere(i, out); return; }
+  var p = glyphs[Math.floor(Math.random()*glyphs.length)];
+  out[0] = p[0] + gauss()*0.32;
+  out[1] = p[1] + gauss()*0.32;
+  out[2] = gauss()*1.6;
+}
+
+/* One scroll target per section. The wordmark is no longer a scroll target —
+   it now plays once on load, then dissolves into the hero sphere. */
+var builders = [makeSphere, makeNet, makeHelix, makeTunnel, makeFrames];
+var buffers  = builders.map(function(){ return new Float32Array(COUNT*3); });
+var wordBuf  = new Float32Array(COUNT*3);
+var sizes    = new Float32Array(COUNT);
+var rnds     = new Float32Array(COUNT);
+var cols     = new Float32Array(COUNT*3);
+var tmp      = [0,0,0];
+
+var C_BLUE = [0.24,0.42,1.00], C_SOFT = [0.55,0.64,1.00], C_RED = [0.90,0.23,0.29];
+for (var i = 0; i < COUNT; i++){
+  for (var b = 0; b < builders.length; b++){
+    builders[b](i, tmp);
+    buffers[b][i*3]   = tmp[0];
+    buffers[b][i*3+1] = tmp[1];
+    buffers[b][i*3+2] = tmp[2];
+  }
+  makeWord(i, tmp);
+  wordBuf[i*3] = tmp[0]; wordBuf[i*3+1] = tmp[1]; wordBuf[i*3+2] = tmp[2];
+
+  sizes[i] = rnd(0.9, 2.5);
+  rnds[i]  = Math.random();
+  var c = (i % 13 === 0) ? C_RED : (i % 3 === 0 ? C_SOFT : C_BLUE);
+  cols[i*3] = c[0]; cols[i*3+1] = c[1]; cols[i*3+2] = c[2];
+}
+
+var geo = new THREE.BufferGeometry();
+geo.setAttribute("position", new THREE.BufferAttribute(buffers[0], 3));
+geo.setAttribute("t1", new THREE.BufferAttribute(buffers[1], 3));
+geo.setAttribute("t2", new THREE.BufferAttribute(buffers[2], 3));
+geo.setAttribute("t3", new THREE.BufferAttribute(buffers[3], 3));
+geo.setAttribute("t4", new THREE.BufferAttribute(buffers[4], 3));
+geo.setAttribute("tW", new THREE.BufferAttribute(wordBuf, 3));
+geo.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+geo.setAttribute("aRnd",  new THREE.BufferAttribute(rnds, 1));
+geo.setAttribute("aCol",  new THREE.BufferAttribute(cols, 3));
+geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 200);
+
+var uniforms = {
+  w0:{value:1}, w1:{value:0}, w2:{value:0}, w3:{value:0}, w4:{value:0},
+  uTime:{value:0}, uIntro:{value:reduced?1:0}, uDrift:{value:1},
+  uWord:{value:reduced?0:1},
+  uRepel:{value:(fine && !reduced) ? 1 : 0},
+  uMouse:{value:new THREE.Vector2(9999,9999)},
+  uPix:{value:renderer.getPixelRatio()}
+};
+
+var material = new THREE.ShaderMaterial({
+  uniforms: uniforms,
+  transparent: true,
+  depthWrite: false,
+  depthTest: false,
+  blending: THREE.AdditiveBlending,
+  vertexShader: [
+    "attribute vec3 t1; attribute vec3 t2; attribute vec3 t3;",
+    "attribute vec3 t4; attribute vec3 tW;",
+    "attribute float aSize; attribute float aRnd; attribute vec3 aCol;",
+    "uniform float w0,w1,w2,w3,w4;",
+    "uniform float uTime,uIntro,uDrift,uRepel,uPix,uWord;",
+    "uniform vec2 uMouse;",
+    "varying vec3 vCol; varying float vFade;",
+    "void main(){",
+    "  vec3 p = position*w0 + t1*w1 + t2*w2 + t3*w3 + t4*w4;",
+    "  p = mix(p, tW, uWord);",
+    "  float dr = uDrift * (1.0 - uWord*0.88);",
+    "  float s = aRnd * 6.2831853;",
+    "  p.x += sin(uTime*0.35 + s)       * dr * (0.4 + aRnd);",
+    "  p.y += cos(uTime*0.29 + s*1.7)   * dr * (0.4 + aRnd);",
+    "  p.z += sin(uTime*0.23 + s*2.3)   * dr * 0.7;",
+    "  vec3 start = p * (2.1 + aRnd*3.6);",
+    "  p = mix(start, p, uIntro);",
+    "  vec2 d = p.xy - uMouse;",
+    "  float dist = length(d) + 0.001;",
+    "  p.xy += (d/dist) * (uRepel * 110.0 / (dist*dist + 34.0));",
+    "  vec4 mv = modelViewMatrix * vec4(p, 1.0);",
+    "  gl_Position = projectionMatrix * mv;",
+    "  float depth = max(1.0, -mv.z);",
+    "  gl_PointSize = min(aSize * uPix * (120.0 / depth), 6.5 * uPix);",
+    "  float far  = 1.0 - smoothstep(60.0, 235.0, depth);",
+    "  float near = smoothstep(2.0, 14.0, depth);",
+    "  vCol  = aCol;",
+    "  vFade = uIntro * far * near;",
+    "}"
+  ].join("\n"),
+  fragmentShader: [
+    "precision mediump float;",
+    "varying vec3 vCol; varying float vFade;",
+    "void main(){",
+    "  vec2 c = gl_PointCoord - 0.5;",
+    "  float d = length(c);",
+    "  if (d > 0.5) discard;",
+    "  float a = pow(1.0 - d*2.0, 2.2);",
+    "  gl_FragColor = vec4(vCol, a * vFade);",
+    "}"
+  ].join("\n")
+});
+
+var points = new THREE.Points(geo, material);
+points.frustumCulled = false;
+scene.add(points);
+
+/* The wordmark is sampled before the web font finishes loading, so redo it
+   once Space Grotesk is actually available. */
+if (glyphs && document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){
+    var tW = geo.getAttribute("tW");
+    glyphs = sampleWord();
+    if (!glyphs) return;
+    var o = [0,0,0];
+    for (var n = 0; n < COUNT; n++){
+      makeWord(n, o);
+      tW.array[n*3] = o[0]; tW.array[n*3+1] = o[1]; tW.array[n*3+2] = o[2];
+    }
+    tW.needsUpdate = true;
+  }).catch(function(){});
+}
+
+/* ---- neural-net edges, visible only in section 2 ---- */
+var edgePos = [];
+for (var l = 0; l < nodes.length - 1; l++){
+  for (var a = 0; a < nodes[l].length; a++){
+    for (var b2 = 0; b2 < nodes[l+1].length; b2++){
+      edgePos.push(nodes[l][a][0], nodes[l][a][1], nodes[l][a][2]);
+      edgePos.push(nodes[l+1][b2][0], nodes[l+1][b2][1], nodes[l+1][b2][2]);
+    }
+  }
+}
+var edgeGeo = new THREE.BufferGeometry();
+edgeGeo.setAttribute("position", new THREE.Float32BufferAttribute(edgePos, 3));
+var edgeMat = new THREE.LineBasicMaterial({
+  color:0x3D6BFF, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending
+});
+var edges = new THREE.LineSegments(edgeGeo, edgeMat);
+scene.add(edges);
+
+/* ---- per-section camera + drift settings ----
+   Order: hero / hakkımızda / etkinlikler / haftalık rapor / projeler.
+   Camera x is inverted relative to the composition: pushing the camera left
+   moves the particle mass right, away from whichever column holds the text. */
+var CAM_Z   = [82, 78, 72, 8, 74];
+var CAM_X   = [-14, 9, 13, 0, 0];
+var CAM_Y   = [0, 5, 4, 0, -4];
+var DRIFT   = [1.05, 0.35, 0.55, 0.80, 0.30];
+var weights = [uniforms.w0, uniforms.w1, uniforms.w2, uniforms.w3, uniforms.w4];
+
+function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
+function lerpArr(arr, seg, t){
+  var i = Math.max(0, Math.min(arr.length-2, Math.floor(seg)));
+  return arr[i] + (arr[i+1] - arr[i]) * t;
+}
+
+/* ---- intro ---- */
+var introStart = performance.now();
+var wordAmt    = reduced ? 0 : 1;
+var camTarget  = new THREE.Vector3(0,0,82);
+var mouseWorld = new THREE.Vector3();
+var camX = 0, camY = 0;
+
+function resize(){
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  uniforms.uPix.value = renderer.getPixelRatio();
+}
+window.addEventListener("resize", resize);
+
+var last = performance.now();
+function frame(now){
+  requestAnimationFrame(frame);
+  var dt = Math.max(0, Math.min(0.05, (now - last)/1000));
+  last = now;
+
+  if (!reduced){
+    uniforms.uTime.value += dt;
+    var sec = (now - introStart) / 1000;
+    uniforms.uIntro.value = ease(Math.min(1, sec / 1.5));
+    /* Particles fly in as the wordmark, hold, then dissolve into the hero.
+       Scrolling early cuts the hold short. */
+    var want = (sec < 2.0 && progress < 0.015) ? 1 : 0;
+    wordAmt += (want - wordAmt) * Math.min(1, dt * 2.6);
+    uniforms.uWord.value = wordAmt;
+    smooth += (progress - smooth) * Math.min(1, dt * 4.2);
+  } else {
+    smooth = progress;
+    uniforms.uWord.value = 0;
+  }
+
+  var seg = Math.max(0, Math.min(1, smooth)) * 4;
+  var idx = Math.max(0, Math.min(3, Math.floor(seg)));
+  var t   = ease(seg - idx);
+
+  for (var k = 0; k < 5; k++) weights[k].value = 0;
+  weights[idx].value     = 1 - t;
+  weights[idx + 1].value = t;
+
+  uniforms.uDrift.value = lerpArr(DRIFT, seg, t);
+  edgeMat.opacity = Math.max(0, (weights[1].value - 0.45)) * 0.5 * (1 - wordAmt);
+  edges.visible = edgeMat.opacity > 0.002;
+
+  /* Centre the frame while the wordmark is up, then drift to the section offset. */
+  camTarget.set(
+    lerpArr(CAM_X, seg, t) * (1 - wordAmt),
+    lerpArr(CAM_Y, seg, t) * (1 - wordAmt),
+    lerpArr(CAM_Z, seg, t)
+  );
+
+  if (!reduced){
+    camX += (camTarget.x + nx * 7 - camX) * Math.min(1, dt * 2.4);
+    camY += (camTarget.y + ny * 5 - camY) * Math.min(1, dt * 2.4);
+  } else {
+    camX = camTarget.x; camY = camTarget.y;
+  }
+  camera.position.set(camX, camY, camTarget.z);
+  camera.lookAt(camX * 0.35, camY * 0.35, camTarget.z - 82);
+  camera.updateMatrixWorld();
+
+  points.rotation.y = reduced ? 0 : Math.sin(uniforms.uTime.value * 0.06) * 0.14 * weights[0].value;
+
+  if (uniforms.uRepel.value > 0){
+    mouseWorld.set(nx, ny, 0.5).unproject(camera).sub(camera.position).normalize();
+    var k2 = (0 - camera.position.z) / (mouseWorld.z || -1);
+    uniforms.uMouse.value.set(
+      camera.position.x + mouseWorld.x * k2,
+      camera.position.y + mouseWorld.y * k2
+    );
+  }
+
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+
+})();
+</script>
+</body>
+</html>
