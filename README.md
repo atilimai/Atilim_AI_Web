@@ -29,7 +29,7 @@ Tek dosya olması bilinçli bir tercih: prototipin bağımlılığı yok, kimse 
 
 ## Kodun içinde ne nerede
 
-`index.html` içindeki script altı bölüme ayrılmış durumda:
+`index.html` içindeki script yedi bölüme ayrılmış durumda:
 
 | Bölüm | İçerik |
 |---|---|
@@ -38,7 +38,8 @@ Tek dosya olması bilinçli bir tercih: prototipin bağımlılığı yok, kimse 
 | 3. Reveal on scroll | Metinlerin görünüre girerken açılması |
 | 4. Audio controls | Ses aç/kapat ve seviye kontrolü |
 | 5. Custom cursor | Özel imleç, mıknatıslı butonlar, kart eğilmesi |
-| 6. The 3D field | Parçacık sistemi, morph hedefleri, kamera |
+| 6. Weekly report | Haftalık raporu `content/haberler.json`'dan okuyup sayfaya basar |
+| 7. The 3D field | Parçacık sistemi, morph hedefleri, kamera |
 
 ## Sık yapılacak değişiklikler
 
