@@ -51,7 +51,7 @@ Tek dosya olması bilinçli bir tercih: prototipin bağımlılığı yok, kimse 
 
 1. Yeni bir `<section>` ekleyin
 2. `builders` dizisine aynı imzada bir hedef fonksiyonu ekleyin — `function(i, out)` alıp `out[0..2]`'ye koordinat yazar
-3. `CAM_Z`, `CAM_X`, `CAM_Y`, `DRIFT` dizilerine birer değer ekleyin
+3. `CAM_Z`, `CAM_X`, `CAM_Y`, `DRIFT`, `AIM_X` dizilerine birer değer ekleyin
 4. `ROOT` dizisine bir akor kökü ekleyin (yarım ton cinsinden)
 
 Scroll bölümlemesi dizi uzunluklarından otomatik türemiyor — `smooth * 4` ve `Math.min(3, ...)` ifadelerindeki sayıları da bir artırın.

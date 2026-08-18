@@ -100,6 +100,10 @@ body.pointer-fine .audio input[type=range]{cursor:none}
 section{position:relative;z-index:2;min-height:100svh;display:flex;align-items:center;
   padding:120px clamp(1.25rem,5vw,3.5rem) 100px}
 .wrap{width:100%;max-width:1180px;margin:0 auto}
+/* Hero metnini biraz sola almak için sarmalayıcı genişletiliyor. İçindeki
+   h1/lead kendi max-width'lerini koruduğundan hiçbir satır uzamıyor, sadece
+   sol kenar sola kayıyor. Dar ekranda içerik kutusu zaten bundan dar. */
+#s0 .wrap{max-width:1400px}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
   color:var(--blue-soft);display:flex;align-items:center;gap:12px;margin-bottom:26px}
 .eyebrow::before{content:"";width:26px;height:1px;background:var(--blue);flex:none}
@@ -1100,6 +1104,18 @@ var CAM_Y   = [0, 5, 4, 0, -4];
 var DRIFT   = [1.05, 0.35, 0.55, 0.80, 0.30];
 var weights = [uniforms.w0, uniforms.w1, uniforms.w2, uniforms.w3, uniforms.w4];
 
+/* Moving the camera alone runs out of road: the aim point travels with it
+   (camX * 0.35 in lookAt below), so the two angles mostly cancel and the hero
+   sphere barely leaves the centre. Turning the lens left instead sweeps the
+   whole mass right, clear of the headline. Hero only — the rest stay centred. */
+var AIM_X   = [30, 0, 0, 0, 0];
+
+/* A narrow or portrait viewport runs the text full width, so there is no
+   column to dodge. Fade the sweep out there instead of shoving the sphere
+   off the edge of the screen. */
+function aimFor(a){ return Math.max(0, Math.min(1, (a - 1.05) / 0.55)); }
+var aimScale = aimFor(camera.aspect);
+
 function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
 function lerpArr(arr, seg, t){
   var i = Math.max(0, Math.min(arr.length-2, Math.floor(seg)));
@@ -1118,6 +1134,7 @@ function resize(){
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   uniforms.uPix.value = renderer.getPixelRatio();
+  aimScale = aimFor(camera.aspect);
 }
 window.addEventListener("resize", resize);
 
@@ -1167,8 +1184,11 @@ function frame(now){
   } else {
     camX = camTarget.x; camY = camTarget.y;
   }
+  /* Same (1 - wordAmt) gate as the camera offsets above: the intro wordmark
+     stays centred, the sweep only arrives as it dissolves into the sphere. */
+  var aim = lerpArr(AIM_X, seg, t) * (1 - wordAmt) * aimScale;
   camera.position.set(camX, camY, camTarget.z);
-  camera.lookAt(camX * 0.35, camY * 0.35, camTarget.z - 82);
+  camera.lookAt(camX * 0.35 - aim, camY * 0.35, camTarget.z - 82);
   camera.updateMatrixWorld();
 
   points.rotation.y = reduced ? 0 : Math.sin(uniforms.uTime.value * 0.06) * 0.14 * weights[0].value;
