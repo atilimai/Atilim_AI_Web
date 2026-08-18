@@ -1,6 +1,6 @@
 # Atılım AI — Topluluk Sitesi
 
-Atılım Üniversitesi yapay zekâ topluluğunun web sitesi. Tek dosyalık, derleme adımı olmayan bir statik site: WebGL ile çizilen bir parçacık alanı, scroll'a bağlı olarak beş farklı şekle dönüşüyor.
+Atılım Üniversitesi yapay zeka topluluğunun web sitesi. Tek dosyalık, derleme adımı olmayan bir statik site: WebGL ile çizilen bir parçacık alanı, scroll'a bağlı olarak beş farklı şekle dönüşüyor.
 
 **Canlı:** `https://KULLANICI.github.io/DEPO/` _(GitHub Pages açıldıktan sonra güncelleyin)_
 
