@@ -51,7 +51,7 @@ body.pointer-fine .cursor-dot,body.pointer-fine .cursor-ring{opacity:1}
   border-bottom:1px solid transparent;transition:border-color .4s,background .4s,backdrop-filter .4s}
 .nav.stuck{border-bottom-color:var(--line);background:rgba(7,10,20,.6);backdrop-filter:blur(14px)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
-.brand i{width:15px;height:15px;border-radius:50%;background:var(--red);display:block;flex:none}
+.brand .mark{width:22px;height:auto;display:block;flex:none}
 .brand span{font-family:var(--display);font-size:13px;letter-spacing:.2em;font-weight:500}
 .nav ul{display:flex;gap:26px;list-style:none}
 .nav a.link{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dim);
@@ -228,7 +228,17 @@ footer{position:relative;z-index:2;display:flex;justify-content:space-between;fl
 <div class="cursor-dot" aria-hidden="true"></div>
 
 <header class="nav" id="nav">
-  <a class="brand" href="#s0" data-magnet><i></i><span>ATILIM AI</span></a>
+  <a class="brand" href="#s0">
+    <!-- Topluluk işareti: A üçgeni + i. Özgün logodaki dış daire ve altındaki
+         "ATILIM YAPAY ZEKA" yazısı burada yok — yanında zaten yazıyor, ve bu
+         boyutta ikisi de okunmaz bir lekeye dönüyordu. -->
+    <svg class="mark" viewBox="0 0 60 54" fill="none" stroke="currentColor" stroke-width="2.8" aria-hidden="true">
+      <path d="M22 52H4L45 6V43"/>
+      <path d="M41 32H58V52"/>
+      <circle cx="54" cy="25" r="2.6" fill="currentColor" stroke="none"/>
+    </svg>
+    <span>ATILIM AI</span>
+  </a>
   <nav><ul>
     <li><a class="link" href="#s1" data-nav="1">Hakkımızda</a></li>
     <li><a class="link" href="#s2" data-nav="2">Etkinlikler</a></li>
