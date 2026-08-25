@@ -2,7 +2,7 @@
 
 Atılım Üniversitesi yapay zekâ topluluğunun web sitesi. Tek dosyalık, derleme adımı olmayan bir statik site: WebGL ile çizilen bir parçacık alanı, scroll'a bağlı olarak beş farklı şekle dönüşüyor.
 
-**Canlı:** `https://KULLANICI.github.io/DEPO/` _(GitHub Pages açıldıktan sonra güncelleyin)_
+**Canlı:** https://atilimai.github.io/Atilim_AI_Web/
 
 ---
 
@@ -13,14 +13,20 @@ Kurulum yok. `index.html` dosyasını tarayıcıda açmak yeterli.
 Yerelde sunucu üzerinden denemek isterseniz:
 
 ```bash
-python3 -m http.server 8000
+python3 -m http.server 8000        # Windows'ta: py -m http.server 8000
 # http://localhost:8000
 ```
+
+Haberler `fetch` ile okunduğu için `haberler.html` sayfası `file://` üzerinden çalışmaz; o sayfayı denerken sunucu şart.
 
 ## Dosya yapısı
 
 ```
-index.html      Her şey burada — HTML, CSS ve JavaScript tek dosyada
+index.html                        Ana sayfa — HTML, CSS ve JavaScript tek dosyada
+haberler.html                     Haber arşivi sayfası (aynı JSON'u okur)
+content/haberler.json             Haftalık rapor içeriği — site ve Discord botu ortak kaynağı
+scripts/discord-gonder.js         Yeni sayıyı Discord webhook'una gönderir
+.github/workflows/                JSON değişince botu çalıştıran iş akışı
 README.md
 .gitignore
 ```
@@ -38,7 +44,10 @@ Tek dosya olması bilinçli bir tercih: prototipin bağımlılığı yok, kimse 
 | 3. Reveal on scroll | Metinlerin görünüre girerken açılması |
 | 4. Audio controls | Ses aç/kapat ve seviye kontrolü |
 | 5. Custom cursor | Özel imleç, mıknatıslı butonlar, kart eğilmesi |
-| 6. The 3D field | Parçacık sistemi, morph hedefleri, kamera |
+| 6. Weekly report | Haberler.json'dan haber akışını render eder |
+| 7. Stats & modal | İstatistik kutusu tıklamaları, genel pencere (modal) aç/kapa |
+| 8. Event accordion | Etkinlik satırlarının aşağı açılan detay/kayıt bölümü |
+| 9. The 3D field | Parçacık sistemi, morph hedefleri, kamera |
 
 ## Sık yapılacak değişiklikler
 
@@ -75,20 +84,23 @@ Haberler `content/haberler.json` içinde durur. Site de, Discord botu da aynı d
       "tarih": "7 Ağu",
       "baslik": "Haber başlığı",
       "ozet": "İki cümlelik özet.",
-      "link": "https://kaynak.example.com"
+      "link": "https://kaynak.example.com",
+      "gorsel": "",
+      "kaynak": ""
     }
   ]
 }
 ```
 
-`link` boş bırakılabilir. Dosyayı `main`'e pushladığınızda GitHub Actions devreye girer, siteyi günceller ve Discord'a gönderir.
+`link`, `gorsel` (görsel URL'si) ve `kaynak` (kaynak adı) boş bırakılabilir — bu ikisi sadece `haberler.html` arşiv sayfasında kullanılıyor. Dosyayı `main`'e pushladığınızda GitHub Actions devreye girer, siteyi günceller ve Discord'a gönderir.
 
 ### Kurulum (bir kez)
 
 1. Discord'da kanal ayarları → Entegrasyonlar → Webhook oluştur → adresi kopyalayın
 2. GitHub'da depo → Settings → Secrets and variables → Actions → New repository secret
 3. İsim `DISCORD_WEBHOOK`, değer kopyaladığınız adres
-4. `.github/workflows/haftalik-rapor.yml` içindeki `SITE_URL` satırını kendi Pages adresinizle değiştirin
+
+`SITE_URL` adresi `.github/workflows/haftalik-rapor.yml` içinde tanımlı; Pages adresi değişirse orayı güncelleyin.
 
 Webhook adresini asla depoya yazmayın. Adresi gören herkes kanalınıza istediği mesajı gönderebilir; sızarsa Discord'dan webhook'u silip yenisini oluşturmak gerekir.
 
@@ -131,10 +143,11 @@ CDN üzerinden, `package.json` yok:
 
 ## Yol haritası
 
-- [ ] Gerçek içerik (aşağıdaki nota bakın)
-- [ ] Discord davet bağlantısı
+- [ ] Gerçek içerik (aşağıdaki nota bakın) — etkinlik detayları ve kayıt formu bağlantıları hâlâ boş
+- [x] Discord davet bağlantısı
+- [x] GitHub Actions ile haftalık raporu Discord'a gönderme
+- [x] Haber arşivi sayfası (`haberler.html`)
 - [ ] Haftalık raporu Markdown dosyalarından besleme
-- [ ] GitHub Actions ile haftalık raporu Discord'a gönderme
 - [ ] Site büyüyünce Next.js + React Three Fiber'a taşıma
 
 ## Katkı

@@ -27,8 +27,7 @@ jobs:
       - name: Discord'a gönder
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          # Depoyu açtıktan sonra kendi Pages adresinizle değiştirin
-          SITE_URL: https://KULLANICI.github.io/DEPO/
+          SITE_URL: https://atilimai.github.io/Atilim_AI_Web/
         run: node scripts/discord-gonder.js
 
       - name: Gönderim durumunu kaydet
