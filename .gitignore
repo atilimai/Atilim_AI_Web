@@ -8,6 +8,10 @@ desktop.ini
 .idea/
 *.swp
 
+# Yerel geliştirme araçları
+.serena/
+.playwright-mcp/
+
 # Bağımlılıklar ve loglar (ileride Next.js'e geçilirse)
 node_modules/
 .next/
