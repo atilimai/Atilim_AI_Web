@@ -157,7 +157,14 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     liste.appendChild(p);
   }
 
-  function haberKarti(h){
+  /* Haberin tam metni varsa ayrıntı sayfasının adresi, yoksa boş. */
+  function ayrintiAdresi(h, sayiNo, sira){
+    if (!h.icerik) return "";
+    return "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira;
+  }
+
+  function haberKarti(h, sayiNo, sira){
+    var ayrinti = ayrintiAdresi(h, sayiNo, sira);
     var art = document.createElement("article");
     art.className = "haber";
 
@@ -187,8 +194,15 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     }
     if (ust.children.length) ic.appendChild(ust);
 
+    /* Başlık önce kendi ayrıntı sayfamıza bağlanır; tam metin yoksa eski
+       davranış sürer ve doğrudan kaynağa gider. */
     var h3 = document.createElement("h3");
-    if (h.link){
+    if (ayrinti){
+      var ia = document.createElement("a");
+      ia.href = ayrinti;
+      ia.textContent = h.baslik || "";
+      h3.appendChild(ia);
+    } else if (h.link){
       var a = document.createElement("a");
       a.href = h.link;
       a.target = "_blank";
@@ -207,7 +221,7 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
       ic.appendChild(p);
     }
 
-    if (h.kaynak || h.link){
+    if (h.kaynak || h.link || ayrinti){
       var alt = document.createElement("div");
       alt.className = "haber-alt";
       if (h.kaynak){
@@ -216,6 +230,7 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
         k.textContent = "Kaynak: " + h.kaynak;
         alt.appendChild(k);
       }
+      /* Dış kaynak varsa ikisi de durur: biri yazının tamamı, öteki kaynak. */
       if (h.link){
         var oku = document.createElement("a");
         oku.className = "oku";
@@ -224,6 +239,14 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
         oku.rel = "noopener noreferrer";
         oku.textContent = "Haberi oku ↗";
         alt.appendChild(oku);
+      }
+      if (ayrinti){
+        var devam = document.createElement("a");
+        devam.className = "oku";
+        devam.href = ayrinti;
+        devam.textContent = "Devamını oku →";
+        if (h.link) devam.style.marginLeft = "0";
+        alt.appendChild(devam);
       }
       ic.appendChild(alt);
     }
@@ -251,7 +274,7 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
 
     var akis = document.createElement("div");
     akis.className = "akis";
-    (sayi.haberler || []).forEach(function(h){ akis.appendChild(haberKarti(h)); });
+    (sayi.haberler || []).forEach(function(h, i){ akis.appendChild(haberKarti(h, sayi.sayi, i)); });
     sec.appendChild(akis);
 
     return sec;
