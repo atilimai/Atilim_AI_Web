@@ -90,6 +90,23 @@ main.wrap{padding-bottom:clamp(70px,10vw,120px)}
   transition:border-color .3s,background .3s,transform .3s}
 .oku:hover{border-color:var(--blue-soft);background:rgba(61,107,255,.08);transform:translateY(-2px)}
 
+/* ---------- açılır kart ---------- */
+.haber.acilir .haber-in{cursor:pointer}
+.haber.acilir h3{transition:color .3s}
+.haber.acilir:hover h3{color:var(--blue-soft)}
+.ac{margin-left:auto;font-family:var(--body);font-size:13px;font-weight:500;
+  color:var(--ink);background:none;border:1px solid var(--line-hi);border-radius:8px;
+  padding:9px 16px;cursor:pointer;transition:border-color .3s,background .3s}
+.ac:hover{border-color:var(--blue-soft);background:rgba(61,107,255,.08)}
+.tam{display:none;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.haber.acik .tam{display:block}
+.tam p{color:var(--dim-hi);font-size:.98rem;line-height:1.8;margin-top:16px}
+.tam p:first-child{margin-top:0}
+.tam .kalici{display:inline-block;margin-top:22px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;
+  border-bottom:1px solid var(--line-hi);padding-bottom:3px;transition:color .3s}
+.tam .kalici:hover{color:var(--ink)}
+
 /* ---------- durum / alt ---------- */
 .durum{color:var(--dim);font-family:var(--mono);font-size:12.5px;line-height:1.8;
   margin-top:40px;padding:22px 24px;border:1px solid var(--line);border-radius:14px}
@@ -163,10 +180,23 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     return "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira;
   }
 
+  /* Tam metni paragraflara böler: boş satır ayırır, tek satır sonu ayırmaz. */
+  function paragraflar(metin){
+    var kap = document.createDocumentFragment();
+    (metin || "").split(/\n\s*\n/).forEach(function(parca){
+      var t = parca.replace(/\s+$/, "");
+      if (!t) return;
+      var p = document.createElement("p");
+      p.textContent = t;
+      kap.appendChild(p);
+    });
+    return kap;
+  }
+
   function haberKarti(h, sayiNo, sira){
     var ayrinti = ayrintiAdresi(h, sayiNo, sira);
     var art = document.createElement("article");
-    art.className = "haber";
+    art.className = ayrinti ? "haber acilir" : "haber";
 
     if (h.gorsel){
       var img = document.createElement("img");
@@ -194,14 +224,12 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     }
     if (ust.children.length) ic.appendChild(ust);
 
-    /* Başlık önce kendi ayrıntı sayfamıza bağlanır; tam metin yoksa eski
-       davranış sürer ve doğrudan kaynağa gider. */
+    /* Tam metni olan haberde başlık bağlantı değil: karta tıklamak metni
+       yerinde açıyor. Tam metin yoksa eski davranış sürer, başlık doğrudan
+       kaynağa gider. */
     var h3 = document.createElement("h3");
     if (ayrinti){
-      var ia = document.createElement("a");
-      ia.href = ayrinti;
-      ia.textContent = h.baslik || "";
-      h3.appendChild(ia);
+      h3.textContent = h.baslik || "";
     } else if (h.link){
       var a = document.createElement("a");
       a.href = h.link;
@@ -241,14 +269,43 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
         alt.appendChild(oku);
       }
       if (ayrinti){
-        var devam = document.createElement("a");
-        devam.className = "oku";
-        devam.href = ayrinti;
-        devam.textContent = "Devamını oku →";
-        if (h.link) devam.style.marginLeft = "0";
-        alt.appendChild(devam);
+        var dugme = document.createElement("button");
+        dugme.type = "button";
+        dugme.className = "ac";
+        dugme.textContent = "Devamını oku ▾";
+        dugme.setAttribute("aria-expanded", "false");
+        if (h.link) dugme.style.marginLeft = "0";
+        alt.appendChild(dugme);
       }
       ic.appendChild(alt);
+    }
+
+    if (ayrinti){
+      var tam = document.createElement("div");
+      tam.className = "tam";
+      tam.appendChild(paragraflar(h.icerik));
+
+      /* Kalıcı bağlantı: haberi tek başına paylaşmak isteyen için. */
+      var kalici = document.createElement("a");
+      kalici.className = "kalici";
+      kalici.href = ayrinti;
+      kalici.textContent = "Bu haberi ayrı sayfada aç ↗";
+      tam.appendChild(kalici);
+
+      ic.appendChild(tam);
+
+      /* Tek dinleyici kartta: düğmeye tıklamak da buraya kabarıyor. Kaynak
+         bağlantıları hariç tutuluyor, yoksa yeni sekme açarken kart da
+         açılıp kapanıyordu. */
+      art.addEventListener("click", function(olay){
+        if (olay.target.closest("a")) return;
+        var acik = art.classList.toggle("acik");
+        var d = art.querySelector(".ac");
+        if (d){
+          d.textContent = acik ? "Kapat ▴" : "Devamını oku ▾";
+          d.setAttribute("aria-expanded", acik ? "true" : "false");
+        }
+      });
     }
 
     art.appendChild(ic);
