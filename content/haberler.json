@@ -2,6 +2,22 @@
   "_aciklama": "Sayılar en yeniden eskiye doğru sıralanır. Site sayilar[0] gösterir, Discord botu da onu gönderir. Yeni sayı eklerken dizinin BAŞINA ekleyin.",
   "sayilar": [
     {
+      "sayi": 13,
+      "tarih": "2026-08-26",
+      "haberler": [
+        {
+          "etiket": "Model",
+          "tarih": "28 Tem",
+          "baslik": "Bu haber discorda gidecek mi?",
+          "ozet": "Github üzerindeki uyarı değerlendiril di 12. saydan sonra 13. sayıyı deneme olarak gönderiyoruz bakalım",
+          "icerik": "umarım bir sorun çıkmadan gider .D",
+          "link": "https://open.spotify.com/intl-tr/track/2Vo0kGsnu44Nmfuh3r5aJv?si=cd991227af0c4b05",
+          "gorsel": "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Fwww.ahaber.com.tr%2Fviral%2Fgaleri%2Fliste%2Fsigara-zammi-9-temmuz-guncel-fiyatlar-2025-en-ucuz-ve-pahali-sigara-ne-kadar-kac-tl-oldu&ved=0CBYQjRxqFwoTCOCK2oL4vpYDFQAAAAAdAAAAABBq&opi=89978449",
+          "kaynak": "Ben"
+        }
+      ]
+    },
+    {
       "sayi": 12,
       "tarih": "2026-08-03",
       "haberler": [
