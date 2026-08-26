@@ -18,11 +18,10 @@ jobs:
   gonder:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+      # Script'in npm bagimliligi yok; yalnizca fs/path ve global fetch kullaniyor,
+      # ikisi de runner'da hazir gelen Node'da var. Bu yuzden setup-node adimi
+      # kaldirildi - kurulacak bir sey olmayinca surdurulecek bir surum de kalmiyor.
+      - uses: actions/checkout@v7
 
       - name: Discord'a gönder
         env:
