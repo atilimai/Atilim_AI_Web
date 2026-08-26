@@ -212,6 +212,13 @@ h3{font-family:var(--display);font-weight:500;font-size:1.2rem;letter-spacing:-.
 .feed-bot-btn svg{width:13px;height:13px;fill:currentColor}
 .feed-bot-btn:hover{background:#4752C4;transform:translateY(-1px)}
 .feed-more{display:block;text-align:center;margin-top:18px}
+/* Tam metni olan haberde: başlık ayrıntı sayfasına gider, altına da bağlantı düşer */
+.feed h4 a.ic{color:var(--ink);text-decoration:none;transition:color .3s}
+.feed h4 a.ic:hover{color:var(--blue-soft)}
+.feed .devam{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue-soft);text-decoration:none;
+  border-bottom:1px solid var(--line-hi);padding-bottom:3px;transition:color .3s,border-color .3s}
+.feed .devam:hover{color:var(--ink);border-color:var(--blue-soft)}
 
 /* ---------- close ---------- */
 .close{text-align:center}
@@ -885,7 +892,11 @@ if (fine && !reduced){
   var feedIssue = document.getElementById("feedIssue");
   if (!feedList || !window.fetch) return;
 
-  function article(h){
+  function article(h, sayiNo, sira){
+    /* Tam metni olan haber, arşivdeki ayrıntı sayfasına bağlanır. Ana sayfa
+       özet akışı olduğu için burada kart açılmıyor; okuma haberler.html
+       tarafında sürüyor. */
+    var ayrinti = h.icerik ? "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira : "";
     var art = document.createElement("article");
 
     var src = document.createElement("p");
@@ -893,7 +904,13 @@ if (fine && !reduced){
     src.textContent = [h.etiket, h.tarih].filter(Boolean).join(" · ");
 
     var ttl = document.createElement("h4");
-    if (h.link){
+    if (ayrinti){
+      var ia = document.createElement("a");
+      ia.className = "ic";
+      ia.href = ayrinti;
+      ia.textContent = h.baslik || "";
+      ttl.appendChild(ia);
+    } else if (h.link){
       var a = document.createElement("a");
       a.href = h.link;
       a.target = "_blank";
@@ -910,6 +927,15 @@ if (fine && !reduced){
     sum.textContent = h.ozet || "";
 
     art.appendChild(src); art.appendChild(ttl); art.appendChild(sum);
+
+    if (ayrinti){
+      var devam = document.createElement("a");
+      devam.className = "devam";
+      devam.href = ayrinti;
+      devam.textContent = "Devamını oku →";
+      art.appendChild(devam);
+    }
+
     return art;
   }
 
@@ -922,7 +948,7 @@ if (fine && !reduced){
       if (feedIssue && issue.sayi) feedIssue.textContent = issue.sayi + ". sayı";
 
       feedList.textContent = "";
-      issue.haberler.forEach(function(h){ feedList.appendChild(article(h)); });
+      issue.haberler.forEach(function(h, i){ feedList.appendChild(article(h, issue.sayi, i)); });
     })
     .catch(function(){ /* sayfadaki içerik olduğu gibi kalır */ });
 })();
