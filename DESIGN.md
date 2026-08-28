@@ -13,7 +13,7 @@ colors:
   paper-ink: "#F0EADD"
   paper-ink-muted: "#C4BBAA"
   paper-ink-subtle: "#A69C8C"
-  paper-ink-tertiary: "#8A8175"
+  paper-ink-tertiary: "#918879"
   day-canvas: "#F2EDE3"
   day-card: "#FBF8F1"
   ink: "#1A1713"
@@ -48,9 +48,9 @@ typography:
     lineHeight: 1.34
   reading:
     fontFamily: "Newsreader, Georgia, serif"
-    fontSize: "18px"
+    fontSize: "19px"
     fontWeight: 400
-    lineHeight: 1.8
+    lineHeight: 1.85
   body-lg:
     fontFamily: "Public Sans, system-ui, sans-serif"
     fontSize: "18px"
@@ -190,7 +190,7 @@ What is rejected is specific: the generic AI-startup page. A tracked-caps eyebro
 - **Paper Ink** (#F0EADD, 16.16:1): Headings and primary text.
 - **Paper Ink Muted** (#C4BBAA, 10.18:1): Body copy.
 - **Paper Ink Subtle** (#A69C8C, 7.15:1): Secondary information.
-- **Paper Ink Tertiary** (#8A8175, 5.05:1): Dates, counts. The AA floor sits here.
+- **Paper Ink Tertiary** (#918879, 5.54:1 on night, 4.87:1 on bench-2): Dates, counts. The AA floor sits here — it is checked against bench-2, the lightest surface it can land on, not just the page ground.
 
 ### Neutral — day world
 - **Day Canvas / Day Card** (#F2EDE3 / #FBF8F1): Ground and raised card on reading pages.
@@ -216,7 +216,7 @@ The 3D wordmark samples a font's pixels off a canvas to build its particle targe
 - **display-lg** (300, clamp 32–48px, lh 1.1): Section headings.
 - **headline** (400, 28px): Sub-sections, article titles.
 - **title** (400, 21px): Card and news headlines.
-- **reading** (400, 18px, lh 1.8): Long-form article body on the day world. Measure 62–68ch.
+- **reading** (400, 19px, lh 1.85): Long-form article body on the day world. Measure 62–68ch.
 - **body-lg** (400, 18px, lh 1.62): Lead paragraphs.
 - **body** (400, 16px), **body-sm** (400, 15px): Default and secondary text.
 - **button** (500, 15px): All buttons and action links.
@@ -282,6 +282,20 @@ A row, not a card: date, category label, headline and summary align on one grid 
 - **Do** give every interactive element a visible `:focus-visible` ring, and test it with a keyboard.
 - **Do** switch to the day world for anything that is read at length.
 - **Do** freeze the particle field under `prefers-reduced-motion`.
+
+### Documented exceptions
+
+Two things sit outside the palette on purpose, and both are recorded here so a
+reviewer does not "fix" them:
+
+- **GitHub language colours** (`#DA5B0B` and the rest of the `RENK` map in
+  `index.html`) are external semantic data, not design tokens. They identify a
+  language the way a flag identifies a country; recolouring them to fit the
+  palette would make them wrong.
+- **The day world's cream ground** (#F2EDE3) will be flagged by generic
+  anti-pattern detectors as a saturated-trope background. It is a deliberate,
+  reasoned choice: `icerik` runs to 20,000 characters and long-form reading does
+  not belong on a dark ground. Keep it.
 
 ### Don't:
 - **Don't** take functional text below 12px.
