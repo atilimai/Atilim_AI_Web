@@ -3,460 +3,348 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atılım AI — Topluluk</title>
+<title>Atılım AI — Yapay Zekâ Topluluğu</title>
+<meta name="description" content="Atılım Üniversitesi Yapay Zekâ Topluluğu. Her perşembe akşamı buluşuyor, atölyeler düzenliyor, açık kaynak projeler yürütüyor ve haftalık yapay zekâ raporu yayımlıyoruz.">
+<meta name="theme-color" content="#100D0A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Atılım AI — Yapay Zekâ Topluluğu">
+<meta property="og:description" content="Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.">
+<meta property="og:url" content="https://atilimai.github.io/Atilim_AI_Web/">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* Tasarım sistemi: DESIGN.md. Token dışında değer kullanılmaz. */
 :root{
-  --void:#070A14;
-  --deep:#0C1020;
-  --line:rgba(146,170,235,.14);
-  --line-hi:rgba(146,170,235,.32);
-  --ink:#E9EDF8;
-  --dim:#8792AE;
-  --dim-hi:#B9C2DE;
-  --blue:#3D6BFF;
-  --blue-soft:#8DA4FF;
-  --red:#E63A4B;
-  --display:"Space Grotesk",system-ui,sans-serif;
-  --body:"Inter",system-ui,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --gece:#100D0A; --tezgah:#191512; --tezgah-2:#211B16;
+  --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
+  --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#8A8175;
+  --lamba:#E8A33D; --lamba-h:#F5B65C; --on-lamba:#241703;
+  --ekran:#8FB4D6; --canli:#7FB069;
+  --disp:"Newsreader",Georgia,serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px;
+  --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px; --sp-sec:96px;
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  background:var(--void);color:var(--ink);font-family:var(--body);
-  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-body.pointer-fine{cursor:none}
-body.pointer-fine a,body.pointer-fine button{cursor:none}
+body{background:var(--gece);color:var(--kagit);font-family:var(--body);
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--disp);font-weight:300}
+a{color:var(--lamba);text-decoration:none}
+:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
 
-#scene{position:fixed;inset:0;z-index:0;display:block}
-.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 45%,transparent 30%,rgba(7,10,20,.55) 78%,rgba(7,10,20,.9) 100%)}
+#scene{position:fixed;inset:0;z-index:0;display:block;pointer-events:none}
 body.no-webgl #scene{display:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);position:relative;z-index:1}
 
-.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;z-index:90;pointer-events:none;
-  border-radius:50%;opacity:0;transition:opacity .3s}
-.cursor-dot{width:5px;height:5px;background:var(--red);margin:-2.5px 0 0 -2.5px}
-.cursor-ring{width:30px;height:30px;border:1px solid var(--line-hi);margin:-15px 0 0 -15px;
-  transition:width .25s,height .25s,margin .25s,border-color .25s,opacity .3s}
-body.pointer-fine .cursor-dot,body.pointer-fine .cursor-ring{opacity:1}
-.cursor-ring.grab{width:56px;height:56px;margin:-28px 0 0 -28px;border-color:var(--red)}
+/* ---------- erişim ---------- */
+.atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--lamba);color:var(--on-lamba);
+  font-weight:500;padding:12px 20px;border-radius:var(--r-md)}
+.atla:focus{left:20px;top:14px}
 
 /* ---------- nav ---------- */
-.nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;
-  justify-content:space-between;padding:18px clamp(1.25rem,5vw,3.5rem);
-  border-bottom:1px solid transparent;transition:border-color .4s,background .4s,backdrop-filter .4s}
-.nav.stuck{border-bottom-color:var(--line);background:rgba(7,10,20,.6);backdrop-filter:blur(14px)}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
-.brand i{width:15px;height:15px;border-radius:50%;background:var(--red);display:block;flex:none}
-.brand span{font-family:var(--display);font-size:13px;letter-spacing:.2em;font-weight:500}
-.nav ul{display:flex;gap:26px;list-style:none}
-.nav a.link{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dim);
-  text-decoration:none;text-transform:uppercase;transition:color .3s;position:relative;padding:4px 0}
-.nav a.link:hover,.nav a.link.on{color:var(--ink)}
-.nav a.link.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--red)}
-@media(max-width:820px){.nav ul{display:none}}
-
-/* ---------- rail ---------- */
-.rail{position:fixed;right:clamp(1rem,2.5vw,2rem);top:50%;transform:translateY(-50%);
-  z-index:60;display:flex;flex-direction:column;gap:14px}
-.rail b{font-family:var(--mono);font-size:10px;color:var(--dim);opacity:.4;
-  font-weight:400;letter-spacing:.12em;transition:color .3s,opacity .3s}
-.rail b.on{color:var(--red);opacity:1}
-@media(max-width:820px){.rail{display:none}}
-
-/* ---------- audio control ---------- */
-.audio{position:fixed;right:clamp(1rem,2.5vw,2rem);bottom:22px;z-index:70;
-  display:flex;align-items:center;gap:11px;padding:8px 14px 8px 12px;border-radius:999px;
-  border:1px solid var(--line);background:rgba(10,14,28,.62);backdrop-filter:blur(14px);
-  transition:border-color .4s}
-.audio:hover{border-color:var(--line-hi)}
-.audio.nudge{animation:nudge 2.6s ease-in-out 3}
-@keyframes nudge{0%,100%{border-color:var(--line)}50%{border-color:rgba(230,58,75,.5)}}
-.audio button{background:none;border:0;padding:3px;display:flex;align-items:flex-end;gap:2px;height:20px}
-.audio button i{display:block;width:3px;height:3px;border-radius:1px;background:var(--dim);
-  transition:background .35s,height .35s}
-.audio.on button i{background:var(--red)}
-.audio.on button i:nth-child(1){animation:eq .82s -.10s ease-in-out infinite alternate}
-.audio.on button i:nth-child(2){animation:eq .64s -.35s ease-in-out infinite alternate}
-.audio.on button i:nth-child(3){animation:eq .95s -.22s ease-in-out infinite alternate}
-.audio.on button i:nth-child(4){animation:eq .73s -.48s ease-in-out infinite alternate}
-@keyframes eq{from{height:3px}to{height:14px}}
-.audio .pct{font-family:var(--mono);font-size:10px;color:var(--dim);width:20px;text-align:right}
-.audio input[type=range]{-webkit-appearance:none;appearance:none;width:72px;height:14px;
-  background:transparent;margin:0}
-.audio input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line-hi);border-radius:2px}
-.audio input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;
-  border-radius:50%;background:var(--ink);margin-top:-4px}
-.audio input[type=range]::-moz-range-track{height:2px;background:var(--line-hi);border-radius:2px}
-.audio input[type=range]::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:var(--ink)}
-body.pointer-fine .audio input[type=range]{cursor:none}
-@media(max-width:560px){.audio{bottom:16px;gap:8px}.audio input[type=range]{width:52px}.audio .pct{display:none}}
-
-/* ---------- layout ---------- */
-section{position:relative;z-index:2;min-height:100svh;display:flex;align-items:center;
-  padding:120px clamp(1.25rem,5vw,3.5rem) 100px}
-.wrap{width:100%;max-width:1180px;margin:0 auto}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
-  color:var(--blue-soft);display:flex;align-items:center;gap:12px;margin-bottom:26px}
-.eyebrow::before{content:"";width:26px;height:1px;background:var(--blue);flex:none}
-h1{font-family:var(--display);font-weight:500;font-size:clamp(2.5rem,6.6vw,5rem);
-  line-height:.99;letter-spacing:-.035em;max-width:15ch}
-h2{font-family:var(--display);font-weight:500;font-size:clamp(1.85rem,3.9vw,3rem);
-  line-height:1.08;letter-spacing:-.03em;max-width:18ch}
-h3{font-family:var(--display);font-weight:500;font-size:1.2rem;letter-spacing:-.01em}
-.lead{color:var(--dim);max-width:46ch;margin-top:22px;font-size:clamp(.95rem,1.15vw,1.05rem)}
-
-.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:38px}
-.btn{font-family:var(--body);font-size:14px;padding:13px 24px;border-radius:8px;
-  text-decoration:none;border:1px solid transparent;transition:.35s cubic-bezier(.16,1,.3,1);display:inline-block}
-.btn.solid{background:var(--red);color:#2A0509;font-weight:500}
-.btn.solid:hover{background:#FF4E5E;transform:translateY(-2px)}
-.btn.ghost{border-color:var(--line-hi);color:var(--ink)}
-.btn.ghost:hover{border-color:var(--blue-soft);background:rgba(61,107,255,.08);transform:translateY(-2px)}
-
-.hint{position:absolute;bottom:38px;left:clamp(1.25rem,5vw,3.5rem);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--dim);display:flex;align-items:center;gap:10px}
-.hint em{display:block;width:1px;height:34px;background:linear-gradient(var(--blue),transparent);
-  animation:drop 2.2s infinite;font-style:normal}
-@keyframes drop{0%{opacity:0;transform:scaleY(.2)}40%{opacity:1}100%{opacity:0;transform:scaleY(1)}}
-
-.two{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(2rem,6vw,6rem);align-items:center}
-@media(max-width:900px){.two{grid-template-columns:1fr;gap:2.5rem}}
-
-#s1 .lead{color:var(--dim-hi)}
-
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:34px}
-.stats div,.stats button.stat{background:var(--void);padding:22px 24px}
-.stats button.stat{all:unset;display:block;width:100%;box-sizing:border-box;background:var(--void);
-  padding:22px 24px;cursor:pointer;font:inherit;text-align:left;transition:background .3s}
-.stats button.stat:hover{background:rgba(61,107,255,.08)}
-.stats strong{font-family:var(--display);font-size:2rem;font-weight:500;display:block;letter-spacing:-.02em}
-.stats span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-
-/* ---------- projects ---------- */
-.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
-@media(max-width:900px){.projects{grid-template-columns:1fr}}
-.card{padding:26px 26px 22px;border-radius:14px;border:1px solid var(--line);
-  background:rgba(14,20,40,.85);
-  transition:border-color .4s,scale .35s cubic-bezier(.16,1,.3,1);
-  transform-style:preserve-3d;will-change:transform}
-.card:hover{border-color:var(--line-hi);scale:.96}
-.card .state{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  display:inline-flex;align-items:center;gap:7px;color:var(--dim);margin-bottom:18px}
-.card .state i{width:6px;height:6px;border-radius:50%;background:var(--dim);display:block}
-.card .state.live i{background:var(--red);box-shadow:0 0 0 3px rgba(230,58,75,.16)}
-.card .state.live{color:var(--ink)}
-.card p{color:var(--dim);font-size:.92rem;margin-top:12px;min-height:76px}
-.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
-.tags i{font-family:var(--mono);font-size:10px;font-style:normal;color:var(--blue-soft);
-  border:1px solid rgba(61,107,255,.28);border-radius:5px;padding:3px 8px}
-
-/* ---------- timeline ---------- */
-.tl{list-style:none;margin-top:10px}
-.tl li{display:grid;grid-template-columns:96px 1fr auto;gap:20px;align-items:baseline;
-  padding:22px 0;border-top:1px solid var(--line);transition:border-color .4s;cursor:pointer}
-.tl li:last-child{border-bottom:1px solid var(--line)}
-.tl li:hover{border-top-color:var(--line-hi)}
-.tl time{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--red);letter-spacing:.06em}
-.tl em{font-family:var(--mono);font-size:11px;font-style:normal;color:var(--dim);letter-spacing:.06em}
-@media(max-width:760px){.tl li{grid-template-columns:1fr;gap:6px}}
-
-.tl-detay{grid-column:1/-1;max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.16,1,.3,1)}
-.tl-item.open .tl-detay{max-height:260px}
-.tl-detay-in{padding-top:16px}
-.tl-detay-in p{color:var(--dim);font-size:.9rem;max-width:60ch}
-.tl-kayit{display:flex;align-items:center;gap:12px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-.tl-kayit .uyari{font-family:var(--mono);font-size:11px;color:var(--red)}
-
-/* ---------- news ---------- */
-.news{display:grid;grid-template-columns:1fr;gap:clamp(1.5rem,4vw,3rem);margin-top:40px;align-items:start}
-.feed{padding:8px 28px 20px;border-radius:14px;border:1px solid var(--line);
-  background:rgba(10,14,28,.55);backdrop-filter:blur(16px)}
-.feed article{padding:22px 0;border-bottom:1px solid var(--line)}
-.feed article:last-child{border-bottom:0}
-.feed h4{font-family:var(--display);font-size:1rem;font-weight:500;letter-spacing:-.01em}
-.feed p{color:var(--dim);font-size:.88rem;margin-top:7px}
-.feed .src{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-soft)}
-
-.feed-issue{display:flex;align-items:baseline;gap:14px;
-  padding-bottom:14px;margin-bottom:8px;border-bottom:1px solid var(--line)}
-.feed-issue-t{font-family:var(--display);font-weight:500;font-size:1.06rem;letter-spacing:-.015em;color:var(--ink)}
-.feed-issue-n{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--blue-soft);border:1px solid var(--line-hi);border-radius:999px;padding:3px 11px;margin-left:auto}
-
-.feed-bot{display:flex;align-items:center;gap:10px;padding-top:12px;margin-top:8px;border-top:1px solid var(--line)}
-.feed-bot-av{position:relative;width:26px;height:26px;border-radius:50%;background:#5865F2;flex:none;
+nav{position:sticky;top:0;z-index:40;border-bottom:1px solid transparent;
+  transition:border-color .4s,background .4s}
+nav.yapisik{border-bottom-color:var(--hair);background:rgba(16,13,10,.86);backdrop-filter:blur(12px)}
+.nav-in{display:flex;align-items:center;gap:var(--sp-lg);height:64px;position:relative}
+.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);
+  font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
+.marka i{width:15px;height:15px;border:1px solid var(--lamba);flex:none;
   display:flex;align-items:center;justify-content:center}
-.feed-bot-av svg{width:15px;height:15px;fill:#fff}
-.feed-bot-dot{position:absolute;right:-2px;bottom:-2px;width:10px;height:10px;border-radius:50%;
-  background:#23A55A;border:2px solid #0B0F1D;animation:botPulse 2.6s ease-out infinite}
-@keyframes botPulse{
-  0%{box-shadow:0 0 0 0 rgba(35,165,90,.45)}
-  70%{box-shadow:0 0 0 6px rgba(35,165,90,0)}
-  100%{box-shadow:0 0 0 0 rgba(35,165,90,0)}
+.marka i::after{content:"";width:5px;height:5px;background:var(--lamba)}
+.baglar{display:flex;gap:var(--r-xs);margin-left:auto}
+.baglar a{position:relative;font-size:15px;color:var(--kagit-s);padding:10px 14px;
+  border-radius:var(--r-sm);min-height:44px;display:flex;align-items:center;
+  transition:color .3s,background .3s}
+.baglar a:hover{color:var(--kagit);background:var(--tezgah)}
+.baglar a.acik{color:var(--kagit)}
+.baglar a.acik::after{content:"";position:absolute;left:14px;right:14px;bottom:8px;
+  height:2px;background:var(--lamba)}
+.menu-btn{display:none;margin-left:auto;background:var(--tezgah);border:1px solid var(--hair-s);
+  color:var(--kagit);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;padding:0 var(--sp-md);height:44px;border-radius:var(--r-md);cursor:pointer}
+@media(max-width:900px){
+  .baglar{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;
+    background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-lg);padding:var(--sp-xs)}
+  .baglar.gorunur{display:flex}
+  .baglar a{padding:14px}
+  .baglar a.acik::after{display:none}
+  .menu-btn{display:block}
 }
-.feed-bot-txt{display:flex;flex-direction:column;line-height:1.3;margin-right:auto}
-.feed-bot-name{font-size:12px;font-weight:500;color:var(--ink)}
-.feed-bot-durum{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#3BA55D}
-.feed-bot-btn{font-family:var(--body);font-size:11.5px;font-weight:500;padding:7px 14px;border-radius:6px;
-  background:#5865F2;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
-  transition:background .25s,transform .25s}
-.feed-bot-btn svg{width:13px;height:13px;fill:currentColor}
-.feed-bot-btn:hover{background:#4752C4;transform:translateY(-1px)}
-.feed-more{display:block;text-align:center;margin-top:18px}
-/* Tam metni olan haberde: başlık ayrıntı sayfasına gider, altına da bağlantı düşer */
-.feed h4 a.ic{color:var(--ink);text-decoration:none;transition:color .3s}
-.feed h4 a.ic:hover{color:var(--blue-soft)}
-.feed .devam{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--blue-soft);text-decoration:none;
-  border-bottom:1px solid var(--line-hi);padding-bottom:3px;transition:color .3s,border-color .3s}
-.feed .devam:hover{color:var(--ink);border-color:var(--blue-soft)}
 
-/* ---------- close ---------- */
-.close{text-align:center}
-.close h2{margin:0 auto;max-width:20ch}
-.close .lead{margin-left:auto;margin-right:auto}
-.close .btns{justify-content:center}
-footer{position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
-  padding:26px clamp(1.25rem,5vw,3.5rem);border-top:1px solid var(--line);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+/* ---------- bölüm ---------- */
+section{padding:var(--sp-sec) 0}
+.kicker{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--lamba)}
+h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;max-width:17ch;text-wrap:balance}
+h1 em{font-style:italic;color:var(--lamba)}
+h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
+  margin-top:var(--sp-md);text-wrap:balance;max-width:20ch}
+.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:62ch;margin-top:20px}
+.meta{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- hero ---------- */
+#s0{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
+.hero-grid{display:grid;grid-template-columns:104px 1fr;gap:var(--sp-xxl);align-items:start;width:100%}
+.defter{font-family:var(--mono);font-size:12px;line-height:2.1;color:var(--kagit-t);
+  text-align:right;padding:14px 22px 0 0;border-right:1px solid var(--hair)}
+.defter b{display:block;color:var(--kagit);font-weight:400}
+.eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
+@media(max-width:760px){.hero-grid{grid-template-columns:1fr;gap:var(--sp-lg)}.defter{display:none}}
+
+/* ---------- düğme ---------- */
+.btn{font-family:var(--body);font-size:15px;font-weight:500;padding:0 22px;min-height:48px;
+  border-radius:var(--r-md);display:inline-flex;align-items:center;border:1px solid transparent;
+  cursor:pointer;transition:background .3s,border-color .3s,color .3s}
+.btn.p{background:var(--lamba);color:var(--on-lamba)}
+.btn.p:hover{background:var(--lamba-h)}
+.btn.s{background:var(--tezgah);border-color:var(--hair-s);color:var(--kagit)}
+.btn.s:hover{background:var(--tezgah-2);border-color:var(--hair-t)}
+
+/* ---------- iki sütun / ölçüm ---------- */
+.iki{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(32px,6vw,80px)}
+@media(max-width:900px){.iki{grid-template-columns:1fr;gap:var(--sp-xl)}}
+.olcum{margin-top:var(--sp-xl);border-top:1px solid var(--hair)}
+.olcum div{display:flex;align-items:baseline;gap:var(--sp-md);padding:var(--sp-md) 0;
+  border-bottom:1px solid var(--hair)}
+.olcum b{font-family:var(--mono);font-size:28px;font-weight:400;color:var(--lamba);
+  line-height:1;width:56px;flex:none}
+.olcum span{font-size:15px;color:var(--kagit-s)}
+.olcum button{all:unset;display:flex;align-items:baseline;gap:var(--sp-md);width:100%;
+  padding:var(--sp-md) 0;border-bottom:1px solid var(--hair);cursor:pointer;
+  min-height:44px;box-sizing:border-box;transition:opacity .3s}
+.olcum button:hover{opacity:.75}
+
+/* ---------- etkinlik ---------- */
+.tl{list-style:none;margin-top:var(--sp-xl);border-top:1px solid var(--hair)}
+.tl li{border-bottom:1px solid var(--hair)}
+.tl button{width:100%;display:grid;grid-template-columns:80px 1fr auto;gap:20px;
+  align-items:baseline;padding:22px 0;background:none;border:0;color:inherit;font:inherit;
+  text-align:left;cursor:pointer;transition:opacity .3s;min-height:44px}
+.tl button:hover{opacity:.78}
+.tl time{font-family:var(--mono);font-size:13px;color:var(--lamba)}
+.tl .baslik{font-family:var(--disp);font-size:21px;font-weight:400;line-height:1.34}
+.tl .yer{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--kagit-t)}
+.tl .detay{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.tl li[aria-expanded="true"] .detay{grid-template-rows:1fr}
+.tl .detay>div{overflow:hidden}
+.tl .detay p{color:var(--kagit-m);font-size:15px;line-height:1.7;max-width:60ch;padding-bottom:22px}
+@media(max-width:760px){.tl button{grid-template-columns:1fr;gap:6px}}
+
+/* ---------- haber ---------- */
+.haber{display:grid;grid-template-columns:88px 108px 1fr;gap:20px;padding:22px 0;
+  border-bottom:1px solid var(--hair);align-items:baseline}
+.haber:first-child{border-top:1px solid var(--hair)}
+.haber h3{font-size:21px;font-weight:400;line-height:1.34}
+.haber h3 a{color:var(--kagit);transition:color .3s}
+.haber h3 a:hover{color:var(--lamba)}
+.haber p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:6px;max-width:66ch}
+.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ekran)}
+.devam{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:13px;
+  color:var(--lamba);border-bottom:1px solid rgba(232,163,61,.4);padding-bottom:3px}
+.arsiv-bag{display:inline-flex;align-items:center;gap:var(--sp-xs);margin-top:var(--sp-xl);
+  font-family:var(--mono);font-size:13px;color:var(--lamba);
+  border-bottom:1px solid rgba(232,163,61,.4);padding-bottom:4px;min-height:44px}
+@media(max-width:760px){.haber{grid-template-columns:1fr;gap:var(--sp-xs)}}
+
+/* ---------- proje ---------- */
+.projeler{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:var(--sp-md);margin-top:var(--sp-xl)}
+.kart{background:var(--tezgah);border:1px solid var(--hair);border-radius:var(--r-lg);
+  padding:var(--sp-lg);transition:background .35s,border-color .35s}
+.kart:hover{background:var(--tezgah-2);border-color:var(--hair-s)}
+.durum{display:inline-flex;align-items:center;gap:var(--sp-xs);font-family:var(--mono);
+  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--kagit-s)}
+.durum i{width:7px;height:7px;border-radius:50%;background:var(--kagit-t)}
+.durum.canli i{background:var(--canli)}
+.durum.canli{color:var(--kagit-m)}
+.kart h3{font-size:21px;font-weight:400;margin-top:14px}
+.kart p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:10px}
+.etiketler{display:flex;gap:var(--sp-xs);flex-wrap:wrap;margin-top:20px;
+  padding-top:var(--sp-md);border-top:1px solid var(--hair)}
+.etiketler span{font-family:var(--mono);font-size:12px;color:var(--kagit-t);
+  border:1px solid var(--hair-s);border-radius:var(--r-sm);padding:4px 9px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:relative;z-index:1}
+.foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
+  font-size:14px;color:var(--kagit-t)}
+.foot .sag{margin-left:auto;display:flex;gap:20px}
+.foot a{color:var(--kagit-s)}
+.foot a:hover{color:var(--kagit)}
 
 /* ---------- modal ---------- */
-.modal{position:fixed;inset:0;z-index:85;display:none}
-.modal.open{display:block}
-.modal-bg{position:absolute;inset:0;background:rgba(7,10,20,.72);backdrop-filter:blur(4px)}
-.modal-panel{position:relative;max-width:420px;margin:14vh auto 0;padding:30px;border-radius:14px;
-  border:1px solid var(--line-hi);background:rgba(10,14,28,.88);backdrop-filter:blur(20px)}
-.modal-x{position:absolute;top:14px;right:14px;background:none;border:0;color:var(--dim);font-size:16px;
-  cursor:pointer;z-index:2;transition:color .3s}
-.modal-x:hover{color:var(--ink)}
-@media(max-width:620px){.modal-panel{margin:9vh 16px 0}}
-
-/* GitHub tarzı depo listesi */
-.modal-panel.gh{max-width:560px;padding:0;overflow:hidden}
-.gh-head{display:flex;align-items:center;gap:13px;padding:20px 26px;border-bottom:1px solid var(--line)}
-.gh-mark{width:26px;height:26px;fill:var(--ink);flex:none}
-.gh-head h3{font-family:var(--display);font-weight:500;font-size:1.02rem;letter-spacing:-.01em;line-height:1.3}
-.gh-sub{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.04em}
-.gh-list{list-style:none;max-height:54vh;overflow-y:auto}
-.gh-repo{padding:16px 26px;border-bottom:1px solid var(--line);transition:background .25s}
-.gh-repo:hover{background:rgba(61,107,255,.06)}
-.gh-name{display:inline-flex;align-items:center;gap:8px;color:var(--blue-soft);font-weight:500;
-  font-size:.97rem;text-decoration:none;vertical-align:middle}
+.modal{position:fixed;inset:0;z-index:60;display:none}
+.modal.acik{display:block}
+.modal-bg{position:absolute;inset:0;background:rgba(16,13,10,.78)}
+.modal-panel{position:relative;max-width:560px;margin:12vh auto 0;background:var(--tezgah-2);
+  border:1px solid var(--hair-t);border-radius:var(--r-xl);overflow:hidden}
+.modal-x{position:absolute;top:12px;right:12px;width:44px;height:44px;background:none;border:0;
+  color:var(--kagit-s);font-size:18px;cursor:pointer;border-radius:var(--r-sm);z-index:2}
+.modal-x:hover{color:var(--kagit);background:var(--tezgah)}
+.gh-head{display:flex;align-items:center;gap:13px;padding:20px var(--sp-lg);
+  border-bottom:1px solid var(--hair)}
+.gh-mark{width:24px;height:24px;fill:var(--kagit);flex:none}
+.gh-head h3{font-size:21px;font-weight:400}
+.gh-sub{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
+.gh-list{list-style:none;max-height:52vh;overflow-y:auto}
+.gh-repo{padding:var(--sp-md) var(--sp-lg);border-bottom:1px solid var(--hair)}
+.gh-name{display:inline-flex;align-items:center;gap:var(--sp-xs);color:var(--lamba);font-weight:500}
 .gh-name:hover{text-decoration:underline}
-.gh-ico{width:15px;height:15px;fill:var(--dim);flex:none}
-.gh-badge{margin-left:9px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;
-  color:var(--dim);border:1px solid var(--line-hi);border-radius:999px;padding:2px 9px;vertical-align:middle}
-.gh-desc{color:var(--dim);font-size:.85rem;line-height:1.55;margin-top:7px;max-width:52ch}
-.gh-desc.bos{opacity:.55;font-style:italic}
-.gh-meta{display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin-top:11px;font-size:11.5px;color:var(--dim)}
+.gh-ico{width:15px;height:15px;fill:var(--kagit-t);flex:none}
+.gh-desc{color:var(--kagit-s);font-size:15px;line-height:1.55;margin-top:7px;max-width:52ch}
+.gh-desc.bos{color:var(--kagit-t);font-style:italic}
+.gh-meta{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;margin-top:10px;
+  font-family:var(--mono);font-size:12px;color:var(--kagit-t)}
 .gh-meta span{display:inline-flex;align-items:center;gap:5px}
 .gh-meta span[hidden]{display:none}
 .gh-meta svg{width:12px;height:12px;fill:currentColor}
-.gh-lang i{width:9px;height:9px;border-radius:50%;display:block;background:var(--dim)}
-.gh-all{display:block;text-align:center;padding:14px;font-size:12.5px;color:var(--dim);
-  text-decoration:none;transition:color .3s,background .3s}
-.gh-all:hover{color:var(--ink);background:rgba(61,107,255,.06)}
+.gh-lang i{width:9px;height:9px;border-radius:50%;display:block;background:var(--kagit-t)}
+.gh-all{display:block;text-align:center;padding:var(--sp-md);font-size:15px;color:var(--kagit-s);
+  min-height:44px}
+.gh-all:hover{color:var(--kagit);background:var(--tezgah)}
+@media(max-width:620px){.modal-panel{margin:8vh var(--sp-md) 0}}
 
-/* ---------- reveal ---------- */
-.reveal{opacity:0;transform:translateY(26px);
-  transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
-.reveal.in{opacity:1;transform:none}
-:focus-visible{outline:2px solid var(--blue-soft);outline-offset:3px;border-radius:4px}
+/* ---------- belirme ---------- */
+/* Gizleme yalnızca JS varken uygulanır: betik çalışmazsa ya da tarayıcı
+   sekmeyi kısarsa içerik görünür kalır, boş sayfa görünmez. */
+.js .reveal{opacity:0;transform:translateY(20px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.js .reveal.in{opacity:1;transform:none}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .reveal{opacity:1;transform:none;transition:none}
-  .hint em{animation:none}
-  .audio.on button i{animation:none;height:9px}
-  .audio.nudge{animation:none}
-  .feed-bot-dot{animation:none}
-  .cursor-dot,.cursor-ring{display:none}
-  body.pointer-fine{cursor:auto}
+  .js .reveal{opacity:1;transform:none;transition:none}
+  *{transition-duration:.01ms!important}
 }
 </style>
 </head>
 <body>
 
 <canvas id="scene" aria-hidden="true"></canvas>
-<div class="vignette" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
+<a class="atla" href="#icerik">İçeriğe atla</a>
 
-<header class="nav" id="nav">
-  <a class="brand" href="#s0" data-magnet><i></i><span>ATILIM AI</span></a>
-  <nav><ul>
-    <li><a class="link" href="#s1" data-nav="1">Hakkımızda</a></li>
-    <li><a class="link" href="#s2" data-nav="2">Etkinlikler</a></li>
-    <li><a class="link" href="#s3" data-nav="3">Haftalık Rapor</a></li>
-    <li><a class="link" href="#s4" data-nav="4">Projeler</a></li>
-  </ul></nav>
-</header>
-
-<div class="rail" id="rail" aria-hidden="true">
-  <b data-r="0">01</b><b data-r="1">02</b><b data-r="2">03</b>
-  <b data-r="3">04</b><b data-r="4">05</b>
-</div>
-
-<div class="audio" id="audio">
-  <button id="sndBtn" type="button" aria-pressed="false" aria-label="Sesi aç">
-    <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
-  </button>
-  <input id="sndVol" type="range" min="0" max="100" step="1" value="55" aria-label="Ses düzeyi">
-  <span class="pct" id="sndPct">55</span>
-</div>
-
-<main>
-
-<section id="s0">
-  <div class="wrap">
-    <p class="eyebrow reveal">Atılım Üniversitesi · Yapay zekâ topluluğu</p>
-    <h1 class="reveal">Yapay zekâyı birlikte öğreniyor, birlikte üretiyoruz.</h1>
-    <p class="lead reveal">Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.</p>
-    <div class="btns reveal">
-      <a class="btn solid" href="https://discord.gg/uUzsA7uDzU" data-magnet>Topluluğa katıl</a>
-      <a class="btn ghost" href="#s4" data-magnet>Projelere göz at</a>
-    </div>
+<nav id="nav"><div class="wrap nav-in">
+  <a class="marka" href="#s0"><i aria-hidden="true"></i>ATILIM AI</a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="baglar">Menü</button>
+  <div class="baglar" id="baglar">
+    <a href="#s1" data-b="s1">Hakkımızda</a>
+    <a href="#s2" data-b="s2">Etkinlikler</a>
+    <a href="#s3" data-b="s3">Haftalık Rapor</a>
+    <a href="#s4" data-b="s4">Projeler</a>
   </div>
-  <p class="hint"><em></em>Uzayda ilerlemek için kaydır</p>
-</section>
+</div></nav>
 
-<section id="s1">
-  <div class="wrap two">
+<main id="icerik">
+
+<section id="s0"><div class="wrap">
+  <div class="hero-grid">
+    <p class="defter reveal">kuruluş<b>2023</b>toplantı<b>perşembe</b>bölüm<b>farketmez</b></p>
     <div>
-      <p class="eyebrow reveal">Hakkımızda</p>
-      <h2 class="reveal">Haftada bir akşam, aynı masada.</h2>
-    </div>
-    <div>
-      <p class="lead reveal" style="max-width:52ch;margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Ortak sorun basitti: dersler teoriyi veriyordu, ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
-      <p class="lead reveal" style="max-width:52ch">Şimdi her hafta Perşembe akşamı toplanıyoruz. Kimi zaman bir makaleyi birlikte okuyup söküyoruz, kimi zaman biri ekranını paylaşıp tıkandığı yeri gösteriyor. Bölüm ayrımı yok — hukuktan da, psikolojiden de üyemiz var.</p>
-      <div class="stats reveal">
-        <div><strong>0</strong><span>Kayıtlı üye</span></div>
-        <button type="button" class="stat" data-scroll="#s4"><strong>0</strong><span>Aktif proje</span></button>
-        <button type="button" class="stat" data-modal="modal-projeler"><strong>2</strong><span>Tamamlanan proje</span></button>
-        <div><strong>7</strong><span>Tamamlanan etkinlik</span></div>
+      <h1 class="reveal">Yapay zekâyı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
+      <p class="giris reveal">Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.</p>
+      <div class="eylem reveal">
+        <a class="btn p" href="https://discord.gg/uUzsA7uDzU">Topluluğa katıl</a>
+        <a class="btn s" href="#s4">Projelere göz at</a>
       </div>
     </div>
   </div>
-</section>
+</div></section>
 
-<section id="s2">
-  <div class="wrap two" style="grid-template-columns:.8fr 1.4fr">
-    <div>
-      <p class="eyebrow reveal">Etkinlikler</p>
-      <h2 class="reveal">Yaklaşan etkinlikler.</h2>
-      <p class="lead reveal">Sen yoksan eksiğiz</p>
-    </div>
-    <ul class="tl reveal">
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>12 Eyl</time><span>Sıfırdan transformer: dikkat mekanizmasını elle kurmak</span><em>Mühendislik B-204</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>Dikkat mekanizmasını sıfırdan, elle kod yazarak kuruyoruz. Önkoşul yok, laptop yeterli.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>26 Eyl</time><span>Konuk sohbet — üretimde dil modelleri neyi kırıyor</span><em>Konferans salonu</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>Üretimde çalışan dil modeli sistemlerinde en sık neyin bozulduğunu konuşacağız — bir konuk konuşmacıyla açık oturum.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>10 Eki</time><span>Proje eşleşme gecesi: fikri olanla kodu olanı tanıştırma</span><em>Kulüpler binası</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>Bir proje fikrin var ama ekibin yok, ya da tam tersi — bu akşam eşleşiyoruz.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>24 Eki</time><span>Kampüs içi hackathon — 24 saat, dört kategori</span><em>Kütüphane 3. kat</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>24 saat sürecek kampüs içi hackathon. Dört kategoride yarışılıyor, takım kurmadan da katılabilirsin.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-    </ul>
+<section id="s1"><div class="wrap iki">
+  <div>
+    <p class="kicker reveal">Hakkımızda</p>
+    <h2 class="reveal">Haftada bir akşam, aynı masada.</h2>
   </div>
-</section>
+  <div>
+    <p class="giris reveal" style="margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Ortak sorun basitti: dersler teoriyi veriyordu, ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
+    <p class="giris reveal">Şimdi her hafta Perşembe akşamı toplanıyoruz. Kimi zaman bir makaleyi birlikte okuyup söküyoruz, kimi zaman biri ekranını paylaşıp tıkandığı yeri gösteriyor. Bölüm ayrımı yok — hukuktan da, psikolojiden de üyemiz var.</p>
+    <div class="olcum reveal">
+      <button type="button" data-scroll="#s4"><b class="num">3</b><span>yürüyen proje</span></button>
+      <button type="button" data-modal="modal-projeler"><b class="num">2</b><span>tamamlanan proje</span></button>
+      <div><b class="num">7</b><span>tamamlanan etkinlik</span></div>
+    </div>
+  </div>
+</div></section>
 
-<section id="s3">
-  <div class="wrap">
-    <p class="eyebrow reveal">Haftalık Rapor</p>
-    <h2 class="reveal">Bu hafta neler oldu?</h2>
-    <p class="lead reveal">Her Pazartesi sabahı derliyoruz. Aynı içerik otomatik olarak Discord kanalına da düşüyor.</p>
-    <div class="news">
-      <div class="feed reveal" id="feed">
-        <p class="feed-issue"><span class="feed-issue-t">Haftalık Rapor</span><span class="feed-issue-n" id="feedIssue">12. sayı</span></p>
-        <div id="feedList">
-          <article>
-            <p class="src">Model · 28 Tem</p>
-            <h4>Açık ağırlıklı modellerde bağlam penceresi yarışı</h4>
-            <p>Üç ayrı ekip aynı hafta içinde uzun bağlam sürümleri yayımladı. Karşılaştırmalı ölçümler henüz bağımsız olarak tekrarlanmadı.</p>
-          </article>
-          <article>
-            <p class="src">Araştırma · 29 Tem</p>
-            <h4>Küçük modellerde damıtmanın sınırı üzerine yeni bulgular</h4>
-            <p>Öğretmen modelin boyutu belli bir eşiği geçtiğinde öğrencinin kazancı düzleşiyor. Kod ve ağırlıklar paylaşıldı.</p>
-          </article>
-          <article>
-            <p class="src">Politika · 31 Tem</p>
-            <h4>Değerlendirme raporlaması için ortak standart önerisi</h4>
-            <p>Birkaç kurum, model kartlarında hangi ölçümlerin zorunlu olacağına dair ortak bir taslak yayımladı.</p>
-          </article>
-        </div>
-        <a class="btn solid feed-more" href="haberler.html">Tüm haberleri gör →</a>
-        <div class="feed-bot">
-          <span class="feed-bot-av">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>
-            <i class="feed-bot-dot" aria-hidden="true"></i>
-          </span>
-          <span class="feed-bot-txt">
-            <span class="feed-bot-name">Atılım AI Botu</span>
-            <span class="feed-bot-durum">Çevrimiçi</span>
-          </span>
-          <a class="feed-bot-btn" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>Sunucuya katıl</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<section id="s2"><div class="wrap">
+  <p class="kicker reveal">Etkinlikler</p>
+  <h2 class="reveal">Yaklaşan etkinlikler.</h2>
+  <ul class="tl reveal" id="tl">
+    <li aria-expanded="false">
+      <button type="button"><time datetime="2026-09-12">12 Eyl</time><span class="baslik">Sıfırdan transformer: dikkat mekanizmasını elle kurmak</span><span class="yer">Mühendislik B-204</span></button>
+      <div class="detay"><div><p>Dikkat mekanizmasını sıfırdan, elle kod yazarak kuruyoruz. Önkoşul yok, laptop yeterli.</p></div></div>
+    </li>
+    <li aria-expanded="false">
+      <button type="button"><time datetime="2026-09-26">26 Eyl</time><span class="baslik">Konuk sohbet — üretimde dil modelleri neyi kırıyor</span><span class="yer">Konferans salonu</span></button>
+      <div class="detay"><div><p>Üretimde çalışan dil modeli sistemlerinde en sık neyin bozulduğunu konuşacağız — bir konuk konuşmacıyla açık oturum.</p></div></div>
+    </li>
+    <li aria-expanded="false">
+      <button type="button"><time datetime="2026-10-10">10 Eki</time><span class="baslik">Proje eşleşme gecesi: fikri olanla kodu olanı tanıştırma</span><span class="yer">Kulüpler binası</span></button>
+      <div class="detay"><div><p>Bir proje fikrin var ama ekibin yok, ya da tam tersi — bu akşam eşleşiyoruz.</p></div></div>
+    </li>
+    <li aria-expanded="false">
+      <button type="button"><time datetime="2026-10-24">24 Eki</time><span class="baslik">Kampüs içi hackathon — 24 saat, dört kategori</span><span class="yer">Kütüphane 3. kat</span></button>
+      <div class="detay"><div><p>24 saat sürecek kampüs içi hackathon. Dört kategoride yarışılıyor, takım kurmadan da katılabilirsin.</p></div></div>
+    </li>
+  </ul>
+</div></section>
 
-<section id="s4">
-  <div class="wrap">
-    <p class="eyebrow reveal">Projeler</p>
-    <h2 class="reveal">Üyelerimizin yürüttüğü işler.</h2>
-    <div class="projects">
-      <div class="card reveal tilt">
-        <p class="state live"><i></i>Yayında</p>
-        <h3>Kampüs Asistanı</h3>
-        <p>Ders programı, yemekhane menüsü ve yönetmelikleri tek yerden yanıtlayan bir asistan. Kaynak göstermeden cevap vermiyor.</p>
-        <div class="tags"><i>Python</i><i>FastAPI</i><i>pgvector</i></div>
-      </div>
-      <div class="card reveal tilt">
-        <p class="state"><i></i>Geliştirmede</p>
-        <h3>Görü</h3>
-        <p>Laboratuvar kameralarında koruyucu ekipman tespiti. Kamera görüntüsü cihazdan çıkmıyor, model uçta çalışıyor.</p>
-        <div class="tags"><i>PyTorch</i><i>YOLO</i><i>ONNX</i></div>
-      </div>
-      <div class="card reveal tilt">
-        <p class="state live"><i></i>Yayında</p>
-        <h3>Bülten</h3>
-        <p>Haftanın yapay zekâ gelişmelerini derleyip siteye ve Discord kanalımıza taşıyan otomasyon. Bu sayfadaki akışı o besliyor.</p>
-        <div class="tags"><i>Next.js</i><i>GitHub Actions</i><i>Webhook</i></div>
-      </div>
+<section id="s3"><div class="wrap">
+  <p class="kicker reveal">Haftalık Rapor</p>
+  <h2 class="reveal">Bu hafta neler oldu?</h2>
+  <p class="giris reveal">Her Pazartesi sabahı derliyoruz. Aynı içerik otomatik olarak Discord kanalına da düşüyor.</p>
+  <p class="meta reveal" id="feedIssue" style="margin-top:32px">12. sayı</p>
+  <div class="reveal" id="feedList" style="margin-top:16px">
+    <div class="haber">
+      <span class="meta">28 Tem</span><span class="etiket">Model</span>
+      <div><h3>Açık ağırlıklı modellerde bağlam penceresi yarışı</h3><p>Üç ayrı ekip aynı hafta içinde uzun bağlam sürümleri yayımladı. Karşılaştırmalı ölçümler henüz bağımsız olarak tekrarlanmadı.</p></div>
+    </div>
+    <div class="haber">
+      <span class="meta">29 Tem</span><span class="etiket">Araştırma</span>
+      <div><h3>Küçük modellerde damıtmanın sınırı üzerine yeni bulgular</h3><p>Öğretmen modelin boyutu belli bir eşiği geçtiğinde öğrencinin kazancı düzleşiyor. Kod ve ağırlıklar paylaşıldı.</p></div>
+    </div>
+    <div class="haber">
+      <span class="meta">31 Tem</span><span class="etiket">Politika</span>
+      <div><h3>Değerlendirme raporlaması için ortak standart önerisi</h3><p>Birkaç kurum, model kartlarında hangi ölçümlerin zorunlu olacağına dair ortak bir taslak yayımladı.</p></div>
     </div>
   </div>
-</section>
+  <a class="arsiv-bag reveal" href="haberler.html">Bütün sayılar →</a>
+</div></section>
+
+<section id="s4"><div class="wrap">
+  <p class="kicker reveal">Projeler</p>
+  <h2 class="reveal">Üyelerimizin yürüttüğü işler.</h2>
+  <div class="projeler">
+    <div class="kart reveal">
+      <p class="durum canli"><i aria-hidden="true"></i>Yayında</p>
+      <h3>Kampüs Asistanı</h3>
+      <p>Ders programı, yemekhane menüsü ve yönetmelikleri tek yerden yanıtlayan bir asistan. Kaynak göstermeden cevap vermiyor.</p>
+      <div class="etiketler"><span>Python</span><span>FastAPI</span><span>pgvector</span></div>
+    </div>
+    <div class="kart reveal">
+      <p class="durum"><i aria-hidden="true"></i>Geliştirmede</p>
+      <h3>Görü</h3>
+      <p>Laboratuvar kameralarında koruyucu ekipman tespiti. Kamera görüntüsü cihazdan çıkmıyor, model uçta çalışıyor.</p>
+      <div class="etiketler"><span>PyTorch</span><span>YOLO</span><span>ONNX</span></div>
+    </div>
+    <div class="kart reveal">
+      <p class="durum canli"><i aria-hidden="true"></i>Yayında</p>
+      <h3>Bülten</h3>
+      <p>Haftanın yapay zekâ gelişmelerini derleyip siteye ve Discord kanalımıza taşıyan otomasyon. Bu sayfadaki akışı o besliyor.</p>
+      <div class="etiketler"><span>Node</span><span>GitHub Actions</span><span>Webhook</span></div>
+    </div>
+  </div>
+</div></section>
+
+</main>
 
 <div class="modal" id="modal-projeler" aria-hidden="true">
   <div class="modal-bg" data-modal-close></div>
@@ -509,235 +397,82 @@ footer{position:relative;z-index:2;display:flex;justify-content:space-between;fl
 
     <a class="gh-all" href="https://github.com/atilimai?tab=repositories" target="_blank" rel="noopener">Tüm depoları GitHub'da gör ↗</a>
   </div>
-</div>
-
-</main>
-
-<footer>
+<footer><div class="wrap foot">
   <span>Atılım AI · Ankara</span>
-  <span><a href="https://discord.gg/uUzsA7uDzU" style="color:var(--red);text-decoration:none">Discord'a katıl</a> · Prototip, içerik örnektir</span>
-</footer>
-
+  <span class="sag">
+    <a href="haberler.html">Haberler</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord</a>
+    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub</a>
+  </span>
+</div></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
 "use strict";
 
+document.documentElement.classList.add("js");
+
 var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 var fine    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 var mobile  = window.innerWidth < 900;
-if (fine && !reduced) document.body.classList.add("pointer-fine");
 
 /* ============================================================
-   1. Sound — everything here is synthesised at runtime, no files.
+   1. Kabuk — nav durumu, mobil menü, aktif bölüm
 
-   Layers:  drone  detuned triangles + sub through a slowly swept lowpass
-            pad    chord tones, each breathing on its own slow LFO
-            bells  sparse pentatonic plucks, mostly reverb
-            sfx    hover / click blips, section swell
-   The chord root follows the scroll section, so the harmony moves
-   with the morph instead of looping underneath it.
+   Aktif bölüm gerçek bölüm konumundan okunur. Eskiden
+   Math.round(progress*4) ile toplam kaydırma oranına bakılıyordu;
+   bölümler farklı yükseklikte olduğu için işaret kayıyordu.
    ============================================================ */
-var Sound = (function(){
-  var ctx, master, dry, conv, filt, droneG, padG, bellDry, noiseBuf;
-  var oscs = [], pads = [];
-  var live = false, vol = 0.55, timer = null, cur = 0;
+var nav = document.getElementById("nav");
+window.addEventListener("scroll", function(){
+  nav.classList.toggle("yapisik", window.scrollY > 24);
+}, {passive:true});
 
-  /* No thirds anywhere. Sus2/add9 voicings read as open and calm instead of
-     major-cheerful or minor-sad, and the bells use a major pentatonic so no
-     flat third or flat seventh can creep in. */
-  var ROOT  = [0, 5, 3, 7, 0];               // semitones from A1, one per section
-  var CHORD = [0, 7, 12, 14];
-  var PENT  = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
-
-  function hz(semi){ return 55 * Math.pow(2, semi/12); }
-
-  function impulse(sec, decay){
-    var n = Math.floor(ctx.sampleRate * sec);
-    var b = ctx.createBuffer(2, n, ctx.sampleRate);
-    for (var c = 0; c < 2; c++){
-      var d = b.getChannelData(c);
-      for (var i = 0; i < n; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/n, decay);
-    }
-    return b;
-  }
-
-  function build(){
-    master = ctx.createGain();
-    master.gain.value = 0.0001;
-    /* Rolls the top off the whole mix so nothing can turn brittle. */
-    var soften = ctx.createBiquadFilter();
-    soften.type = "lowpass"; soften.frequency.value = 5200; soften.Q.value = 0.7;
-    master.connect(soften); soften.connect(ctx.destination);
-
-    conv = ctx.createConvolver();
-    conv.buffer = impulse(5.2, 3.1);
-    var wet = ctx.createGain(); wet.gain.value = 0.92;
-    conv.connect(wet); wet.connect(master);
-
-    dry = ctx.createGain(); dry.gain.value = 1;
-    dry.connect(master);
-
-    /* drone */
-    filt = ctx.createBiquadFilter();
-    filt.type = "lowpass"; filt.frequency.value = 430; filt.Q.value = 0.8;
-    droneG = ctx.createGain(); droneG.gain.value = 0.115;
-    filt.connect(droneG); droneG.connect(dry); droneG.connect(conv);
-
-    [[-6,"triangle",1], [6,"triangle",1], [0,"sine",0.5]].forEach(function(cfg){
-      var o = ctx.createOscillator();
-      o.type = cfg[1];
-      o.detune.value = cfg[0];
-      o.frequency.value = hz(ROOT[0] + 12) * cfg[2];
-      o.connect(filt); o.start();
-      oscs.push({ osc:o, mul:cfg[2] });
-    });
-
-    var lfo = ctx.createOscillator(); lfo.frequency.value = 0.04;
-    var lg  = ctx.createGain();       lg.gain.value = 150;
-    lfo.connect(lg); lg.connect(filt.frequency); lfo.start();
-
-    /* pad */
-    padG = ctx.createGain(); padG.gain.value = 0.085;
-    padG.connect(dry); padG.connect(conv);
-    CHORD.forEach(function(iv, k){
-      var o = ctx.createOscillator();
-      o.type = "sine";
-      o.frequency.value = hz(ROOT[0] + iv + 24);
-      var g = ctx.createGain(); g.gain.value = 0.2;
-      var l = ctx.createOscillator(); l.frequency.value = 0.022 + k * 0.013;
-      var a = ctx.createGain();       a.gain.value = 0.15;
-      l.connect(a); a.connect(g.gain); l.start();
-      o.connect(g); g.connect(padG); o.start();
-      pads.push({ osc:o, iv:iv });
-    });
-
-    bellDry = ctx.createGain(); bellDry.gain.value = 0.32;
-    bellDry.connect(dry);
-
-    /* one noise buffer, reused by every section swell */
-    var n = Math.floor(ctx.sampleRate * 2);
-    noiseBuf = ctx.createBuffer(1, n, ctx.sampleRate);
-    var nd = noiseBuf.getChannelData(0);
-    for (var i = 0; i < n; i++) nd[i] = Math.random()*2 - 1;
-  }
-
-  function bell(){
-    if (!live) { timer = null; return; }
-    var t = ctx.currentTime;
-    var o = ctx.createOscillator();
-    o.type = "sine";
-    o.frequency.value = hz(ROOT[cur] + PENT[Math.floor(Math.random()*PENT.length)] + 24);
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.075, t + 0.09);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 4.6);
-    o.connect(g); g.connect(conv); g.connect(bellDry);
-    o.start(t); o.stop(t + 4.8);
-    timer = setTimeout(bell, 3200 + Math.random()*5200);
-  }
-
-  function blip(freq, dur, level){
-    if (!live) return;
-    var t = ctx.currentTime;
-    var o = ctx.createOscillator();
-    o.type = "sine";
-    o.frequency.setValueAtTime(freq, t);
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(level, t + 0.035);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g); g.connect(dry); g.connect(conv);
-    o.start(t); o.stop(t + dur + 0.03);
-  }
-
-  function swell(){
-    if (!live) return;
-    var t = ctx.currentTime, dur = 1.9;
-    var src = ctx.createBufferSource(); src.buffer = noiseBuf;
-    var bp = ctx.createBiquadFilter();
-    bp.type = "lowpass"; bp.Q.value = 0.7;
-    bp.frequency.setValueAtTime(260, t);
-    bp.frequency.exponentialRampToValueAtTime(900, t + dur*0.5);
-    bp.frequency.exponentialRampToValueAtTime(300, t + dur);
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.028, t + 0.55);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    src.connect(bp); bp.connect(g); g.connect(conv); g.connect(dry);
-    src.start(t); src.stop(t + dur);
-  }
-
-  return {
-    isOn: function(){ return live; },
-    enable: function(){
-      if (!ctx){
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return false;
-        try { ctx = new AC(); build(); } catch(e){ ctx = null; return false; }
-      }
-      if (ctx.state === "suspended" && ctx.resume) ctx.resume();
-      live = true;
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.setTargetAtTime(vol, ctx.currentTime, 0.45);
-      if (!timer) timer = setTimeout(bell, 700);
-      return true;
-    },
-    disable: function(){
-      live = false;
-      if (timer){ clearTimeout(timer); timer = null; }
-      if (!ctx) return;
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.3);
-    },
-    volume: function(v){
-      vol = Math.max(0.0001, Math.min(1, v));
-      if (live && ctx) master.gain.setTargetAtTime(vol, ctx.currentTime, 0.12);
-    },
-    duck: function(down){
-      if (!ctx || !live) return;
-      master.gain.setTargetAtTime(down ? 0.0001 : vol, ctx.currentTime, 0.25);
-    },
-    section: function(i){
-      cur = Math.max(0, Math.min(ROOT.length-1, i));
-      if (!live || !ctx) return;
-      var t = ctx.currentTime;
-      oscs.forEach(function(x){ x.osc.frequency.setTargetAtTime(hz(ROOT[cur] + 12) * x.mul, t, 1.4); });
-      pads.forEach(function(x){ x.osc.frequency.setTargetAtTime(hz(ROOT[cur] + x.iv + 24), t, 1.7); });
-      swell();
-    },
-    hover: function(){ blip(1046, 0.26, 0.020); },
-    click: function(){ blip(587, 0.34, 0.036); setTimeout(function(){ blip(880, 0.30, 0.026); }, 90); }
-  };
+(function(){
+  var btn = document.getElementById("menuBtn");
+  var kutu = document.getElementById("baglar");
+  if (!btn || !kutu) return;
+  btn.addEventListener("click", function(){
+    var acik = kutu.classList.toggle("gorunur");
+    btn.setAttribute("aria-expanded", acik ? "true" : "false");
+  });
+  kutu.addEventListener("click", function(e){
+    if (e.target.tagName !== "A") return;
+    kutu.classList.remove("gorunur");
+    btn.setAttribute("aria-expanded", "false");
+  });
 })();
 
-/* ============================================================
-   2. Scroll progress + section state (works with or without 3D)
-   ============================================================ */
-var progress = 0, smooth = 0, section = 0;
-var railBits = [].slice.call(document.querySelectorAll("#rail b"));
-var navLinks = [].slice.call(document.querySelectorAll(".link"));
-var nav = document.getElementById("nav");
+var baglar   = [].slice.call(document.querySelectorAll(".baglar a"));
+var bolumler = baglar.map(function(a){ return document.getElementById(a.dataset.b); });
+var aktif = -1;
 
-function readScroll(){
+if ("IntersectionObserver" in window){
+  var bolumIO = new IntersectionObserver(function(girisler){
+    girisler.forEach(function(g){
+      if (!g.isIntersecting) return;
+      var i = bolumler.indexOf(g.target);
+      if (i < 0 || i === aktif) return;
+      aktif = i;
+      baglar.forEach(function(a, j){ a.classList.toggle("acik", j === i); });
+    });
+  }, {rootMargin:"-45% 0px -45% 0px"});
+  bolumler.forEach(function(s){ if (s) bolumIO.observe(s); });
+}
+
+/* Parçacık alanı için kaydırma oranı — yalnızca 9. bölüm kullanır. */
+var progress = 0, smooth = 0;
+function okuKaydirma(){
   var max = document.documentElement.scrollHeight - window.innerHeight;
   progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-  nav.classList.toggle("stuck", window.scrollY > 40);
-  var s = Math.round(progress * 4);
-  if (s !== section){
-    section = s;
-    railBits.forEach(function(b,i){ b.classList.toggle("on", i === section); });
-    navLinks.forEach(function(a){ a.classList.toggle("on", +a.dataset.nav === section); });
-    Sound.section(section);
-  }
 }
-window.addEventListener("scroll", readScroll, {passive:true});
-window.addEventListener("resize", readScroll);
-readScroll();
+window.addEventListener("scroll", okuKaydirma, {passive:true});
+window.addEventListener("resize", okuKaydirma);
+okuKaydirma();
 smooth = progress;
 
 /* ============================================================
-   3. Reveal on scroll
+   2. Belirme
    ============================================================ */
 var revealables = [].slice.call(document.querySelectorAll(".reveal"));
 if ("IntersectionObserver" in window && !reduced){
@@ -745,10 +480,10 @@ if ("IntersectionObserver" in window && !reduced){
     entries.forEach(function(e){
       if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
     });
-  }, {threshold:.18, rootMargin:"0px 0px -8% 0px"});
+  }, {threshold:.15, rootMargin:"0px 0px -6% 0px"});
   [].slice.call(document.querySelectorAll("section")).forEach(function(sec){
     [].slice.call(sec.querySelectorAll(".reveal")).forEach(function(el, i){
-      el.style.transitionDelay = (Math.min(i, 6) * 75) + "ms";
+      el.style.transitionDelay = (Math.min(i, 5) * 70) + "ms";
       io.observe(el);
     });
   });
@@ -757,186 +492,78 @@ if ("IntersectionObserver" in window && !reduced){
 }
 
 /* ============================================================
-   4. Audio controls
+   3. Fare konumu — 3B alanın itme ve kamera kaydırması için
 
-   Sound stays off until the visitor asks for it. That is also what
-   satisfies the browser autoplay rules — the AudioContext is created
-   inside the click, so it is allowed to make noise straight away.
+   Özel imleç, mıknatıs düğmeler ve kart eğimi kaldırıldı:
+   cursor:none imleci tamamen gizliyordu ve JS hata verdiğinde
+   ziyaretçi imleçsiz kalıyordu.
    ============================================================ */
-var sndWrap = document.getElementById("audio");
-var sndBtn  = document.getElementById("sndBtn");
-var sndVol  = document.getElementById("sndVol");
-var sndPct  = document.getElementById("sndPct");
-var touched = false;
-
-function paintAudio(on){
-  sndWrap.classList.toggle("on", on);
-  sndBtn.setAttribute("aria-pressed", on ? "true" : "false");
-  sndBtn.setAttribute("aria-label", on ? "Sesi kapat" : "Sesi aç");
-}
-
-sndBtn.addEventListener("click", function(){
-  touched = true;
-  sndWrap.classList.remove("nudge");
-  if (Sound.isOn()){
-    Sound.disable();
-    paintAudio(false);
-  } else {
-    Sound.volume(sndVol.value / 100);
-    if (Sound.enable()){
-      paintAudio(true);
-      Sound.section(section);
-    } else {
-      sndWrap.style.display = "none";   // no Web Audio support, hide the control
-    }
-  }
-});
-
-sndVol.addEventListener("input", function(){
-  touched = true;
-  sndPct.textContent = sndVol.value;
-  Sound.volume(sndVol.value / 100);
-});
-
-/* One quiet nudge so the control is noticed, then never again. */
-if (!reduced) setTimeout(function(){
-  if (!touched) sndWrap.classList.add("nudge");
-}, 5200);
-
-document.addEventListener("visibilitychange", function(){
-  Sound.duck(document.hidden);
-});
-
-if (fine){
-  var HOVERABLE = ".link,.btn,.brand,.card,.tl li,.feed article";
-  var lastHovered = null;
-  document.addEventListener("pointerover", function(e){
-    var el = e.target && e.target.closest ? e.target.closest(HOVERABLE) : null;
-    if (el === lastHovered) return;
-    lastHovered = el;
-    if (el) Sound.hover();
-  });
-  document.addEventListener("click", function(e){
-    if (e.target && e.target.closest && e.target.closest(".link,.btn,.brand")) Sound.click();
-  });
-}
-
-/* ============================================================
-   5. Custom cursor + magnetic buttons + card tilt
-   ============================================================ */
-var mx = window.innerWidth/2, my = window.innerHeight/2;
 var nx = 0, ny = 0;
-
 if (fine && !reduced){
-  var dot  = document.querySelector(".cursor-dot");
-  var ring = document.querySelector(".cursor-ring");
-  var rx = mx, ry = my;
-
   window.addEventListener("mousemove", function(e){
-    mx = e.clientX; my = e.clientY;
-    nx = (mx / window.innerWidth)  * 2 - 1;
-    ny = -((my / window.innerHeight) * 2 - 1);
-    dot.style.transform = "translate(" + mx + "px," + my + "px)";
-  });
-
-  (function cursorLoop(){
-    rx += (mx - rx) * .16;
-    ry += (my - ry) * .16;
-    ring.style.transform = "translate(" + rx + "px," + ry + "px)";
-    requestAnimationFrame(cursorLoop);
-  })();
-
-  [].slice.call(document.querySelectorAll("[data-magnet]")).forEach(function(el){
-    el.addEventListener("mouseenter", function(){ ring.classList.add("grab"); });
-    el.addEventListener("mouseleave", function(){
-      ring.classList.remove("grab");
-      el.style.transform = "";
-    });
-    el.addEventListener("mousemove", function(e){
-      var r = el.getBoundingClientRect();
-      var dx = (e.clientX - (r.left + r.width/2)) * .22;
-      var dy = (e.clientY - (r.top + r.height/2)) * .22;
-      el.style.transform = "translate(" + dx + "px," + dy + "px)";
-    });
-  });
-
-  [].slice.call(document.querySelectorAll(".tilt")).forEach(function(card){
-    card.style.transition = "transform .5s cubic-bezier(.16,1,.3,1),border-color .4s,scale .35s cubic-bezier(.16,1,.3,1)";
-    card.addEventListener("mousemove", function(e){
-      var r = card.getBoundingClientRect();
-      var px = (e.clientX - r.left) / r.width  - .5;
-      var py = (e.clientY - r.top)  / r.height - .5;
-      card.style.transition = "transform .12s linear,border-color .4s,scale .35s cubic-bezier(.16,1,.3,1)";
-      card.style.transform = "perspective(900px) rotateY(" + (px*8).toFixed(2) +
-                             "deg) rotateX(" + (-py*8).toFixed(2) + "deg) translateZ(6px)";
-    });
-    card.addEventListener("mouseleave", function(){
-      card.style.transition = "transform .5s cubic-bezier(.16,1,.3,1),border-color .4s,scale .35s cubic-bezier(.16,1,.3,1)";
-      card.style.transform = "";
-    });
-  });
+    nx = (e.clientX / window.innerWidth)  * 2 - 1;
+    ny = -((e.clientY / window.innerHeight) * 2 - 1);
+  }, {passive:true});
 }
 
 /* ============================================================
-   6. Weekly report
+   4. Haftalık rapor
 
-   Rendered from content/haberler.json so the site and the Discord
-   bot read the same file — one place to edit, not two.
+   content/haberler.json'dan çizilir; site ve Discord botu aynı
+   dosyayı okur. Fetch başarısız olursa sayfadaki içerik kalır —
+   index.html'i doğrudan diskten açtığında olan budur.
 
-   If the fetch fails the markup already in the page stays put. That
-   is what you get opening index.html straight off disk, since fetch
-   cannot read local files over file://.
+   Her şey textContent ile basılır: panelden gelen metin HTML
+   olarak yorumlanmaz.
    ============================================================ */
 (function(){
   var feedList  = document.getElementById("feedList");
   var feedIssue = document.getElementById("feedIssue");
   if (!feedList || !window.fetch) return;
 
-  function article(h, sayiNo, sira){
-    /* Tam metni olan haber, arşivdeki ayrıntı sayfasına bağlanır. Ana sayfa
-       özet akışı olduğu için burada kart açılmıyor; okuma haberler.html
-       tarafında sürüyor. */
+  function satir(h, sayiNo, sira){
     var ayrinti = h.icerik ? "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira : "";
-    var art = document.createElement("article");
+    var kap = document.createElement("div");
+    kap.className = "haber";
 
-    var src = document.createElement("p");
-    src.className = "src";
-    src.textContent = [h.etiket, h.tarih].filter(Boolean).join(" · ");
+    var tarih = document.createElement("span");
+    tarih.className = "meta";
+    tarih.textContent = h.tarih || "";
 
-    var ttl = document.createElement("h4");
-    if (ayrinti){
-      var ia = document.createElement("a");
-      ia.className = "ic";
-      ia.href = ayrinti;
-      ia.textContent = h.baslik || "";
-      ttl.appendChild(ia);
-    } else if (h.link){
+    var etiket = document.createElement("span");
+    etiket.className = "etiket";
+    etiket.textContent = h.etiket || "";
+
+    var govde = document.createElement("div");
+
+    var h3 = document.createElement("h3");
+    if (ayrinti || h.link){
       var a = document.createElement("a");
-      a.href = h.link;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.style.color = "inherit";
-      a.style.textDecoration = "none";
+      a.href = ayrinti || h.link;
+      if (!ayrinti){ a.target = "_blank"; a.rel = "noopener noreferrer"; }
       a.textContent = h.baslik || "";
-      ttl.appendChild(a);
+      h3.appendChild(a);
     } else {
-      ttl.textContent = h.baslik || "";
+      h3.textContent = h.baslik || "";
     }
+    govde.appendChild(h3);
 
-    var sum = document.createElement("p");
-    sum.textContent = h.ozet || "";
-
-    art.appendChild(src); art.appendChild(ttl); art.appendChild(sum);
+    if (h.ozet){
+      var p = document.createElement("p");
+      p.textContent = h.ozet;
+      govde.appendChild(p);
+    }
 
     if (ayrinti){
       var devam = document.createElement("a");
       devam.className = "devam";
       devam.href = ayrinti;
       devam.textContent = "Devamını oku →";
-      art.appendChild(devam);
+      govde.appendChild(devam);
     }
 
-    return art;
+    kap.appendChild(tarih); kap.appendChild(etiket); kap.appendChild(govde);
+    return kap;
   }
 
   fetch("content/haberler.json", { cache: "no-cache" })
@@ -944,39 +571,53 @@ if (fine && !reduced){
     .then(function(d){
       var issue = d && d.sayilar && d.sayilar[0];
       if (!issue || !issue.haberler || !issue.haberler.length) return;
-
       if (feedIssue && issue.sayi) feedIssue.textContent = issue.sayi + ". sayı";
-
       feedList.textContent = "";
-      issue.haberler.forEach(function(h, i){ feedList.appendChild(article(h, issue.sayi, i)); });
+      issue.haberler.forEach(function(h, i){ feedList.appendChild(satir(h, issue.sayi, i)); });
     })
     .catch(function(){ /* sayfadaki içerik olduğu gibi kalır */ });
 })();
 
 /* ============================================================
-   7. Stats & modal
+   5. Ölçümler ve modal
+
+   Modal artık odağı içeri alıyor, içeride tuzaklıyor ve kapanınca
+   tetikleyen düğmeye geri veriyor.
    ============================================================ */
 (function(){
-  document.querySelectorAll(".stats [data-scroll]").forEach(function(btn){
+  var sonTetik = null;
+  var ODAKLANABILIR = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
+
+  document.querySelectorAll(".olcum [data-scroll]").forEach(function(btn){
     btn.addEventListener("click", function(){ location.hash = btn.dataset.scroll; });
   });
 
-  function openModal(id){
+  function ac(id, tetik){
     var m = document.getElementById(id);
     if (!m) return;
-    m.classList.add("open");
+    sonTetik = tetik || null;
+    m.classList.add("acik");
     m.setAttribute("aria-hidden", "false");
+    var ilk = m.querySelector(ODAKLANABILIR);
+    if (ilk) ilk.focus();
     if (id === "modal-projeler") depolariTazele();
   }
 
+  function kapat(m){
+    if (!m) return;
+    m.classList.remove("acik");
+    m.setAttribute("aria-hidden", "true");
+    if (sonTetik && sonTetik.focus) sonTetik.focus();
+    sonTetik = null;
+  }
+
   /* GitHub'daki güncel bilgiyi çeker; başarısız olursa HTML'deki değerler kalır.
-     Yetkisiz istek, saatte 60 çağrıyla sınırlı — bu yüzden bir kez çalışır. */
+     Yetkisiz istek saatte 60 çağrıyla sınırlı — bu yüzden bir kez çalışır. */
   var depoDurum = "bekliyor";
   function depolariTazele(){
     if (depoDurum !== "bekliyor" || !window.fetch) return;
     depoDurum = "istendi";
 
-    /* Simgeyi (svg/i) koruyarak yanındaki metni günceller */
     function metniYaz(el, deger){
       var son = el.lastChild;
       if (son && son.nodeType === 3) son.nodeValue = deger;
@@ -1003,7 +644,7 @@ if (fine && !reduced){
           var lang = li.querySelector(".gh-lang");
           if (r.language){
             lang.hidden = false;
-            lang.querySelector("i").style.background = RENK[r.language] || "#8792AE";
+            lang.querySelector("i").style.background = RENK[r.language] || "#8A8175";
             metniYaz(lang, r.language);
           } else { lang.hidden = true; }
 
@@ -1017,48 +658,46 @@ if (fine && !reduced){
       })
       .catch(function(){ /* sayfadaki değerler olduğu gibi kalır */ });
   }
-  function closeModal(m){
-    m.classList.remove("open");
-    m.setAttribute("aria-hidden", "true");
-  }
 
   document.addEventListener("click", function(e){
-    var opener = e.target.closest("[data-modal]");
-    if (opener){ openModal(opener.dataset.modal); return; }
-    var closer = e.target.closest("[data-modal-close]");
-    if (closer){ closeModal(closer.closest(".modal")); }
+    var acan = e.target.closest("[data-modal]");
+    if (acan){ ac(acan.dataset.modal, acan); return; }
+    var kapayan = e.target.closest("[data-modal-close]");
+    if (kapayan){ kapat(kapayan.closest(".modal")); }
   });
+
   document.addEventListener("keydown", function(e){
-    if (e.key === "Escape"){
-      var open = document.querySelector(".modal.open");
-      if (open) closeModal(open);
-    }
+    var acik = document.querySelector(".modal.acik");
+    if (!acik) return;
+    if (e.key === "Escape"){ kapat(acik); return; }
+    if (e.key !== "Tab") return;
+    var oge = [].slice.call(acik.querySelectorAll(ODAKLANABILIR))
+                .filter(function(el){ return el.offsetParent !== null; });
+    if (!oge.length) return;
+    var ilk = oge[0], son = oge[oge.length - 1];
+    if (e.shiftKey && document.activeElement === ilk){ e.preventDefault(); son.focus(); }
+    else if (!e.shiftKey && document.activeElement === son){ e.preventDefault(); ilk.focus(); }
   });
 })();
 
 /* ============================================================
-   8. Event accordion
+   6. Etkinlik akordeonu
+
+   Satırlar gerçek <button> olduğu için klavye desteği kendiliğinden
+   geliyor. Eskiden <li role="button" tabindex="0"> vardı ve yalnızca
+   click dinleniyordu; Enter/Space hiç çalışmıyordu.
    ============================================================ */
 (function(){
-  var tl = document.querySelector(".tl");
+  var tl = document.getElementById("tl");
   if (!tl) return;
   tl.addEventListener("click", function(e){
-    var kayit = e.target.closest("[data-kayit]");
-    if (kayit){
-      var href = kayit.getAttribute("href");
-      if (!href || href === "#"){
-        e.preventDefault();
-        kayit.parentElement.querySelector(".uyari").hidden = false;
-      }
-      return;
-    }
-    var item = e.target.closest(".tl-item");
-    if (!item) return;
-    item.classList.toggle("open");
-    item.setAttribute("aria-expanded", item.classList.contains("open"));
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    var li = btn.parentElement;
+    var acik = li.getAttribute("aria-expanded") === "true";
+    li.setAttribute("aria-expanded", acik ? "false" : "true");
   });
 })();
-
 /* ============================================================
    9. The 3D field
    ============================================================ */
@@ -1074,7 +713,7 @@ try {
 }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x070A14, 1);
+renderer.setClearColor(0x100D0A, 1);
 
 var scene  = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 400);
@@ -1189,7 +828,7 @@ function sampleWord(){
   g.fillStyle = "#fff";
   g.textAlign = "center";
   g.textBaseline = "middle";
-  g.font = "700 96px 'Space Grotesk', Arial, sans-serif";
+  g.font = "600 92px 'IBM Plex Mono', ui-monospace, monospace";
   g.fillText("ATILIM AI", 320, 82);
   var d;
   try { d = g.getImageData(0, 0, c.width, c.height).data; } catch(e){ return null; }
@@ -1213,7 +852,8 @@ function makeWord(i, out){
 }
 
 /* One scroll target per section. The wordmark is no longer a scroll target —
-   it now plays once on load, then dissolves into the hero sphere. */
+   it now plays once on load, then dissolves into the hero sphere.
+   Font mono: Newsreader'in ince serif govdeleri parcacik olarak dagiliyor. */
 var builders = [makeSphere, makeNet, makeHelix, makeTunnel, makeFrames];
 var buffers  = builders.map(function(){ return new Float32Array(COUNT*3); });
 var wordBuf  = new Float32Array(COUNT*3);
@@ -1222,7 +862,8 @@ var rnds     = new Float32Array(COUNT);
 var cols     = new Float32Array(COUNT*3);
 var tmp      = [0,0,0];
 
-var C_BLUE = [0.24,0.42,1.00], C_SOFT = [0.55,0.64,1.00], C_RED = [0.90,0.23,0.29];
+/* ekran (soğuk) ve lamba (sıcak) — DESIGN.md, İki Kaynak Kuralı */
+var C_EKRAN = [0.56,0.71,0.84], C_EKRAN_SOFT = [0.68,0.80,0.90], C_LAMBA = [0.91,0.64,0.24];
 for (var i = 0; i < COUNT; i++){
   for (var b = 0; b < builders.length; b++){
     builders[b](i, tmp);
@@ -1235,7 +876,7 @@ for (var i = 0; i < COUNT; i++){
 
   sizes[i] = rnd(0.9, 2.5);
   rnds[i]  = Math.random();
-  var c = (i % 13 === 0) ? C_RED : (i % 3 === 0 ? C_SOFT : C_BLUE);
+  var c = (i % 9 === 0) ? C_LAMBA : (i % 3 === 0 ? C_EKRAN_SOFT : C_EKRAN);
   cols[i*3] = c[0]; cols[i*3+1] = c[1]; cols[i*3+2] = c[2];
 }
 
@@ -1315,7 +956,7 @@ points.frustumCulled = false;
 scene.add(points);
 
 /* The wordmark is sampled before the web font finishes loading, so redo it
-   once Space Grotesk is actually available. */
+   once IBM Plex Mono is actually available. */
 if (glyphs && document.fonts && document.fonts.ready){
   document.fonts.ready.then(function(){
     var tW = geo.getAttribute("tW");
@@ -1343,7 +984,7 @@ for (var l = 0; l < nodes.length - 1; l++){
 var edgeGeo = new THREE.BufferGeometry();
 edgeGeo.setAttribute("position", new THREE.Float32BufferAttribute(edgePos, 3));
 var edgeMat = new THREE.LineBasicMaterial({
-  color:0x3D6BFF, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending
+  color:0x8FB4D6, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending
 });
 var edges = new THREE.LineSegments(edgeGeo, edgeMat);
 scene.add(edges);
@@ -1352,10 +993,10 @@ scene.add(edges);
    Order: hero / hakkımızda / etkinlikler / haftalık rapor / projeler.
    Camera x is inverted relative to the composition: pushing the camera left
    moves the particle mass right, away from whichever column holds the text. */
-var CAM_Z   = [82, 78, 72, 8, 74];
-var CAM_X   = [-14, 9, 13, 0, 0];
-var CAM_Y   = [0, 5, 4, 0, -4];
-var DRIFT   = [1.05, 0.35, 0.55, 0.80, 0.30];
+var CAM_Z   = [88, 78, 72, 8, 74];
+var CAM_X   = [-34, 12, 14, 0, 0];
+var CAM_Y   = [9, 5, 4, 0, -4];
+var DRIFT   = [0.85, 0.35, 0.55, 0.70, 0.30];
 var weights = [uniforms.w0, uniforms.w1, uniforms.w2, uniforms.w3, uniforms.w4];
 
 function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }

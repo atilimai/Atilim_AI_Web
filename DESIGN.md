@@ -1,83 +1,83 @@
 ---
 name: Atılım AI
-description: "Institutional site for the AI society at Atılım University. A deep navy-black canvas (#070A14) with a single warm accent (#F5913C), stepped surface and hairline ramps, and depth carried without shadows. A live particle field morphs behind the page as you scroll; the system stays quiet around it. Display type is Space Grotesk 500 with tight negative tracking, body is Instrument Sans, and technical labels sit in JetBrains Mono and never drop below 12px."
+description: "Institutional site for the AI society at Atılım University, built as two worlds under one system. The landing page is a warm near-black workbench (#100D0A) lit by two sources: a lamp (#E8A33D, where people are) and a screen (#8FB4D6, the colour of the particle field that morphs behind the page as you scroll). Reading surfaces — the news archive and article pages — switch to warm paper (#F2EDE3) because full text runs to 20,000 characters and long reading does not belong on a dark ground. Display type is Newsreader with italic emphasis, body is Public Sans, technical labels sit in IBM Plex Mono and never drop below 12px. Depth is carried by stepped surfaces and hairlines; there are no shadows."
 
 colors:
-  accent: "#F5913C"
-  accent-hover: "#FFA65C"
-  on-accent: "#1A0E03"
-  ink: "#E9EDF8"
-  ink-muted: "#B9C2DE"
-  ink-subtle: "#8792AE"
-  ink-tertiary: "#7B85A2"
-  canvas: "#070A14"
-  surface-1: "#0C1020"
-  surface-2: "#10152A"
-  surface-3: "#151B33"
-  hairline: "#1C2440"
-  hairline-strong: "#2A3455"
-  hairline-tertiary: "#3A4668"
-  field-cool: "#3D6BFF"
-  field-cool-soft: "#8DA4FF"
-  semantic-live: "#3BA55D"
+  lamp: "#E8A33D"
+  lamp-hover: "#F5B65C"
+  on-lamp: "#241703"
+  screen: "#8FB4D6"
+  night: "#100D0A"
+  bench-1: "#191512"
+  bench-2: "#211B16"
+  paper-ink: "#F0EADD"
+  paper-ink-muted: "#C4BBAA"
+  paper-ink-subtle: "#A69C8C"
+  paper-ink-tertiary: "#8A8175"
+  day-canvas: "#F2EDE3"
+  day-card: "#FBF8F1"
+  ink: "#1A1713"
+  ink-muted: "#4A443B"
+  ink-subtle: "#6B6357"
+  lamp-deep: "#8A5510"
+  screen-deep: "#3D6389"
+  live: "#7FB069"
 
 typography:
   display-xl:
-    fontFamily: "Space Grotesk, system-ui, sans-serif"
-    fontSize: "clamp(2.75rem, 6vw, 4.5rem)"
-    fontWeight: 500
-    lineHeight: 1.02
-    letterSpacing: "-0.035em"
-  display-lg:
-    fontFamily: "Space Grotesk, system-ui, sans-serif"
-    fontSize: "clamp(2rem, 4vw, 3rem)"
-    fontWeight: 500
-    lineHeight: 1.08
-    letterSpacing: "-0.03em"
-  headline:
-    fontFamily: "Space Grotesk, system-ui, sans-serif"
-    fontSize: "28px"
-    fontWeight: 500
-    lineHeight: 1.2
+    fontFamily: "Newsreader, Georgia, serif"
+    fontSize: "clamp(2.75rem, 6.4vw, 4.6rem)"
+    fontWeight: 300
+    lineHeight: 1.06
     letterSpacing: "-0.02em"
-  title:
-    fontFamily: "Space Grotesk, system-ui, sans-serif"
-    fontSize: "20px"
-    fontWeight: 500
-    lineHeight: 1.3
+  display-lg:
+    fontFamily: "Newsreader, Georgia, serif"
+    fontSize: "clamp(2rem, 4vw, 3rem)"
+    fontWeight: 300
+    lineHeight: 1.1
     letterSpacing: "-0.015em"
-  body-lg:
-    fontFamily: "Instrument Sans, system-ui, sans-serif"
+  headline:
+    fontFamily: "Newsreader, Georgia, serif"
+    fontSize: "28px"
+    fontWeight: 400
+    lineHeight: 1.25
+  title:
+    fontFamily: "Newsreader, Georgia, serif"
+    fontSize: "21px"
+    fontWeight: 400
+    lineHeight: 1.34
+  reading:
+    fontFamily: "Newsreader, Georgia, serif"
     fontSize: "18px"
     fontWeight: 400
-    lineHeight: 1.6
-    letterSpacing: "0"
+    lineHeight: 1.8
+  body-lg:
+    fontFamily: "Public Sans, system-ui, sans-serif"
+    fontSize: "18px"
+    fontWeight: 400
+    lineHeight: 1.62
   body:
-    fontFamily: "Instrument Sans, system-ui, sans-serif"
+    fontFamily: "Public Sans, system-ui, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.65
-    letterSpacing: "0"
   body-sm:
-    fontFamily: "Instrument Sans, system-ui, sans-serif"
-    fontSize: "14px"
+    fontFamily: "Public Sans, system-ui, sans-serif"
+    fontSize: "15px"
     fontWeight: 400
-    lineHeight: 1.55
-    letterSpacing: "0"
+    lineHeight: 1.6
   button:
-    fontFamily: "Instrument Sans, system-ui, sans-serif"
+    fontFamily: "Public Sans, system-ui, sans-serif"
     fontSize: "15px"
     fontWeight: 500
     lineHeight: 1.2
-    letterSpacing: "0"
   meta:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontFamily: "IBM Plex Mono, ui-monospace, monospace"
     fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.5
-    letterSpacing: "0.02em"
   label:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontFamily: "IBM Plex Mono, ui-monospace, monospace"
     fontSize: "12px"
     fontWeight: 500
     lineHeight: 1.4
@@ -103,177 +103,192 @@ spacing:
 
 components:
   button-primary:
-    backgroundColor: "{colors.accent}"
-    textColor: "{colors.on-accent}"
+    backgroundColor: "{colors.lamp}"
+    textColor: "{colors.on-lamp}"
     typography: "{typography.button}"
     rounded: "{rounded.md}"
-    padding: "12px 20px"
+    padding: "0 22px"
+    height: "48px"
   button-primary-hover:
-    backgroundColor: "{colors.accent-hover}"
-    textColor: "{colors.on-accent}"
+    backgroundColor: "{colors.lamp-hover}"
+    textColor: "{colors.on-lamp}"
     typography: "{typography.button}"
     rounded: "{rounded.md}"
   button-secondary:
-    backgroundColor: "{colors.surface-1}"
-    textColor: "{colors.ink}"
+    backgroundColor: "{colors.bench-1}"
+    textColor: "{colors.paper-ink}"
     typography: "{typography.button}"
     rounded: "{rounded.md}"
-    padding: "12px 20px"
+    padding: "0 22px"
+    height: "48px"
   card:
-    backgroundColor: "{colors.surface-1}"
-    textColor: "{colors.ink}"
+    backgroundColor: "{colors.bench-1}"
+    textColor: "{colors.paper-ink}"
     typography: "{typography.body}"
     rounded: "{rounded.lg}"
     padding: "24px"
-  card-raised:
-    backgroundColor: "{colors.surface-2}"
-    textColor: "{colors.ink}"
+  card-hover:
+    backgroundColor: "{colors.bench-2}"
+    textColor: "{colors.paper-ink}"
     typography: "{typography.body}"
     rounded: "{rounded.lg}"
     padding: "24px"
-  news-row:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
-    rounded: "{rounded.xs}"
-    padding: "20px 0"
   tag:
-    backgroundColor: "{colors.surface-2}"
-    textColor: "{colors.ink-muted}"
+    backgroundColor: "{colors.night}"
+    textColor: "{colors.paper-ink-tertiary}"
     typography: "{typography.label}"
     rounded: "{rounded.sm}"
-    padding: "5px 10px"
-  nav-link:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.ink-subtle}"
+    padding: "4px 9px"
+  news-row:
+    backgroundColor: "{colors.night}"
+    textColor: "{colors.paper-ink}"
     typography: "{typography.body-sm}"
     rounded: "{rounded.xs}"
-    padding: "8px 12px"
+    padding: "22px 0"
+  article-card:
+    backgroundColor: "{colors.day-card}"
+    textColor: "{colors.ink}"
+    typography: "{typography.reading}"
+    rounded: "{rounded.lg}"
+    padding: "30px"
 ---
 
 # Design System: Atılım AI
 
 ## Overview
 
-**Creative North Star: "Institutional discipline, live laboratory"**
+**Creative North Star: "The dark room and the lit notebook"**
 
-This is a student society's institutional site, not a product landing page. Most visitors are students deciding whether to show up. The page's job is not to convert them — it is to show the society is a serious place, and to keep the door open.
+This is a student society's institutional site, not a product landing page. Most visitors are students deciding whether to show up on a Thursday evening. The page's job is not to convert them — it is to show the society is a serious place, and to keep the door open.
 
-The system's tension comes from that: the discipline of an institution against the aliveness of a lab. Discipline lives in the measurements — one type ramp, one spacing scale, one radius scale, one chromatic accent. Aliveness lives in the particle field behind the page, which morphs as you scroll and is a real, running thing. The system stays **quiet around it**. Because the field already moves, the interface does not need to.
+The system is built as **two worlds**. The landing page is a workbench at night: warm near-black, lit by two sources that became the two accent colours. The **lamp** (#E8A33D) is where people are — actions, focus, the brand mark. The **screen** (#8FB4D6) is the colour of the particle field that morphs behind the page as you scroll. Giving the field a role in the metaphor is what keeps it from reading as decoration.
 
-What is rejected is specific: the generic AI-startup page. The tracked-caps eyebrow chip above an oversized headline, the purple-blue gradient, glass panels on every surface, decorative stat counters. These were never structural problems — they were craft problems.
+Reading surfaces are the other world. The archive and article pages switch to warm paper, because a `icerik` field runs to 20,000 characters and long-form reading does not belong on a dark ground. Leaving the dark room and opening the notebook is a deliberate transition, not an inconsistency — the top bar stays dark across it to carry the identity through.
+
+What is rejected is specific: the generic AI-startup page. A tracked-caps eyebrow chip above an oversized headline, purple-blue gradients, glass panels on every surface, decorative stat counters. These were never structural problems — the structure is fine. They were craft problems.
 
 **Key Characteristics:**
-- Depth without shadows: a stepped surface ramp plus three hairline levels
-- A single warm accent against the cool particle field — never used decoratively
+- Two worlds, one system: night for the landing page, paper for reading
+- Two named light sources instead of an abstract accent palette
+- Depth without shadows: stepped surfaces plus three hairline levels
 - Functional text never drops below 12px
 - Motion belongs to the background; text and controls hold still
 
 ## Colors
 
-The canvas is deep and navy-leaning; the particle field's cool blue already comes from there. The single chromatic accent is deliberately warm so it stays distinguishable against that field.
-
 ### Primary
-- **Warm Accent** (#F5913C): Brand mark, focus ring, active section indicator, and **one** primary action per screen. 8.47:1 on canvas. Never decorative — if you see orange, there is something to do there.
+- **Lamp** (#E8A33D, 8.98:1 on night): The warm source. Brand mark, focus ring, active section marker, and **one** primary action per screen. Never decorative — if you see amber, there is something to do there.
+- **Lamp Deep** (#8A5510, 5.31:1 on paper): The same source on the light world, darkened to stay legible.
 
-### Neutral
-- **Canvas** (#070A14): Page ground. The particle field lives on top of it.
-- **Surface 1–3** (#0C1020 / #10152A / #151B33): Cards, expanded panels, overlapping layers. Depth is told with this ramp, not with shadows.
-- **Ink** (#E9EDF8, 16.88:1): Headings and primary text.
-- **Ink Muted** (#B9C2DE, 11.14:1): Body copy and long-form reading.
-- **Ink Subtle** (#8792AE, 6.36:1): Secondary information, meta rows.
-- **Ink Tertiary** (#7B85A2, 4.90:1): Dates, counts, the least important text. The AA floor sits here — there is no dimmer grey.
-- **Hairline 1–3** (#1C2440 / #2A3455 / #3A4668): Dividers, card borders, field outlines.
+### Secondary
+- **Screen** (#8FB4D6, 8.92:1 on night): The cool source, and the colour of the particle field. Used for category labels and non-actionable emphasis, so it never competes with the lamp.
+- **Screen Deep** (#3D6389, 5.38:1 on paper): The light-world counterpart.
+
+### Neutral — night world
+- **Night** (#100D0A): Ground of the landing page. Warm, not blue-black.
+- **Bench 1–2** (#191512 / #211B16): Cards at rest and on hover.
+- **Paper Ink** (#F0EADD, 16.16:1): Headings and primary text.
+- **Paper Ink Muted** (#C4BBAA, 10.18:1): Body copy.
+- **Paper Ink Subtle** (#A69C8C, 7.15:1): Secondary information.
+- **Paper Ink Tertiary** (#8A8175, 5.05:1): Dates, counts. The AA floor sits here.
+
+### Neutral — day world
+- **Day Canvas / Day Card** (#F2EDE3 / #FBF8F1): Ground and raised card on reading pages.
+- **Ink** (#1A1713, 15.31:1), **Ink Muted** (#4A443B, 8.25:1), **Ink Subtle** (#6B6357, 5.07:1).
 
 ### Named Rules
-**The One Voice Rule.** The warm accent covers less than 5% of any screen and only ever signals an action or a state. Painting a card border, a heading, or an icon orange "to liven it up" breaks this rule.
+**The Two Sources Rule.** There are exactly two accent hues and each has a job: the lamp signals action, the screen signals category. A third accent, or the lamp used for a category label, breaks the metaphor and the hierarchy at the same time.
 
-**The No-Shadow Rule.** This system has no `box-shadow`. When an element needs to come forward it moves up one surface level and one hairline level. The only exception is `:focus-visible`.
+**The No-Shadow Rule.** This system has no `box-shadow`. When an element comes forward it moves up one surface level and one hairline level. The only exception is `:focus-visible`.
 
 ## Typography
 
-**Display:** Space Grotesk (with a system-ui fallback) — load-bearing, because the 3D wordmark samples this font's pixels off a canvas. Changing it means changing the logo.
-**Body:** Instrument Sans (with a system-ui fallback)
-**Mono:** JetBrains Mono — technical labels, dates, and numeric meta only
+**Display:** Newsreader (Georgia fallback) — a warm serif that carries the society rather than the technology. Italic is the emphasis mechanism.
+**Body:** Public Sans (system-ui fallback)
+**Mono:** IBM Plex Mono — technical labels, dates, and figures only
 
-**Character:** Geometric headings with tight negative tracking, over an unassuming and highly legible body face. Mono appears only where the content is genuinely data — never to decorate something with a technical mood.
+**Character:** A warm serif over a plain, highly legible sans. Mono appears only where content is genuinely data — never to decorate something with a technical mood.
+
+The 3D wordmark samples a font's pixels off a canvas to build its particle target. Newsreader's thin serif strokes sample poorly, so **the wordmark uses IBM Plex Mono at 600**. This is the one place where a type choice is a code dependency.
 
 ### Hierarchy
-- **display-xl** (500, clamp 44–72px, lh 1.02, ls -0.035em): One per page. The homepage H1.
-- **display-lg** (500, clamp 32–48px, lh 1.08, ls -0.03em): Section headings.
-- **headline** (500, 28px, lh 1.2): Sub-sections and modal titles.
-- **title** (500, 20px, lh 1.3): Card and news headlines.
-- **body-lg** (400, 18px, lh 1.6): Lead paragraphs. Measure 60–70ch.
-- **body** (400, 16px, lh 1.65): Default text.
-- **body-sm** (400, 14px, lh 1.55): In-card description, secondary text.
+- **display-xl** (300, clamp 44–74px, lh 1.06, ls -0.02em): One per page. The homepage H1.
+- **display-lg** (300, clamp 32–48px, lh 1.1): Section headings.
+- **headline** (400, 28px): Sub-sections, article titles.
+- **title** (400, 21px): Card and news headlines.
+- **reading** (400, 18px, lh 1.8): Long-form article body on the day world. Measure 62–68ch.
+- **body-lg** (400, 18px, lh 1.62): Lead paragraphs.
+- **body** (400, 16px), **body-sm** (400, 15px): Default and secondary text.
 - **button** (500, 15px): All buttons and action links.
-- **meta** (mono 400, 13px, ls 0.02em): Dates, sources, issue numbers.
-- **label** (mono 500, 12px, ls 0.08em, uppercase): Tags and status indicators. **The floor of the scale.**
+- **meta** (mono 400, 13px): Dates, sources, issue numbers.
+- **label** (mono 500, 12px, ls 0.08em, uppercase): Tags and status. **The floor of the scale.**
 
 ### Named Rules
 **The Twelve Pixel Floor.** No functional text drops below 12px. Labels, dates, meta, footer — all included. Going smaller is not refinement; it is lost legibility, and it is the first thing to disappear on a high-DPI screen.
 
-**The Inverse Tracking Rule.** Letter-spacing runs inversely to size: negative on large headings (-0.035em), zero in body copy, positive only on the 12px mono label and even there measured (0.08em). Putting 0.26em on 11px text breaks legibility twice over.
+**The Inverse Tracking Rule.** Letter-spacing runs inversely to size: negative on large headings (-0.02em), zero in body copy, positive only on the 12px mono label and even there measured (0.08em). Putting 0.26em on 11px text breaks legibility twice over.
 
 ## Layout
 
-A single centred container: **max 1180px**, with `clamp(1.25rem, 5vw, 3.5rem)` of side padding. Vertical rhythm between sections comes from `spacing.section` (96px); rhythm inside a section is picked from the 4px scale (4/8/12/16/24/32/48). No in-between values are invented.
+A single centred container: **max 1180px**, with `clamp(20px, 5vw, 56px)` of side padding. Vertical rhythm between sections comes from `spacing.section` (96px); rhythm inside a section is picked from the 4px scale. No in-between values are invented.
 
-There are three breakpoints: **640px** (collapse to one column), **900px** (two-column blocks collapse), **1180px** (container locks). The five scattered breakpoints in the current implementation reduce to these three.
+There are three breakpoints: **760px** (single column, notebook rail hidden), **900px** (nav collapses to a disclosure panel, two-column blocks stack), **1180px** (container locks).
 
-Touch targets are at least **44×44px** everywhere. `overflow-x: hidden` is not a fix but a patch that hides overflow; overflow is solved at its source.
+Touch targets are at least **44×44px** everywhere. `overflow-x: hidden` is not a fix but a patch; overflow is solved at its source.
 
 ## Elevation & Depth
 
-This system does not use shadows. Depth is told with two ramps: surfaces lighten as they come forward (canvas → surface-1 → surface-2 → surface-3), and hairlines strengthen as boundaries become more definite. A card on hover gains a surface level, not a shadow.
+No shadows. Depth is told with two ramps: surfaces lighten as they come forward (night → bench-1 → bench-2), and hairlines strengthen as boundaries become definite (.13 → .22 → .34 alpha). A card on hover gains a surface level, not a shadow.
 
-The particle field behind everything is a third depth layer and never competes with content: the camera pushes the mass away from whichever column holds the text, and motion drops to its minimum in the most-read section.
+The particle field is a third depth layer and never competes with content: the camera pushes the mass away from whichever column holds the text, and motion drops to its minimum in the most-read section.
 
 ### Named Rules
-**The One Level Rule.** A surface may move up one surface level and one hairline level at once; moving two levels means it is a modal or an opened panel. Ordinary hover moves one level.
+**The One Level Rule.** Ordinary hover moves one surface level. Moving two means a modal or an opened panel.
 
 ## Shapes
 
-The radius scale has six steps: **4 / 6 / 8 / 12 / 16 / pill**. Buttons and inputs use `md` (8px), cards `lg` (12px), large panels and modals `xl` (16px), tags `sm` (6px), and `pill` only for indicators that genuinely need a pill shape.
-
-The eleven arbitrary values currently in use (1, 2, 4, 5, 6, 8, 12, 14, 16px, 50%, 999px) reduce to these six. `border-radius: 50%` is for actual circles only — status dots, avatars.
+Six steps: **4 / 6 / 8 / 12 / 16 / pill**. Buttons and inputs use `md` (8px), cards `lg` (12px), large panels and modals `xl` (16px), tags `sm` (6px). `border-radius: 50%` is for actual circles only — status dots, the brand mark's inner square is a square on purpose.
 
 ## Components
 
 ### Buttons
-- **Shape:** Soft corner (8px), 12px 20px padding, minimum height 44px.
-- **Primary:** Warm accent ground, dark text. **One per screen.**
-- **Secondary:** surface-1 ground, hairline-strong border, ink text.
-- **Hover:** The surface moves up one level, or the accent shifts to `accent-hover`. No `translateY`.
-- **Focus:** 2px accent ring at 3px offset. Required on every interactive element.
+- **Shape:** 8px radius, 0 22px padding, minimum height 48px.
+- **Primary:** Lamp ground, dark text. **One per screen.**
+- **Secondary:** bench-1 ground, hairline border, paper-ink text.
+- **Hover:** Surface moves up one level, or the lamp shifts to lamp-hover. No `translateY`.
+- **Focus:** 2px lamp ring at 3px offset. Required on every interactive element.
 
 ### Cards
-- **Shape:** 12px radius, surface-1 ground, hairline border, 24px padding.
-- **Hover:** Moves to surface-2 and hairline-strong.
+- 12px radius, bench-1 ground, hairline border, 24px padding. Hover moves to bench-2 and hairline-strong.
 - **No fixed heights.** Content flows to the real data limits: titles run to 200 characters, summaries to 800.
 
 ### Navigation
-- Horizontal links on desktop, body-sm; the active section is marked with a 2px warm-accent underline.
-- **The menu is not hidden on mobile.** Below 900px it becomes a disclosure panel — it does not disappear as it does today.
-- The active section is read from real section position (`IntersectionObserver`), not from scroll ratio.
+- Horizontal links on desktop; the active section carries a 2px lamp underline.
+- **The menu is not hidden on mobile.** Below 900px it becomes a disclosure panel controlled by a labelled button with `aria-expanded`.
+- The active section is read from real section position (`IntersectionObserver`), never from scroll ratio.
+
+### Events list
+Each row is a real `<button>`, so keyboard operation comes for free. Expansion animates `grid-template-rows` from `0fr` to `1fr` rather than `max-height`, so no magic pixel ceiling can clip long copy.
 
 ### News row
-A row, not a card: date, tag, headline, and summary align on one grid separated by a single hairline. In the archive, expanded full text grows beneath the same row.
+A row, not a card: date, category label, headline and summary align on one grid separated by a single hairline. In the archive, expanded full text grows beneath the same row.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** pick every spacing value from the 4px scale (4/8/12/16/24/32/48/96).
+- **Do** pick every spacing value from the 4px scale.
 - **Do** tell depth with the surface and hairline ramps; move a level instead of adding a `box-shadow`.
-- **Do** reserve the warm accent for action, focus, and brand.
+- **Do** keep the lamp for action and the screen for category.
 - **Do** give every interactive element a visible `:focus-visible` ring, and test it with a keyboard.
-- **Do** freeze the particle field under `prefers-reduced-motion` — this behaviour is already correctly built and must be preserved.
+- **Do** switch to the day world for anything that is read at length.
+- **Do** freeze the particle field under `prefers-reduced-motion`.
 
 ### Don't:
 - **Don't** take functional text below 12px.
-- **Don't** put wide letter-spacing on 11px text.
+- **Don't** put wide letter-spacing on small text.
 - **Don't** add `box-shadow`.
 - **Don't** invent radius or spacing values outside the scale.
 - **Don't** put a second primary button on a screen.
 - **Don't** hide overflow with `overflow-x: hidden`.
-- **Don't** show decorative counters, decorative pulse animations, or statistics that aren't populated — a counter reading zero looks broken; remove the field instead.
+- **Don't** show statistics that aren't populated — a counter reading zero looks broken; remove the field instead.
+- **Don't** change the display font without updating `sampleWord()`; the wordmark is sampled from a real typeface.

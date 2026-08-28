@@ -4,158 +4,167 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Haberler — Atılım AI</title>
+<meta name="description" content="Atılım AI Yapay Zekâ Topluluğu'nun her hafta derlediği yapay zekâ gelişmelerinin tam arşivi.">
+<meta name="theme-color" content="#100D0A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Haberler — Atılım AI">
+<meta property="og:description" content="Her hafta derlediğimiz yapay zekâ gelişmelerinin tam arşivi.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* Gündüz dünyası — DESIGN.md. Uzun metin karanlık zeminde okunmuyor. */
 :root{
-  --void:#070A14;
-  --line:rgba(146,170,235,.14);
-  --line-hi:rgba(146,170,235,.32);
-  --ink:#E9EDF8;
-  --dim:#8792AE;
-  --dim-hi:#B9C2DE;
-  --blue:#3D6BFF;
-  --blue-soft:#8DA4FF;
-  --red:#E63A4B;
-  --display:"Space Grotesk",system-ui,sans-serif;
-  --body:"Inter",system-ui,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --gece:#100D0A; --hair-d:rgba(240,234,221,.13);
+  --kagit:#F0EADD; --kagit-s:#A69C8C;
+  --gunduz:#F2EDE3; --kart:#FBF8F1;
+  --murekkep:#1A1713; --murekkep-m:#4A443B; --murekkep-s:#6B6357;
+  --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24);
+  --lamba:#E8A33D; --lamba-d:#8A5510; --ekran-d:#3D6389;
+  --disp:"Newsreader",Georgia,serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
+  --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  background:var(--void);color:var(--ink);font-family:var(--body);
-  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
-}
-/* üstteki yumuşak ışık — sabit, hafif, hiçbir şeyi tıklanmaz yapmıyor */
-body::before{
-  content:"";position:fixed;left:0;right:0;top:0;height:560px;pointer-events:none;z-index:0;
-  background:radial-gradient(58% 100% at 50% 0%,rgba(61,107,255,.15),transparent 72%);
-}
-.wrap{width:100%;max-width:760px;margin:0 auto;padding:0 clamp(1.25rem,5vw,2.5rem);position:relative;z-index:1}
+body{background:var(--gunduz);color:var(--murekkep);font-family:var(--body);
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--disp);font-weight:300}
+a{color:var(--lamba-d);text-decoration:none}
+:focus-visible{outline:2px solid var(--lamba-d);outline-offset:3px;border-radius:var(--r-xs)}
+.wrap{max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+.mono{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.meta{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
+.num{font-variant-numeric:tabular-nums}
 
-/* ---------- üst bar ---------- */
-.topbar{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);
-  background:rgba(7,10,20,.78);backdrop-filter:blur(14px)}
-.topbar-in{display:flex;align-items:center;gap:16px;height:58px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);
-  font-family:var(--display);font-weight:500;font-size:13.5px;letter-spacing:.14em}
-.brand i{width:9px;height:9px;border-radius:50%;background:var(--red);display:block;flex:none}
-.geri{margin-left:auto;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--dim);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:8px 14px;
-  transition:color .3s,border-color .3s,background .3s}
-.geri:hover{color:var(--ink);border-color:var(--line-hi);background:rgba(61,107,255,.08)}
+.atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--lamba-d);color:#fff;
+  font-weight:500;padding:12px 20px;border-radius:var(--r-md)}
+.atla:focus{left:20px;top:14px}
 
-/* ---------- kapak ---------- */
-.hero{padding:clamp(52px,9vw,88px) 0 clamp(30px,5vw,46px)}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
-  color:var(--blue-soft);display:flex;align-items:center;gap:12px;margin-bottom:22px}
-.eyebrow::before{content:"";width:26px;height:1px;background:var(--blue);flex:none}
-h1{font-family:var(--display);font-weight:500;font-size:clamp(2.3rem,7vw,3.6rem);letter-spacing:-.035em;line-height:1.05}
-.lead{color:var(--dim-hi);max-width:54ch;margin-top:20px;font-size:1.02rem}
-.hero-meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--dim);margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+/* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. */
+.ust{background:var(--gece);border-bottom:1px solid var(--hair-d)}
+.ust-in{display:flex;align-items:center;gap:var(--sp-md);height:60px}
+.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);
+  font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
+.marka i{width:14px;height:14px;border:1px solid var(--lamba);flex:none;
+  display:flex;align-items:center;justify-content:center}
+.marka i::after{content:"";width:5px;height:5px;background:var(--lamba)}
+.geri{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--kagit-s);
+  padding:0 var(--sp-sm);min-height:44px;display:flex;align-items:center;border-radius:var(--r-sm)}
+.geri:hover{color:var(--kagit)}
 
-/* ---------- sayı başlığı ---------- */
-main.wrap{padding-bottom:clamp(70px,10vw,120px)}
-.sayi{margin-top:clamp(30px,5vw,44px)}
-.sayi-bar{position:sticky;top:58px;z-index:10;display:flex;align-items:baseline;gap:14px;
-  padding:14px 0;background:rgba(7,10,20,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.sayi-bar h2{font-family:var(--display);font-weight:500;font-size:1.15rem;letter-spacing:-.02em}
-.sayi-bar time{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--dim);margin-left:auto}
+.kapak{padding:clamp(48px,8vw,80px) 0 var(--sp-xl)}
+h1{font-size:clamp(2.5rem,7vw,4rem);line-height:1.05;letter-spacing:-.02em}
+.giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
+.sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
+  padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
 
-/* ---------- haber ---------- */
-.akis{display:flex;flex-direction:column;gap:20px;margin-top:24px}
-.haber{border-radius:16px;border:1px solid var(--line);background:rgba(12,17,34,.6);
-  overflow:hidden;transition:border-color .4s,background .4s}
-.haber:hover{border-color:var(--line-hi);background:rgba(12,17,34,.78)}
-.haber img{width:100%;max-height:300px;object-fit:cover;display:block;border-bottom:1px solid var(--line)}
-.haber-in{padding:clamp(22px,3.5vw,30px)}
-.haber-ust{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.etiket{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--blue-soft);border:1px solid var(--line-hi);border-radius:999px;padding:4px 11px}
-.haber-ust time{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
-.haber h3{font-family:var(--display);font-weight:500;font-size:clamp(1.15rem,2.6vw,1.42rem);
-  letter-spacing:-.02em;line-height:1.28;margin-top:14px}
-.haber h3 a{color:inherit;text-decoration:none;transition:color .3s}
-.haber h3 a:hover{color:var(--blue-soft)}
-.ozet{color:var(--dim-hi);margin-top:14px;font-size:.98rem;line-height:1.75}
-.haber-alt{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-  margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-.kaynak{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-.oku{margin-left:auto;font-family:var(--body);font-size:13px;font-weight:500;text-decoration:none;
-  color:var(--ink);border:1px solid var(--line-hi);border-radius:8px;padding:9px 16px;
-  transition:border-color .3s,background .3s,transform .3s}
-.oku:hover{border-color:var(--blue-soft);background:rgba(61,107,255,.08);transform:translateY(-2px)}
+main{padding-bottom:clamp(64px,10vw,112px)}
+.sayi{margin-top:var(--sp-xxl)}
+.sayi-bar{display:flex;align-items:baseline;gap:var(--sp-sm);padding-bottom:var(--sp-sm);
+  border-bottom:2px solid var(--murekkep)}
+.sayi-bar h2{font-size:26px;font-weight:400}
+.sayi-bar time{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-left:auto}
 
-/* ---------- açılır kart ---------- */
-.haber.acilir .haber-in{cursor:pointer}
-.haber.acilir h3{transition:color .3s}
-.haber.acilir:hover h3{color:var(--blue-soft)}
-.ac{margin-left:auto;font-family:var(--body);font-size:13px;font-weight:500;
-  color:var(--ink);background:none;border:1px solid var(--line-hi);border-radius:8px;
-  padding:9px 16px;cursor:pointer;transition:border-color .3s,background .3s}
-.ac:hover{border-color:var(--blue-soft);background:rgba(61,107,255,.08)}
-.tam{display:none;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
-.haber.acik .tam{display:block}
-.tam p{color:var(--dim-hi);font-size:.98rem;line-height:1.8;margin-top:16px}
+.haber{display:grid;grid-template-columns:64px 1fr;gap:var(--sp-lg);padding:var(--sp-lg) 0;
+  border-bottom:1px solid var(--cizgi);transition:background .3s}
+.haber.acilir{cursor:pointer;margin:0 calc(var(--sp-md) * -1);padding-left:var(--sp-md);padding-right:var(--sp-md)}
+.haber.acilir:hover{background:var(--kart)}
+.haber-tarih{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);line-height:1.7;text-align:right}
+.haber-tarih b{display:block;color:var(--murekkep);font-weight:400;font-size:15px}
+.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ekran-d)}
+.haber h3{font-size:26px;font-weight:400;line-height:1.28;margin-top:var(--sp-sm)}
+.haber h3 a{color:var(--murekkep)}
+.haber h3 a:hover{color:var(--lamba-d)}
+.ozet{color:var(--murekkep-m);font-size:16.5px;line-height:1.7;margin-top:var(--sp-sm);max-width:64ch}
+.haber img{width:100%;max-height:280px;object-fit:cover;display:block;
+  border-radius:var(--r-lg);margin-top:var(--sp-md);border:1px solid var(--cizgi)}
+.alt{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;margin-top:var(--sp-md)}
+.kaynak{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
+.oku,.ac{font-family:var(--body);font-size:15px;font-weight:500;color:var(--murekkep);
+  background:none;border:1px solid var(--cizgi-s);border-radius:var(--r-md);
+  padding:0 var(--sp-md);min-height:44px;display:inline-flex;align-items:center;cursor:pointer;
+  transition:background .3s,border-color .3s}
+.oku:hover,.ac:hover{background:var(--kart);border-color:var(--murekkep-s)}
+.ac{margin-left:auto}
+
+.tam{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.haber.acik .tam{grid-template-rows:1fr}
+.tam>div{overflow:hidden}
+.tam-ic{padding-top:var(--sp-lg);margin-top:var(--sp-md);border-top:1px solid var(--cizgi)}
+.tam p{font-family:var(--disp);font-size:18px;line-height:1.8;color:var(--murekkep);
+  margin-top:var(--sp-md);max-width:66ch}
 .tam p:first-child{margin-top:0}
-.tam .kalici{display:inline-block;margin-top:22px;font-family:var(--mono);font-size:10.5px;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;
-  border-bottom:1px solid var(--line-hi);padding-bottom:3px;transition:color .3s}
-.tam .kalici:hover{color:var(--ink)}
+.kalici{display:inline-block;margin-top:var(--sp-lg);font-family:var(--mono);font-size:13px;
+  color:var(--lamba-d);border-bottom:1px solid rgba(138,85,16,.4);padding-bottom:3px}
+@media(max-width:640px){
+  .haber{grid-template-columns:1fr;gap:var(--sp-xs)}
+  .haber-tarih{text-align:left;display:flex;gap:var(--sp-xs);align-items:baseline}
+}
 
-/* ---------- durum / alt ---------- */
-.durum{color:var(--dim);font-family:var(--mono);font-size:12.5px;line-height:1.8;
-  margin-top:40px;padding:22px 24px;border:1px solid var(--line);border-radius:14px}
-footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
-.footer-in{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--dim)}
-.footer-in a{color:var(--dim);text-decoration:none;transition:color .3s}
-.footer-in a:hover{color:var(--ink)}
-.footer-in .sag{margin-left:auto;display:flex;gap:18px}
+.durum{color:var(--murekkep-s);font-family:var(--mono);font-size:13px;line-height:1.8;
+  margin-top:var(--sp-xl);padding:var(--sp-lg);border:1px solid var(--cizgi);border-radius:var(--r-lg);
+  background:var(--kart)}
+footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
+.foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
+  font-size:14px;color:var(--murekkep-s)}
+.foot .sag{margin-left:auto;display:flex;gap:20px}
+.foot a{color:var(--murekkep-s)}
+.foot a:hover{color:var(--murekkep)}
 
-:focus-visible{outline:2px solid var(--blue-soft);outline-offset:3px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .oku:hover{transform:none}
+  *{transition-duration:.01ms!important}
 }
 </style>
 </head>
 <body>
 
-<nav class="topbar">
-  <div class="wrap topbar-in">
-    <a class="brand" href="index.html"><i></i>ATILIM AI</a>
-    <a class="geri" href="index.html">← Ana sayfa</a>
-  </div>
-</nav>
+<a class="atla" href="#liste">İçeriğe atla</a>
 
-<header class="hero wrap">
-  <p class="eyebrow">Haftalık Rapor</p>
-  <h1>Haberler</h1>
-  <p class="lead">Her Pazartesi derlediğimiz yapay zekâ gelişmelerinin tam arşivi — ana sayfadaki özetlerin kaynakları, görselleri ve ayrıntılarıyla.</p>
-  <p class="hero-meta" id="heroMeta">Arşiv yükleniyor…</p>
+<nav class="ust"><div class="wrap ust-in">
+  <a class="marka" href="index.html"><i aria-hidden="true"></i>ATILIM AI</a>
+  <a class="geri" href="index.html">← Ana sayfa</a>
+</div></nav>
+
+<header class="kapak wrap">
+  <p class="mono" style="color:var(--lamba-d)">Haftalık Rapor</p>
+  <h1 style="margin-top:16px">Haberler</h1>
+  <p class="giris">Her hafta derlediğimiz yapay zekâ gelişmelerinin tam arşivi — ana sayfadaki özetlerin kaynakları, görselleri ve tam metinleriyle.</p>
+  <p class="sayac" id="sayac">Arşiv yükleniyor…</p>
 </header>
 
 <main class="wrap" id="liste"></main>
 
-<footer>
-  <div class="wrap footer-in">
-    <span>Atılım AI · Ankara</span>
-    <span class="sag">
-      <a href="index.html">Ana sayfa</a>
-      <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord</a>
-    </span>
-  </div>
-</footer>
+<footer><div class="wrap foot">
+  <span>Atılım AI · Ankara</span>
+  <span class="sag">
+    <a href="index.html">Ana sayfa</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord</a>
+  </span>
+</div></footer>
 
 <script>
+/*
+ * Haber arşivi.
+ *
+ * Veri content/haberler.json'dan gelir; site de Discord botu da aynı
+ * dosyayı okur. Yönetim panelinin önizlemesi bu sayfayı olduğu gibi
+ * alıp window.fetch'i sarmalıyor ve "haberler.json" geçen isteğe taslağı
+ * döndürüyor — bu yüzden çağrı window.fetch üzerinden ve adres bu alt
+ * dizeyi içerecek şekilde kalmalı.
+ *
+ * Her şey textContent ile basılır: panelden gelen metin HTML olarak
+ * yorumlanmaz.
+ */
 (function(){
-  var liste    = document.getElementById("liste");
-  var heroMeta = document.getElementById("heroMeta");
+  var liste = document.getElementById("liste");
+  var sayac = document.getElementById("sayac");
 
   var AYLAR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran",
                "Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -174,7 +183,6 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     liste.appendChild(p);
   }
 
-  /* Haberin tam metni varsa ayrıntı sayfasının adresi, yoksa boş. */
   function ayrintiAdresi(h, sayiNo, sira){
     if (!h.icerik) return "";
     return "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira;
@@ -198,35 +206,28 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     var art = document.createElement("article");
     art.className = ayrinti ? "haber acilir" : "haber";
 
-    if (h.gorsel){
-      var img = document.createElement("img");
-      img.src = h.gorsel;
-      img.alt = "";
-      img.loading = "lazy";
-      art.appendChild(img);
+    var tarih = document.createElement("div");
+    tarih.className = "haber-tarih";
+    if (h.tarih){
+      var parcalar = String(h.tarih).split(" ");
+      var gun = document.createElement("b");
+      gun.textContent = parcalar[0] || "";
+      tarih.appendChild(gun);
+      tarih.appendChild(document.createTextNode(parcalar.slice(1).join(" ")));
     }
+    art.appendChild(tarih);
 
     var ic = document.createElement("div");
-    ic.className = "haber-in";
 
-    var ust = document.createElement("div");
-    ust.className = "haber-ust";
     if (h.etiket){
       var et = document.createElement("span");
       et.className = "etiket";
       et.textContent = h.etiket;
-      ust.appendChild(et);
+      ic.appendChild(et);
     }
-    if (h.tarih){
-      var tm = document.createElement("time");
-      tm.textContent = h.tarih;
-      ust.appendChild(tm);
-    }
-    if (ust.children.length) ic.appendChild(ust);
 
     /* Tam metni olan haberde başlık bağlantı değil: karta tıklamak metni
-       yerinde açıyor. Tam metin yoksa eski davranış sürer, başlık doğrudan
-       kaynağa gider. */
+       yerinde açıyor. Tam metin yoksa başlık doğrudan kaynağa gider. */
     var h3 = document.createElement("h3");
     if (ayrinti){
       h3.textContent = h.baslik || "";
@@ -249,23 +250,30 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
       ic.appendChild(p);
     }
 
+    if (h.gorsel){
+      var img = document.createElement("img");
+      img.src = h.gorsel;
+      img.alt = "";
+      img.loading = "lazy";
+      ic.appendChild(img);
+    }
+
     if (h.kaynak || h.link || ayrinti){
       var alt = document.createElement("div");
-      alt.className = "haber-alt";
+      alt.className = "alt";
       if (h.kaynak){
         var k = document.createElement("span");
         k.className = "kaynak";
         k.textContent = "Kaynak: " + h.kaynak;
         alt.appendChild(k);
       }
-      /* Dış kaynak varsa ikisi de durur: biri yazının tamamı, öteki kaynak. */
       if (h.link){
         var oku = document.createElement("a");
         oku.className = "oku";
         oku.href = h.link;
         oku.target = "_blank";
         oku.rel = "noopener noreferrer";
-        oku.textContent = "Haberi oku ↗";
+        oku.textContent = "Kaynağa git ↗";
         alt.appendChild(oku);
       }
       if (ayrinti){
@@ -274,7 +282,6 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
         dugme.className = "ac";
         dugme.textContent = "Devamını oku ▾";
         dugme.setAttribute("aria-expanded", "false");
-        if (h.link) dugme.style.marginLeft = "0";
         alt.appendChild(dugme);
       }
       ic.appendChild(alt);
@@ -283,19 +290,23 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     if (ayrinti){
       var tam = document.createElement("div");
       tam.className = "tam";
-      tam.appendChild(paragraflar(h.icerik));
+      var sar = document.createElement("div");
+      var icerik = document.createElement("div");
+      icerik.className = "tam-ic";
+      icerik.appendChild(paragraflar(h.icerik));
 
-      /* Kalıcı bağlantı: haberi tek başına paylaşmak isteyen için. */
       var kalici = document.createElement("a");
       kalici.className = "kalici";
       kalici.href = ayrinti;
       kalici.textContent = "Bu haberi ayrı sayfada aç ↗";
-      tam.appendChild(kalici);
+      icerik.appendChild(kalici);
 
+      sar.appendChild(icerik);
+      tam.appendChild(sar);
       ic.appendChild(tam);
 
-      /* Tek dinleyici kartta: düğmeye tıklamak da buraya kabarıyor. Kaynak
-         bağlantıları hariç tutuluyor, yoksa yeni sekme açarken kart da
+      /* Tek dinleyici kartta: düğmeye tıklamak da buraya kabarıyor.
+         Bağlantılar hariç tutuluyor, yoksa yeni sekme açarken kart da
          açılıp kapanıyordu. */
       art.addEventListener("click", function(olay){
         if (olay.target.closest("a")) return;
@@ -328,17 +339,12 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     bar.appendChild(t);
 
     sec.appendChild(bar);
-
-    var akis = document.createElement("div");
-    akis.className = "akis";
-    (sayi.haberler || []).forEach(function(h, i){ akis.appendChild(haberKarti(h, sayi.sayi, i)); });
-    sec.appendChild(akis);
-
+    (sayi.haberler || []).forEach(function(h, i){ sec.appendChild(haberKarti(h, sayi.sayi, i)); });
     return sec;
   }
 
   if (!window.fetch){
-    heroMeta.textContent = "";
+    sayac.textContent = "";
     durum("Tarayıcınız bu sayfayı desteklemiyor.");
     return;
   }
@@ -348,20 +354,20 @@ footer{border-top:1px solid var(--line);padding:26px 0;margin-top:0}
     .then(function(d){
       var sayilar = (d && d.sayilar) || [];
       if (!sayilar.length){
-        heroMeta.textContent = "";
+        sayac.textContent = "";
         durum("Henüz yayımlanmış bir sayı yok.");
         return;
       }
 
       var toplam = 0;
       sayilar.forEach(function(s){ toplam += (s.haberler || []).length; });
-      heroMeta.textContent = sayilar.length + " sayı · " + toplam + " haber · en yenisi " +
-                             tarihYaz(sayilar[0].tarih);
+      sayac.textContent = sayilar.length + " sayı · " + toplam + " haber · en yenisi " +
+                          tarihYaz(sayilar[0].tarih);
 
       sayilar.forEach(function(s){ liste.appendChild(sayiBolumu(s)); });
     })
     .catch(function(){
-      heroMeta.textContent = "";
+      sayac.textContent = "";
       durum("Haberler yüklenemedi. Bu sayfa haberleri content/haberler.json dosyasından okur; " +
             "dosyayı doğrudan açmak yerine yerel bir sunucu (http://) üzerinden açmanız gerekir.");
     });
