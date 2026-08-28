@@ -116,6 +116,8 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .olcum b{font-family:var(--mono);font-size:28px;font-weight:400;color:var(--lamba);
   line-height:1;width:56px;flex:none}
 .olcum span{font-size:15px;color:var(--kagit-s)}
+/* Doğrulanmamış rakam: yer tutucu olduğu okunsun diye vurgu rengini almaz. */
+.olcum b.bekliyor{font-size:15px;color:var(--kagit-t);letter-spacing:.06em}
 .olcum button{all:unset;display:flex;align-items:baseline;gap:var(--sp-md);width:100%;
   padding:var(--sp-md) 0;border-bottom:1px solid var(--hair);cursor:pointer;
   min-height:44px;box-sizing:border-box;transition:opacity .3s}
@@ -266,10 +268,13 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
   <div>
     <p class="giris reveal" style="margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Ortak sorun basitti: dersler teoriyi veriyordu, ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
     <p class="giris reveal">Şimdi her hafta Perşembe akşamı toplanıyoruz. Kimi zaman bir makaleyi birlikte okuyup söküyoruz, kimi zaman biri ekranını paylaşıp tıkandığı yeri gösteriyor. Bölüm ayrımı yok — hukuktan da, psikolojiden de üyemiz var.</p>
+    <!-- Rakamlar henüz doğrulanmadı. Yer tutucular bilerek görünür: uydurma
+         bir sayı ya da sıfır göstermektense beklemede olduğu okunsun.
+         Gerçek değerler gelince .num içeriğini ve .bekliyor sınıfını kaldır. -->
     <div class="olcum reveal">
-      <button type="button" data-scroll="#s4"><b class="num">3</b><span>yürüyen proje</span></button>
-      <button type="button" data-modal="modal-projeler"><b class="num">2</b><span>tamamlanan proje</span></button>
-      <div><b class="num">7</b><span>tamamlanan etkinlik</span></div>
+      <button type="button" data-scroll="#s4"><b class="num bekliyor">[ADET]</b><span>yürüyen proje</span></button>
+      <button type="button" data-modal="modal-projeler"><b class="num bekliyor">[ADET]</b><span>tamamlanan proje</span></button>
+      <div><b class="num bekliyor">[ADET]</b><span>tamamlanan etkinlik</span></div>
     </div>
   </div>
 </div></section>
