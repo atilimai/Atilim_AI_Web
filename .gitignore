@@ -11,6 +11,7 @@ desktop.ini
 # Yerel geliştirme araçları
 .serena/
 .playwright-mcp/
+.impeccable/
 
 # Bağımlılıklar ve loglar (ileride Next.js'e geçilirse)
 node_modules/
