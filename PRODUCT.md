@@ -127,13 +127,15 @@ Google redirect URL in two `gorsel` fields. A visitor reading the landing page t
 invented news presented as the society's weekly digest, which is exactly what Principle 4
 forbids. Two things follow:
 
-- Clearing the file is safe and already handled in code. `haberler.html` shows *"Henüz
-  yayımlanmış bir sayı yok."*, and `index.html` leaves its section alone when the feed is
-  empty — no layout breaks.
-- **`index.html` ships three fabricated news rows in static HTML** as the no-data fallback
-  (`#feedList`, dated 28–31 Tem). They are indistinguishable from real news and would remain
-  visible even with an empty JSON. They must be replaced with an empty state before launch,
-  or removed. This one *is* a code change.
+- **Clearing the file is safe.** Both pages already handle it: they show *"Henüz
+  yayımlanmış bir sayı yok."* and no layout breaks. A failed fetch is treated differently
+  and leaves the page as-is, because an unreachable file is not evidence that nothing was
+  published.
+- **`index.html` still holds three example news rows in static HTML** (`#feedList`, dated
+  28–31 Tem). They exist so the section can be designed against real-looking content, and a
+  source comment says so. They are no longer a hazard — the script replaces them with the
+  empty state as soon as the feed loads with nothing in it — but they are still invented
+  copy in the file and should go once a real issue exists.
 
 ## Product Principles
 
@@ -151,16 +153,23 @@ forbids. Two things follow:
 
 ## Accessibility & Inclusion
 
-**Target: WCAG 2.1 AA.** Not an external mandate; a standard the team has adopted. The
-current implementation meets it — every text/background pair in `DESIGN.md` is measured, the
-type floor is 12px, touch targets are 44px, every interactive element is a real control with
-a visible focus ring, and `prefers-reduced-motion` freezes the particle field.
+**Target: WCAG 2.1 AA.** Not an external mandate; a standard the team has adopted. Measured
+on the shipped pages, not asserted: **zero contrast failures** across all three pages at
+desktop and phone widths, **zero horizontal overflow** from 320px to 1970px, **zero
+interactive targets under 44px**, no heading-level skips, a skip link and full landmark set
+on every page, and a modal with focus trap, Escape, and focus return. The type floor is
+12px. `prefers-reduced-motion` cancels the spatial transitions by name and leaves colour and
+opacity feedback intact; the scroll-driven field draws one static frame and its bands
+collapse.
 
-Two known gaps carried forward:
+One WCAG failure remains, and it cannot be closed in this repository:
 
-- **News images are published with an empty `alt`**, which presents content images as
-  decorative. The root cause is the data contract: `news.ts` has no alt-text field. Fixing
-  it requires a change on the panel side.
+- **News images are published with an empty `alt`** (WCAG 1.1.1, level A), which presents
+  content images as decorative. The root cause is the data contract: `news.ts` has no
+  alt-text field. Until the panel adds one, the site cannot claim AA.
+
+One further weakness, not a WCAG failure:
+
 - **Article permalinks are positional** (`?sira=0`), so a screen-reader user returning to a
   bookmarked article after an issue is reordered lands on a different article with no
   warning.

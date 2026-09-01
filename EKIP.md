@@ -8,6 +8,7 @@ kırılacağı yazıyor.
 **Yapay zekâ aracıyla çalışıyorsan okuma sırası:**
 
 1. Bu dosyanın "Site 60 saniyede", "Sayfa haritası", "Tuzaklar" başlıkları
+   — `index.html`'e dokunacaksan "Alan katmanı" da
 2. Görsel bir karar vereceksen `DESIGN.md`, ürün bağlamı gerekiyorsa
    `PRODUCT.md` — ikisi de depo kökünde
 3. Dokunacağın sayfanın ilgili bölümü
@@ -18,6 +19,7 @@ Aradığın yeri numarayla değil, arayarak bul:
 | Ne arıyorsan | Nasıl bulacaksın |
 |---|---|
 | haber akışı | `grep -n "haberler.json" index.html` |
+| 3B alan katmanı | `grep -n "6. Alan" index.html` |
 | betiğin bölümleri | `grep -n "^/\* ===" -A2 index.html` |
 | bir stil kuralı | `grep -n "^\.sinif-adi{" index.html` |
 
@@ -46,11 +48,12 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 
 | Bölüm | Ne yapar |
 |---|---|
-| Kabuk | Nav durumu, mobil menü, aktif bölüm işareti |
-| Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
-| **Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
-| Ölçümler ve modal | Sayaçlar ve GitHub depo listesi modali |
-| Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması |
+| 1 · Kabuk | Nav durumu, mobil menü, aktif bölüm işareti |
+| 2 · Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
+| **3 · Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
+| 4 · Ölçümler ve modal | Sayaçlar ve GitHub depo listesi modali |
+| 5 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması |
+| **6 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
 
 Haberle ilgili her iş "Haftalık rapor" bölümünde. Fetch başarısız olursa
 sayfadaki hazır içerik olduğu gibi kalır — yerelde `file://` ile açtığında
@@ -62,8 +65,11 @@ arşive bırakılıyor. Panelin üst sınırı bir sayıda 25 haber, ve o sını
 sınırsız akış telefonda sayfayı üç katına çıkarıyordu.
 
 Eski notlarda geçen ama artık **olmayan** şeyler: ses sentezi, ses kontrolleri,
-özel imleç ve mıknatıs düğmeler, ve arka plandaki 3B parçacık alanı (three.js
-ile birlikte kaldırıldı). Bunları arama; kod değil, tarih.
+özel imleç ve mıknatıs düğmeler. Bunları arama; kod değil, tarih.
+
+three.js'li parçacık alanı da kaldırıldı — ama yerine **ham WebGL ile yazılmış
+yeni bir alan katmanı** geldi. Aşağıdaki "Alan katmanı" başlığına bak;
+"kaldırılmış" diye silme.
 
 ### `haberler.html`
 
@@ -93,6 +99,48 @@ düzenlenmiş olabilir" deniyordu. Parametrenin varlığı artık sayısal testt
 **önce** sorgulanıyor.
 
 Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklendi.
+
+## Alan katmanı
+
+`index.html`'in içinde, ayrı bir `<script>` içinde duran ham WebGL katmanı.
+`grep -n "6. Alan" index.html` seni oraya götürür. **Kütüphane yok** — three.js
+bilerek kaldırıldı, yerine gölgelendirici ve model üreticileri elle yazıldı.
+
+Ne yapar: kaydırdıkça beş model arasında dönüşür — monogram, sinir ağı, dikkat
+matrisi, belirteç akışı, gradyan inişi. İki hâli var: okuma sütununun sağındaki
+bölgede duran küçük **mercek**, bölümler arasında ekranın ortasına gelip büyüyen
+**levha**. Levha ekranı kaplamaz; en çok 800 × 500 px'dir.
+
+Neden bu kadar dikkat isteyen bir şey: **hiçbir koşulda metnin üstüne
+düşmemesi** gerekiyor. Bu opasiteyle değil geometriyle sağlanıyor — sürücü
+yalnızca `gl.scissor` dikdörtgeninin içine boyayabiliyor, o dikdörtgen de ya boş
+alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
+
+**Kırmadan dokunmak için bilmen gerekenler:**
+
+- **Yığın düzeni.** Tuval `z-index:0`'da ve konumlandırılmış olduğu için normal
+  akıştaki metnin *üstüne* boyar; bu yüzden `main,footer{position:relative;
+  z-index:1}` kuralı var. Bu seçiciyi **genişletme**. Bir kez `nav, .modal,
+  .atla` da eklenmişti ve üçünün kendi `position`/`z-index` değerlerini ezip
+  sticky başlığı, modali ve atlama bağlantısını bozmuştu — masaüstünde hiç
+  görünmeden.
+- **Geçiş bantları.** Bölümler arasındaki boş `.gecis` div'leri süs değil;
+  levhanın açılacağı, içinde metin bulunmayan alanı onlar tanımlıyor. Silersen
+  levha hâli tamamen kaybolur. İçlerine metin koyma.
+- **Sığdırma izdüşüm uzayında yapılır.** Perspektif böleni noktadan noktaya
+  değiştiği için model uzayında hesaplanan sınır yanıltır ve eğik modeller
+  (gradyan inişi) kırpılır. `ortala()` bunu her noktanın izdüşümünden, yalpalama
+  aralığını tarayarak ölçüyor. Formülü basitleştirmeye kalkma.
+- **1152 px altında mercek hiç kurulmaz.** Telefonda yalnızca levhalar çalışır;
+  bant yüksekliği ve parçacık sayısı ayrıca düşer.
+- **WebGL yoksa** gövdeye `no-alan` eklenir, tuval gizlenir, bantlar kapanır ve
+  sayfa alan katmanı hiç yokmuş gibi görünür. `prefers-reduced-motion` açıksa
+  döngü hiç başlamaz, tek durağan kare çizilir.
+- **Değişiklik yaptıysan kırpılma testini koştur:** modeli her iki hâlde çizip
+  tuvali geri oku, scissor dikdörtgeninin dış 3 pikselinde yanan piksel say.
+  Sıfırdan büyük her sonuç, modelin kesildiği anlamına gelir.
+
+Ayrıntılı gerekçeler ve ölçülmüş kanıtlar `DESIGN.md` → Components → The field.
 
 ## Veri sözleşmesi
 
@@ -197,9 +245,18 @@ HTML'i önbellekte tutabiliyor.
   ve `images/ai_mark.png` ondan üretildi — renkler ters çevrilip siyah
   atılarak. Kaynağı değiştirirsen ikisini de yeniden üretmen gerekir, yoksa
   sekme logosu ile nav işareti kaynaktan ayrı düşer.
-- **Araç klasörleri.** `.serena/` ve `.playwright-mcp/` `.gitignore`'da (şu an
-  diskte yoklar). `.impeccable/` — tasarım sistemi sidecar'ı ve kritik arşivi —
-  `.gitignore`'da değil, `git status`'te takip edilmeyen olarak görünür.
+- **Araç klasörleri.** `.serena/`, `.playwright-mcp/` ve `.impeccable/` üçü de
+  `.gitignore`'da. `.impeccable/` tasarım sistemi sidecar'ını ve kritik arşivini
+  tutar; yerel araç durumudur, depoya girmemeli.
+- **Henüz hiçbir bülten yayımlanmadı.** `content/haberler.json`'daki üç kayıt
+  yer tutucu, `index.html`'deki üç haber satırı da tasarım için konmuş örnek
+  içerik (kaynakta yorumu var). Metin yazarken siteye yayımlama geçmişi
+  atfetme. Dosya boşaltıldığında iki sayfa da "Henüz yayımlanmış bir sayı yok."
+  gösteriyor — kod hazır.
+- **Dokunma hedefi 44 px, satır sonu `overflow-wrap:anywhere`.** İkisi de
+  ölçülerek getirildi: panelin izin verdiği 200 karakterlik bölünmez bir başlık
+  okuma sayfalarında binlerce piksel yatay taşma yapıyordu. Panelden veri basan
+  yeni bir metin öğesi eklersen `overflow-wrap` vermeyi unutma.
 
 ## Kilitli kararlar
 

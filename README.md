@@ -10,7 +10,12 @@ onu çalıştırıyor.
 
 > Yeni geliştiriyorsan (özellikle bir yapay zekâ aracıyla çalışıyorsan) önce
 > `EKIP.md` dosyasını oku. `index.html` stil, içerik ve betiği tek dosyada
-> taşıyor; rehber, nereye bakman gerektiğini baştan söylüyor.
+> taşıyor ve dosyanın büyük bölümü kaydırmayla değişen 3B alan katmanı;
+> rehber, nereye bakman gerektiğini baştan söylüyor.
+
+> **Not:** Henüz hiçbir bülten yayımlanmadı. `content/haberler.json`'daki
+> kayıtlar ve ana sayfadaki haber satırları tasarım için konmuş yer
+> tutuculardır.
 
 ## Çalıştırma
 
@@ -27,7 +32,7 @@ python -m http.server 8000
 
 | Dosya | Ne |
 |---|---|
-| `index.html` | Ana sayfa: tanıtım, etkinlikler, projeler, haftalık rapor özeti |
+| `index.html` | Ana sayfa: tanıtım, etkinlikler, projeler, haftalık rapor özeti + 3B alan katmanı |
 | `haberler.html` | Haber arşivi; tam metni olan kartlar yerinde açılır |
 | `haber.html` | Tek bir haberin ayrıntı sayfası (`?sayi=13&sira=0`) |
 | `content/haberler.json` | **Tek veri kaynağı.** Site de Discord botu da bunu okur |
@@ -61,10 +66,14 @@ dakika içinde canlıda olur.
 ## Katkı
 
 - Bağımlılık ekleme. Site bilerek düz HTML/CSS/JS; bir çatı ya da paket
-  eklemek bu tercihi bozar.
+  eklemek bu tercihi bozar. Ana sayfadaki 3B alan da bu yüzden bir kütüphane
+  değil, elle yazılmış ham WebGL.
 - Panelden gelen metin **düz metindir**; sayfalar her şeyi `textContent` ile
   basar. `innerHTML` kullanma — haber metnindeki bir etiket çalışan koda
   dönüşür.
 - Değişikliği yerel sunucuda gerçek `content/haberler.json` ile dene; boş
   alanlar (kaynak, görsel, tam metin) farklı çiziliyor.
+- 3B alan katmanına dokunacaksan önce `EKIP.md` → "Alan katmanı". Katmanın tek
+  sert kuralı var: hiçbir koşulda metnin üstüne düşmemeli, ve bu opasiteyle
+  değil `gl.scissor` ile sağlanıyor.
 - Tuzaklar ve kilitli kararlar [`EKIP.md`](EKIP.md) içinde.
