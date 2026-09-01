@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Haberler — Atılım AI">
 <meta property="og:description" content="Her hafta derlediğimiz yapay zekâ gelişmelerinin tam arşivi.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -42,28 +42,30 @@ a{color:var(--lamba-d);text-decoration:none}
 .num{font-variant-numeric:tabular-nums}
 
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--murekkep);color:var(--gunduz);
-  font-weight:500;padding:12px 20px;border-radius:var(--r-md)}
+  font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
 .atla:focus{left:20px;top:14px}
 
 /* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. */
 .ust{background:var(--gece);border-bottom:1px solid var(--hair-d)}
 .ust-in{display:flex;align-items:center;gap:var(--sp-md);height:60px}
-.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);
+.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
-.marka i{width:14px;height:14px;border:1px solid var(--lamba);flex:none;
-  display:flex;align-items:center;justify-content:center}
-.marka i::after{content:"";width:5px;height:5px;background:var(--lamba)}
+.marka i{width:20px;height:20px;flex:none;
+  background:url(images/ai_mark.png) center/contain no-repeat}
 .geri{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--kagit-s);
   padding:0 var(--sp-sm);min-height:44px;display:flex;align-items:center;border-radius:var(--r-sm)}
 .geri:hover{color:var(--kagit)}
 
-.kapak{padding:clamp(48px,8vw,80px) 0 var(--sp-xl)}
+.kapak{padding-block:clamp(48px,8vw,80px) var(--sp-xl)}
 h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
+/* Panelden gelen metin 200 karakterlik bölünmez tek bir dizi olabilir; bu
+   satır olmadan sayfa yatayda binlerce piksel kayıyor. */
+.sayi-bar h2,.haber h3,.ozet,.tam p{overflow-wrap:anywhere}
 .giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
 .sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
   padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
 
-main{padding-bottom:clamp(64px,10vw,112px)}
+main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 .sayi{margin-top:var(--sp-xxl)}
 .sayi-bar{display:flex;align-items:baseline;gap:var(--sp-sm);padding-bottom:var(--sp-sm);
   border-bottom:2px solid var(--murekkep)}
@@ -81,9 +83,13 @@ main{padding-bottom:clamp(64px,10vw,112px)}
 .haber h3{font-size:28px;font-weight:400;line-height:1.28;margin-top:var(--sp-sm)}
 .haber h3 a{color:var(--murekkep)}
 .haber h3 a:hover{color:var(--lamba-d)}
-.ozet{color:var(--murekkep-m);font-size:16.5px;line-height:1.7;margin-top:var(--sp-sm);max-width:64ch}
-.haber img{width:100%;max-height:280px;object-fit:cover;display:block;
-  border-radius:var(--r-lg);margin-top:var(--sp-md);border:1px solid var(--cizgi)}
+.ozet{color:var(--murekkep-m);font-size:16px;line-height:1.65;margin-top:var(--sp-sm);max-width:64ch}
+/* Yer önceden ayrılmazsa tembel yüklenen görsel geldiğinde kart aşağı kayar. */
+.haber img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
+  border-radius:var(--r-lg);margin-top:var(--sp-md);border:1px solid transparent}
+/* Kenarlık yalnızca görsel geldiğinde: yavaş ya da askıda kalan bir adres,
+   ayrılmış alanı boş bir çerçeve gibi göstermesin. */
+.haber img.yuklendi{border-color:var(--cizgi)}
 .alt{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;margin-top:var(--sp-md)}
 .kaynak{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
 .oku,.ac{font-family:var(--body);font-size:15px;font-weight:500;color:var(--murekkep);
@@ -100,7 +106,8 @@ main{padding-bottom:clamp(64px,10vw,112px)}
 .tam p{font-family:var(--disp);font-size:19px;line-height:1.8;color:var(--murekkep);
   margin-top:var(--sp-md);max-width:66ch}
 .tam p:first-child{margin-top:0}
-.kalici{display:inline-block;margin-top:var(--sp-lg);font-family:var(--mono);font-size:13px;
+.kalici{display:inline-flex;align-items:center;min-height:44px;margin-top:var(--sp-sm);
+  font-family:var(--mono);font-size:13px;
   color:var(--lamba-d);border-bottom:1px solid rgba(138,85,16,.4);padding-bottom:3px}
 @media(max-width:760px){
   .haber{grid-template-columns:1fr;gap:var(--sp-xs)}
@@ -114,12 +121,15 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--murekkep-s)}
 .foot .sag{margin-left:auto;display:flex;gap:20px}
-.foot a{color:var(--murekkep-s)}
+/* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
+.foot a{color:var(--murekkep-s);padding-block:var(--sp-sm)}
 .foot a:hover{color:var(--murekkep)}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  *{transition-duration:.01ms!important}
+  /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
+     renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır. Açılan tam metin anında görünür. */
+  .tam{transition:none}
 }
 </style>
 </head>
@@ -255,6 +265,10 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       img.src = h.gorsel;
       img.alt = "";
       img.loading = "lazy";
+      /* Görsel adresi de panelden gelir ve bozuk olabilir; kırık ikon
+         bırakmaktansa görseli kaldırıyoruz. */
+      img.onload = function(){ this.classList.add("yuklendi"); };
+      img.onerror = function(){ if (this.parentNode) this.parentNode.removeChild(this); };
       ic.appendChild(img);
     }
 

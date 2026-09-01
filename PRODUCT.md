@@ -34,11 +34,17 @@ Success is a student showing up on a Thursday who found the society through this
 ## Positioning
 
 What the society actually does, rather than what it says about itself, is the position: it
-meets every week and it publishes every week. Fourteen issues exist. The weekly digest is
-produced through a real pipeline — an admin panel commits to this repository, GitHub Pages
-publishes the site, and a GitHub Actions job posts the same issue to Discord exactly once.
-That machinery is a fact about the society, not a marketing claim, and it is the reason the
-site can be trusted to be current.
+meets every week, and it has built the machinery to publish every week. An admin panel
+commits to this repository, GitHub Pages publishes the site, and a GitHub Actions job posts
+the same issue to Discord exactly once. That machinery is a fact about the society, not a
+marketing claim.
+
+**No issue has been published yet.** Every entry now in `content/haberler.json` is
+placeholder content, and the issue numbers in it (12, 13, 14) are placeholders too — they
+are not a count of anything. An earlier version of this file read the highest number as a
+total and claimed "fourteen issues exist"; that was wrong, and the mistake is recorded here
+so it is not repeated. Until the first real issue ships, the pipeline is a capability, not
+yet evidence, and no copy anywhere may imply a publishing history.
 
 ## Operating Context
 
@@ -58,9 +64,11 @@ site can be trusted to be current.
 **Locked technical decisions** (recorded in `EKIP.md`, owned by the team lead — treat as
 binding):
 
-- **No dependencies and no build step.** No framework, no package manager, no bundler. The
-  site is plain HTML/CSS/JS served directly from GitHub Pages. The single pre-existing
-  exception is a three.js CDN script that drives the background particle field.
+- **No dependencies and no build step, without exception.** No framework, no package
+  manager, no bundler, no CDN script. The site is plain HTML/CSS/JS served directly from
+  GitHub Pages. The three.js CDN script that once drove the background particle field was
+  removed; the scroll-driven field on the landing page is now raw WebGL written inline in
+  `index.html` (see DESIGN.md → Components → The field).
 - **Text from the panel is printed with `textContent`, never `innerHTML`.** Panel copy is
   user input; a tag in a news item must render as text, not run as code.
 - **Four places share one data contract.** `content/haberler.json` field names are read by
@@ -98,12 +106,14 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 ## Evidence on Hand
 
 **Real and usable:**
-- `content/haberler.json` — the published issue archive, the society's strongest evidence
-  that it does what it says. Currently 14 issues.
 - The `atilimai` GitHub organisation and its public repositories.
 - The publishing pipeline itself (`scripts/discord-gonder.js`,
   `.github/workflows/haftalik-rapor.yml`).
 - The scheduled events listed on the site.
+
+**Built but not yet evidence:** `content/haberler.json` and the publishing chain around it.
+The archive is the society's strongest *potential* evidence, and it becomes evidence the day
+the first real issue lands in it. Today it holds only placeholders.
 
 **Not established — must not be fabricated.** Member count, active project count, and
 completed event count are unknown. The site currently shows **visibly marked placeholders**
@@ -111,10 +121,19 @@ in their place, by the team's decision, so that a reader can tell a number is pe
 than reading a fabricated or broken-looking figure. Replace them with real figures when the
 team supplies them; never invent one, and never quietly fill a placeholder with a guess.
 
-**Known content problem:** issues 13 and 14 in `content/haberler.json` are test data
-(placeholder titles, a Google redirect URL in the `gorsel` field), and issue 12's `icerik`
-is filler text. This is live on the published site. It is a content fix for the team through
-the admin panel, not a code change.
+**Known content problem — the whole archive is placeholder, and it is live.** All three
+entries in `content/haberler.json` are stand-ins: placeholder titles, filler `icerik`, and a
+Google redirect URL in two `gorsel` fields. A visitor reading the landing page today sees
+invented news presented as the society's weekly digest, which is exactly what Principle 4
+forbids. Two things follow:
+
+- Clearing the file is safe and already handled in code. `haberler.html` shows *"Henüz
+  yayımlanmış bir sayı yok."*, and `index.html` leaves its section alone when the feed is
+  empty — no layout breaks.
+- **`index.html` ships three fabricated news rows in static HTML** as the no-data fallback
+  (`#feedList`, dated 28–31 Tem). They are indistinguishable from real news and would remain
+  visible even with an empty JSON. They must be replaced with an empty state before launch,
+  or removed. This one *is* a code change.
 
 ## Product Principles
 

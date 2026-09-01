@@ -8,11 +8,22 @@ kırılacağı yazıyor.
 **Yapay zekâ aracıyla çalışıyorsan okuma sırası:**
 
 1. Bu dosyanın "Site 60 saniyede", "Sayfa haritası", "Tuzaklar" başlıkları
-2. Dokunacağın sayfanın ilgili bölümü — `index.html` numaralı bölümlere
-   ayrılmış, aşağıda hangi numaranın ne olduğu yazıyor
+2. Görsel bir karar vereceksen `DESIGN.md`, ürün bağlamı gerekiyorsa
+   `PRODUCT.md` — ikisi de depo kökünde
+3. Dokunacağın sayfanın ilgili bölümü
 
-`index.html`'in tamamını okutma: 1450 satır ve çoğu görsel efekt. Haberlerle
-ilgili iş yapıyorsan yalnızca **6. bölüm** (satır ~880–930) ilgilendirir.
+`index.html`'in tamamını okutma: tek dosyada stil + içerik + betik var.
+Aradığın yeri numarayla değil, arayarak bul:
+
+| Ne arıyorsan | Nasıl bulacaksın |
+|---|---|
+| haber akışı | `grep -n "haberler.json" index.html` |
+| betiğin bölümleri | `grep -n "^/\* ===" -A2 index.html` |
+| bir stil kuralı | `grep -n "^\.sinif-adi{" index.html` |
+
+Bu dosyada bilerek satır numarası ve bölüm numarası yok: ikisi de her
+düzenlemede kayıyor, belge de sessizce yalan söylemeye başlıyor. Buraya
+numara ekleme.
 
 ---
 
@@ -28,39 +39,58 @@ yayımlıyor.
 
 ## Sayfa haritası
 
-### `index.html` (1450 satır)
+### `index.html`
 
-Tek dosyada stil + içerik + betik. Betik numaralı bölümlere ayrılmış; ilgili
-yorumu ararsan bölüm başlıklarını `/* ===` ile bulabilirsin:
+Tek dosyada stil + içerik + betik. Betik adlandırılmış bölümlere ayrılmış;
+hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 
 | Bölüm | Ne yapar |
 |---|---|
-| 1 | Ses — çalışma anında sentezleniyor, ses dosyası yok |
-| 2 | Kaydırma ilerlemesi ve bölüm durumu |
-| 3 | Görünürlüğe göre beliren animasyonlar |
-| 4 | Ses kontrolleri |
-| 5 | İmleç, mıknatıs düğmeler, kart eğimi |
-| **6** | **Haftalık rapor akışı — `content/haberler.json` buradan okunuyor** |
-| 7 | İstatistikler ve modal |
-| 8 | Etkinlik akordeonu |
-| 9 | 3B alan (canvas) |
+| Kabuk | Nav durumu, mobil menü, aktif bölüm işareti |
+| Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
+| **Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
+| Ölçümler ve modal | Sayaçlar ve GitHub depo listesi modali |
+| Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması |
 
-Haberle ilgili her iş 6. bölümde. Fetch başarısız olursa sayfadaki hazır içerik
-olduğu gibi kalır — yerelde `file://` ile açtığında olan budur.
+Haberle ilgili her iş "Haftalık rapor" bölümünde. Fetch başarısız olursa
+sayfadaki hazır içerik olduğu gibi kalır — yerelde `file://` ile açtığında
+olan budur.
 
-### `haberler.html` (371 satır)
+Ana sayfa sayının **tamamını değil ilk üç haberini** çiziyor (`GOSTER`
+sabiti); gerisi sessizce düşmüyor, "kalan N haberi arşivde" satırıyla anılıp
+arşive bırakılıyor. Panelin üst sınırı bir sayıda 25 haber, ve o sınırda
+sınırsız akış telefonda sayfayı üç katına çıkarıyordu.
+
+Eski notlarda geçen ama artık **olmayan** şeyler: ses sentezi, ses kontrolleri,
+özel imleç ve mıknatıs düğmeler, ve arka plandaki 3B parçacık alanı (three.js
+ile birlikte kaldırıldı). Bunları arama; kod değil, tarih.
+
+### `haberler.html`
 
 Bütün sayıların arşivi. Her haber bir kart; **tam metni olan kartlar tıklanınca
-yerinde açılır** (`.acilir` sınıfı, `.tam` bölümü). Tek bir tıklama dinleyicisi
-kartın üstünde durur ve bağlantı tıklamalarını dışarıda bırakır — yoksa kaynağı
-yeni sekmede açarken kart da açılıp kapanıyordu.
+yerinde açılır**. İki sınıf var, karıştırma: `.acilir` kartın *açılabilir*
+olduğunu işaretler (tam metni olmayan kartta hiç yoktur), `.acik` ise o an
+*açık* olduğunu. Açılan bölümün kendisi `.tam`.
 
-### `haber.html` (290 satır)
+Tek bir tıklama dinleyicisi kartın üstünde durur ve bağlantı tıklamalarını
+dışarıda bırakır — yoksa kaynağı yeni sekmede açarken kart da açılıp
+kapanıyordu.
+
+### `haber.html`
 
 Tek haberin ayrıntı sayfası. Adres: `haber.html?sayi=12&sira=0` — sayı numarası
 ve o sayının içindeki sıra. Aynı JSON'u okur, ilgili haberi bulur, `icerik`
-alanını paragraflara bölerek basar. Eksik/bozuk adres, silinmiş haber ve tam
-metni olmayan haber ayrı ayrı karşılanır; sayfa hiçbir durumda boş kalmaz.
+alanını paragraflara bölerek basar.
+
+**Beş ayrı durum ayrı ayrı karşılanır** ve her biri gerçek bir `<h1>` ve kendi
+`document.title`'ı ile çizilir; sayfa hiçbir durumda boş ya da başlıksız
+kalmaz: adres eksik · adres bozuk · haber bulunamadı · tam metni yok ·
+yüklenemedi. Hepsini `grep -n 'durum("' haber.html` ile görürsün.
+
+"Adres eksik" ile "adres bozuk" neden ayrı: `Number(null)` sıfır olduğu için
+hiç parametresiz bir adres sayısal testi geçiyor ve kullanıcıya "sayı
+düzenlenmiş olabilir" deniyordu. Parametrenin varlığı artık sayısal testten
+**önce** sorgulanıyor.
 
 Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklendi.
 
@@ -94,8 +124,9 @@ Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklend
 
 Kurallar:
 
-- **Sayılar en yeniden eskiye sıralanır.** Ana sayfa `sayilar[0]`'ı gösterir,
-  Discord botu da onu gönderir. Yeni sayı dizinin **başına** eklenir.
+- **Sayılar en yeniden eskiye sıralanır.** Ana sayfa `sayilar[0]`'ın ilk üç
+  haberini gösterir, arşiv hepsini; Discord botu `sayilar[0]`'ı bütünüyle
+  gönderir. Yeni sayı dizinin **başına** eklenir.
 - `icerik` **düz metindir.** Boş satır paragrafları ayırır, tek satır sonu
   paragraf içinde kalır. Sayfalar metni `textContent` ile bastığı için
   içindeki etiketler yazıya dönüşür, çalışmaz.
@@ -148,10 +179,10 @@ HTML'i önbellekte tutabiliyor.
   oluşturduğu DOM düğümleridir.
 - **Bağlantı alanları `href`/`src` niteliğine giriyor.** Panel `http(s)` dışını
   reddediyor; burada da varsayma, doğrulanmış veriye güven.
-- **Üç sayfa aynı JSON'u okuyor.** Alan adı değiştirirsen `index.html` (6.
-  bölüm), `haberler.html`, `haber.html` ve `scripts/discord-gonder.js` — dördü
-  birden güncellenmeli. Panel tarafındaki sözleşme de (`src/lib/site/news.ts`)
-  aynı adları kullanıyor.
+- **Üç sayfa aynı JSON'u okuyor.** Alan adı değiştirirsen `index.html`
+  ("Haftalık rapor" bölümü), `haberler.html`, `haber.html` ve
+  `scripts/discord-gonder.js` — dördü birden güncellenmeli. Panel tarafındaki
+  sözleşme de (`src/lib/site/news.ts`) aynı adları kullanıyor.
 - **Ayrıntı sayfası sıraya göre çalışıyor** (`?sira=0`). Bir sayının haber
   sırası değişirse eski bağlantılar başka habere düşer. Kalıcı bağlantı
   gerekiyorsa haberlere kimlik alanı eklemek gerekir — bugün yok.
@@ -159,12 +190,22 @@ HTML'i önbellekte tutabiliyor.
   `fetch("content/haberler.json")` çağrısını taslak veriye yönlendirerek
   çiziyor. Yani o çağrının biçimini değiştirirsen panelin önizlemesi bozulur;
   buna dokunacaksan panel tarafında `src/lib/site/preview.ts` dosyasına da bak.
-- **`.serena/` ve `.playwright-mcp/`** araç önbellekleridir, yoksayılır.
+- **Dış betik yok.** Site hiçbir CDN'den kod çekmiyor; tek dış kaynak Google
+  Fonts stil dosyası. Bir kütüphaneye ihtiyacın olduğunu düşünüyorsan önce
+  "Kilitli kararlar"a bak.
+- **Logo varlıkları türetilmiştir.** `images/ai_s.png` kaynaktır; `favicon.png`
+  ve `images/ai_mark.png` ondan üretildi — renkler ters çevrilip siyah
+  atılarak. Kaynağı değiştirirsen ikisini de yeniden üretmen gerekir, yoksa
+  sekme logosu ile nav işareti kaynaktan ayrı düşer.
+- **Araç klasörleri.** `.serena/` ve `.playwright-mcp/` `.gitignore`'da (şu an
+  diskte yoklar). `.impeccable/` — tasarım sistemi sidecar'ı ve kritik arşivi —
+  `.gitignore`'da değil, `git status`'te takip edilmeyen olarak görünür.
 
 ## Kilitli kararlar
 
-- **Bağımlılık yok.** Çatı, paket yöneticisi, derleme adımı eklenmeyecek. Site
-  bu sadelikte olduğu için Pages'te bedavaya ve anında yayınlanıyor.
+- **Bağımlılık yok.** Çatı, paket yöneticisi, derleme adımı eklenmeyecek ve
+  CDN'den betik çekilmeyecek. Site bu sadelikte olduğu için Pages'te bedavaya
+  ve anında yayınlanıyor.
 - **İçerik panelden gelir.** JSON'u elle düzenlemek son çare; doğrulama ve
   sorumluluk kaydı panel tarafında.
 - **Tam metin düz metindir.** HTML kabul etmiyoruz; panelden ham HTML yazma

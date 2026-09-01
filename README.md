@@ -9,8 +9,8 @@ onu çalıştırıyor.
 - **İçerik nereden geliyor:** haberleri [yönetim paneli](https://github.com/atilimai/Atilim_AI_Panel) yazıyor
 
 > Yeni geliştiriyorsan (özellikle bir yapay zekâ aracıyla çalışıyorsan) önce
-> `EKIP.md` dosyasını oku. `index.html` tek başına 1450 satır; rehber, nereye
-> bakman gerektiğini baştan söylüyor.
+> `EKIP.md` dosyasını oku. `index.html` stil, içerik ve betiği tek dosyada
+> taşıyor; rehber, nereye bakman gerektiğini baştan söylüyor.
 
 ## Çalıştırma
 

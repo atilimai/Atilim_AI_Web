@@ -7,7 +7,7 @@
 <meta name="description" content="Atılım AI haftalık raporundan bir haberin tam metni.">
 <meta name="theme-color" content="#100D0A">
 <meta property="og:type" content="article">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,28 +40,29 @@ a{color:var(--lamba-d);text-decoration:none}
 .num{font-variant-numeric:tabular-nums}
 
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--murekkep);color:var(--gunduz);
-  font-weight:500;padding:12px 20px;border-radius:var(--r-md)}
+  font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
 .atla:focus{left:20px;top:14px}
 
 /* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. */
 .ust{background:var(--gece);border-bottom:1px solid var(--hair-d)}
 .ust-in{display:flex;align-items:center;gap:var(--sp-md);height:60px}
-.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);
+.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
-.marka i{width:14px;height:14px;border:1px solid var(--lamba);flex:none;
-  display:flex;align-items:center;justify-content:center}
-.marka i::after{content:"";width:5px;height:5px;background:var(--lamba)}
+.marka i{width:20px;height:20px;flex:none;
+  background:url(images/ai_mark.png) center/contain no-repeat}
 .geri{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--kagit-s);
   padding:0 var(--sp-sm);min-height:44px;display:flex;align-items:center;border-radius:var(--r-sm)}
 .geri:hover{color:var(--kagit)}
 
-.kapak{padding:clamp(48px,8vw,80px) 0 var(--sp-xl)}
+.kapak{padding-block:clamp(48px,8vw,80px) var(--sp-xl)}
 h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
+/* Panelden gelen başlık, kaynak ve tam metin bölünmez tek bir dizi olabilir. */
+h1,.kaynak,.yazi p{overflow-wrap:anywhere}
 .giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
 .sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
   padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
 
-main{padding-bottom:clamp(64px,10vw,112px)}
+main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 
 .etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ekran-d)}
@@ -74,9 +75,6 @@ main{padding-bottom:clamp(64px,10vw,112px)}
 .oku:hover,.ac:hover{background:var(--kart);border-color:var(--murekkep-s)}
 .ac{margin-left:auto}
 
-  .haber-tarih{text-align:left;display:flex;gap:var(--sp-xs);align-items:baseline}
-}
-
 .durum{color:var(--murekkep-s);font-family:var(--mono);font-size:13px;line-height:1.8;
   margin-top:var(--sp-xl);padding:var(--sp-lg);border:1px solid var(--cizgi);border-radius:var(--r-lg);
   background:var(--kart)}
@@ -84,12 +82,15 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--murekkep-s)}
 .foot .sag{margin-left:auto;display:flex;gap:20px}
-.foot a{color:var(--murekkep-s)}
+/* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
+.foot a{color:var(--murekkep-s);padding-block:var(--sp-sm)}
 .foot a:hover{color:var(--murekkep)}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  *{transition-duration:.01ms!important}
+  /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
+     renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır. Bu sayfada uzamsal
+     geçiş yok; kaldırılacak bir hareket de yok. */
 }
 
 /* ---------- okuma sayfası ---------- */
@@ -98,8 +99,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   text-transform:uppercase;color:var(--ekran-d)}
 .kapak-ust time{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
 .yazi{margin-top:var(--sp-xl)}
-.yazi img.gorsel{width:100%;max-height:400px;object-fit:cover;display:block;
-  border:1px solid var(--cizgi);border-radius:var(--r-lg);margin-bottom:var(--sp-xl)}
+/* En-boy oranı yeri yüklenmeden ayırır; max-height ile yükseklik yükleme anına
+   kadar 0 kalıyor ve görsel gelince altındaki metnin tamamı kayıyordu. */
+.yazi img.gorsel{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
+  border:1px solid transparent;border-radius:var(--r-lg);margin-bottom:var(--sp-xl)}
+.yazi img.gorsel.yuklendi{border-color:var(--cizgi)}
 .yazi p{font-family:var(--disp);font-size:19px;line-height:1.85;color:var(--murekkep);
   margin-top:var(--sp-lg);max-width:66ch}
 .yazi p:first-of-type{margin-top:0}
@@ -166,7 +170,16 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     return Number(p[3]) + " " + AYLAR[Number(p[2]) - 1] + " " + p[1];
   }
 
-  function durum(metin){
+  function durum(baslik, metin){
+    document.title = baslik + " — Atılım AI";
+    document.getElementById("baslik").textContent = baslik;
+    kapakUst.remove();
+    var bosOzet = document.getElementById("ozet");
+    if (bosOzet) bosOzet.remove();
+    var bosMeta = document.getElementById("kapakMeta");
+    if (bosMeta) bosMeta.remove();
+    kapak.hidden = false;
+
     var p = document.createElement("p");
     p.className = "durum";
     p.textContent = metin;
@@ -182,11 +195,22 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   }
 
   var q = new URLSearchParams(location.search);
-  var sayiNo = Number(q.get("sayi"));
-  var sira   = Number(q.get("sira"));
+  var qSayi = q.get("sayi");
+  var qSira = q.get("sira");
+
+  if (qSayi === null || qSayi === "" || qSira === null || qSira === ""){
+    durum("Adres eksik",
+          "Bu sayfa tek bir haberi gösterir ve adresinde sayı numarasıyla sıra bilgisini bekler. " +
+          "Haberi haberler sayfasından açarsanız adres kendiliğinden doğru kurulur.");
+    return;
+  }
+
+  var sayiNo = Number(qSayi);
+  var sira   = Number(qSira);
 
   if (!Number.isInteger(sayiNo) || !Number.isInteger(sira) || sira < 0){
-    durum("Adres eksik ya da bozuk. Haberi haberler sayfasından açın.");
+    durum("Adres bozuk",
+          "Adresteki sayı numarası ya da sıra bilgisi okunamadı. Haberi haberler sayfasından açın.");
     return;
   }
 
@@ -223,6 +247,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       img.className = "gorsel";
       img.src = h.gorsel;
       img.alt = "";
+      img.onload = function(){ this.classList.add("yuklendi"); };
+      img.onerror = function(){ if (this.parentNode) this.parentNode.removeChild(this); };
       yazi.appendChild(img);
     }
 
@@ -273,18 +299,22 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       }
       var h = sayi && (sayi.haberler || [])[sira];
       if (!h){
-        durum("Bu haber bulunamadı. Sayı düzenlenmiş ve haberin sırası değişmiş olabilir.");
+        durum("Haber bulunamadı",
+              "Bu adres bir haberi işaret etmiyor. Sayı düzenlenmiş ve haberin sırası değişmiş olabilir; " +
+              "haberi arşivden yeniden açın.");
         return;
       }
       if (!h.icerik){
-        durum("Bu haberin tam metni yok; özeti haberler sayfasında duruyor.");
+        durum("Tam metin yok",
+              "Bu haberin tam metni yayımlanmamış. Özeti haberler sayfasında duruyor.");
         return;
       }
       ciz(sayi, h);
     })
     .catch(function(){
-      durum("Haber yüklenemedi. Bu sayfa haberleri content/haberler.json dosyasından okur; " +
-            "dosyayı doğrudan açmak yerine yerel bir sunucu (http://) üzerinden açmanız gerekir.");
+      durum("Haber yüklenemedi",
+            "Bu sayfa haberleri content/haberler.json dosyasından okur; dosyayı doğrudan açmak yerine " +
+            "yerel bir sunucu (http://) üzerinden açmanız gerekir.");
     });
 })();
 </script>

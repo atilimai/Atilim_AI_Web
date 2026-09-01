@@ -11,10 +11,10 @@
 <meta property="og:description" content="Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.">
 <meta property="og:url" content="https://atilimai.github.io/Atilim_AI_Web/">
 <meta name="twitter:card" content="summary">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* Tasarım sistemi: DESIGN.md. Token dışında değer kullanılmaz. */
 :root{
@@ -38,13 +38,11 @@ h1,h2,h3{font-family:var(--disp);font-weight:300}
 a{color:var(--lamba);text-decoration:none}
 :focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
 
-#scene{position:fixed;inset:0;z-index:0;display:block;pointer-events:none}
-body.no-webgl #scene{display:none}
-.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);position:relative;z-index:1}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);position:relative}
 
 /* ---------- erişim ---------- */
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--lamba);color:var(--on-lamba);
-  font-weight:500;padding:12px 20px;border-radius:var(--r-md)}
+  font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
 .atla:focus{left:20px;top:14px}
 
 /* ---------- nav ---------- */
@@ -52,17 +50,17 @@ nav{position:sticky;top:0;z-index:40;border-bottom:1px solid transparent;
   transition:border-color .4s,background .4s}
 nav.yapisik{border-bottom-color:var(--hair);background:rgba(16,13,10,.86);backdrop-filter:blur(12px)}
 .nav-in{display:flex;align-items:center;gap:var(--sp-lg);height:64px;position:relative}
-.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);
+.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
-.marka i{width:15px;height:15px;border:1px solid var(--lamba);flex:none;
-  display:flex;align-items:center;justify-content:center}
-.marka i::after{content:"";width:5px;height:5px;background:var(--lamba)}
+.marka i{width:20px;height:20px;flex:none;
+  background:url(images/ai_mark.png) center/contain no-repeat}
 .baglar{display:flex;gap:var(--r-xs);margin-left:auto}
 .baglar a{position:relative;font-size:15px;color:var(--kagit-s);padding:10px 14px;
   border-radius:var(--r-sm);min-height:44px;display:flex;align-items:center;
   transition:color .3s,background .3s}
 .baglar a:hover{color:var(--kagit);background:var(--tezgah)}
 .baglar a.acik{color:var(--kagit)}
+.baglar .kat{display:none}
 .baglar a.acik::after{content:"";position:absolute;left:14px;right:14px;bottom:8px;
   height:2px;background:var(--lamba)}
 .menu-btn{display:none;margin-left:auto;background:var(--tezgah);border:1px solid var(--hair-s);
@@ -74,6 +72,9 @@ nav.yapisik{border-bottom-color:var(--hair);background:rgba(16,13,10,.86);backdr
   .baglar.gorunur{display:flex}
   .baglar a{padding:14px}
   .baglar a.acik::after{display:none}
+  .baglar .kat{display:flex;color:var(--lamba);border-top:1px solid var(--hair);
+    margin-top:var(--sp-xs);padding-top:var(--sp-md)}
+  .baglar .kat:hover{color:var(--lamba-h);background:var(--tezgah-2)}
   .menu-btn{display:block}
 }
 
@@ -91,12 +92,13 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 
 /* ---------- hero ---------- */
 #s0{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
-.hero-grid{display:grid;grid-template-columns:104px 1fr;gap:var(--sp-xxl);align-items:start;width:100%}
-.defter{font-family:var(--mono);font-size:12px;line-height:2.1;color:var(--kagit-t);
-  text-align:right;padding:14px 22px 0 0;border-right:1px solid var(--hair)}
-.defter b{display:block;color:var(--kagit);font-weight:400}
+#s0>.wrap{width:100%}
 .eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
-@media(max-width:760px){.hero-grid{grid-template-columns:1fr;gap:var(--sp-lg)}.defter{display:none}}
+/* Toplanti sabiti: gun, oda ve onkosul, her kirilma noktasinda sayfanin akisinda. */
+.bulusma{font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--kagit-s);
+  margin-top:var(--sp-lg);padding-top:var(--sp-md);border-top:1px solid var(--hair);
+  max-width:52ch}
+.bulusma b{color:var(--kagit);font-weight:400}
 
 /* ---------- düğme ---------- */
 .btn{font-family:var(--body);font-size:15px;font-weight:500;padding:0 22px;min-height:48px;
@@ -122,6 +124,10 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
   padding:var(--sp-md) 0;border-bottom:1px solid var(--hair);cursor:pointer;
   min-height:44px;box-sizing:border-box;transition:opacity .3s}
 .olcum button:hover{opacity:.75}
+/* all:unset outline'ı da sıfırlar ve özgüllükte genel :focus-visible kuralını
+   yener; halkayı burada geri vermek zorundayız. */
+.olcum button:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;
+  border-radius:var(--r-xs)}
 
 /* ---------- etkinlik ---------- */
 .tl{list-style:none;margin-top:var(--sp-xl);border-top:1px solid var(--hair);padding-top:var(--sp-xs)}
@@ -143,12 +149,15 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .haber{display:grid;grid-template-columns:88px 108px 1fr;gap:20px;padding:22px 0;
   border-bottom:1px solid var(--hair);align-items:baseline}
 .haber:first-child{border-top:1px solid var(--hair)}
-.haber h3{font-size:21px;font-weight:400;line-height:1.34}
+.haber h3{font-size:21px;font-weight:400;line-height:1.34;max-width:40ch;overflow-wrap:anywhere}
 .haber h3 a{color:var(--kagit);transition:color .3s}
 .haber h3 a:hover{color:var(--lamba)}
-.haber p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:6px;max-width:66ch}
+.haber p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:6px;max-width:66ch;
+  overflow-wrap:anywhere}
 .etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ekran)}
+.feed-kalan{font-family:var(--mono);font-size:13px;color:var(--kagit-t);padding:22px 0;
+  border-bottom:1px solid var(--hair)}
 .devam{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:13px;
   color:var(--lamba);border-bottom:1px solid rgba(232,163,61,.4);padding-bottom:3px}
 .arsiv-bag{display:inline-flex;align-items:center;gap:var(--sp-xs);margin-top:var(--sp-xl);
@@ -175,11 +184,13 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
   border:1px solid var(--hair-s);border-radius:var(--r-sm);padding:4px 9px}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:relative;z-index:1}
+footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
+.foot-bulusma{color:var(--kagit-s);line-height:1.8}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--kagit-t)}
 .foot .sag{margin-left:auto;display:flex;gap:20px}
-.foot a{color:var(--kagit-s)}
+/* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
+.foot a{color:var(--kagit-s);padding-block:var(--sp-sm)}
 .foot a:hover{color:var(--kagit)}
 
 /* ---------- modal ---------- */
@@ -224,13 +235,57 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .js .reveal{opacity:1;transform:none;transition:none}
-  *{transition-duration:.01ms!important}
+  /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
+     renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır. Etkinlik satırı
+     anında açılır; alan katmanı zaten tek durağan kare çizer. */
+  .tl .detay{transition:none}
 }
+
+/* --ray: taban alet rayı. --daralt: geniş ekranda okuma sütunundan kısılan
+   ek pay; ikisinin toplamı merceğin ortalanacağı bölgeyi verir. */
+:root{ --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
+       --daralt:clamp(60px,12vw,220px); }
+
+/* ---------- alan: kaydırmayla değişen model ----------
+   Okunabilirlik burada opasiteyle değil geometriyle korunuyor: WebGL yalnızca
+   scissor dikdörtgeninin içine boyayabiliyor, o dikdörtgen de ya sağdaki boş
+   alet rayı ya da içinde hiç metin bulunmayan bölüm arası bölge oluyor.  */
+#alan{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* Alet rayı: yalnızca ölçü taşıyan, görünmez bir yer tutucu. Yatay konumu
+   JS gerçek .wrap dikdörtgeninden okur — 100vw kaydırma çubuğunu sayar. */
+#ray{position:fixed;top:0;left:0;width:calc(var(--ray) + var(--daralt));height:8px;
+  visibility:hidden;pointer-events:none}
+@media(max-width:1151px){#ray{display:none}}
+body.no-alan #alan{display:none}
+/* Sabit tuval z-index:0'da olduğu için normal akıştaki metnin ÜSTÜNE boyar;
+   akış öğelerini bir kat yukarı almak gerekir. Yalnızca konumlandırılmamış
+   olanlar: nav (sticky, 40), .modal (fixed, 60) ve .atla (absolute, 100)
+   kendi katmanlarına sahip ve bu kural onları ezerse sticky başlık, modal ve
+   atlama bağlantısı bozulur. */
+main,footer{position:relative;z-index:1}
+
+/* Okuma sütunu sağında merceğe ait bir bölge bırakır; mercek yalnızca orada durur. */
+@media(min-width:1152px){
+  /* Kutu genişler (metin sola kayar), okuma sütunu ayrıca --daralt kadar kısılır.
+     Böylece metnin sağında mercek için gerçek bir bölge açılır ve mercek o
+     bölgenin ortasına, boyutu da bölgeye göre oturur. */
+  .wrap{max-width:min(calc(1180px + var(--ray) + var(--ray-ara)), 100%)}
+  main .wrap{padding-right:calc(clamp(20px,5vw,56px) + var(--ray) + var(--ray-ara) + var(--daralt))}
+}
+
+/* Bölüm arası: hiç içeriği olmayan, levhanın ortaya gelip büyüdüğü bölge.
+   İçinde metin bulunmadığı için okunabilirlik sorusu burada hiç doğmuyor. */
+.gecis{min-height:min(70vh,580px)}
+@media(max-width:760px){.gecis{min-height:min(72vh,540px)}}
+body.no-alan .gecis{min-height:var(--sp-sec)}
+@media(prefers-reduced-motion:reduce){ .gecis{min-height:var(--sp-sec)} }
 </style>
 </head>
 <body>
+<canvas id="alan" aria-hidden="true"></canvas>
+<div id="ray" aria-hidden="true"></div>
 
-<canvas id="scene" aria-hidden="true"></canvas>
+
 <a class="atla" href="#icerik">İçeriğe atla</a>
 
 <nav id="nav"><div class="wrap nav-in">
@@ -241,24 +296,23 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
     <a href="#s2" data-b="s2">Etkinlikler</a>
     <a href="#s3" data-b="s3">Haftalık Rapor</a>
     <a href="#s4" data-b="s4">Projeler</a>
+    <a class="kat" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl ↗</a>
   </div>
 </div></nav>
 
 <main id="icerik">
 
 <section id="s0"><div class="wrap">
-  <div class="hero-grid">
-    <p class="defter reveal">kuruluş<b>2023</b>toplantı<b>perşembe</b>bölüm<b>farketmez</b></p>
-    <div>
-      <h1 class="reveal">Yapay zekâyı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
-      <p class="giris reveal">Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.</p>
-      <div class="eylem reveal">
-        <a class="btn p" href="https://discord.gg/uUzsA7uDzU">Topluluğa katıl</a>
-        <a class="btn s" href="#s4">Projelere göz at</a>
-      </div>
-    </div>
+  <h1 class="reveal">Yapay zekâyı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
+  <p class="giris reveal">Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.</p>
+  <div class="eylem reveal">
+    <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl</a>
+    <a class="btn s" href="#s4">Projelere göz at</a>
   </div>
+  <p class="bulusma reveal"><b>Her perşembe akşamı</b> · Mühendislik B-204 · önkoşul yok, laptop yeterli</p>
 </div></section>
+
+<div class="gecis" aria-hidden="true"></div>
 
 <section id="s1"><div class="wrap iki">
   <div>
@@ -278,6 +332,8 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
     </div>
   </div>
 </div></section>
+
+<div class="gecis" aria-hidden="true"></div>
 
 <section id="s2"><div class="wrap">
   <p class="kicker reveal">Etkinlikler</p>
@@ -302,11 +358,16 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
   </ul>
 </div></section>
 
+<div class="gecis" aria-hidden="true"></div>
+
 <section id="s3"><div class="wrap">
   <p class="kicker reveal">Haftalık Rapor</p>
   <h2 class="reveal">Bu hafta neler oldu?</h2>
   <p class="giris reveal">Her Pazartesi sabahı derliyoruz. Aynı içerik otomatik olarak Discord kanalına da düşüyor.</p>
   <p class="meta reveal" id="feedIssue" style="margin-top:32px">12. sayı</p>
+  <!-- Aşağıdaki üç satır tasarım için örnek içeriktir, gerçek haber değildir.
+       Veri okunduğunda JS bunları değiştirir; veri boşsa boş durum metniyle
+       değiştirir. Yayına çıkmadan önce gerçek sayı gelmiş olmalı. -->
   <div class="reveal" id="feedList" style="margin-top:16px">
     <div class="haber">
       <span class="meta">28 Tem</span><span class="etiket">Model</span>
@@ -323,6 +384,8 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
   </div>
   <a class="arsiv-bag reveal" href="haberler.html">Bütün sayılar →</a>
 </div></section>
+
+<div class="gecis" aria-hidden="true"></div>
 
 <section id="s4"><div class="wrap">
   <p class="kicker reveal">Projeler</p>
@@ -402,15 +465,16 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
 
     <a class="gh-all" href="https://github.com/atilimai?tab=repositories" target="_blank" rel="noopener">Tüm depoları GitHub'da gör ↗</a>
   </div>
+</div>
+
 <footer><div class="wrap foot">
-  <span>Atılım AI · Ankara</span>
+  <span class="foot-bulusma">Her perşembe akşamı buluşuyoruz — Mühendislik B-204.<br>Atılım AI · Ankara</span>
   <span class="sag">
     <a href="haberler.html">Haberler</a>
     <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord</a>
     <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub</a>
   </span>
 </div></footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
 "use strict";
@@ -418,15 +482,13 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px;position:re
 document.documentElement.classList.add("js");
 
 var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-var fine    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-var mobile  = window.innerWidth < 900;
 
 /* ============================================================
    1. Kabuk — nav durumu, mobil menü, aktif bölüm
 
-   Aktif bölüm gerçek bölüm konumundan okunur. Eskiden
-   Math.round(progress*4) ile toplam kaydırma oranına bakılıyordu;
-   bölümler farklı yükseklikte olduğu için işaret kayıyordu.
+   Aktif bölüm gerçek bölüm konumundan okunur. Eskiden toplam
+   kaydırma oranına bakılıyordu; bölümler farklı yükseklikte
+   olduğu için işaret kayıyordu.
    ============================================================ */
 var nav = document.getElementById("nav");
 window.addEventListener("scroll", function(){
@@ -448,7 +510,7 @@ window.addEventListener("scroll", function(){
   });
 })();
 
-var baglar   = [].slice.call(document.querySelectorAll(".baglar a"));
+var baglar   = [].slice.call(document.querySelectorAll(".baglar a[data-b]"));
 var bolumler = baglar.map(function(a){ return document.getElementById(a.dataset.b); });
 var aktif = -1;
 
@@ -464,17 +526,6 @@ if ("IntersectionObserver" in window){
   }, {rootMargin:"-45% 0px -45% 0px"});
   bolumler.forEach(function(s){ if (s) bolumIO.observe(s); });
 }
-
-/* Parçacık alanı için kaydırma oranı — yalnızca 9. bölüm kullanır. */
-var progress = 0, smooth = 0;
-function okuKaydirma(){
-  var max = document.documentElement.scrollHeight - window.innerHeight;
-  progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-}
-window.addEventListener("scroll", okuKaydirma, {passive:true});
-window.addEventListener("resize", okuKaydirma);
-okuKaydirma();
-smooth = progress;
 
 /* ============================================================
    2. Belirme
@@ -497,22 +548,7 @@ if ("IntersectionObserver" in window && !reduced){
 }
 
 /* ============================================================
-   3. Fare konumu — 3B alanın itme ve kamera kaydırması için
-
-   Özel imleç, mıknatıs düğmeler ve kart eğimi kaldırıldı:
-   cursor:none imleci tamamen gizliyordu ve JS hata verdiğinde
-   ziyaretçi imleçsiz kalıyordu.
-   ============================================================ */
-var nx = 0, ny = 0;
-if (fine && !reduced){
-  window.addEventListener("mousemove", function(e){
-    nx = (e.clientX / window.innerWidth)  * 2 - 1;
-    ny = -((e.clientY / window.innerHeight) * 2 - 1);
-  }, {passive:true});
-}
-
-/* ============================================================
-   4. Haftalık rapor
+   3. Haftalık rapor
 
    content/haberler.json'dan çizilir; site ve Discord botu aynı
    dosyayı okur. Fetch başarısız olursa sayfadaki içerik kalır —
@@ -522,6 +558,7 @@ if (fine && !reduced){
    olarak yorumlanmaz.
    ============================================================ */
 (function(){
+  var GOSTER = 3;   /* ana sayfada gosterilen haber sayisi; gerisi arsivde */
   var feedList  = document.getElementById("feedList");
   var feedIssue = document.getElementById("feedIssue");
   if (!feedList || !window.fetch) return;
@@ -575,16 +612,38 @@ if (fine && !reduced){
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(d){
       var issue = d && d.sayilar && d.sayilar[0];
-      if (!issue || !issue.haberler || !issue.haberler.length) return;
+      /* Veri okundu ama içinde sayı yok: HTML'deki örnek satırlar kalırsa sayfa
+         yayımlanmamış haberi yayımlanmış gibi gösterir. Ağ hatası ayrı bir
+         durumdur ve aşağıdaki catch'te sayfa olduğu gibi bırakılır. */
+      if (!issue || !issue.haberler || !issue.haberler.length){
+        feedList.textContent = "";
+        var bos = document.createElement("p");
+        bos.className = "feed-kalan";
+        bos.textContent = "Henüz yayımlanmış bir sayı yok.";
+        feedList.appendChild(bos);
+        if (feedIssue) feedIssue.textContent = "";
+        return;
+      }
       if (feedIssue && issue.sayi) feedIssue.textContent = issue.sayi + ". sayı";
       feedList.textContent = "";
-      issue.haberler.forEach(function(h, i){ feedList.appendChild(satir(h, issue.sayi, i)); });
+
+      var hepsi = issue.haberler;
+      hepsi.slice(0, GOSTER).forEach(function(h, i){
+        feedList.appendChild(satir(h, issue.sayi, i));
+      });
+
+      if (hepsi.length > GOSTER){
+        var kalan = document.createElement("p");
+        kalan.className = "feed-kalan";
+        kalan.textContent = "Bu sayının kalan " + (hepsi.length - GOSTER) + " haberi arşivde.";
+        feedList.appendChild(kalan);
+      }
     })
     .catch(function(){ /* sayfadaki içerik olduğu gibi kalır */ });
 })();
 
 /* ============================================================
-   5. Ölçümler ve modal
+   4. Ölçümler ve modal
 
    Modal artık odağı içeri alıyor, içeride tuzaklıyor ve kapanınca
    tetikleyen düğmeye geri veriyor.
@@ -686,7 +745,7 @@ if (fine && !reduced){
 })();
 
 /* ============================================================
-   6. Etkinlik akordeonu
+   5. Etkinlik akordeonu
 
    Satırlar gerçek <button> olduğu için klavye desteği kendiliğinden
    geliyor. Eskiden <li role="button" tabindex="0"> vardı ve yalnızca
@@ -703,394 +762,572 @@ if (fine && !reduced){
     li.setAttribute("aria-expanded", acik ? "false" : "true");
   });
 })();
-/* ============================================================
-   9. The 3D field
-   ============================================================ */
-var canvas = document.getElementById("scene");
-if (typeof THREE === "undefined"){ document.body.classList.add("no-webgl"); return; }
-
-var renderer;
-try {
-  renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:false, alpha:true, powerPreference:"high-performance"});
-} catch(err){
-  document.body.classList.add("no-webgl");
-  return;
-}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x100D0A, 1);
-
-var scene  = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 400);
-camera.position.set(0, 0, 80);
-
-var COUNT = mobile ? 9000 : 26000;
-
-/* ---- helpers ---- */
-function rnd(a,b){ return a + Math.random()*(b-a); }
-function gauss(){ return (Math.random()+Math.random()+Math.random()-1.5)/1.5; }
-
-/* ---- target 0: hero — breathing sphere shell ---- */
-function makeSphere(i, out){
-  var y  = 1 - (i / (COUNT-1)) * 2;
-  var r  = Math.sqrt(Math.max(0, 1 - y*y));
-  var th = i * 2.39996;
-  var rad = 22 * (0.86 + Math.random()*0.22);
-  out[0] = Math.cos(th) * r * rad;
-  out[1] = y * rad;
-  out[2] = Math.sin(th) * r * rad;
-}
-
-/* ---- target 1: neural network graph ---- */
-var LAYERS = [5, 8, 8, 4];
-var nodes = [], layerIdx = [];
-(function buildNodes(){
-  var span = 58, x0 = -span/2;
-  for (var l = 0; l < LAYERS.length; l++){
-    var n = LAYERS[l], list = [];
-    var x = x0 + (span / (LAYERS.length - 1)) * l;
-    for (var k = 0; k < n; k++){
-      var y = (n === 1) ? 0 : (k/(n-1) - .5) * (n * 3.6);
-      list.push([x, y, rnd(-3,3)]);
-    }
-    nodes.push(list); layerIdx.push(n);
-  }
-})();
-function makeNet(i, out){
-  var atNode = (i % 5) < 2;
-  if (atNode){
-    var l = Math.floor(Math.random()*nodes.length);
-    var p = nodes[l][Math.floor(Math.random()*nodes[l].length)];
-    out[0] = p[0] + gauss()*1.5;
-    out[1] = p[1] + gauss()*1.5;
-    out[2] = p[2] + gauss()*1.5;
-  } else {
-    var la = Math.floor(Math.random()*(nodes.length-1));
-    var a  = nodes[la][Math.floor(Math.random()*nodes[la].length)];
-    var b  = nodes[la+1][Math.floor(Math.random()*nodes[la+1].length)];
-    var t  = Math.random();
-    out[0] = a[0] + (b[0]-a[0])*t + gauss()*0.5;
-    out[1] = a[1] + (b[1]-a[1])*t + gauss()*0.5;
-    out[2] = a[2] + (b[2]-a[2])*t + gauss()*0.5;
-  }
-}
-
-/* ---- target 2: floating project frames ---- */
-var FRAMES = [];
-(function buildFrames(){
-  var w = 17, h = 11;
-  for (var r = 0; r < 2; r++){
-    for (var c = 0; c < 3; c++){
-      FRAMES.push({ x:(c-1)*22, y:(r===0?9:-9), z:rnd(-9,9), w:w, h:h });
-    }
-  }
-})();
-function makeFrames(i, out){
-  var f = FRAMES[i % FRAMES.length];
-  var onEdge = (i % 4) !== 0;
-  var u, v;
-  if (onEdge){
-    var side = Math.floor(Math.random()*4);
-    var t = Math.random();
-    if (side === 0){ u = -f.w/2 + f.w*t; v =  f.h/2; }
-    else if (side === 1){ u = -f.w/2 + f.w*t; v = -f.h/2; }
-    else if (side === 2){ u = -f.w/2; v = -f.h/2 + f.h*t; }
-    else { u = f.w/2; v = -f.h/2 + f.h*t; }
-  } else {
-    u = rnd(-f.w/2, f.w/2); v = rnd(-f.h/2, f.h/2);
-  }
-  out[0] = f.x + u + gauss()*0.35;
-  out[1] = f.y + v + gauss()*0.35;
-  out[2] = f.z + gauss()*0.8;
-}
-
-/* ---- target 3: timeline helix ---- */
-function makeHelix(i, out){
-  var t = i / COUNT;
-  var a = t * Math.PI * 11;
-  var rad = 13 + Math.sin(t * 22) * 1.6;
-  var tick = (i % 9 === 0);
-  out[0] = Math.cos(a) * rad + gauss()*0.7;
-  out[1] = Math.sin(a) * rad + gauss()*0.7;
-  out[2] = -68 + t * 104 + (tick ? 0 : gauss()*1.4);
-}
-
-/* ---- target 4: tunnel walls (centre kept clear) ---- */
-function makeTunnel(i, out){
-  var a = Math.random() * Math.PI * 2;
-  var rad = rnd(30, 44);
-  out[0] = Math.cos(a) * rad;
-  out[1] = Math.sin(a) * rad * 0.72;
-  out[2] = rnd(-72, 26);
-}
-
-/* ---- target 5: the wordmark, sampled from a canvas ---- */
-function sampleWord(){
-  var c = document.createElement("canvas");
-  c.width = 640; c.height = 160;
-  var g = c.getContext("2d");
-  if (!g) return null;
-  g.fillStyle = "#fff";
-  g.textAlign = "center";
-  g.textBaseline = "middle";
-  g.font = "600 92px 'IBM Plex Mono', ui-monospace, monospace";
-  g.fillText("ATILIM AI", 320, 82);
-  var d;
-  try { d = g.getImageData(0, 0, c.width, c.height).data; } catch(e){ return null; }
-  var pts = [];
-  for (var y = 0; y < c.height; y += 2){
-    for (var x = 0; x < c.width; x += 2){
-      if (d[(y*c.width + x)*4 + 3] > 128){
-        pts.push([ (x - c.width/2) * 0.115, -(y - c.height/2) * 0.115 ]);
-      }
-    }
-  }
-  return pts.length > 200 ? pts : null;
-}
-var glyphs = sampleWord();
-function makeWord(i, out){
-  if (!glyphs){ makeSphere(i, out); return; }
-  var p = glyphs[Math.floor(Math.random()*glyphs.length)];
-  out[0] = p[0] + gauss()*0.32;
-  out[1] = p[1] + gauss()*0.32;
-  out[2] = gauss()*1.6;
-}
-
-/* One scroll target per section. The wordmark is no longer a scroll target —
-   it now plays once on load, then dissolves into the hero sphere.
-   Font mono: Newsreader'in ince serif govdeleri parcacik olarak dagiliyor. */
-var builders = [makeSphere, makeNet, makeHelix, makeTunnel, makeFrames];
-var buffers  = builders.map(function(){ return new Float32Array(COUNT*3); });
-var wordBuf  = new Float32Array(COUNT*3);
-var sizes    = new Float32Array(COUNT);
-var rnds     = new Float32Array(COUNT);
-var cols     = new Float32Array(COUNT*3);
-var tmp      = [0,0,0];
-
-/* ekran (soğuk) ve lamba (sıcak) — DESIGN.md, İki Kaynak Kuralı */
-var C_EKRAN = [0.56,0.71,0.84], C_EKRAN_SOFT = [0.68,0.80,0.90], C_LAMBA = [0.91,0.64,0.24];
-for (var i = 0; i < COUNT; i++){
-  for (var b = 0; b < builders.length; b++){
-    builders[b](i, tmp);
-    buffers[b][i*3]   = tmp[0];
-    buffers[b][i*3+1] = tmp[1];
-    buffers[b][i*3+2] = tmp[2];
-  }
-  makeWord(i, tmp);
-  wordBuf[i*3] = tmp[0]; wordBuf[i*3+1] = tmp[1]; wordBuf[i*3+2] = tmp[2];
-
-  sizes[i] = rnd(0.9, 2.5);
-  rnds[i]  = Math.random();
-  var c = (i % 9 === 0) ? C_LAMBA : (i % 3 === 0 ? C_EKRAN_SOFT : C_EKRAN);
-  cols[i*3] = c[0]; cols[i*3+1] = c[1]; cols[i*3+2] = c[2];
-}
-
-var geo = new THREE.BufferGeometry();
-geo.setAttribute("position", new THREE.BufferAttribute(buffers[0], 3));
-geo.setAttribute("t1", new THREE.BufferAttribute(buffers[1], 3));
-geo.setAttribute("t2", new THREE.BufferAttribute(buffers[2], 3));
-geo.setAttribute("t3", new THREE.BufferAttribute(buffers[3], 3));
-geo.setAttribute("t4", new THREE.BufferAttribute(buffers[4], 3));
-geo.setAttribute("tW", new THREE.BufferAttribute(wordBuf, 3));
-geo.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
-geo.setAttribute("aRnd",  new THREE.BufferAttribute(rnds, 1));
-geo.setAttribute("aCol",  new THREE.BufferAttribute(cols, 3));
-geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 200);
-
-var uniforms = {
-  w0:{value:1}, w1:{value:0}, w2:{value:0}, w3:{value:0}, w4:{value:0},
-  uTime:{value:0}, uIntro:{value:reduced?1:0}, uDrift:{value:1},
-  uWord:{value:reduced?0:1},
-  uRepel:{value:(fine && !reduced) ? 1 : 0},
-  uMouse:{value:new THREE.Vector2(9999,9999)},
-  uPix:{value:renderer.getPixelRatio()}
-};
-
-var material = new THREE.ShaderMaterial({
-  uniforms: uniforms,
-  transparent: true,
-  depthWrite: false,
-  depthTest: false,
-  blending: THREE.AdditiveBlending,
-  vertexShader: [
-    "attribute vec3 t1; attribute vec3 t2; attribute vec3 t3;",
-    "attribute vec3 t4; attribute vec3 tW;",
-    "attribute float aSize; attribute float aRnd; attribute vec3 aCol;",
-    "uniform float w0,w1,w2,w3,w4;",
-    "uniform float uTime,uIntro,uDrift,uRepel,uPix,uWord;",
-    "uniform vec2 uMouse;",
-    "varying vec3 vCol; varying float vFade;",
-    "void main(){",
-    "  vec3 p = position*w0 + t1*w1 + t2*w2 + t3*w3 + t4*w4;",
-    "  p = mix(p, tW, uWord);",
-    "  float dr = uDrift * (1.0 - uWord*0.88);",
-    "  float s = aRnd * 6.2831853;",
-    "  p.x += sin(uTime*0.35 + s)       * dr * (0.4 + aRnd);",
-    "  p.y += cos(uTime*0.29 + s*1.7)   * dr * (0.4 + aRnd);",
-    "  p.z += sin(uTime*0.23 + s*2.3)   * dr * 0.7;",
-    "  vec3 start = p * (2.1 + aRnd*3.6);",
-    "  p = mix(start, p, uIntro);",
-    "  vec2 d = p.xy - uMouse;",
-    "  float dist = length(d) + 0.001;",
-    "  p.xy += (d/dist) * (uRepel * 110.0 / (dist*dist + 34.0));",
-    "  vec4 mv = modelViewMatrix * vec4(p, 1.0);",
-    "  gl_Position = projectionMatrix * mv;",
-    "  float depth = max(1.0, -mv.z);",
-    "  gl_PointSize = min(aSize * uPix * (120.0 / depth), 6.5 * uPix);",
-    "  float far  = 1.0 - smoothstep(60.0, 235.0, depth);",
-    "  float near = smoothstep(2.0, 14.0, depth);",
-    "  vCol  = aCol;",
-    "  vFade = uIntro * far * near;",
-    "}"
-  ].join("\n"),
-  fragmentShader: [
-    "precision mediump float;",
-    "varying vec3 vCol; varying float vFade;",
-    "void main(){",
-    "  vec2 c = gl_PointCoord - 0.5;",
-    "  float d = length(c);",
-    "  if (d > 0.5) discard;",
-    "  float a = pow(1.0 - d*2.0, 2.2);",
-    "  gl_FragColor = vec4(vCol, a * vFade);",
-    "}"
-  ].join("\n")
-});
-
-var points = new THREE.Points(geo, material);
-points.frustumCulled = false;
-scene.add(points);
-
-/* The wordmark is sampled before the web font finishes loading, so redo it
-   once IBM Plex Mono is actually available. */
-if (glyphs && document.fonts && document.fonts.ready){
-  document.fonts.ready.then(function(){
-    var tW = geo.getAttribute("tW");
-    glyphs = sampleWord();
-    if (!glyphs) return;
-    var o = [0,0,0];
-    for (var n = 0; n < COUNT; n++){
-      makeWord(n, o);
-      tW.array[n*3] = o[0]; tW.array[n*3+1] = o[1]; tW.array[n*3+2] = o[2];
-    }
-    tW.needsUpdate = true;
-  }).catch(function(){});
-}
-
-/* ---- neural-net edges, visible only in section 2 ---- */
-var edgePos = [];
-for (var l = 0; l < nodes.length - 1; l++){
-  for (var a = 0; a < nodes[l].length; a++){
-    for (var b2 = 0; b2 < nodes[l+1].length; b2++){
-      edgePos.push(nodes[l][a][0], nodes[l][a][1], nodes[l][a][2]);
-      edgePos.push(nodes[l+1][b2][0], nodes[l+1][b2][1], nodes[l+1][b2][2]);
-    }
-  }
-}
-var edgeGeo = new THREE.BufferGeometry();
-edgeGeo.setAttribute("position", new THREE.Float32BufferAttribute(edgePos, 3));
-var edgeMat = new THREE.LineBasicMaterial({
-  color:0x8FB4D6, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending
-});
-var edges = new THREE.LineSegments(edgeGeo, edgeMat);
-scene.add(edges);
-
-/* ---- per-section camera + drift settings ----
-   Order: hero / hakkımızda / etkinlikler / haftalık rapor / projeler.
-   Camera x is inverted relative to the composition: pushing the camera left
-   moves the particle mass right, away from whichever column holds the text. */
-var CAM_Z   = [88, 78, 72, 8, 74];
-var CAM_X   = [-34, 12, 14, 0, 0];
-var CAM_Y   = [9, 5, 4, 0, -4];
-var DRIFT   = [0.85, 0.35, 0.55, 0.70, 0.30];
-var weights = [uniforms.w0, uniforms.w1, uniforms.w2, uniforms.w3, uniforms.w4];
-
-function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
-function lerpArr(arr, seg, t){
-  var i = Math.max(0, Math.min(arr.length-2, Math.floor(seg)));
-  return arr[i] + (arr[i+1] - arr[i]) * t;
-}
-
-/* ---- intro ---- */
-var introStart = performance.now();
-var wordAmt    = reduced ? 0 : 1;
-var camTarget  = new THREE.Vector3(0,0,82);
-var mouseWorld = new THREE.Vector3();
-var camX = 0, camY = 0;
-
-function resize(){
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  uniforms.uPix.value = renderer.getPixelRatio();
-}
-window.addEventListener("resize", resize);
-
-var last = performance.now();
-function frame(now){
-  requestAnimationFrame(frame);
-  var dt = Math.max(0, Math.min(0.05, (now - last)/1000));
-  last = now;
-
-  if (!reduced){
-    uniforms.uTime.value += dt;
-    var sec = (now - introStart) / 1000;
-    uniforms.uIntro.value = ease(Math.min(1, sec / 1.5));
-    /* Particles fly in as the wordmark, hold, then dissolve into the hero.
-       Scrolling early cuts the hold short. */
-    var want = (sec < 2.0 && progress < 0.015) ? 1 : 0;
-    wordAmt += (want - wordAmt) * Math.min(1, dt * 2.6);
-    uniforms.uWord.value = wordAmt;
-    smooth += (progress - smooth) * Math.min(1, dt * 4.2);
-  } else {
-    smooth = progress;
-    uniforms.uWord.value = 0;
-  }
-
-  var seg = Math.max(0, Math.min(1, smooth)) * 4;
-  var idx = Math.max(0, Math.min(3, Math.floor(seg)));
-  var t   = ease(seg - idx);
-
-  for (var k = 0; k < 5; k++) weights[k].value = 0;
-  weights[idx].value     = 1 - t;
-  weights[idx + 1].value = t;
-
-  uniforms.uDrift.value = lerpArr(DRIFT, seg, t);
-  edgeMat.opacity = Math.max(0, (weights[1].value - 0.45)) * 0.5 * (1 - wordAmt);
-  edges.visible = edgeMat.opacity > 0.002;
-
-  /* Centre the frame while the wordmark is up, then drift to the section offset. */
-  camTarget.set(
-    lerpArr(CAM_X, seg, t) * (1 - wordAmt),
-    lerpArr(CAM_Y, seg, t) * (1 - wordAmt),
-    lerpArr(CAM_Z, seg, t)
-  );
-
-  if (!reduced){
-    camX += (camTarget.x + nx * 7 - camX) * Math.min(1, dt * 2.4);
-    camY += (camTarget.y + ny * 5 - camY) * Math.min(1, dt * 2.4);
-  } else {
-    camX = camTarget.x; camY = camTarget.y;
-  }
-  camera.position.set(camX, camY, camTarget.z);
-  camera.lookAt(camX * 0.35, camY * 0.35, camTarget.z - 82);
-  camera.updateMatrixWorld();
-
-  points.rotation.y = reduced ? 0 : Math.sin(uniforms.uTime.value * 0.06) * 0.14 * weights[0].value;
-
-  if (uniforms.uRepel.value > 0){
-    mouseWorld.set(nx, ny, 0.5).unproject(camera).sub(camera.position).normalize();
-    var k2 = (0 - camera.position.z) / (mouseWorld.z || -1);
-    uniforms.uMouse.value.set(
-      camera.position.x + mouseWorld.x * k2,
-      camera.position.y + mouseWorld.y * k2
-    );
-  }
-
-  renderer.render(scene, camera);
-}
-requestAnimationFrame(frame);
 
 })();
 </script>
+<script>
+/* ============================================================
+   Alan — kaydırmayla değişen model katmanı.
+   Bağımlılık yok, CDN yok: ham WebGL, sayfanın içinde.
+
+   Okunabilirlik sözleşmesi: WebGL yalnızca scissor dikdörtgeninin içine
+   boyayabilir. O dikdörtgen ya sağdaki boş alet rayı ya da içinde hiç metin
+   olmayan bölüm arası bölgedir. Metnin üstüne düşmesi mümkün değildir.
+   ============================================================ */
+(function(){
+"use strict";
+
+var tuval = document.getElementById("alan");
+var ray   = document.getElementById("ray");
+if (!tuval || !ray) return;
+
+function kapat(){ document.body.classList.add("no-alan"); }
+
+var kisik = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+var gl = null;
+try {
+  var sec = {alpha:false, antialias:false, depth:false, stencil:false,
+             powerPreference:"high-performance"};
+  gl = tuval.getContext("webgl2", sec) || tuval.getContext("webgl", sec);
+} catch(e){ gl = null; }
+if (!gl){ kapat(); return; }
+
+var mobil = window.matchMedia("(max-width:760px)").matches;
+var SAYI  = mobil ? 7500 : 18000;
+
+function ras(a,b){ return a + Math.random()*(b-a); }
+function cn(){ return (Math.random()+Math.random()+Math.random()-1.5)/1.5; }
+function daha(a,b,x){ var t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*t*(t*(t*6-15)+10); }
+
+/* ---------- 0. monogram ---------- */
+var harf = null;
+function ornekle(ciz, W, H, esik, olcX, olcY){
+  var c = document.createElement("canvas"); c.width = W; c.height = H;
+  var g = c.getContext("2d"); if (!g) return null;
+  ciz(g);
+  var d; try { d = g.getImageData(0,0,W,H).data; } catch(e){ return null; }
+  var p = [];
+  for (var y=0;y<H;y++) for (var x=0;x<W;x++){
+    if (d[(y*W+x)*4+3] > esik) p.push([(x/W-0.5)*olcX, -(y/H-0.5)*olcY]);
+  }
+  return p.length > 260 ? p : null;
+}
+function monogramYap(i,out){
+  if (!harf){ out[0]=cn()*0.7; out[1]=cn()*0.5; out[2]=cn()*0.4; return; }
+  var p = harf[(Math.random()*harf.length)|0];
+  out[0]=p[0]+cn()*0.014; out[1]=p[1]+cn()*0.014; out[2]=cn()*0.075;
+}
+
+/* ---------- 1. sinir ağı ---------- */
+/* Katmanlar düz (z=0) ve eşit aralıklı; düğüm aralığı her katmanda aynı, öyle
+   ki sütunlar dümdüz dursun. Bağlantılar rastgele seçilmiyor — katmanlar tam
+   bağlı, çünkü yoğun katmanın kendisi öyle. */
+var KATMAN=[4,5,5,3], ADIM=0.38, dugum=[], agKenar=[];
+(function(){
+  var l,k,n,kat,x;
+  for (l=0;l<KATMAN.length;l++){
+    n=KATMAN[l]; kat=[]; x=(l/(KATMAN.length-1)-0.5)*3.05;
+    for (k=0;k<n;k++) kat.push([x, (k-(n-1)*0.5)*ADIM, 0]);
+    dugum.push(kat);
+  }
+  for (l=0;l<dugum.length-1;l++)
+    for (var a=0;a<dugum[l].length;a++)
+      for (var b=0;b<dugum[l+1].length;b++)
+        agKenar.push([dugum[l][a], dugum[l+1][b]]);
+})();
+function agYap(i,out){
+  if (i%4 === 0){
+    var l=(Math.random()*dugum.length)|0, p=dugum[l][(Math.random()*dugum[l].length)|0];
+    out[0]=p[0]+cn()*0.026; out[1]=p[1]+cn()*0.026; out[2]=cn()*0.028;
+  } else {
+    var e=agKenar[(Math.random()*agKenar.length)|0], a=e[0], b=e[1], t=Math.random();
+    out[0]=a[0]+(b[0]-a[0])*t;
+    out[1]=a[1]+(b[1]-a[1])*t+cn()*0.005;
+    out[2]=cn()*0.012;
+  }
+}
+
+/* ---------- 2. dikkat matrisi ---------- */
+/* Nedensel maske: bir belirteç yalnızca kendinden öncekilere bakabilir, bu
+   yüzden üst üçgen boştur ve matris keskin bir köşegen kenarla okunur.
+   Hücreler gaussian leke değil dolu kare yamalar; parlaklık ağırlıktan gelir. */
+var N=16, agir=new Float32Array(N*N), kum=new Float32Array(N*N), top=0;
+(function(){
+  for (var j=0;j<N;j++) for (var i2=0;i2<N;i2++){
+    /* Maskeli hücreler tamamen boş değil, çok sönük: matrisin karesi görünür
+       kalıyor, maske de o karenin içindeki bir yokluk olarak okunuyor. */
+    var w = 0.022;
+    if (i2 <= j){
+      var d = j - i2;
+      w = 0.20
+        + Math.exp(-(d*d)/2.0)*1.85          /* en yakın belirteçler */
+        + (i2 === 0 ? 1.05 : 0)              /* ilk belirtece dönen dikkat */
+        + (Math.random() < 0.06 ? Math.random()*1.25 : 0);
+    }
+    agir[j*N+i2]=w; top+=w; kum[j*N+i2]=top;
+  }
+})();
+var HX = 2.62/(N-1), HY = 1.86/(N-1);
+function matrisYap(i,out){
+  var r=Math.random()*top, lo=0, hi=N*N-1;
+  while (lo<hi){ var m=(lo+hi)>>1; if (kum[m]<r) lo=m+1; else hi=m; }
+  var cx=lo%N, cy=(lo/N)|0, w=agir[lo];
+  out[0]=(cx/(N-1)-0.5)*2.62 + (Math.random()-0.5)*HX*0.66;
+  out[1]=-(cy/(N-1)-0.5)*1.86 + (Math.random()-0.5)*HY*0.66;
+  out[2]=(Math.min(w,2.4)-0.7)*0.26 + cn()*0.012;
+}
+
+/* ---------- 3. belirteç akışı ---------- */
+var TOK=34, tokY=new Float32Array(TOK), tokB=new Float32Array(TOK);
+(function(){
+  for (var k=0;k<TOK;k++){
+    var u=k/(TOK-1);
+    tokY[k]=Math.sin(u*6.1)*0.20+Math.sin(u*15.0+1.2)*0.075;
+    tokB[k]=0.14+Math.abs(Math.sin(u*11.0+0.4))*0.62;
+  }
+})();
+function akisYap(i,out){
+  if (i%6 === 0){                       /* diziyi taşıyan ince taban */
+    var k2=(Math.random()*(TOK-1))|0, u=Math.random();
+    var x0=(k2/(TOK-1)-0.5)*2.90, x1=((k2+1)/(TOK-1)-0.5)*2.90;
+    out[0]=x0+(x1-x0)*u;
+    out[1]=tokY[k2]+(tokY[k2+1]-tokY[k2])*u-0.02+cn()*0.006;
+    out[2]=cn()*0.06;
+  } else {                              /* tek tek belirteçler */
+    var k=(Math.random()*TOK)|0;
+    out[0]=(k/(TOK-1)-0.5)*2.90 + cn()*0.0085;
+    out[1]=tokY[k] + (Math.random()-0.5)*tokB[k];
+    out[2]=cn()*0.12;
+  }
+}
+
+/* ---------- 4. gradyan inişi ---------- */
+/* Hata yüzeyi tel kafes olarak çizilir, iniş yolu gerçek gradyan adımlarıyla
+   üretilir: adımlar eğim azaldıkça kendiliğinden kısalır. Yol, adım sayısına
+   göre değil yay uzunluğuna göre örneklenir — yoksa bütün parçacıklar
+   adımların kısaldığı dipte yığılıp beyaz bir leke oluşturuyor. */
+var EGIM = 0.52, EC = Math.cos(EGIM), ES = Math.sin(EGIM), ORT = 0.55, KENAR_U = 0.88, KENAR_V = 0.80;
+function hata(u,v){ return 0.62*(0.95*u*u + 1.05*v*v) - 0.30*Math.cos(2.9*u)*Math.cos(2.6*v); }
+function egimU(u,v){ return 1.178*u + 0.870*Math.sin(2.9*u)*Math.cos(2.6*v); }
+function egimV(u,v){ return 1.302*v + 0.780*Math.cos(2.9*u)*Math.sin(2.6*v); }
+function yerlestir(u,v,y,out){
+  /* Zemin düzlemi (u,v), yükseklik h. Sahne X ekseni etrafında EGIM kadar
+     döner: A=0'da yükseklik doğrudan yukarı, A=90°'de kuş bakışı olur.
+     Kamera +Z'ye bakar, yani büyük z uzaktır — v arttıkça hem yukarı hem
+     uzağa gitmeli, yükselen nokta ise izleyiciye yaklaşmalı. */
+  var h = y - ORT;
+  out[0] = u*1.16;
+  out[1] =  h*EC + v*ES;
+  out[2] = -h*ES + v*EC;
+}
+var YOL = [], YOLU = [], YOLTOP = 0;
+(function(){
+  var u=-0.80, v=0.68, lr=0.14, s;
+  YOL.push([u,v]);
+  for (s=0;s<46;s++){ var a=egimU(u,v), b=egimV(u,v); u-=lr*a; v-=lr*b; YOL.push([u,v]); }
+  YOLU.push(0);
+  for (s=1;s<YOL.length;s++){
+    var dx=YOL[s][0]-YOL[s-1][0], dy=YOL[s][1]-YOL[s-1][1];
+    YOLTOP += Math.sqrt(dx*dx+dy*dy); YOLU.push(YOLTOP);
+  }
+})();
+function inisYap(i,out){
+  if (i%4 === 0){                       /* iniş yolu */
+    var r=Math.random()*YOLTOP, lo=1, hi=YOLU.length-1;
+    while (lo<hi){ var m=(lo+hi)>>1; if (YOLU[m]<r) lo=m+1; else hi=m; }
+    var g0=YOLU[lo-1], g1=YOLU[lo];
+    var tt=(g1>g0) ? (r-g0)/(g1-g0) : 0;
+    var a=YOL[lo-1], b=YOL[lo];
+    var u=a[0]+(b[0]-a[0])*tt, v=a[1]+(b[1]-a[1])*tt;
+    yerlestir(u, v, hata(u,v)+0.075, out);
+    out[0]+=cn()*0.006; out[1]+=cn()*0.006;
+  } else {                              /* hata yüzeyinin tel kafesi */
+    var uu, vv;
+    if (Math.random() < 0.5){
+      vv = (((Math.random()*13)|0)/12 - 0.5)*2*KENAR_V;
+      uu = (Math.random()*2-1)*KENAR_U;
+    } else {
+      uu = (((Math.random()*15)|0)/14 - 0.5)*2*KENAR_U;
+      vv = (Math.random()*2-1)*KENAR_V;
+    }
+    yerlestir(uu, vv, hata(uu,vv), out);
+    out[1]+=cn()*0.004; out[2]+=cn()*0.004;
+  }
+}
+
+var yapici = [monogramYap, agYap, matrisYap, akisYap, inisYap];
+
+/* ---------- shader ---------- */
+var VS =
+"attribute vec3 a0;attribute vec3 a1;attribute vec3 a2;attribute vec3 a3;attribute vec3 a4;"+
+"attribute float aBoy;attribute float aTohum;"+
+"uniform float w0,w1,w2,w3,w4;"+
+"uniform float uZaman,uEn,uDon,uSup,uSurukle,uSig,uNokta,uItme;"+
+"uniform vec2 uFare;"+
+"varying float vIsik;varying float vSol;"+
+"void main(){"+
+"  vec3 p = a0*w0+a1*w1+a2*w2+a3*w3+a4*w4;"+
+"  float f = aTohum*6.2831853;"+
+"  p += vec3(sin(uZaman*0.34+f),cos(uZaman*0.27+f*1.7),sin(uZaman*0.21+f*2.3))*(0.020*uSurukle);"+
+"  float c=cos(uDon), s=sin(uDon);"+
+"  p = vec3(p.x*c+p.z*s, p.y, -p.x*s+p.z*c);"+
+"  float z = p.z + 3.30;"+
+"  vec2 nd = p.xy*(2.05/z)*uSig; nd.x /= uEn;"+
+"  if (uItme > 0.0001){"+
+"    vec2 fd = nd - uFare;"+
+"    nd += normalize(fd + vec2(1e-4)) * (uItme * exp(-dot(fd,fd)*8.5));"+
+"  }"+
+"  gl_Position = vec4(nd,0.0,1.0);"+
+"  gl_PointSize = clamp(aBoy*(2.05/z)*uSig*uNokta, 1.55, 18.0);"+
+"  vIsik = exp(-pow((p.x-uSup)*1.55,2.0));"+
+"  vSol  = 1.0 - smoothstep(3.55,5.10,z);"+
+"}";
+var FS =
+"precision mediump float;"+
+"varying float vIsik;varying float vSol;"+
+"uniform vec3 uSoguk;uniform vec3 uSicak;uniform float uKazanc;uniform float uVurgu;"+
+"void main(){"+
+"  vec2 d = gl_PointCoord-0.5; float r2 = dot(d,d);"+
+"  if (r2 > 0.25) discard;"+
+"  float a = 1.0-r2*4.0; a*=a;"+
+"  float h = vIsik*uVurgu;"+
+"  vec3 col = mix(uSoguk,uSicak,h);"+
+"  gl_FragColor = vec4(col*(0.62+0.55*h)*(a*vSol*uKazanc*0.50), 1.0);"+
+"}";
+
+function derle(tip, kod){
+  var s = gl.createShader(tip);
+  gl.shaderSource(s, kod); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) return null;
+  return s;
+}
+
+var prog = null, konum = {}, tampon = [];
+/* Her modelin gerçek yarı-genişliği: sığdırma bunlardan hesaplanır. */
+var sinirX = [1,1,1,1,1], sinirY = [1,1,1,1,1];
+/* Çerçevenin ne kadarını dolduracağı modele göre: işaret kendinden emin
+   durmalı, diyagramların ise nefes alacak kenar boşluğu olmalı. */
+/* Doluluk, sürüklenme payı ve nokta yarıçapı için kenarda boşluk bırakır;
+   itme sırasında ayrıca küçülür (aşağıya bak), böylece parçacıklar çerçeveyi
+   hiçbir durumda aşıp kırpılmaz. */
+var DOLGU = [0.925, 0.885, 0.900, 0.905, 0.890];
+/* Modeli kendi sınırlayıcı kutusunun merkezine oturtur ve yarı-genişliklerini
+   kaydeder. Sınırın mutlak değerden okunması, gradyan inişi gibi simetrik
+   olmayan modelleri çerçevenin bir yarısına itiyordu. */
+/* Sınırlar MODEL uzayında değil, İZDÜŞÜM uzayında ölçülür. Perspektif
+   katsayısı 2.05/(z+3.30) noktadan noktaya değişir; gradyan inişi gibi eğik bir
+   yüzeyin z yayılımı ±1.19 olduğu için en yakın noktalarda katsayı 0.97'ye,
+   yani sabit varsayılan 0.62'nin 1.57 katına çıkar. Model uzayında yapılan
+   sığdırma bunu göremez ve o noktalar dikdörtgeni aşıp kırpılır.
+   Ölçüm ayrıca yalpalama aralığı boyunca taranır: dönme x ile z'yi karıştırdığı
+   için derin bir modelin izdüşüm genişliği açıya göre değişir. */
+var YALPA = [-0.30, -0.15, 0, 0.15, 0.30];
+function ortala(dizi, k){
+  var mnx=1e9, mxx=-1e9, mny=1e9, mxy=-1e9, i, x, y;
+  for (i=0;i<SAYI;i++){
+    x=dizi[i*3]; y=dizi[i*3+1];
+    if (x<mnx) mnx=x; if (x>mxx) mxx=x;
+    if (y<mny) mny=y; if (y>mxy) mxy=y;
+  }
+  var ox=(mnx+mxx)*0.5, oy=(mny+mxy)*0.5;
+  for (i=0;i<SAYI;i++){ dizi[i*3]-=ox; dizi[i*3+1]-=oy; }
+
+  var ex=0, ey=0, a, c, s, rx, rz, kk, px, py, z;
+  for (a=0;a<YALPA.length;a++){
+    c=Math.cos(YALPA[a]); s=Math.sin(YALPA[a]);
+    for (i=0;i<SAYI;i++){
+      x=dizi[i*3]; y=dizi[i*3+1]; z=dizi[i*3+2];
+      rx =  x*c + z*s;
+      rz = -x*s + z*c;
+      kk = 2.05/Math.max(0.9, rz + 3.30);
+      px = Math.abs(rx*kk); if (px>ex) ex=px;
+      py = Math.abs(y*kk);  if (py>ey) ey=py;
+    }
+  }
+  sinirX[k]=Math.max(0.05, ex);
+  sinirY[k]=Math.max(0.05, ey);
+}
+/* sinirX/sinirY zaten izdüşüm birimindedir; burada ikinci bir 0.62 uygulanmaz. */
+function sigdir(w, en){
+  var ex=0, ey=0, d=0;
+  for (var i=0;i<5;i++){ ex+=w[i]*sinirX[i]; ey+=w[i]*sinirY[i]; d+=w[i]*DOLGU[i]; }
+  ex=Math.max(0.05,ex); ey=Math.max(0.05,ey); d=Math.max(0.2,d);
+  return Math.min(d*en/ex, d/ey);
+}
+
+function kur(){
+  var vs = derle(gl.VERTEX_SHADER, VS), fs = derle(gl.FRAGMENT_SHADER, FS);
+  if (!vs || !fs) return false;
+  prog = gl.createProgram();
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
+  gl.useProgram(prog);
+
+  var poz = [], boy = new Float32Array(SAYI), toh = new Float32Array(SAYI), t3=[0,0,0];
+  for (var b=0;b<5;b++) poz.push(new Float32Array(SAYI*3));
+  for (var i=0;i<SAYI;i++){
+    for (var k=0;k<5;k++){
+      yapici[k](i,t3); poz[k][i*3]=t3[0]; poz[k][i*3+1]=t3[1]; poz[k][i*3+2]=t3[2];
+    }
+    /* i%4===0 her modelde yapısal öğedir: ağda düğüm, inişte yol.
+       Boyutu oradan alıyoruz — kenarlar ve tel kafes ince toz kalıyor. */
+    boy[i]=(i%4===0) ? ras(1.60,2.75) : ras(0.95,1.75);
+    toh[i]=Math.random();
+  }
+  for (b=0;b<5;b++) ortala(poz[b], b);
+
+  function bagla(ad, veri, boyut){
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, veri, gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, ad);
+    if (loc >= 0){ gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, boyut, gl.FLOAT, false, 0, 0); }
+    tampon.push(buf);
+  }
+  for (var q=0;q<5;q++) bagla("a"+q, poz[q], 3);
+  bagla("aBoy", boy, 1);
+  bagla("aTohum", toh, 1);
+
+  ["w0","w1","w2","w3","w4","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare",
+   "uSoguk","uSicak","uKazanc","uVurgu"].forEach(function(ad){ konum[ad]=gl.getUniformLocation(prog, ad); });
+
+  gl.uniform3f(konum.uSoguk, 0.561, 0.706, 0.839);  /* ekran  #8FB4D6 */
+  gl.uniform3f(konum.uSicak, 0.910, 0.639, 0.239);  /* lamba  #E8A33D */
+  gl.uniform1f(konum.uVurgu, 0.85);
+  gl.disable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE);
+  gl.clearColor(0.06275, 0.05098, 0.03922, 1.0);   /* gece #100D0A */
+  return true;
+}
+
+/* ---------- ölçüler ---------- */
+var dpr = 1, EN = 0, BOY = 0;
+function boyutla(){
+  dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+  EN = window.innerWidth; BOY = window.innerHeight;
+  tuval.width  = Math.round(EN*dpr);
+  tuval.height = Math.round(BOY*dpr);
+}
+
+/* Merceğin yeri okuma sütununun dışındaki rayın dış ucudur ve her karede
+   gerçek .wrap dikdörtgeninden hesaplanır — resize olayına güvenilmez.
+   Temel dolgu clamp(20px,5vw,56px), .wrap ile birebir aynı. */
+var refWrap = document.querySelector("#s1 .wrap") || document.querySelector("main .wrap");
+var MERCEK_TAVAN = 560;
+function mercekKutusu(){
+  if (EN < 1152 || !refWrap) return null;
+  var d = ray.getBoundingClientRect();
+  if (d.width < 80) return null;
+  var w = refWrap.getBoundingClientRect();
+  var temel = Math.min(56, Math.max(20, EN*0.05));
+  var sag = w.right - temel, sol = sag - d.width;          /* mercek bölgesi */
+  var lw = Math.min(d.width, MERCEK_TAVAN);
+  var lh = Math.min(lw*1.18, BOY*0.74);
+  return {x: sol + (d.width - lw)*0.5, y: BOY*0.52 - lh*0.5, w: lw, h: lh};
+}
+
+var gecis  = Array.prototype.slice.call(document.querySelectorAll(".gecis"));
+
+var kutu = {x:0,y:0,w:0,h:0};
+/* Etkileşim yalnızca çizilen dikdörtgenin içinde ve yalnızca imleç gerçekten
+   hareket ederken çalışır. Park edilmiş bir imleç hiçbir şey yapmaz — main branch'teki
+   sayfa geneline yayılan sürekli tepki tam olarak yorucu olan şeydi. */
+var fx=-9999, fy=-9999, fareVar=false, sonHareket=-99, ilgi=0, saat=0;
+/* Kaydırmadan gelen değerler doğrudan kullanılırsa dokunmatik kaydırmanın
+   kesikli ve ataletli adımları modele birebir yansır; telefonda geçiş
+   sıçrayarak olur. Hedefe zaman sabitiyle yaklaşıyoruz. */
+var pYum = 0, tYum = 0, sonZaman = -1;
+var ince = window.matchMedia("(pointer:fine)").matches;
+
+function cizim(zaman){
+  /* --- okumalar ---
+     Dönüşüm bölüm merkezleri arasına yayılmıyor: geçiş bölgesinin ilk yarısında
+     tamamlanıp orada duruyor. Böylece çerçeve tam açıldığında ekranda iki
+     modelin ortalaması değil, saf bir model bulunuyor. */
+  var vm = BOY*0.5, i, p = 0;
+  var ort = 0, zr = null, dt = [];
+  for (i=0;i<gecis.length;i++){
+    var g = gecis[i].getBoundingClientRect();
+    dt.push(g);
+    var gor = Math.min(g.bottom, BOY) - Math.max(g.top, 0);
+    var o = Math.max(0, gor)/BOY;
+    if (o > ort){ ort = o; zr = g; }
+  }
+  for (i=dt.length-1; i>=0; i--){
+    if (dt[i].top <= vm){
+      p = (vm <= dt[i].bottom)
+        ? i + daha(0.04, 0.46, (vm - dt[i].top)/Math.max(1, dt[i].height))
+        : i + 1;
+      break;
+    }
+  }
+
+  var rr = mercekKutusu();
+  var rayVar = !!rr;
+
+  /* --- hedef dikdörtgen ---
+     Genişleme, ekranın ne kadarının boş olduğuna göre: bölge ne kadar
+     kaplarsa çerçeve o kadar açılır. Eşik bölgenin erişebileceği en yüksek
+     kaplamaya göre ölçeklenir, böylece kısa ekranlarda da tam açılır. */
+  var maks = zr ? Math.min(1, zr.height/BOY) : 0;
+  var t = (zr && maks > 0.05) ? daha(0.14*maks, 0.90*maks, ort) : 0;
+
+  /* dt'ye bağlı yumuşatma: kare hızı düşse de aynı hızda yaklaşır. */
+  var dt = (sonZaman < 0) ? 1 : Math.min(0.1, Math.max(0.001, zaman - sonZaman));
+  sonZaman = zaman;
+  if (kisik || dt >= 1){ pYum = p; tYum = t; }
+  else {
+    pYum += (p - pYum) * (1 - Math.exp(-dt/0.17));
+    tYum += (t - tYum) * (1 - Math.exp(-dt/0.13));
+    if (Math.abs(p-pYum) < 0.0004) pYum = p;
+    if (Math.abs(t-tYum) < 0.0004) tYum = t;
+  }
+  /* Ekranda hiç bant yoksa geçilecek bir hedef de yok: açıklık anında sıfırlanır,
+     yoksa levha dikdörtgeni yokken t hâlâ 1'e yakın kalıp kutuyu bozar. */
+  if (!zr) { tYum = 0; }
+  p = pYum; t = tYum;
+
+  var lx, ly, lw, lh, px, py, pw, ph;
+  if (zr){
+    var ust = Math.max(0, zr.top);
+    var alt = Math.min(BOY, zr.bottom);
+    /* Levha bir "tam ekran anı" değil: mercekle aynı cinsten, yalnızca daha
+       büyük ve ekranın ortasına gelmiş bir dikdörtgen. Görünür bir kenarlığı
+       yok; sınırı ekranın her kenarında kalan boşluk çiziyor. */
+    var kenar = Math.min(96, EN*0.08);
+    pw = Math.min(EN - kenar*2, 800); px = (EN-pw)*0.5;
+    var bosluk = Math.max(0, alt-ust);
+    ph = Math.min(bosluk, 500);
+    py = ust + (bosluk - ph)*0.5;
+  } else { px=0; py=0; pw=EN; ph=0; }
+
+  if (rayVar){ lx=rr.x; ly=rr.y; lw=rr.w; lh=rr.h; }
+  else {
+    lw = 132; lh = 150;
+    lx = EN*0.5 - lw*0.5;
+    ly = (zr ? (py + ph*0.5) : BOY*0.5) - lh*0.5;
+  }
+
+  kutu.x = lx + (px-lx)*t;
+  kutu.y = ly + (py-ly)*t;
+  kutu.w = lw + (pw-lw)*t;
+  kutu.h = lh + (ph-lh)*t;
+
+  /* İmleç çerçevenin içinde mi ve son 1,5 saniyede hareket etti mi? */
+  var ic = ince && !kisik && fareVar && kutu.w > 4 && kutu.h > 4 &&
+           fx >= kutu.x && fx <= kutu.x + kutu.w &&
+           fy >= kutu.y && fy <= kutu.y + kutu.h &&
+           (saat - sonHareket) < 1.5;
+  ilgi += ((ic ? 1 : 0) - ilgi) * (ic ? 0.10 : 0.045);
+  if (ilgi < 0.002) ilgi = 0;
+
+  /* Çizilen dikdörtgenin görünür bir kenarlığı yoktur; alanın sınırı yalnızca
+     scissor'dır. Merceğin uyandığını kazanç ve parçacıkların açılması söyler. */
+  var kazanc = (0.58 + 0.42*t) * (rayVar ? 1 : t) * (1 + 0.32*ilgi);
+
+  gl.disable(gl.SCISSOR_TEST);
+  gl.viewport(0,0,tuval.width,tuval.height);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  if (kutu.h < 3 || kutu.w < 3 || kazanc < 0.012) return;
+
+  var gx = Math.round(kutu.x*dpr);
+  var gw = Math.round(kutu.w*dpr);
+  var gh = Math.round(kutu.h*dpr);
+  var gy = Math.round(tuval.height - (kutu.y+kutu.h)*dpr);
+  gl.enable(gl.SCISSOR_TEST);
+  gl.scissor(gx, gy, gw, gh);
+  gl.viewport(gx, gy, gw, gh);
+
+  var idx = Math.max(0, Math.min(3, Math.floor(p)));
+  var f = daha(0, 1, p - idx);
+  var w = [0,0,0,0,0];
+  w[idx] = 1-f; w[idx+1] = f;
+  if (p >= 4){ w=[0,0,0,0,1]; }
+  for (i=0;i<5;i++) gl.uniform1f(konum["w"+i], w[i]);
+
+  gl.uniform1f(konum.uZaman, zaman);
+  var en = gw/Math.max(1,gh);
+  gl.uniform1f(konum.uEn, en);
+  /* Model her dikdörtgeni doldursun: hangi eksen önce dolarsa o sınırlar. */
+  /* İtme parçacıkları en çok uItme kadar dışarı taşır; model tam o kadar
+     küçülünce taşan hiçbir nokta çerçevenin dışına çıkmaz. */
+  var itme = 0.115*ilgi;
+  gl.uniform1f(konum.uSig, sigdir(w, en) * (1 - 0.07*t) * (1 - itme));
+  gl.uniform1f(konum.uItme, itme);
+  /* Nokta boyutu dikdörtgenle doğrusal ölçeklenirse küçük durumda orantısız
+     incelir ve çizgiler kaybolur; karekök her iki durumu da ~2,9 aygıt
+     pikselinde buluşturur. */
+  gl.uniform1f(konum.uNokta, gh*0.0026*Math.sqrt(1100/Math.max(240,gh)));
+  var fnx = ((fx-kutu.x)/kutu.w)*2 - 1, fny = 1 - ((fy-kutu.y)/kutu.h)*2;
+  gl.uniform2f(konum.uFare, fnx, fny);
+  gl.uniform1f(konum.uDon, kisik ? 0 : (Math.sin(zaman*0.06)*0.13 + fnx*0.16*ilgi));
+  gl.uniform1f(konum.uSup, kisik ? 9 : (-2.4 + ((zaman*0.20)%1)*4.8));
+  gl.uniform1f(konum.uSurukle, kisik ? 0 : (0.55 + 0.45*t));
+  gl.uniform1f(konum.uKazanc, kazanc);
+  gl.drawArrays(gl.POINTS, 0, SAYI);
+}
+
+/* ---------- döngü ---------- */
+var t0 = 0, calisiyor = false;
+function kare(now){
+  if (!calisiyor) return;
+  requestAnimationFrame(kare);
+  if (document.hidden) return;
+  if (!t0) t0 = now;
+  saat = (now-t0)/1000;
+  cizim(saat);
+}
+
+if (!kur()){ kapat(); return; }
+boyutla();
+
+window.addEventListener("resize", function(){ boyutla(); if (kisik) cizim(0); }, {passive:true});
+if (ince && !kisik){
+  window.addEventListener("mousemove", function(e){
+    fx = e.clientX; fy = e.clientY; fareVar = true; sonHareket = saat;
+  }, {passive:true});
+}
+
+var img = new Image();
+/* Yedek: görsel gelmezse ya da file:// altında tuval kirlenirse harfle çiz. */
+function yedekHarf(){
+  return ornekle(function(g){
+    g.fillStyle="#fff"; g.textAlign="center"; g.textBaseline="middle";
+    g.font = '300 104px Newsreader, Georgia, serif';
+    g.fillText("ai", 140, 74);
+  }, 280, 140, 110, 2.20, 1.10);
+}
+img.onload = function(){
+  harf = ornekle(function(g){ g.drawImage(img,0,0,158,158); }, 158, 158, 84, 1.78, 1.78)
+      || yedekHarf();
+  baslat();
+};
+img.onerror = function(){ harf = yedekHarf(); baslat(); };
+
+var basladi = false;
+function baslat(){
+  if (basladi) return; basladi = true;
+  /* monogram tamponunu gerçek harfle yeniden yaz */
+  var poz = new Float32Array(SAYI*3), t3=[0,0,0];
+  for (var i=0;i<SAYI;i++){
+    monogramYap(i,t3); poz[i*3]=t3[0]; poz[i*3+1]=t3[1]; poz[i*3+2]=t3[2];
+  }
+  ortala(poz, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, tampon[0]);
+  gl.bufferData(gl.ARRAY_BUFFER, poz, gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, "a0");
+  if (loc >= 0){ gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0); }
+
+  if (kisik){ cizim(0); return; }
+  calisiyor = true;
+  requestAnimationFrame(kare);
+}
+img.src = "images/ai_mark.png";
+
+})();
+</script>
+
 </body>
 </html>
