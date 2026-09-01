@@ -500,6 +500,10 @@ what the wordmark already says, so the interface takes the monogram alone. The t
 (`favicon.png`) is the same monogram in white on a `gece` disc at 72% of the disc's width,
 because a transparent mark disappears against light browser chrome.
 
+Both files are derived, and the source they are derived from is in the repository:
+`images/ai_s.png`, the society's original full lockup at 1796x1796. Keep it — regenerating
+the monogram or the tab icon without it means redrawing them.
+
 ### Standing meeting line
 Mono 13px `kagit-s`, hairline above, capped at 52ch, sitting directly under the hero's
 button row at every breakpoint. The day leads in `kagit`; the room and the "no prerequisite"
