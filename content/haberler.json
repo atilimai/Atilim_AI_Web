@@ -2,6 +2,22 @@
   "_aciklama": "Sayılar en yeniden eskiye doğru sıralanır. Site sayilar[0] gösterir, Discord botu da onu gönderir. Yeni sayı eklerken dizinin BAŞINA ekleyin.",
   "sayilar": [
     {
+      "sayi": 15,
+      "tarih": "2026-09-02",
+      "haberler": [
+        {
+          "etiket": "awdawdawd",
+          "tarih": "",
+          "baslik": "awdawd",
+          "ozet": "awdawdawdawsdawdasdawdasdawdaw",
+          "icerik": "daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naadawdawd\na\nwd\nawd\na\nwd\n\nadw\n\n\n\n\naw\nda\nwd\naw\n\n\nawd\naw\nd",
+          "link": "",
+          "gorsel": "",
+          "kaynak": ""
+        }
+      ]
+    },
+    {
       "sayi": 14,
       "tarih": "2026-08-26",
       "haberler": [
