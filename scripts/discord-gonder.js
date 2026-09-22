@@ -81,7 +81,12 @@ try {
 }
 
 const sayi = veri && Array.isArray(veri.sayilar) ? veri.sayilar[0] : null;
-if (!sayi) cik(1, "haberler.json içinde sayı yok.");
+/* Boş dizi hata değil: site ilk sayı yayımlanana kadar bu halde duruyor ve
+ * üç sayfa da bunu ayrı bir durum olarak gösteriyor. Burada exit 1 vermek
+ * haberler.json'a dokunan her push'ta iş akışını kırmızı yakıyordu —
+ * gönderilecek bir şey olmaması başarısızlık değil. Gerçek bozukluklar
+ * (geçersiz JSON, habersiz sayı) exit 1 vermeye devam ediyor. */
+if (!sayi) cik(0, "haberler.json'da sayı yok, gönderilecek bir şey yok.");
 if (!Array.isArray(sayi.haberler) || sayi.haberler.length === 0) {
   cik(1, `${sayi.sayi}. sayıda hiç haber yok.`);
 }
