@@ -28,7 +28,11 @@ const KURU    = process.env.KURU_CALISMA === "1";
 
 const DATA  = path.join("content", "haberler.json");
 const STATE = path.join("content", ".son-gonderilen");
-const RENK  = parseInt("E63A4B", 16);   // sitedeki --red
+/* Embed şeridi sitenin eylem rengini taşır. Burada uzun süre E63A4B durdu
+ * ve yorumu "sitedeki --red" diyordu; --red silinmiş bir paletten kalmaydı ve
+ * depoda başka hiçbir yerde geçmiyordu. Her haftalık rapor gönderisi,
+ * toplulugun tek katılım kanalına sitede bulunmayan bir kırmızıyla düşüyordu. */
+const RENK  = parseInt("E8A33D", 16);   // --lamba, DESIGN.md
 
 /* Discord'un sert sınırları. Aşılırsa istek 400 döner.
  * "toplam" TEK BİR EMBED'in değil, bir mesajdaki TÜM embed'lerin toplamıdır;

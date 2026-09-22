@@ -1,11 +1,11 @@
 # EKIP.md — Atılım AI Topluluk Sitesi
 
-Bu dosya, siteye katkı verecek herkes ve **her yapay zekâ aracı** için yazıldı.
+Bu dosya, siteye katkı verecek herkes ve **her yapay zeka aracı** için yazıldı.
 Amacı: dosyaları baştan sona taramadan doğru yere dokunabilmen. Kodun *ne*
 yaptığı koddan okunur; burada *neden* öyle olduğu ve nereye dokunursan neyin
 kırılacağı yazıyor.
 
-**Yapay zekâ aracıyla çalışıyorsan okuma sırası:**
+**Yapay zeka aracıyla çalışıyorsan okuma sırası:**
 
 1. Bu dosyanın "Site 60 saniyede", "Sayfa haritası", "Tuzaklar" başlıkları
    — `index.html`'e dokunacaksan "Alan katmanı" da
@@ -32,8 +32,9 @@ numara ekleme.
 ## Site 60 saniyede
 
 Statik bir tanıtım sitesi ve haber arşivi. Derleme adımı, paket yöneticisi ve
-bağımlılık **yok**; dosyalar doğrudan GitHub Pages'ten sunuluyor. Üç sayfa var
-ve üçü de aynı veri dosyasını okuyor: `content/haberler.json`.
+bağımlılık **yok**; dosyalar doğrudan GitHub Pages'ten sunuluyor. Üç içerik
+sayfası var ve üçü de aynı veri dosyasını okuyor: `content/haberler.json`.
+Dördüncü dosya `404.html` veri okumaz; Pages onu yalnızca eksik adreslerde sunar.
 
 İçerik elle düzenlenmiyor — haberleri kulübün [yönetim
 paneli](https://github.com/atilimai/Atilim_AI_Panel) bu depoya commit atarak
@@ -51,13 +52,21 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 | 1 · Kabuk | Nav durumu, mobil menü, aktif bölüm işareti |
 | 2 · Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
 | **3 · Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
-| 4 · Ölçümler ve modal | Sayaçlar ve GitHub depo listesi modali |
-| 5 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması |
+| 4 · Ölçümler ve modal | Sayaçlar, GitHub depo listesi modali, arka plan kaydırma kilidi |
+| 5 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti |
 | **6 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
 
-Haberle ilgili her iş "Haftalık rapor" bölümünde. Fetch başarısız olursa
-sayfadaki hazır içerik olduğu gibi kalır — yerelde `file://` ile açtığında
-olan budur.
+Haberle ilgili her iş "Haftalık rapor" bölümünde. **Akışın üç durumu var ve
+üçü ayrı cümle söyler:** yükleniyor, veri okundu ama sayı yok, istek düştü.
+Üçüncüsü *"Haftalık rapor şu an yüklenemedi."* der ve bir **Yeniden dene**
+düğmesi verir — yerelde `file://` ile açtığında ya da bağlantın koptuğunda
+göreceğin budur.
+
+Bu ayrım şart, çünkü eskiden hata dalı sayfayı olduğu gibi bırakıyordu ve
+statik biçimlendirme *"Henüz yayımlanmış bir sayı yok."* dediği için ağ hatası
+boş arşiv gibi görünüyordu. Arşiv bugün gerçekten boş olduğundan bu doğruydu —
+ama **ilk sayı yayımlandığı gün** bağlantısı kopan her ziyaretçiye site hiç
+yayın yapılmadığını söyleyecekti. İki durumu bir daha birleştirme.
 
 Ana sayfa sayının **tamamını değil ilk üç haberini** çiziyor (`GOSTER`
 sabiti); gerisi sessizce düşmüyor, "kalan N haberi arşivde" satırıyla anılıp
@@ -100,6 +109,19 @@ düzenlenmiş olabilir" deniyordu. Parametrenin varlığı artık sayısal testt
 
 Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklendi.
 
+### `404.html`
+
+Pages'in eksik adresler için sunduğu sayfa. Gece dünyasında, `index.html`'in
+belirteçleriyle; kendi kopyasını taşır, ortak stil dosyası yok.
+
+**İçindeki her yol kökten mutlaktır** (`/Atilim_AI_Web/...`) ve bu bilinçli:
+Pages bu dosyayı eksik olan *her* yol için sunuyor, `/a/b/c` adresinde göreli
+bir `haberler.html` `/a/b/haberler.html`'e çözülüp kırılıyordu. **Depo adı
+değişirse bu dosyadaki bütün yolları güncelle** — hiçbiri göreli değil.
+
+Denenen adresi `location.pathname`'den okuyup `textContent` ile basar; betik
+yoksa o satır `hidden` kalır, boş bir etiket göstermez.
+
 ## Alan katmanı
 
 `index.html`'in içinde, ayrı bir `<script>` içinde duran ham WebGL katmanı.
@@ -107,7 +129,7 @@ Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklend
 bilerek kaldırıldı, yerine gölgelendirici ve model üreticileri elle yazıldı.
 
 Ne yapar: kaydırdıkça beş model arasında dönüşür — monogram, sinir ağı, dikkat
-matrisi, belirteç akışı, gradyan inişi. İki hâli var: okuma sütununun sağındaki
+matrisi, belirteç akışı, gradyan inişi. İki hali var: okuma sütununun sağındaki
 bölgede duran küçük **mercek**, bölümler arasında ekranın ortasına gelip büyüyen
 **levha**. Levha ekranı kaplamaz; en çok 800 × 500 px'dir.
 
@@ -126,17 +148,34 @@ alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
   görünmeden.
 - **Geçiş bantları.** Bölümler arasındaki boş `.gecis` div'leri süs değil;
   levhanın açılacağı, içinde metin bulunmayan alanı onlar tanımlıyor. Silersen
-  levha hâli tamamen kaybolur. İçlerine metin koyma.
+  levha hali tamamen kaybolur. İçlerine metin koyma — bir başlık, bir açıklama,
+  hiçbir şey. Yükseklikleri üç yerde kapanıyor: `no-alan`, azaltılmış hareket ve
+  1152 px altı.
 - **Sığdırma izdüşüm uzayında yapılır.** Perspektif böleni noktadan noktaya
   değiştiği için model uzayında hesaplanan sınır yanıltır ve eğik modeller
   (gradyan inişi) kırpılır. `ortala()` bunu her noktanın izdüşümünden, yalpalama
   aralığını tarayarak ölçüyor. Formülü basitleştirmeye kalkma.
-- **1152 px altında mercek hiç kurulmaz.** Telefonda yalnızca levhalar çalışır;
-  bant yüksekliği ve parçacık sayısı ayrıca düşer.
+- **1152 px altında alan katmanı hiç yok.** Ne mercek, ne levha: bir medya
+  sorgusu tuvali gizliyor, `.gecis` bantları `--sp-sec`'e kapanıyor ve çizim
+  döngüsünde `EN < 1152` guard'ı var. Döngü kare istemeye devam ettiği için
+  pencereyi genişletince alan kendiliğinden geri gelir; yeniden yükleme
+  gerekmiyor.
+
+  Eskiden telefonda levha çalışıyordu ve bantlar `min(72vh,540px)` kalıyordu:
+  dördü toplam ~1.780 px boş kaydırma ekliyor, arkasında da 7.500 parçacık
+  dönüyordu. Ölçüldü — 390 px'de sayfa ~7.100 px'den 5.339 px'e indi. Kampüs
+  Discord bağlantısından gelen cihaz sınıfı bilgi taşımayan bir katman için pil
+  ve ısı ödemesin. **Bu sınırı gevşetirsen o bedeli geri getirirsin.**
 - **WebGL yoksa** gövdeye `no-alan` eklenir, tuval gizlenir, bantlar kapanır ve
   sayfa alan katmanı hiç yokmuş gibi görünür. `prefers-reduced-motion` açıksa
   döngü hiç başlamaz, tek durağan kare çizilir.
-- **Değişiklik yaptıysan kırpılma testini koştur:** modeli her iki hâlde çizip
+- **İçerik taşıyan hiçbir kap merceğin bölgesine girmemeli.** 1152 px üstünde
+  `main .wrap` *ve* `footer .wrap` aynı sağ payı alıyor. `nav` bilerek dışarıda:
+  o krom, hem de dikey olarak merceğin üstünde duruyor. Footer'a bu pay
+  verilmeden önce kapanış düğmesi 1920 px'de merceğin dikdörtgeninin içine
+  düşüyordu, alt bilgi de gövde metninden ~600 px sağda hizasız duruyordu.
+  Sayfaya tam genişlikte yeni bir içerik kabı eklersen aynı tuzağa düşersin.
+- **Değişiklik yaptıysan kırpılma testini koştur:** modeli her iki halde çizip
   tuvali geri oku, scissor dikdörtgeninin dış 3 pikselinde yanan piksel say.
   Sıfırdan büyük her sonuç, modelin kesildiği anlamına gelir.
 
@@ -197,7 +236,7 @@ ve alan sırasını koruyarak yazıyor.
   yansır, Discord'a gitmez.
 - Her haber ayrı bir embed olur. Discord bir mesajda en fazla 10 embed ve
   toplam 6000 karakter kabul ettiği için embed'ler gruplanıp arka arkaya
-  birkaç mesaj hâlinde gönderilir.
+  birkaç mesaj halinde gönderilir.
 - Gönderimden sonra `.son-gonderilen` dosyasını `main`'e geri push eder
   (commit mesajında `[skip ci]` var, kendini tetiklemez).
 - Webhook adresi `DISCORD_WEBHOOK` secret'ından gelir. **Asla koda yazma** —
@@ -220,8 +259,8 @@ HTML'i önbellekte tutabiliyor.
 ## Tuzaklar
 
 - **`file://` ile açma.** Sayfalar haberleri `fetch` ile okur, dosya
-  protokolünde bu engellenir; sayfa "haberler yüklenemedi" der. Yerel sunucu
-  kullan.
+  protokolünde bu engellenir. Ana sayfa *"Haftalık rapor şu an yüklenemedi."*
+  der, okuma sayfaları kendi hata kartını gösterir. Yerel sunucu kullan.
 - **`innerHTML` kullanma.** Panelden gelen metin kullanıcı girdisidir; her şey
   `textContent` ile basılıyor ve bu bilinçli. Tek istisna, sayfaların kendi
   oluşturduğu DOM düğümleridir.
@@ -241,22 +280,82 @@ HTML'i önbellekte tutabiliyor.
 - **Dış betik yok.** Site hiçbir CDN'den kod çekmiyor; tek dış kaynak Google
   Fonts stil dosyası. Bir kütüphaneye ihtiyacın olduğunu düşünüyorsan önce
   "Kilitli kararlar"a bak.
-- **Logo varlıkları türetilmiştir.** `images/ai_s.png` kaynaktır; `favicon.png`
-  ve `images/ai_mark.png` ondan üretildi — renkler ters çevrilip siyah
-  atılarak. Kaynağı değiştirirsen ikisini de yeniden üretmen gerekir, yoksa
-  sekme logosu ile nav işareti kaynaktan ayrı düşer.
+- **Logo varlıkları türetilmiştir ve zincir beş dosya.** `images/ai_s.png`
+  kaynaktır. Ondan üretilenler: `favicon.png` ve `images/ai_mark.png` (renkler
+  ters çevrilip siyah atılarak), `favicon.svg` ve `apple-touch-icon.png` (A
+  işaretinin geometrisi elle çizilerek), `images/og.jpg` (paylaşım kartı,
+  `ai_mark.png`'yi kullanıyor). **Kaynağı değiştirirsen beşini de yeniden
+  üret**, yoksa sekme logosu, nav işareti, telefon simgesi ve paylaşım kartı
+  kaynaktan ayrı düşer.
+
+  `favicon.svg` ile `apple-touch-icon.png` kaynağın birebir küçültülmüşü
+  *değil*: kaynaktaki saç çizgisi 16 px'te kayboluyor, o yüzden çizgi
+  kalınlaştırıldı ve sağdaki ince "i" dilimi elendi. Geometri iki dosyada da
+  aynı (32'lik kutuda `M25 5.5 L7 25.5 L17 25.5` ve `M25 5.5 L25 22.6`,
+  çizgi 2.2); birini değiştirirsen diğerini de değiştir.
+
+  `images/og.jpg` tarayıcıda `<canvas>` ile üretiliyor — makinede
+  ImageMagick/PIL yok, `sips` de birleştirme yapamıyor. Kartın metni
+  değişirse görseli yeniden üretmek gerekir; metin JPEG'e gömülü.
+  **Yazı tiplerini `document.fonts.load()`'a metinle birlikte geçir:** Google
+  Fonts `latin-ext` alt kümesini yalnızca ihtiyaç duyulunca indiriyor, boş
+  çağrıda `ğ`/`ı`/`ş` inmiyor ve canvas o harflerde yedek yazı tipine düşüyor.
+
+- **Paylaşım kartı yalnızca yayımlandıktan sonra görünür.** `og:image`
+  `https://atilimai.github.io/...` adresini gösteriyor; kazıyıcılar oradan
+  çekiyor, yereldeki dosyadan değil. Discord daha önce paylaşılmış bir
+  bağlantının önizlemesini birkaç gün önbellekte tutabilir.
 - **Araç klasörleri.** `.serena/`, `.playwright-mcp/` ve `.impeccable/` üçü de
   `.gitignore`'da. `.impeccable/` tasarım sistemi sidecar'ını ve kritik arşivini
   tutar; yerel araç durumudur, depoya girmemeli.
-- **Henüz hiçbir bülten yayımlanmadı.** `content/haberler.json`'daki üç kayıt
-  yer tutucu, `index.html`'deki üç haber satırı da tasarım için konmuş örnek
-  içerik (kaynakta yorumu var). Metin yazarken siteye yayımlama geçmişi
-  atfetme. Dosya boşaltıldığında iki sayfa da "Henüz yayımlanmış bir sayı yok."
-  gösteriyor — kod hazır.
+- **Henüz hiçbir bülten yayımlanmadı ve arşiv artık boş.** `content/haberler.json`
+  9 Eylül 2026'da temizlendi: `sayilar` boş bir dizi. `index.html`'deki üç örnek
+  haber satırı da kaldırıldı; yerinde betiğin bastığı boş durum cümlesi duruyor.
+  Metin yazarken siteye yayımlama geçmişi atfetme. İlk gerçek sayı panelden
+  gelecek; `content/.son-gonderilen` **14** olduğu için Discord'a yalnızca
+  14'ten büyük numaralı bir sayı gider.
 - **Dokunma hedefi 44 px, satır sonu `overflow-wrap:anywhere`.** İkisi de
   ölçülerek getirildi: panelin izin verdiği 200 karakterlik bölünmez bir başlık
-  okuma sayfalarında binlerce piksel yatay taşma yapıyordu. Panelden veri basan
-  yeni bir metin öğesi eklersen `overflow-wrap` vermeyi unutma.
+  okuma sayfalarında binlerce piksel yatay taşma yapıyordu. Panelden **ya da
+  GitHub API'sinden** veri basan yeni bir metin öğesi eklersen `overflow-wrap`
+  vermeyi unutma — ızgara ve flex çocuklarına `min-width:0` da gerekiyor, yoksa
+  kural yazsan bile öğe içeriğinin altına inemez.
+- **Buluşma saati "17.30" doğrulanmış değil.** Yönetim kurulu onaylayana kadar
+  yer tutucu. `[ADET]`'lerin aksine kendini yer tutucu olarak *ilan etmiyor*:
+  ziyaretçi kesin bir olgu okuyor, yanlışsa öğrenci yanlış saatte gelir.
+  `index.html`'de üç yerde görünüyor — kahraman satırı, etkinlikler bölümünün
+  girişi, footer'ın kapanış satırı. `grep -n "17.30" index.html` dördünü
+  listeler; dördüncüsü kahramanın üstündeki uyarı yorumudur. **Üçünü birlikte
+  değiştir, yorumu da güncelle ya da kaldır.**
+- **Etkinlik listesi haftalık buluşma değil.** Haftalık buluşma her perşembe,
+  tarih takibi gerektirmiyor. Listedeki tarihli satırlar ondan ayrı, hafta
+  sonuna denk gelen özel etkinlikler. Bölümün girişi bu ayrımı açıkça söylüyor;
+  silme. Söylenmediğinde sayfa üç yerde "her perşembe" derken dört cumartesi
+  tarihi listeliyor ve takvime bakan öğrenci siteyi olgusal bir hatada
+  yakalıyor.
+- **Bölüm başlıklarının üstüne etiket koyma.** Dört tanesi vardı (mono 12 px,
+  büyük harf, kehribar) ve kaldırıldı: `DESIGN.md`'nin kod yazılmadan önce isim
+  vererek reddettiği kalıbın kendisiydi, ayrıca kategori etiketini eylem
+  rengiyle basmak İki Kaynak Kuralı'nı kırıyordu. Başlıklar kendi ağırlığını
+  taşıyor, bölüm adları menüde zaten var.
+- **API'den gelen sayıyı biçimlendirmeye gömme.** Depo modalindeki dil, yıldız,
+  çatal ve güncelleme tarihi `hidden` geliyor ve yalnızca yanıt ulaşınca
+  açılıyor. Eskiden değerler HTML'in içindeydi; kimliksiz GitHub çağrısı saatte
+  60 ile sınırlı ve kampüs ağı tek IP paylaştığı için istek sessizce düştüğünde
+  fosil sayılar canlı veri gibi ekranda kalıyordu. İstek başarısız olursa tek
+  satırlık dürüst bir not basılıyor.
+- **Açılır bir satıra durağan halde gösterge ver.** Etkinlik satırları ve
+  ölçüm satırları yalnızca `:hover` opaklığıyla işaretliydi — imleç gelene
+  kadar görünmez, dokunmatikte hiç görünmez. Etkinliklerin açıklamaları,
+  içindeki "önkoşul yok, laptop yeterli" cümlesi dahil, kimsenin göremediği bir
+  tetiğin arkasında kalıyordu. Şimdi çizilmiş bir chevron üç hali de söylüyor,
+  ve **betik yoksa gizleniyor**: yapılamayacak bir etkileşimi haber vermesin.
+- **Azaltılmış hareket iptalinin seçicisi, geçişi kuran kuralla aynı
+  özgüllükte olmalı.** Akordeonun kapalı hali `.js` kapısının arkasına
+  taşındığında kuran seçici `.js .tl .detay` (0,3,0) oldu, iptal ise
+  `.tl .detay` (0,2,0) kaldı — `prefers-reduced-motion` kaynakta doğru
+  görünürken sessizce çalışmayı bıraktı. Bir kurala kapı sınıfı eklersen
+  azaltılmış hareket bloğuna da ekle.
 
 ## Kilitli kararlar
 

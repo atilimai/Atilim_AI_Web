@@ -1,6 +1,6 @@
 # Atılım AI — Topluluk Sitesi
 
-Atılım Üniversitesi Yapay Zekâ Topluluğu'nun tanıtım sitesi ve haftalık rapor
+Atılım Üniversitesi Yapay Zeka Topluluğu'nun tanıtım sitesi ve haftalık rapor
 arşivi. Üç sayfa, sıfır bağımlılık, derleme adımı yok: dosyalar ne ise tarayıcı
 onu çalıştırıyor.
 
@@ -8,14 +8,14 @@ onu çalıştırıyor.
 - **Geliştirici rehberi:** [`EKIP.md`](EKIP.md) — yapı, veri akışı, tuzaklar
 - **İçerik nereden geliyor:** haberleri [yönetim paneli](https://github.com/atilimai/Atilim_AI_Panel) yazıyor
 
-> Yeni geliştiriyorsan (özellikle bir yapay zekâ aracıyla çalışıyorsan) önce
+> Yeni geliştiriyorsan (özellikle bir yapay zeka aracıyla çalışıyorsan) önce
 > `EKIP.md` dosyasını oku. `index.html` stil, içerik ve betiği tek dosyada
 > taşıyor ve dosyanın büyük bölümü kaydırmayla değişen 3B alan katmanı;
 > rehber, nereye bakman gerektiğini baştan söylüyor.
 
-> **Not:** Henüz hiçbir bülten yayımlanmadı. `content/haberler.json`'daki
-> kayıtlar ve ana sayfadaki haber satırları tasarım için konmuş yer
-> tutuculardır.
+> **Not:** Henüz hiçbir bülten yayımlanmadı. `content/haberler.json` boş
+> (`sayilar: []`) ve her iki sayfa da "Henüz yayımlanmış bir sayı yok."
+> gösteriyor. İlk sayı yönetim panelinden yayımlanacak.
 
 ## Çalıştırma
 

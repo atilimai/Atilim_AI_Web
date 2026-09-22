@@ -7,7 +7,26 @@
 <meta name="description" content="Atılım AI haftalık raporundan bir haberin tam metni.">
 <meta name="theme-color" content="#100D0A">
 <meta property="og:type" content="article">
+<meta property="og:site_name" content="Atılım AI">
+<meta property="og:locale" content="tr_TR">
+<!-- Kazıyıcılar betik çalıştırmıyor: başlık ve açıklama, betiğin
+     çalıştığı halde değil, statik <title> ile aynı kalır. -->
+<meta property="og:title" content="Haber — Atılım AI">
+<meta property="og:description" content="Atılım AI haftalık raporundan bir haberin tam metni.">
+<meta property="og:url" content="https://atilimai.github.io/Atilim_AI_Web/haber.html">
+<!-- Kanonik adres bilerek YOK. Bu sayfa her ?sayi=&sira= için aynı statik
+     HTML'i sunuyor; sorgusuz adrese kanonik vermek bütün yazıları tek adrese
+     katlar, sorguyu kanonik yapmak ise statikte olmayan bir içeriği iddia eder.
+     İkisi de yanlış; boş bırakmak dürüst olanı. index.html ve haberler.html
+     kanonik taşıyor, arama için asıl giriş kapıları onlar. -->
+<meta property="og:image" content="https://atilimai.github.io/Atilim_AI_Web/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Atılım AI — Yapay zekayı birlikte öğreniyor, birlikte üretiyoruz.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -35,9 +54,6 @@ h1,h2,h3{font-family:var(--disp);font-weight:300}
 a{color:var(--lamba-d);text-decoration:none}
 :focus-visible{outline:2px solid var(--lamba-d);outline-offset:3px;border-radius:var(--r-xs)}
 .wrap{max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
-.mono{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
-.meta{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
-.num{font-variant-numeric:tabular-nums}
 
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--murekkep);color:var(--gunduz);
   font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
@@ -55,7 +71,14 @@ a{color:var(--lamba-d);text-decoration:none}
 .geri:hover{color:var(--kagit)}
 
 .kapak{padding-block:clamp(48px,8vw,80px) var(--sp-xl)}
-h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
+h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em;
+  text-wrap:balance}
+/* Panel başlığı 200 karaktere kadar gelebiliyor ve display-xl kısa bir kahraman
+   satırı için ölçülmüş bir adım. Tavanda ölçülen: 1440px'te 773px'lik, on
+   satırlık bir başlık; yazının ilk paragrafı 1,6 ekran aşağıda (telefonda 2
+   ekran). Uzun başlık ramptaki bir alt basamağa iniyor — display-lg; yeni bir
+   ölçek uydurulmuyor. Eşik ölçümle seçildi, aşağıdaki betiğe bak. */
+h1.uzun{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em}
 /* Panelden gelen başlık, kaynak ve tam metin bölünmez tek bir dizi olabilir. */
 h1,.kaynak,.yazi p{overflow-wrap:anywhere}
 .giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
@@ -64,24 +87,24 @@ h1,.kaynak,.yazi p{overflow-wrap:anywhere}
 
 main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 
-.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--ekran-d)}
-.alt{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;margin-top:var(--sp-md)}
-.kaynak{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
-.oku,.ac{font-family:var(--body);font-size:15px;font-weight:500;color:var(--murekkep);
-  background:none;border:1px solid var(--cizgi-s);border-radius:var(--r-md);
-  padding:0 var(--sp-md);min-height:44px;display:inline-flex;align-items:center;cursor:pointer;
-  transition:background .3s,border-color .3s}
-.oku:hover,.ac:hover{background:var(--kart);border-color:var(--murekkep-s)}
-.ac{margin-left:auto}
-
 .durum{color:var(--murekkep-s);font-family:var(--mono);font-size:13px;line-height:1.8;
   margin-top:var(--sp-xl);padding:var(--sp-lg);border:1px solid var(--cizgi);border-radius:var(--r-lg);
   background:var(--kart)}
+/* Her durum kartının altında bir çıkış satırı: hata da, betiksiz hal de
+   bir yere gidebilmeli. Düğmeler zaten .oku — sisteme yeni bir şey girmiyor. */
+.durum-eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-lg)}
+/* Betik çalışmıyorsa <noscript> bu bloğu getiriyor; JS açıkken hiç
+   oluşturulmadığı için bu kural da hiç uygulanmıyor. .kapak'ın üst boşluğunu
+   taşır (padding shorthand'i .wrap üzerinde kullanma kuralı gereği
+   padding-block). */
+.betiksiz{padding-block:clamp(48px,8vw,80px) 0}
 footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--murekkep-s)}
-.foot .sag{margin-left:auto;display:flex;gap:20px}
+.foot .sag{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
+/* Telefonda margin-left:auto bağlantıları ekran kenarına sıkıştırıyor ve
+   kompozisyondan çok kazara bir kümelenme gibi okunuyor (index.html ile aynı). */
+@media(max-width:760px){.foot .sag{margin-left:0}}
 /* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
 .foot a{color:var(--murekkep-s);padding-block:var(--sp-sm)}
 .foot a:hover{color:var(--murekkep)}
@@ -97,7 +120,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .kapak-ust{display:flex;align-items:center;gap:var(--sp-sm);flex-wrap:wrap;margin-bottom:var(--sp-md)}
 .etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ekran-d)}
-.kapak-ust time{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
+/* Panelden gelen tarih serbest metin ("3 Ağustos 2026"); makine okunur bir
+   karşılığı yok. datetime'sız <time>, içeriği geçerli bir tarih dizisi
+   değilse geçersiz biçimlendirme — o yüzden <span>. Sayı tarihi (sayi.tarih)
+   ISO ama o başka bir tarih, buraya konamaz. */
+.kapak-ust .tarih{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
 .yazi{margin-top:var(--sp-xl)}
 /* En-boy oranı yeri yüklenmeden ayırır; max-height ile yükseklik yükleme anına
    kadar 0 kalıyor ve görsel gelince altındaki metnin tamamı kayıyordu. */
@@ -109,13 +136,34 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .yazi p:first-of-type{margin-top:0}
 .yazi-alt{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;
   margin-top:var(--sp-xxl);padding-top:var(--sp-lg);border-top:1px solid var(--cizgi)}
-.alt{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;margin-top:var(--sp-lg)}
 .kaynak{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
 .oku{font-family:var(--body);font-size:15px;font-weight:500;color:var(--murekkep);
   background:none;border:1px solid var(--cizgi-s);border-radius:var(--r-md);
-  padding:0 var(--sp-md);min-height:44px;display:inline-flex;align-items:center;
-  transition:background .3s,border-color .3s}
+  padding:0 var(--sp-md);min-height:44px;display:inline-flex;align-items:center;cursor:pointer;
+  transition:background .3s var(--ease),border-color .3s var(--ease)}
 .oku:hover{background:var(--kart);border-color:var(--murekkep-s)}
+/* Baskı — bu blok stil sayfasının en sonunda durmak zorunda. Medya sorgusu
+   özgüllük eklemez, kaskadı kaynak sırası belirler; blok yukarıda dururken
+   .oku (0,1,0) ve .yazi p (0,1,1) gibi eşit özgüllüklü ekran kuralları onu
+   yeniyordu ve baskı stili sessizce hiç uygulanmıyordu.
+
+   Yazı 20.000 karaktere kadar çıkabiliyor ve bu, birinin gerçekten
+   yazdıracağı tek sayfa. Kroma kâğıtta işi yok. Siyah/beyaz ekran paletinin
+   dışında ve öyle olmalı: yazıcının kendi dünyası, gündüz dünyası değil —
+   tarayıcı zeminleri basmaz, kart rengi boş bir çerçeveye döner. */
+@media print{
+  /* Renk kuralı YOK ve olmamalı. Tarayıcılar zemin renklerini varsayılan
+     olarak basmıyor (print-color-adjust:exact istenmedikçe), yani krem zemin
+     zaten kâğıda gitmiyor; mürekkep --murekkep (#1A1713) ise siyaha yeterince
+     yakın. Buraya #fff/#000 koymak yalnızca gereksiz olmakla kalmıyor,
+     dedektör medya bağlamını görmediği için onları ekran değeri sanıp
+     haber.html'e iki yanlış bulgu ekliyor ve belgeli cream-palette
+     istisnasını maskeliyordu. Kalan kurallar kâğıtta gerçekten işe yarayan
+     şeyler: kromu kaldır, ölçüyü serbest bırak, boş çerçeveyi sil. */
+  .ust,footer,.durum-eylem,.oku{display:none}
+  .yazi img.gorsel{border:0}
+  .wrap{max-width:none;padding:0}
+}
 </style>
 </head>
 <body>
@@ -134,7 +182,22 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   <p class="sayac" id="kapakMeta"></p>
 </header>
 
-<main class="wrap" id="govde"></main>
+<main class="wrap" id="govde">
+  <!-- Betik yoksa bu sayfada tek bir cümle bile yoktu: #kapak hidden, gövde
+       boş, gezinme çubuğuyla alt bilgi üst üste biniyordu. Bağlantı
+       önizlemeleri ve tarayıcı botları da bunu görüyordu. Diğer dört hata
+       durumuyla aynı kalıp: gerçek bir <h1>, sade bir cümle, bir çıkış. -->
+  <noscript><div class="betiksiz">
+    <h1>Yazı görüntülenemiyor</h1>
+    <p class="durum">Bu sayfa yazının metnini tarayıcıda hazırlıyor ve bunun
+      için JavaScript gerekiyor. Tarayıcı ayarlarından açabilir ya da arşivden
+      devam edebilirsin.</p>
+    <p class="durum-eylem">
+      <a class="oku" href="haberler.html">← Bütün haberler</a>
+      <a class="oku" href="index.html">Ana sayfa</a>
+    </p>
+  </div></noscript>
+</main>
 
 <footer><div class="wrap foot">
   <span>Atılım AI · Ankara</span>
@@ -170,22 +233,45 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     return Number(p[3]) + " " + AYLAR[Number(p[2]) - 1] + " " + p[1];
   }
 
-  function durum(baslik, metin){
+  /* Her durum bir sayfa: gerçek bir <h1>, eşleşen sekme başlığı, sade bir
+     cümle ve en az bir çıkış. tekrar verilirse çıkış satırının başına bir de
+     "Yeniden dene" düğmesi gelir — yalnızca ağ hatasında anlamlı. */
+  /* Kapak iskeleti kaldırılmaz, gizlenir. Eskiden remove() ediliyordu ve
+     "Yeniden dene" başarılı olduğunda ciz() artık var olmayan öğelere
+     yazmaya çalışıp sessizce hataya düşüyor, ziyaretçi aynı hata kartında
+     kalıyordu. Gizlerken içerik de temizleniyor: eski bir değer geri
+     gelmesin. */
+  function gizle(el){ if (!el) return; el.textContent = ""; el.hidden = true; }
+  function goster(el){ if (el) el.hidden = false; }
+
+  function durum(baslik, metin, tekrar){
     document.title = baslik + " — Atılım AI";
-    document.getElementById("baslik").textContent = baslik;
-    kapakUst.remove();
-    var bosOzet = document.getElementById("ozet");
-    if (bosOzet) bosOzet.remove();
-    var bosMeta = document.getElementById("kapakMeta");
-    if (bosMeta) bosMeta.remove();
+    var bas = document.getElementById("baslik");
+    bas.textContent = baslik;
+    bas.classList.remove("uzun");   /* durum başlıkları kısa */
+    gizle(kapakUst);
+    gizle(document.getElementById("ozet"));
+    gizle(document.getElementById("kapakMeta"));
     kapak.hidden = false;
+
+    /* Yeniden denemede eski kart ekranda kalmasın. */
+    govde.textContent = "";
 
     var p = document.createElement("p");
     p.className = "durum";
     p.textContent = metin;
     govde.appendChild(p);
+
     var sar = document.createElement("p");
-    sar.style.marginTop = "24px";
+    sar.className = "durum-eylem";
+    if (tekrar){
+      var dugme = document.createElement("button");
+      dugme.type = "button";
+      dugme.className = "oku";
+      dugme.textContent = "Yeniden dene";
+      dugme.addEventListener("click", function(){ dugme.disabled = true; tekrar(); });
+      sar.appendChild(dugme);
+    }
     var link = document.createElement("a");
     link.className = "oku";
     link.href = "haberler.html";
@@ -215,7 +301,16 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   }
 
   function ciz(sayi, h){
-    document.title = (h.baslik || "Haber") + " — Atılım AI";
+    /* Panel başlığı 200 karaktere kadar gelebiliyor; sekme, yer imi ve
+       geçmiş kaydı bunu olduğu gibi taşımasın. Sayfadaki <h1> tam metni
+       göstermeye devam ediyor. */
+    var sekme = h.baslik || "Haber";
+    if (sekme.length > 70) sekme = sekme.slice(0, 69).replace(/\s+$/, "") + "…";
+    document.title = sekme + " — Atılım AI";
+    /* Önceki bir hata kartı bunları gizlemiş olabilir. */
+    govde.textContent = "";
+    goster(kapakUst);
+    goster(document.getElementById("kapakMeta"));
 
     if (h.etiket){
       var et = document.createElement("span");
@@ -224,15 +319,22 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       kapakUst.appendChild(et);
     }
     if (h.tarih){
-      var tm = document.createElement("time");
+      /* <time> değil: panel tarihi serbest metin, datetime üretilemiyor. */
+      var tm = document.createElement("span");
+      tm.className = "tarih";
       tm.textContent = h.tarih;
       kapakUst.appendChild(tm);
     }
 
-    document.getElementById("baslik").textContent = h.baslik || "";
+    var bas = document.getElementById("baslik");
+    bas.textContent = h.baslik || "";
+    /* Karakter sayısı, ölçülen yükseklik değil: eşik deterministik kalsın ve
+       yeniden boyutlandırmada ölçüm döngüsü gerekmesin. 70'in üstü her
+       kırılma noktasında display-xl'de dört satırı aşıyor. */
+    bas.classList.toggle("uzun", (h.baslik || "").length > 70);
 
     var ozet = document.getElementById("ozet");
-    if (h.ozet) ozet.textContent = h.ozet; else ozet.remove();
+    if (h.ozet){ ozet.textContent = h.ozet; ozet.hidden = false; } else if (ozet) ozet.remove();
 
     document.getElementById("kapakMeta").textContent =
       sayi.sayi + ". sayı · " + tarihYaz(sayi.tarih) + (h.kaynak ? " · " + h.kaynak : "");
@@ -289,9 +391,16 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     govde.appendChild(yazi);
   }
 
-  fetch("content/haberler.json", { cache: "no-cache" })
+  /* Uçuştaki istek varken ikinci dokunuş iki kart üst üste bindirmesin. */
+  var istekVar = false;
+  function getir(){
+    if (istekVar) return;
+    istekVar = true;
+
+    fetch("content/haberler.json", { cache: "no-cache" })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(d){
+      istekVar = false;
       var sayilar = (d && d.sayilar) || [];
       var sayi = null;
       for (var i = 0; i < sayilar.length; i++){
@@ -311,11 +420,19 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       }
       ciz(sayi, h);
     })
+    /* Eskiden buradaki cümle ziyaretçiye yerel bir HTTP sunucusu kurmasını
+       söylüyordu — geliştirici talimatıydı ve bağlantısı kopan öğrenciye
+       hiçbir şey anlatmıyordu. index.html aynı dosyayı okuyor ve bunu doğru
+       yapıyor; kalıp oradan geliyor. */
     .catch(function(){
-      durum("Haber yüklenemedi",
-            "Bu sayfa haberleri content/haberler.json dosyasından okur; dosyayı doğrudan açmak yerine " +
-            "yerel bir sunucu (http://) üzerinden açmanız gerekir.");
+      istekVar = false;
+      durum("Yazı şu an yüklenemedi",
+            "Bağlantın kesilmiş olabilir. Yeniden deneyebilir ya da arşivden devam edebilirsin.",
+            getir);
     });
+  }
+
+  getir();
 })();
 </script>
 </body>

@@ -4,12 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Haberler — Atılım AI</title>
-<meta name="description" content="Atılım AI Yapay Zekâ Topluluğu'nun her hafta derlediği yapay zekâ gelişmelerinin tam arşivi.">
+<meta name="description" content="Atılım AI Yapay Zeka Topluluğu'nun her hafta derlediği yapay zeka gelişmelerinin tam arşivi.">
 <meta name="theme-color" content="#100D0A">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Atılım AI">
+<meta property="og:locale" content="tr_TR">
 <meta property="og:title" content="Haberler — Atılım AI">
-<meta property="og:description" content="Her hafta derlediğimiz yapay zekâ gelişmelerinin tam arşivi.">
+<meta property="og:description" content="Her hafta derlediğimiz yapay zeka gelişmelerinin tam arşivi.">
+<meta property="og:url" content="https://atilimai.github.io/Atilim_AI_Web/haberler.html">
+<link rel="canonical" href="https://atilimai.github.io/Atilim_AI_Web/haberler.html">
+<meta property="og:image" content="https://atilimai.github.io/Atilim_AI_Web/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Atılım AI — Yapay zekayı birlikte öğreniyor, birlikte üretiyoruz.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -21,7 +32,7 @@
   --gunduz:#F2EDE3; --kart:#FBF8F1;
   --murekkep:#1A1713; --murekkep-m:#4A443B; --murekkep-s:#6B6357;
   --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24);
-  --lamba:#E8A33D; --lamba-d:#8A5510; --ekran-d:#3D6389;
+  --lamba:#E8A33D; --lamba-d:#8A5510; --lamba-alt:rgba(138,85,16,.4); --ekran-d:#3D6389;
   --disp:"Newsreader",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
@@ -38,8 +49,6 @@ a{color:var(--lamba-d);text-decoration:none}
 :focus-visible{outline:2px solid var(--lamba-d);outline-offset:3px;border-radius:var(--r-xs)}
 .wrap{max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
 .mono{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
-.meta{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
-.num{font-variant-numeric:tabular-nums}
 
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--murekkep);color:var(--gunduz);
   font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
@@ -64,6 +73,11 @@ h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
 .giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
 .sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
   padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
+/* Sayaç boşken üst çizgisiyle birlikte 40px ölü boşluk bırakıyordu. */
+.sayac:empty{display:none}
+/* Durum kartının altındaki çıkış satırı: hata da, betiksiz hal de buradan
+   bir yere gidebilmeli. Düğmeler zaten .oku, sistemde yeni bir şey yok. */
+.durum-eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-lg)}
 
 main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 .sayi{margin-top:var(--sp-xxl)}
@@ -81,7 +95,10 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 .etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ekran-d)}
 .haber h3{font-size:28px;font-weight:400;line-height:1.28;margin-top:var(--sp-sm)}
-.haber h3 a{color:var(--murekkep)}
+/* Aynı kalıp: satır içi dolgu düzeni büyütmez, dokunma alanını 44px'e
+   çıkarır. Buradaki kutu 28px'ti — WCAG 2.5.8 tabanını geçiyordu ama
+   projenin kendi 44px kuralını geçmiyordu. */
+.haber h3 a{color:var(--murekkep);padding-block:var(--sp-xs)}
 .haber h3 a:hover{color:var(--lamba-d)}
 .ozet{color:var(--murekkep-m);font-size:16px;line-height:1.65;margin-top:var(--sp-sm);max-width:64ch}
 /* Yer önceden ayrılmazsa tembel yüklenen görsel geldiğinde kart aşağı kayar. */
@@ -101,14 +118,22 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 
 .tam{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
 .haber.acik .tam{grid-template-rows:1fr}
-.tam>div{overflow:hidden}
+/* Kırpmak yetmiyor: 0fr satırın içindeki kalıcı bağlantı yüksekliği sıfır
+   olmasına rağmen odaklanabilir kalıyordu. 25 haberlik bir sayıda bu, klavye
+   kullanıcısı için 25 görünmez sekme durağı demek — odak halkası hiçbir yerde
+   görünmüyor (WCAG 2.4.7). Dahası odak oraya gidince overflow:hidden sarmalayıcı
+   içeriden kayıyor ve kart sonradan açıldığında yazı sonundan başlıyordu.
+   visibility hem sekme sırasından hem erişilebilirlik ağacından çıkarır.
+   Gecikme kapanış animasyonu kadar: metin kapanırken görünür kalır, sonra gider. */
+.tam>div{overflow:hidden;visibility:hidden;transition:visibility 0s .45s}
+.haber.acik .tam>div{visibility:visible;transition:visibility 0s 0s}
 .tam-ic{padding-top:var(--sp-lg);margin-top:var(--sp-md);border-top:1px solid var(--cizgi)}
 .tam p{font-family:var(--disp);font-size:19px;line-height:1.8;color:var(--murekkep);
   margin-top:var(--sp-md);max-width:66ch}
 .tam p:first-child{margin-top:0}
 .kalici{display:inline-flex;align-items:center;min-height:44px;margin-top:var(--sp-sm);
   font-family:var(--mono);font-size:13px;
-  color:var(--lamba-d);border-bottom:1px solid rgba(138,85,16,.4);padding-bottom:3px}
+  color:var(--lamba-d);border-bottom:1px solid var(--lamba-alt);padding-bottom:3px}
 @media(max-width:760px){
   .haber{grid-template-columns:1fr;gap:var(--sp-xs)}
   .haber-tarih{text-align:left;display:flex;gap:var(--sp-xs);align-items:baseline}
@@ -120,7 +145,10 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--murekkep-s)}
-.foot .sag{margin-left:auto;display:flex;gap:20px}
+.foot .sag{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
+/* Telefonda margin-left:auto bağlantıları ekran kenarına sıkıştırıyor ve
+   kompozisyondan çok kazara bir kümelenme gibi okunuyor (index.html ile aynı). */
+@media(max-width:760px){.foot .sag{margin-left:0}}
 /* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
 .foot a{color:var(--murekkep-s);padding-block:var(--sp-sm)}
 .foot a:hover{color:var(--murekkep)}
@@ -128,8 +156,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
-     renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır. Açılan tam metin anında görünür. */
+     renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır. Açılan tam metin anında görünür.
+     İptal, geçişi kuran seçicinin aynısı olmak zorunda: görünürlük gecikmesi
+     .tam>div üzerinde duruyor, orada da kaldırılıyor. */
   .tam{transition:none}
+  .tam>div{transition:none}
 }
 </style>
 </head>
@@ -145,8 +176,22 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 <header class="kapak wrap">
   <p class="mono" style="color:var(--lamba-d)">Haftalık Rapor</p>
   <h1 style="margin-top:16px">Haberler</h1>
-  <p class="giris">Her hafta derlediğimiz yapay zekâ gelişmelerinin tam arşivi — ana sayfadaki özetlerin kaynakları, görselleri ve tam metinleriyle.</p>
-  <p class="sayac" id="sayac">Arşiv yükleniyor…</p>
+  <p class="giris">Her hafta derlediğimiz yapay zeka gelişmelerinin tam arşivi — ana sayfadaki özetlerin kaynakları, görselleri ve tam metinleriyle.</p>
+  <!-- Boş geliyor ve betik ilk iş olarak dolduruyor. Eskiden burada statik
+       olarak "Arşiv yükleniyor…" yazıyordu; betik çalışmayan tarayıcıda o
+       cümle sonsuza kadar ekranda kalıyor, hiç gelmeyecek bir isteği
+       bekliyormuş gibi görünüyordu. Bekleyen istek yoksa yükleme satırı da
+       olmamalı. -->
+  <p class="sayac" id="sayac"></p>
+  <noscript>
+    <p class="durum">Bu sayfa arşivi tarayıcıda hazırlıyor ve bunun için
+      JavaScript gerekiyor. Tarayıcı ayarlarından açabilir ya da haftalık
+      raporu Discord kanalımızdan takip edebilirsin.</p>
+    <p class="durum-eylem">
+      <a class="oku" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord'a git ↗</a>
+      <a class="oku" href="index.html">← Ana sayfa</a>
+    </p>
+  </noscript>
 </header>
 
 <main class="wrap" id="liste"></main>
@@ -213,6 +258,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
   function haberKarti(h, sayiNo, sira){
     var ayrinti = ayrintiAdresi(h, sayiNo, sira);
+    /* Düğme ile açtığı bölgeyi bağlayan kimlik. Sayı + sıra zaten benzersiz. */
+    var tamId = "tam-" + sayiNo + "-" + sira;
     var art = document.createElement("article");
     art.className = ayrinti ? "haber acilir" : "haber";
 
@@ -296,6 +343,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
         dugme.className = "ac";
         dugme.textContent = "Devamını oku ▾";
         dugme.setAttribute("aria-expanded", "false");
+        dugme.setAttribute("aria-controls", tamId);
         alt.appendChild(dugme);
       }
       ic.appendChild(alt);
@@ -304,6 +352,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     if (ayrinti){
       var tam = document.createElement("div");
       tam.className = "tam";
+      tam.id = tamId;
       var sar = document.createElement("div");
       var icerik = document.createElement("div");
       icerik.className = "tam-ic";
@@ -349,6 +398,10 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     bar.appendChild(h2);
 
     var t = document.createElement("time");
+    /* Sayı tarihi sözleşmede ISO ("2026-08-03"); <time> makine okunur
+       değerini taşısın. Biçim tanınmıyorsa datetime hiç yazılmaz —
+       uydurulmuş bir tarih boş bırakmaktan kötüdür. */
+    if (/^\d{4}-\d{2}-\d{2}$/.test(sayi.tarih || "")) t.dateTime = sayi.tarih;
     t.textContent = tarihYaz(sayi.tarih);
     bar.appendChild(t);
 
@@ -363,9 +416,43 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     return;
   }
 
-  fetch("content/haberler.json", { cache: "no-cache" })
+  /* Ağ hatası boş arşivden ayrı bir durum ve ayrı bir cümle hak ediyor.
+     Eskiden buradaki tek cümle ziyaretçiye yerel bir HTTP sunucusu kurmasını
+     söylüyordu — geliştirici talimatıydı, üstelik sayfada tıklanacak hiçbir
+     şey bırakmıyordu. index.html aynı dosyayı okuyor ve bunu doğru yapıyor;
+     kalıp oradan geliyor. */
+  function hataGoster(){
+    sayac.textContent = "";
+    liste.textContent = "";
+    durum("Haber arşivi şu an yüklenemedi. Bağlantın kesilmiş olabilir.");
+    var eylem = document.createElement("p");
+    eylem.className = "durum-eylem";
+    var tekrar = document.createElement("button");
+    tekrar.type = "button";
+    tekrar.className = "oku";
+    tekrar.textContent = "Yeniden dene";
+    tekrar.addEventListener("click", function(){ tekrar.disabled = true; getir(); });
+    eylem.appendChild(tekrar);
+    var ana = document.createElement("a");
+    ana.className = "oku";
+    ana.href = "index.html";
+    ana.textContent = "← Ana sayfa";
+    eylem.appendChild(ana);
+    liste.appendChild(eylem);
+  }
+
+  /* Uçuştaki istek varken ikinci dokunuş satırları üst üste bindirmesin. */
+  var istekVar = false;
+  function getir(){
+    if (istekVar) return;
+    istekVar = true;
+    liste.textContent = "";
+    sayac.textContent = "Arşiv yükleniyor…";
+
+    fetch("content/haberler.json", { cache: "no-cache" })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(d){
+      istekVar = false;
       var sayilar = (d && d.sayilar) || [];
       if (!sayilar.length){
         sayac.textContent = "";
@@ -380,11 +467,10 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
       sayilar.forEach(function(s){ liste.appendChild(sayiBolumu(s)); });
     })
-    .catch(function(){
-      sayac.textContent = "";
-      durum("Haberler yüklenemedi. Bu sayfa haberleri content/haberler.json dosyasından okur; " +
-            "dosyayı doğrudan açmak yerine yerel bir sunucu (http://) üzerinden açmanız gerekir.");
-    });
+    .catch(function(){ istekVar = false; hataGoster(); });
+  }
+
+  getir();
 })();
 </script>
 </body>

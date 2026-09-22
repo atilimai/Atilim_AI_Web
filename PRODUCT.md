@@ -39,21 +39,40 @@ commits to this repository, GitHub Pages publishes the site, and a GitHub Action
 the same issue to Discord exactly once. That machinery is a fact about the society, not a
 marketing claim.
 
-**No issue has been published yet.** Every entry now in `content/haberler.json` is
-placeholder content, and the issue numbers in it (12, 13, 14) are placeholders too — they
-are not a count of anything. An earlier version of this file read the highest number as a
+**No issue has been published yet.** `content/haberler.json` was cleared on 2026-09-09 by
+team decision; it now holds an empty `sayilar` array and both reading surfaces state
+*"Henüz yayımlanmış bir sayı yok."* The entries it used to hold were placeholders, and the
+issue numbers in them (12, 13, 14) were placeholders too — they were never a count of
+anything. An earlier version of this file read the highest number as a
 total and claimed "fourteen issues exist"; that was wrong, and the mistake is recorded here
 so it is not repeated. Until the first real issue ships, the pipeline is a capability, not
 yet evidence, and no copy anywhere may imply a publishing history.
 
 ## Operating Context
 
-- The society meets **every Thursday evening**, currently in Mühendislik B-204. The
-  standing meeting is the society's core ritual and the thing the site is ultimately
-  inviting people to.
+- The society meets **every Thursday**, currently in Mühendislik B-204. The standing
+  meeting is the society's core ritual and the thing the site is ultimately inviting
+  people to. The room is expected to change at some point (team, 2026-09-10); it is a
+  current fact, not a permanent one.
+- **The standing meeting's start time is recorded on the site as 17.30, and it is NOT
+  confirmed.** The team wrote it on 2026-09-10 as a placeholder pending board approval.
+  This is the one unverified figure on the site that does *not* announce itself as
+  pending: a visitor reads "17.30" as a fact and a student who trusts it may arrive at
+  the wrong hour. It appears in three places in `index.html` — the hero `.bulusma` line,
+  the `#s2` lead paragraph, and the footer `.kapanis-sart` line — and all three must
+  change together. Replace it with the confirmed time as soon as the board decides.
+- **Two different kinds of gathering, and the site must keep them apart.** The weekly
+  Thursday meeting needs no date tracking and no registration. The dated items in the
+  events list are *separate special events* — workshops, guest talks, project matchmaking,
+  a campus hackathon — and they fall on weekends. Confirmed 2026-09-10, after the site was
+  found asserting "every Thursday" above four Saturday dates with nothing explaining the
+  difference. Any future events list must state which of the two it is showing.
 - Sessions vary: reading a paper together, someone sharing a screen and showing where they
   are stuck, workshops, guest talks, project matchmaking, a campus hackathon.
 - Discord is the society's live channel; the weekly digest is pushed there automatically.
+  It is currently the **only** join path. The team intends to add a second one and will
+  decide its shape before it ships (2026-09-10), so nothing should be built that assumes
+  Discord is the sole route forever.
 - Content is **not authored in this repository**. A separate private admin panel
   (`atilimai/Atilim_AI_Panel`) validates and commits `content/haberler.json`. Editing that
   file by hand is a last resort.
@@ -96,7 +115,8 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 ## Brand Commitments
 
 - Name: **Atılım AI**, the AI society of Atılım University, Ankara.
-- Discord is the join path and the society's live channel.
+- Discord is the join path and the society's live channel — currently the only one, with a
+  second planned (see Operating Context).
 - Open-source work lives under the `atilimai` GitHub organisation.
 - Content is written in Turkish. The site's interface language is Turkish; internal
   documentation (this file, `DESIGN.md`) is English.
@@ -113,29 +133,45 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 
 **Built but not yet evidence:** `content/haberler.json` and the publishing chain around it.
 The archive is the society's strongest *potential* evidence, and it becomes evidence the day
-the first real issue lands in it. Today it holds only placeholders.
+the first real issue lands in it. Today it is empty on purpose. The team's next step is a
+single test issue published from the panel, to exercise the chain end to end before real
+content goes in.
 
 **Not established — must not be fabricated.** Member count, active project count, and
 completed event count are unknown. The site currently shows **visibly marked placeholders**
-in their place, by the team's decision, so that a reader can tell a number is pending rather
-than reading a fabricated or broken-looking figure. Replace them with real figures when the
-team supplies them; never invent one, and never quietly fill a placeholder with a guess.
+(`[ADET]`, styled by `.olcum b.bekliyor`) in their place, by the team's decision, so that a
+reader can tell a number is pending rather than reading a fabricated or broken-looking
+figure. Reconfirmed 2026-09-10: they stay as they are until the board supplies real
+figures. Replace them then; never invent one, and never quietly fill a placeholder with a
+guess.
 
-**Known content problem — the whole archive is placeholder, and it is live.** All three
-entries in `content/haberler.json` are stand-ins: placeholder titles, filler `icerik`, and a
-Google redirect URL in two `gorsel` fields. A visitor reading the landing page today sees
-invented news presented as the society's weekly digest, which is exactly what Principle 4
-forbids. Two things follow:
+A design review on 2026-09-10 argued the placeholders read as an unfinished website at
+exactly the moment a visitor is judging whether the society is serious, and proposed
+dropping the statistic shape altogether. The team declined for now, on the grounds that the
+numbers are coming from the board. The argument is recorded, not acted on — but note the
+open question it raises: whether a *count* is the evidence a student actually wants, or
+whether three sentences about what happened last Thursday would answer "is this serious?"
+without any figure at all.
 
-- **Clearing the file is safe.** Both pages already handle it: they show *"Henüz
-  yayımlanmış bir sayı yok."* and no layout breaks. A failed fetch is treated differently
-  and leaves the page as-is, because an unreachable file is not evidence that nothing was
-  published.
-- **`index.html` still holds three example news rows in static HTML** (`#feedList`, dated
-  28–31 Tem). They exist so the section can be designed against real-looking content, and a
-  source comment says so. They are no longer a hazard — the script replaces them with the
-  empty state as soon as the feed loads with nothing in it — but they are still invented
-  copy in the file and should go once a real issue exists.
+`.olcum b` was changed from a fixed `width:56px` to `min-width:56px` on 2026-09-10 so a real
+four-digit figure will not overflow when the placeholders are replaced.
+
+**Resolved 2026-09-09 — no invented news remains in the repository.** The archive had been
+carrying three placeholder issues live, presenting invented news as the society's weekly
+digest, which is what Principle 4 forbids. Both halves of that are now gone:
+
+- `content/haberler.json` holds an empty `sayilar` array. Both reading surfaces already
+  handled this and show *"Henüz yayımlanmış bir sayı yok."* with no layout break, and the
+  Discord job exits with `haberler.json içinde sayı yok.` A failed fetch is still treated
+  differently and leaves the page as-is, because an unreachable file is not evidence that
+  nothing was published.
+- `index.html`'s three static example rows in `#feedList` were replaced by the same empty-
+  state sentence the script renders, so the no-JS and failed-fetch paths tell the truth too.
+  The section keeps its design fallback; it just no longer invents news to fill it.
+
+**Discord will fire on the next publish.** `content/.son-gonderilen` holds `14`, so the job
+sends only an issue numbered above it. A test issue numbered 14 or lower reaches the site
+and stays silent on Discord; 15 or higher posts to the channel.
 
 ## Product Principles
 
@@ -166,13 +202,43 @@ One WCAG failure remains, and it cannot be closed in this repository:
 
 - **News images are published with an empty `alt`** (WCAG 1.1.1, level A), which presents
   content images as decorative. The root cause is the data contract: `news.ts` has no
-  alt-text field. Until the panel adds one, the site cannot claim AA.
+  alt-text field. The team has committed to adding one to the panel because AA requires it
+  (confirmed 2026-09-09). **Whether it has shipped is currently unknown** — as of
+  2026-09-10 the team has no active access to the panel repository and will check when
+  that is restored. Until it is confirmed shipped *and* read by the reading pages, the
+  site cannot claim AA. When the field lands it joins the shared contract, so
+  `haberler.html`, `haber.html` and the panel change together.
 
 One further weakness, not a WCAG failure:
 
 - **Article permalinks are positional** (`?sira=0`), so a screen-reader user returning to a
   bookmarked article after an issue is reordered lands on a different article with no
   warning.
+
+Three defects found and closed on 2026-09-09, recorded so they are not reintroduced: the
+events accordion carried `aria-expanded` on its non-interactive `<li>` instead of the
+button, so state was never announced; the mobile menu had no Escape key and no focus return
+while the modal had both; and the active-section nav mark was visual only, with no
+`aria-current`.
+
+Six more closed on 2026-09-10, in the same spirit:
+
+- The four event rows and the two `.olcum` rows were real buttons whose only cue was a
+  hover opacity change — no resting-state indicator, nothing on touch at all. Every event
+  description, including the repeated "önkoşul yok, laptop yeterli", sat behind a trigger
+  nobody could see.
+- With scripts disabled, `.tl .detay` was collapsed by an ungated rule, so four
+  `aria-expanded="false"` buttons could never expand and their descriptions were
+  permanently unreachable. The collapse now sits behind the `.js` gate.
+- The `.olcum` button that opens the repository dialog had no `aria-haspopup="dialog"`.
+- The modal did not lock background scroll. It now does, compensating for the scrollbar
+  width so nothing shifts.
+- The mobile disclosure panel did not close on an outside tap — the most natural dismissal
+  gesture on a phone either did nothing or hit a link behind the panel.
+- `prefers-reduced-motion` stopped cancelling the disclosure transition when the collapse
+  rule moved behind `.js`: the cancel selector `.tl .detay` (0,2,0) lost the specificity
+  contest to `.js .tl .detay` (0,3,0). Both the transition and the indicator's rotation are
+  cancelled again.
 
 Turkish is the interface language; `lang="tr"` is set on every page and must stay set for
 screen-reader pronunciation.
