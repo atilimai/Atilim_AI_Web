@@ -3,460 +3,575 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atılım AI — Topluluk</title>
+<title>Atılım AI — Yapay Zeka Topluluğu</title>
+<meta name="description" content="Atılım Üniversitesi Yapay Zeka Topluluğu. Her perşembe akşamı buluşuyor, atölyeler düzenliyor, açık kaynak projeler yürütüyor ve haftalık yapay zeka raporu yayımlıyoruz.">
+<meta name="theme-color" content="#100D0A">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Atılım AI">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Atılım AI — Yapay Zeka Topluluğu">
+<meta property="og:description" content="Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekayla uğraşan herkesin buluştuğu yer.">
+<meta property="og:url" content="https://atilimai.github.io/Atilim_AI_Web/">
+<link rel="canonical" href="https://atilimai.github.io/Atilim_AI_Web/">
+<meta property="og:image" content="https://atilimai.github.io/Atilim_AI_Web/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Atılım AI — Yapay zekayı birlikte öğreniyor, birlikte üretiyoruz.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* Tasarım sistemi: DESIGN.md. Token dışında değer kullanılmaz. */
 :root{
-  --void:#070A14;
-  --deep:#0C1020;
-  --line:rgba(146,170,235,.14);
-  --line-hi:rgba(146,170,235,.32);
-  --ink:#E9EDF8;
-  --dim:#8792AE;
-  --dim-hi:#B9C2DE;
-  --blue:#3D6BFF;
-  --blue-soft:#8DA4FF;
-  --red:#E63A4B;
-  --display:"Space Grotesk",system-ui,sans-serif;
-  --body:"Inter",system-ui,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --gece:#100D0A; --tezgah:#191512; --tezgah-2:#211B16;
+  --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
+  --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
+  --lamba:#E8A33D; --lamba-h:#F5B65C; --lamba-alt:rgba(232,163,61,.4); --on-lamba:#241703;
+  --ekran:#8FB4D6; --canli:#7FB069;
+  --disp:"Newsreader",Georgia,serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px;
+  --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px; --sp-sec:96px;
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  background:var(--void);color:var(--ink);font-family:var(--body);
-  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-body.pointer-fine{cursor:none}
-body.pointer-fine a,body.pointer-fine button{cursor:none}
+body{background:var(--gece);color:var(--kagit);font-family:var(--body);
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--disp);font-weight:300}
+a{color:var(--lamba);text-decoration:none}
+:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
 
-#scene{position:fixed;inset:0;z-index:0;display:block}
-.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 45%,transparent 30%,rgba(7,10,20,.55) 78%,rgba(7,10,20,.9) 100%)}
-body.no-webgl #scene{display:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);position:relative}
 
-.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;z-index:90;pointer-events:none;
-  border-radius:50%;opacity:0;transition:opacity .3s}
-.cursor-dot{width:5px;height:5px;background:var(--red);margin:-2.5px 0 0 -2.5px}
-.cursor-ring{width:30px;height:30px;border:1px solid var(--line-hi);margin:-15px 0 0 -15px;
-  transition:width .25s,height .25s,margin .25s,border-color .25s,opacity .3s}
-body.pointer-fine .cursor-dot,body.pointer-fine .cursor-ring{opacity:1}
-.cursor-ring.grab{width:56px;height:56px;margin:-28px 0 0 -28px;border-color:var(--red)}
+/* ---------- erişim ---------- */
+/* Yalnızca ekran okuyucuya. [ADET] yer tutucusu göze "beklemede" diyor
+   (.olcum b.bekliyor: 15px, --kagit-t, .06em) ama ekran okuyucu kullanan
+   ziyaretçiye ulaşan tek şey bir köşeli parantez jetonuydu — yer tutucunun
+   bütün amacı bir kullanıcı sınıfına hiç varmıyordu. */
+.gizli{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;
+  letter-spacing:normal}
+.atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--lamba);color:var(--on-lamba);
+  font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
+.atla:focus{left:20px;top:14px}
 
 /* ---------- nav ---------- */
-.nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;
-  justify-content:space-between;padding:18px clamp(1.25rem,5vw,3.5rem);
-  border-bottom:1px solid transparent;transition:border-color .4s,background .4s,backdrop-filter .4s}
-.nav.stuck{border-bottom-color:var(--line);background:rgba(7,10,20,.6);backdrop-filter:blur(14px)}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
-.brand i{width:15px;height:15px;border-radius:50%;background:var(--red);display:block;flex:none}
-.brand span{font-family:var(--display);font-size:13px;letter-spacing:.2em;font-weight:500}
-.nav ul{display:flex;gap:26px;list-style:none}
-.nav a.link{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dim);
-  text-decoration:none;text-transform:uppercase;transition:color .3s;position:relative;padding:4px 0}
-.nav a.link:hover,.nav a.link.on{color:var(--ink)}
-.nav a.link.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--red)}
-@media(max-width:820px){.nav ul{display:none}}
-
-/* ---------- rail ---------- */
-.rail{position:fixed;right:clamp(1rem,2.5vw,2rem);top:50%;transform:translateY(-50%);
-  z-index:60;display:flex;flex-direction:column;gap:14px}
-.rail b{font-family:var(--mono);font-size:10px;color:var(--dim);opacity:.4;
-  font-weight:400;letter-spacing:.12em;transition:color .3s,opacity .3s}
-.rail b.on{color:var(--red);opacity:1}
-@media(max-width:820px){.rail{display:none}}
-
-/* ---------- audio control ---------- */
-.audio{position:fixed;right:clamp(1rem,2.5vw,2rem);bottom:22px;z-index:70;
-  display:flex;align-items:center;gap:11px;padding:8px 14px 8px 12px;border-radius:999px;
-  border:1px solid var(--line);background:rgba(10,14,28,.62);backdrop-filter:blur(14px);
-  transition:border-color .4s}
-.audio:hover{border-color:var(--line-hi)}
-.audio.nudge{animation:nudge 2.6s ease-in-out 3}
-@keyframes nudge{0%,100%{border-color:var(--line)}50%{border-color:rgba(230,58,75,.5)}}
-.audio button{background:none;border:0;padding:3px;display:flex;align-items:flex-end;gap:2px;height:20px}
-.audio button i{display:block;width:3px;height:3px;border-radius:1px;background:var(--dim);
-  transition:background .35s,height .35s}
-.audio.on button i{background:var(--red)}
-.audio.on button i:nth-child(1){animation:eq .82s -.10s ease-in-out infinite alternate}
-.audio.on button i:nth-child(2){animation:eq .64s -.35s ease-in-out infinite alternate}
-.audio.on button i:nth-child(3){animation:eq .95s -.22s ease-in-out infinite alternate}
-.audio.on button i:nth-child(4){animation:eq .73s -.48s ease-in-out infinite alternate}
-@keyframes eq{from{height:3px}to{height:14px}}
-.audio .pct{font-family:var(--mono);font-size:10px;color:var(--dim);width:20px;text-align:right}
-.audio input[type=range]{-webkit-appearance:none;appearance:none;width:72px;height:14px;
-  background:transparent;margin:0}
-.audio input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line-hi);border-radius:2px}
-.audio input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;
-  border-radius:50%;background:var(--ink);margin-top:-4px}
-.audio input[type=range]::-moz-range-track{height:2px;background:var(--line-hi);border-radius:2px}
-.audio input[type=range]::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:var(--ink)}
-body.pointer-fine .audio input[type=range]{cursor:none}
-@media(max-width:560px){.audio{bottom:16px;gap:8px}.audio input[type=range]{width:52px}.audio .pct{display:none}}
-
-/* ---------- layout ---------- */
-section{position:relative;z-index:2;min-height:100svh;display:flex;align-items:center;
-  padding:120px clamp(1.25rem,5vw,3.5rem) 100px}
-.wrap{width:100%;max-width:1180px;margin:0 auto}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
-  color:var(--blue-soft);display:flex;align-items:center;gap:12px;margin-bottom:26px}
-.eyebrow::before{content:"";width:26px;height:1px;background:var(--blue);flex:none}
-h1{font-family:var(--display);font-weight:500;font-size:clamp(2.5rem,6.6vw,5rem);
-  line-height:.99;letter-spacing:-.035em;max-width:15ch}
-h2{font-family:var(--display);font-weight:500;font-size:clamp(1.85rem,3.9vw,3rem);
-  line-height:1.08;letter-spacing:-.03em;max-width:18ch}
-h3{font-family:var(--display);font-weight:500;font-size:1.2rem;letter-spacing:-.01em}
-.lead{color:var(--dim);max-width:46ch;margin-top:22px;font-size:clamp(.95rem,1.15vw,1.05rem)}
-
-.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:38px}
-.btn{font-family:var(--body);font-size:14px;padding:13px 24px;border-radius:8px;
-  text-decoration:none;border:1px solid transparent;transition:.35s cubic-bezier(.16,1,.3,1);display:inline-block}
-.btn.solid{background:var(--red);color:#2A0509;font-weight:500}
-.btn.solid:hover{background:#FF4E5E;transform:translateY(-2px)}
-.btn.ghost{border-color:var(--line-hi);color:var(--ink)}
-.btn.ghost:hover{border-color:var(--blue-soft);background:rgba(61,107,255,.08);transform:translateY(-2px)}
-
-.hint{position:absolute;bottom:38px;left:clamp(1.25rem,5vw,3.5rem);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--dim);display:flex;align-items:center;gap:10px}
-.hint em{display:block;width:1px;height:34px;background:linear-gradient(var(--blue),transparent);
-  animation:drop 2.2s infinite;font-style:normal}
-@keyframes drop{0%{opacity:0;transform:scaleY(.2)}40%{opacity:1}100%{opacity:0;transform:scaleY(1)}}
-
-.two{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(2rem,6vw,6rem);align-items:center}
-@media(max-width:900px){.two{grid-template-columns:1fr;gap:2.5rem}}
-
-#s1 .lead{color:var(--dim-hi)}
-
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:34px}
-.stats div,.stats button.stat{background:var(--void);padding:22px 24px}
-.stats button.stat{all:unset;display:block;width:100%;box-sizing:border-box;background:var(--void);
-  padding:22px 24px;cursor:pointer;font:inherit;text-align:left;transition:background .3s}
-.stats button.stat:hover{background:rgba(61,107,255,.08)}
-.stats strong{font-family:var(--display);font-size:2rem;font-weight:500;display:block;letter-spacing:-.02em}
-.stats span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-
-/* ---------- projects ---------- */
-.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
-@media(max-width:900px){.projects{grid-template-columns:1fr}}
-.card{padding:26px 26px 22px;border-radius:14px;border:1px solid var(--line);
-  background:rgba(14,20,40,.85);
-  transition:border-color .4s,scale .35s cubic-bezier(.16,1,.3,1);
-  transform-style:preserve-3d;will-change:transform}
-.card:hover{border-color:var(--line-hi);scale:.96}
-.card .state{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  display:inline-flex;align-items:center;gap:7px;color:var(--dim);margin-bottom:18px}
-.card .state i{width:6px;height:6px;border-radius:50%;background:var(--dim);display:block}
-.card .state.live i{background:var(--red);box-shadow:0 0 0 3px rgba(230,58,75,.16)}
-.card .state.live{color:var(--ink)}
-.card p{color:var(--dim);font-size:.92rem;margin-top:12px;min-height:76px}
-.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
-.tags i{font-family:var(--mono);font-size:10px;font-style:normal;color:var(--blue-soft);
-  border:1px solid rgba(61,107,255,.28);border-radius:5px;padding:3px 8px}
-
-/* ---------- timeline ---------- */
-.tl{list-style:none;margin-top:10px}
-.tl li{display:grid;grid-template-columns:96px 1fr auto;gap:20px;align-items:baseline;
-  padding:22px 0;border-top:1px solid var(--line);transition:border-color .4s;cursor:pointer}
-.tl li:last-child{border-bottom:1px solid var(--line)}
-.tl li:hover{border-top-color:var(--line-hi)}
-.tl time{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--red);letter-spacing:.06em}
-.tl em{font-family:var(--mono);font-size:11px;font-style:normal;color:var(--dim);letter-spacing:.06em}
-@media(max-width:760px){.tl li{grid-template-columns:1fr;gap:6px}}
-
-.tl-detay{grid-column:1/-1;max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.16,1,.3,1)}
-.tl-item.open .tl-detay{max-height:260px}
-.tl-detay-in{padding-top:16px}
-.tl-detay-in p{color:var(--dim);font-size:.9rem;max-width:60ch}
-.tl-kayit{display:flex;align-items:center;gap:12px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-.tl-kayit .uyari{font-family:var(--mono);font-size:11px;color:var(--red)}
-
-/* ---------- news ---------- */
-.news{display:grid;grid-template-columns:1fr;gap:clamp(1.5rem,4vw,3rem);margin-top:40px;align-items:start}
-.feed{padding:8px 28px 20px;border-radius:14px;border:1px solid var(--line);
-  background:rgba(10,14,28,.55);backdrop-filter:blur(16px)}
-.feed article{padding:22px 0;border-bottom:1px solid var(--line)}
-.feed article:last-child{border-bottom:0}
-.feed h4{font-family:var(--display);font-size:1rem;font-weight:500;letter-spacing:-.01em}
-.feed p{color:var(--dim);font-size:.88rem;margin-top:7px}
-.feed .src{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-soft)}
-
-.feed-issue{display:flex;align-items:baseline;gap:14px;
-  padding-bottom:14px;margin-bottom:8px;border-bottom:1px solid var(--line)}
-.feed-issue-t{font-family:var(--display);font-weight:500;font-size:1.06rem;letter-spacing:-.015em;color:var(--ink)}
-.feed-issue-n{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--blue-soft);border:1px solid var(--line-hi);border-radius:999px;padding:3px 11px;margin-left:auto}
-
-.feed-bot{display:flex;align-items:center;gap:10px;padding-top:12px;margin-top:8px;border-top:1px solid var(--line)}
-.feed-bot-av{position:relative;width:26px;height:26px;border-radius:50%;background:#5865F2;flex:none;
-  display:flex;align-items:center;justify-content:center}
-.feed-bot-av svg{width:15px;height:15px;fill:#fff}
-.feed-bot-dot{position:absolute;right:-2px;bottom:-2px;width:10px;height:10px;border-radius:50%;
-  background:#23A55A;border:2px solid #0B0F1D;animation:botPulse 2.6s ease-out infinite}
-@keyframes botPulse{
-  0%{box-shadow:0 0 0 0 rgba(35,165,90,.45)}
-  70%{box-shadow:0 0 0 6px rgba(35,165,90,0)}
-  100%{box-shadow:0 0 0 0 rgba(35,165,90,0)}
+nav{position:sticky;top:0;z-index:40;border-bottom:1px solid transparent;
+  transition:border-color .4s,background .4s}
+nav.yapisik{border-bottom-color:var(--hair);background:rgba(16,13,10,.86);backdrop-filter:blur(12px)}
+.nav-in{display:flex;align-items:center;gap:var(--sp-lg);height:64px;position:relative}
+.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);min-height:44px;
+  font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
+.marka i{width:20px;height:20px;flex:none;
+  background:url(images/ai_mark.png) center/contain no-repeat}
+.baglar{display:flex;gap:var(--r-xs);margin-left:auto}
+.baglar a{position:relative;font-size:15px;color:var(--kagit-s);padding:10px 14px;
+  border-radius:var(--r-sm);min-height:44px;display:flex;align-items:center;
+  transition:color .3s,background .3s}
+.baglar a:hover{color:var(--kagit);background:var(--tezgah)}
+.baglar a.acik{color:var(--kagit)}
+/* Kat: masaüstünde de duruyor. Gelme kararı etkinlikler okunduktan sonra
+   veriliyor ve o noktaya kadar sayfada kahramandan başka tıklanacak yer
+   yoktu. Dolu düğme değil, kehribar bir bağlantı — birincil düğmeyle
+   yarışmasın diye. */
+.baglar .kat{color:var(--lamba);margin-left:var(--sp-xs);padding-left:18px;
+  border-left:1px solid var(--hair)}
+.baglar .kat:hover{color:var(--lamba-h);background:var(--tezgah)}
+.baglar a.acik::after{content:"";position:absolute;left:14px;right:14px;bottom:8px;
+  height:2px;background:var(--lamba)}
+.menu-btn{display:none;margin-left:auto;background:var(--tezgah);border:1px solid var(--hair-s);
+  color:var(--kagit);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;padding:0 var(--sp-md);height:44px;border-radius:var(--r-md);cursor:pointer}
+@media(max-width:900px){
+  .baglar{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;
+    background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-lg);padding:var(--sp-xs)}
+  .baglar.gorunur{display:flex}
+  .baglar a{padding:14px}
+  .baglar a.acik::after{display:none}
+  .baglar .kat{display:flex;color:var(--lamba);border-top:1px solid var(--hair);
+    border-left:0;margin-left:0;padding-left:14px;
+    margin-top:var(--sp-xs);padding-top:var(--sp-md)}
+  .baglar .kat:hover{color:var(--lamba-h);background:var(--tezgah-2)}
+  .menu-btn{display:block}
 }
-.feed-bot-txt{display:flex;flex-direction:column;line-height:1.3;margin-right:auto}
-.feed-bot-name{font-size:12px;font-weight:500;color:var(--ink)}
-.feed-bot-durum{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#3BA55D}
-.feed-bot-btn{font-family:var(--body);font-size:11.5px;font-weight:500;padding:7px 14px;border-radius:6px;
-  background:#5865F2;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
-  transition:background .25s,transform .25s}
-.feed-bot-btn svg{width:13px;height:13px;fill:currentColor}
-.feed-bot-btn:hover{background:#4752C4;transform:translateY(-1px)}
-.feed-more{display:block;text-align:center;margin-top:18px}
-/* Tam metni olan haberde: başlık ayrıntı sayfasına gider, altına da bağlantı düşer */
-.feed h4 a.ic{color:var(--ink);text-decoration:none;transition:color .3s}
-.feed h4 a.ic:hover{color:var(--blue-soft)}
-.feed .devam{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--blue-soft);text-decoration:none;
-  border-bottom:1px solid var(--line-hi);padding-bottom:3px;transition:color .3s,border-color .3s}
-.feed .devam:hover{color:var(--ink);border-color:var(--blue-soft)}
 
-/* ---------- close ---------- */
-.close{text-align:center}
-.close h2{margin:0 auto;max-width:20ch}
-.close .lead{margin-left:auto;margin-right:auto}
-.close .btns{justify-content:center}
-footer{position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
-  padding:26px clamp(1.25rem,5vw,3.5rem);border-top:1px solid var(--line);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+/* ---------- bölüm ---------- */
+/* Çapa atlamaları bölüm başlığını 64px yapışkan menünün altına gönderiyordu. */
+section{padding:var(--sp-sec) 0;scroll-margin-top:64px}
+/* .kicker kaldırıldı. Mono 12px, 500, .08em, uppercase, --lamba ile dört h2'nin
+   üstünde duruyordu — DESIGN.md'nin kod yazılmadan önce isim vererek reddettiği
+   "izlenimli-büyük-harf göz kapağı" kalıbının tam kendisi. Üstelik kategori
+   etiketini eylem rengiyle basmak İki Kaynak Kuralı'nı da kırıyordu. Başlıklar
+   kendi ağırlığını taşıyor; bölüm adları gezinme çubuğunda zaten var. */
+h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;max-width:17ch;text-wrap:balance}
+h1 em{font-style:italic;color:var(--lamba)}
+h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
+  margin-top:var(--sp-md);text-wrap:balance;max-width:20ch}
+.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:62ch;margin-top:20px}
+.meta{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- hero ---------- */
+#s0{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
+#s0>.wrap{width:100%}
+.eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
+/* Toplanti sabiti: gun, oda ve onkosul, her kirilma noktasinda sayfanin akisinda. */
+.bulusma{font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--kagit-s);
+  margin-top:var(--sp-lg);padding-top:var(--sp-md);border-top:1px solid var(--hair);
+  max-width:52ch}
+.bulusma b{color:var(--kagit);font-weight:400}
+
+/* ---------- düğme ---------- */
+.btn{font-family:var(--body);font-size:15px;font-weight:500;padding:0 22px;min-height:48px;
+  border-radius:var(--r-md);display:inline-flex;align-items:center;border:1px solid transparent;
+  cursor:pointer;transition:background .3s,border-color .3s,color .3s}
+.btn.p{background:var(--lamba);color:var(--on-lamba)}
+.btn.p:hover{background:var(--lamba-h)}
+.btn.s{background:var(--tezgah);border-color:var(--hair-s);color:var(--kagit)}
+.btn.s:hover{background:var(--tezgah-2);border-color:var(--hair-t)}
+
+/* ---------- iki sütun / ölçüm ---------- */
+.iki{display:grid;grid-template-columns:1fr 1.3fr;gap:clamp(32px,6vw,80px)}
+@media(max-width:900px){.iki{grid-template-columns:1fr;gap:var(--sp-xl)}}
+.olcum{margin-top:var(--sp-xl);border-top:1px solid var(--hair)}
+.olcum div{display:flex;align-items:baseline;gap:var(--sp-md);padding:var(--sp-md) 0;
+  border-bottom:1px solid var(--hair)}
+.olcum b{font-family:var(--mono);font-size:28px;font-weight:400;color:var(--lamba);
+  line-height:1;min-width:56px;flex:0 0 auto}
+.olcum span{font-size:15px;color:var(--kagit-s)}
+/* Doğrulanmamış rakam: yer tutucu olduğu okunsun diye vurgu rengini almaz. */
+.olcum b.bekliyor{font-size:15px;color:var(--kagit-t);letter-spacing:.06em}
+.olcum button{all:unset;display:flex;align-items:baseline;gap:var(--sp-md);width:100%;
+  padding:var(--sp-md) 0;border-bottom:1px solid var(--hair);cursor:pointer;
+  min-height:44px;box-sizing:border-box}
+/* Üç satır da aynı görünüyordu, ikisi düğmeydi. Sondaki ok satırın
+   tıklanabilir olduğunu durağan halde söyler; opasite değişimi yalnızca
+   imleç üstündeyken vardı ve dokunmatikte hiç yoktu. */
+.olcum button span{flex:1 1 auto}
+.olcum .git{flex:none;font-size:15px;color:var(--kagit-t);
+  transition:color .3s,transform .3s var(--ease)}
+.olcum button:hover .git,.olcum button:focus-visible .git{
+  color:var(--lamba);transform:translateX(3px)}
+/* all:unset outline'ı da sıfırlar ve özgüllükte genel :focus-visible kuralını
+   yener; halkayı burada geri vermek zorundayız. */
+.olcum button:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;
+  border-radius:var(--r-xs)}
+
+/* ---------- etkinlik ---------- */
+.tl{list-style:none;margin-top:var(--sp-xl);border-top:1px solid var(--hair);padding-top:var(--sp-xs)}
+.tl li{border-bottom:1px solid var(--hair)}
+.tl button{width:100%;display:grid;grid-template-columns:80px 1fr auto auto;gap:20px;
+  align-items:baseline;padding:22px 0;background:none;border:0;color:inherit;font:inherit;
+  text-align:left;cursor:pointer;min-height:44px}
+/* Açılır satırın durağan halde hiç göstergesi yoktu: dört etkinliğin
+   açıklaması ve içindeki "önkoşul yok" cümlesi görünmez bir tetiğin
+   arkasında kalıyordu. İşaret üç durumu da söyler: kapalı, imleç üstünde,
+   açık. Durum sınıfı <li>'de olduğu için :has() gerekmiyor. */
+.tl .isaret{width:12px;height:12px;align-self:center;
+  fill:none;stroke:var(--kagit-t);stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .45s var(--ease),stroke .3s}
+.tl button:hover .isaret,.tl button:focus-visible .isaret{stroke:var(--lamba)}
+.tl li.acik .isaret{transform:rotate(180deg);stroke:var(--lamba)}
+/* Tarih hücresi iki satır: gün adı basılmadan, dördü de cumartesi olan bir
+   liste "her perşembe" diyen sayfayla çelişiyor görünüyordu. Gün adı 12px
+   --kagit-t (5.54:1), 80px sütuna sığar ("Cumartesi" mono 12px'te ~65px). */
+.tl time{font-family:var(--mono);font-size:13px;color:var(--lamba);display:block}
+.tl time span{display:block;margin-top:3px;font-size:12px;letter-spacing:.02em;
+  color:var(--kagit-t)}
+.tl .baslik{font-family:var(--disp);font-size:21px;font-weight:400;line-height:1.34}
+.tl .yer{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--kagit-t)}
+/* Kapalı hal .js kapısının arkasında: betik yoksa satırlar hiç açılamıyordu
+   ve dört açıklama kalıcı olarak erişilemez kalıyordu. Betik yokken hepsi
+   açık gelir, işaret de gizlenir — yapılamayacak bir etkileşimi haber
+   vermesin. */
+.tl .detay{display:grid}
+.js .tl .detay{grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.js .tl li.acik .detay{grid-template-rows:1fr}
+.tl .isaret{display:none}
+.js .tl .isaret{display:block}
+/* Kapalı açıklama yalnızca kırpılıyordu: yüksekliği sıfırdı ama metin
+   erişilebilirlik ağacında duruyordu. Ekran okuyucu kullanan ziyaretçi dört
+   düğmenin de "kapalı" olduğunu duyup ardından dört açıklamayı da sayfa metni
+   olarak dinliyordu — durum ile içerik çelişiyordu. visibility ikisini
+   eşitler. .js kapısı şart: betik yokken satırlar zaten açık geliyor.
+   Gecikme kapanış animasyonu kadar; metin kapanırken görünür kalır. */
+.tl .detay>div{overflow:hidden}
+.js .tl .detay>div{visibility:hidden;transition:visibility 0s .45s}
+.js .tl li.acik .detay>div{visibility:visible;transition:visibility 0s 0s}
+.tl .detay p{color:var(--kagit-m);font-size:15px;line-height:1.7;max-width:60ch;padding-bottom:22px}
+@media(max-width:760px){
+  .tl button{grid-template-columns:1fr auto;gap:6px}
+  .tl time,.tl .baslik,.tl .yer{grid-column:1}
+  .tl .isaret{grid-column:2;grid-row:1/4;align-self:center;margin-left:var(--sp-md)}
+}
+
+/* ---------- haber ---------- */
+/* Sabit 88px/108px sütunlar panelden gelen veriyi taşıyor: kategori 200
+   karaktere kadar gelebiliyor, sarma kuralı olmadan satırı kırıyordu.
+   min-width:0 grid çocuğunun içeriğinin altına inebilmesi için. */
+.haber{display:grid;grid-template-columns:88px 108px 1fr;gap:20px;padding:22px 0;
+  border-bottom:1px solid var(--hair);align-items:baseline}
+.haber>*{min-width:0;overflow-wrap:anywhere}
+.haber:first-child{border-top:1px solid var(--hair)}
+.haber h3{font-size:21px;font-weight:400;line-height:1.34;max-width:40ch;overflow-wrap:anywhere}
+/* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını kurala çıkarır —
+   alt bilgi bağlantılarındaki kalıbın aynısı. Başlık bağlantısı 21px yüksek
+   bir kutuydu; WCAG 2.5.8'in 24px tabanının da altında. Arşiv boşken hiç
+   oluşturulmadığı için ölçümlere girmiyordu. */
+.haber h3 a{color:var(--kagit);transition:color .3s;padding-block:var(--sp-sm)}
+.haber h3 a:hover{color:var(--lamba)}
+.haber p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:6px;max-width:66ch;
+  overflow-wrap:anywhere}
+.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ekran)}
+.feed-kalan{font-family:var(--mono);font-size:13px;color:var(--kagit-t);padding:22px 0;
+  border-bottom:1px solid var(--hair)}
+/* Sayı numarası yoksa boş bir <p> 32px üst boşlukla duruyordu. */
+#feedIssue:empty{display:none}
+/* Ağ hatası boş durumdan ayrı: sorunu adıyla söyler ve yeniden dene sunar. */
+/* Yükleniyor/boş satırı 63px; bu satır 44px'lik düğme yüzünden 90px oluyor ve
+   yükleniyor→hata geçişinde sayfa 26px sıçrıyordu. Esnek satır + yarı dolgu
+   düğmeyi aynı ritmin içine alıyor. */
+.feed-hata{display:flex;align-items:center;gap:var(--sp-xs);flex-wrap:wrap;
+  font-family:var(--mono);font-size:13px;color:var(--kagit-m);padding:11px 0;
+  border-bottom:1px solid var(--hair)}
+.feed-hata button{all:unset;display:inline-flex;align-items:center;
+  color:var(--lamba);cursor:pointer;min-height:44px;
+  border-bottom:1px solid var(--lamba-alt)}
+.feed-hata button:hover{color:var(--lamba-h)}
+.feed-hata button:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;
+  border-radius:var(--r-xs)}
+/* Kardeşi .arsiv-bag 44px taşıyor, bu satır taşımıyordu: 109x25 px'lik bir
+   dokunma hedefi kalıyordu. Arşiv boşken hiç oluşturulmadığı için ölçümlere de
+   girmiyordu — ilk sayı yayımlandığı gün sayfadaki her haberde belirecekti.
+   Alt çizgi metnin altında kalsın diye yükseklik align-items ile veriliyor,
+   padding ile değil. */
+.devam{display:inline-flex;align-items:center;min-height:44px;
+  margin-top:var(--sp-xs);font-family:var(--mono);font-size:13px;
+  color:var(--lamba);border-bottom:1px solid var(--lamba-alt);padding-bottom:3px}
+.arsiv-bag{display:inline-flex;align-items:center;gap:var(--sp-xs);margin-top:var(--sp-xl);
+  font-family:var(--mono);font-size:13px;color:var(--lamba);
+  border-bottom:1px solid var(--lamba-alt);padding-bottom:4px;min-height:44px}
+@media(max-width:760px){.haber{grid-template-columns:1fr;gap:var(--sp-xs)}}
+
+/* ---------- proje ---------- */
+.projeler{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:var(--sp-md);margin-top:var(--sp-xl)}
+.kart{background:var(--tezgah);border:1px solid var(--hair);border-radius:var(--r-lg);
+  padding:var(--sp-lg);transition:background .35s,border-color .35s}
+.kart:hover{background:var(--tezgah-2);border-color:var(--hair-s)}
+.durum{display:inline-flex;align-items:center;gap:var(--sp-xs);font-family:var(--mono);
+  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--kagit-s)}
+.durum i{width:7px;height:7px;border-radius:50%;background:var(--kagit-t)}
+.durum.canli i{background:var(--canli)}
+.durum.canli{color:var(--kagit-m)}
+.kart h3{font-size:21px;font-weight:400;margin-top:14px}
+.kart p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:10px}
+.etiketler{display:flex;gap:var(--sp-xs);flex-wrap:wrap;margin-top:20px;
+  padding-top:var(--sp-md);border-top:1px solid var(--hair)}
+.etiketler span{font-family:var(--mono);font-size:12px;color:var(--kagit-t);
+  border:1px solid var(--hair-s);border-radius:var(--r-sm);padding:4px 9px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
+/* Kapanış daveti: sayfa en düşük enerjili anında, hiçbir ası olmadan
+   bitiyordu. Gün, oda ve "önkoşul yok" burada da tipte duruyor — hiçbir
+   kırılma noktasında kaybolmuyor. Kahramandaki birincil düğmeyle aynı
+   ekranda hiç bulunmuyorlar; aralarında 6.000px var. */
+.kapanis{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-lg);
+  padding-bottom:var(--sp-xxl);margin-bottom:var(--sp-xl);
+  border-bottom:1px solid var(--hair)}
+.kapanis-soz{font-family:var(--disp);font-size:28px;font-weight:400;line-height:1.28;
+  color:var(--kagit);max-width:22ch;text-wrap:balance}
+.kapanis-sart{font-family:var(--mono);font-size:13px;line-height:1.7;
+  color:var(--kagit-s);flex:1 1 220px;max-width:40ch}
+.kapanis .btn{flex:none;margin-left:auto}
+@media(max-width:760px){
+  .kapanis{display:block;padding-bottom:var(--sp-xl);margin-bottom:var(--sp-lg)}
+  .kapanis-sart{margin-top:var(--sp-sm)}
+  .kapanis .btn{margin-top:var(--sp-lg)}
+}
+.foot-bulusma{color:var(--kagit-s);line-height:1.8}
+.foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
+  font-size:15px;color:var(--kagit-t)}
+.foot .sag{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
+/* Telefonda margin-left:auto üç bağlantıyı ekran kenarına sıkıştırıyor ve
+   kompozisyondan çok kazara bir kümelenme gibi okunuyordu. */
+@media(max-width:760px){.foot .sag{margin-left:0}}
+/* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
+/* Discord'da olmayan biri (sponsor, baska topluluk, hoca) icin tek kapi.
+   Kimlik satiriyla ayni grupta duruyor: sagdaki uclu gezinme kalıyor. */
+.foot-posta{overflow-wrap:anywhere}
+.foot a{color:var(--kagit-s);padding-block:var(--sp-sm)}
+.foot a:hover{color:var(--kagit)}
 
 /* ---------- modal ---------- */
-.modal{position:fixed;inset:0;z-index:85;display:none}
-.modal.open{display:block}
-.modal-bg{position:absolute;inset:0;background:rgba(7,10,20,.72);backdrop-filter:blur(4px)}
-.modal-panel{position:relative;max-width:420px;margin:14vh auto 0;padding:30px;border-radius:14px;
-  border:1px solid var(--line-hi);background:rgba(10,14,28,.88);backdrop-filter:blur(20px)}
-.modal-x{position:absolute;top:14px;right:14px;background:none;border:0;color:var(--dim);font-size:16px;
-  cursor:pointer;z-index:2;transition:color .3s}
-.modal-x:hover{color:var(--ink)}
-@media(max-width:620px){.modal-panel{margin:9vh 16px 0}}
-
-/* GitHub tarzı depo listesi */
-.modal-panel.gh{max-width:560px;padding:0;overflow:hidden}
-.gh-head{display:flex;align-items:center;gap:13px;padding:20px 26px;border-bottom:1px solid var(--line)}
-.gh-mark{width:26px;height:26px;fill:var(--ink);flex:none}
-.gh-head h3{font-family:var(--display);font-weight:500;font-size:1.02rem;letter-spacing:-.01em;line-height:1.3}
-.gh-sub{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.04em}
-.gh-list{list-style:none;max-height:54vh;overflow-y:auto}
-.gh-repo{padding:16px 26px;border-bottom:1px solid var(--line);transition:background .25s}
-.gh-repo:hover{background:rgba(61,107,255,.06)}
-.gh-name{display:inline-flex;align-items:center;gap:8px;color:var(--blue-soft);font-weight:500;
-  font-size:.97rem;text-decoration:none;vertical-align:middle}
+.modal{position:fixed;inset:0;z-index:60;display:none}
+.modal.acik{display:block}
+.modal-bg{position:absolute;inset:0;background:rgba(16,13,10,.78)}
+.modal-panel{position:relative;max-width:560px;margin:12vh auto 0;background:var(--tezgah-2);
+  border:1px solid var(--hair-t);border-radius:var(--r-xl);overflow:hidden}
+.modal-x{position:absolute;top:12px;right:12px;width:44px;height:44px;background:none;border:0;
+  color:var(--kagit-s);font-size:18px;cursor:pointer;border-radius:var(--r-sm);z-index:2}
+.modal-x:hover{color:var(--kagit);background:var(--tezgah)}
+.gh-head{display:flex;align-items:center;gap:13px;padding:20px var(--sp-lg);
+  border-bottom:1px solid var(--hair)}
+.gh-mark{width:24px;height:24px;fill:var(--kagit);flex:none}
+.gh-head h3{font-size:21px;font-weight:400}
+.gh-sub{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
+.gh-list{list-style:none;max-height:52vh;overflow-y:auto}
+.gh-repo{padding:var(--sp-md) var(--sp-lg);border-bottom:1px solid var(--hair)}
+/* Panel overflow:hidden; API'den gelen uzun bir depo adı ya da bölünmeyen bir
+   URL sarma kuralı olmadan kırpılıyordu. min-width:0 flex çocuğunun içeriğinin
+   altına inebilmesi için gerekli. */
+.gh-name{display:inline-flex;align-items:center;gap:var(--sp-xs);color:var(--lamba);
+  font-weight:500;min-width:0;overflow-wrap:anywhere}
 .gh-name:hover{text-decoration:underline}
-.gh-ico{width:15px;height:15px;fill:var(--dim);flex:none}
-.gh-badge{margin-left:9px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;
-  color:var(--dim);border:1px solid var(--line-hi);border-radius:999px;padding:2px 9px;vertical-align:middle}
-.gh-desc{color:var(--dim);font-size:.85rem;line-height:1.55;margin-top:7px;max-width:52ch}
-.gh-desc.bos{opacity:.55;font-style:italic}
-.gh-meta{display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin-top:11px;font-size:11.5px;color:var(--dim)}
+.gh-ico{width:15px;height:15px;fill:var(--kagit-t);flex:none}
+.gh-desc{color:var(--kagit-s);font-size:15px;line-height:1.55;margin-top:7px;
+  max-width:52ch;overflow-wrap:anywhere}
+.gh-desc.bos{color:var(--kagit-t);font-style:italic}
+/* Bu sınıfın dosyada hiç kuralı yoktu: "Public" biçimlendirilmemiş 16px gövde
+   yazısı olarak kehribar depo bağlantısına yapışıyor ve satırın en parlak
+   metni oluyordu. .etiketler span ile aynı dil. */
+.gh-badge{margin-left:var(--sp-xs);font-family:var(--mono);font-size:12px;
+  color:var(--kagit-t);border:1px solid var(--hair-s);border-radius:var(--r-sm);
+  padding:3px 8px;white-space:nowrap}
+/* Canlı veri çekilemediğinde sessiz ama dürüst bir satır. */
+.gh-note{font-family:var(--mono);font-size:13px;color:var(--kagit-t);
+  padding:var(--sp-md) var(--sp-lg);border-bottom:1px solid var(--hair)}
+.gh-meta{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;margin-top:10px;
+  font-family:var(--mono);font-size:12px;color:var(--kagit-t)}
 .gh-meta span{display:inline-flex;align-items:center;gap:5px}
 .gh-meta span[hidden]{display:none}
 .gh-meta svg{width:12px;height:12px;fill:currentColor}
-.gh-lang i{width:9px;height:9px;border-radius:50%;display:block;background:var(--dim)}
-.gh-all{display:block;text-align:center;padding:14px;font-size:12.5px;color:var(--dim);
-  text-decoration:none;transition:color .3s,background .3s}
-.gh-all:hover{color:var(--ink);background:rgba(61,107,255,.06)}
+.gh-lang i{width:9px;height:9px;border-radius:50%;display:block;flex:none;
+  background:var(--kagit-t)}
+.gh-lang{overflow-wrap:anywhere}
+.gh-all{display:block;text-align:center;padding:var(--sp-md);font-size:15px;color:var(--kagit-s);
+  min-height:44px}
+.gh-all:hover{color:var(--kagit);background:var(--tezgah)}
+@media(max-width:760px){.modal-panel{margin:8vh var(--sp-md) 0}}
 
-/* ---------- reveal ---------- */
-.reveal{opacity:0;transform:translateY(26px);
-  transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
-.reveal.in{opacity:1;transform:none}
-:focus-visible{outline:2px solid var(--blue-soft);outline-offset:3px;border-radius:4px}
+/* ---------- belirme ---------- */
+/* Gizleme yalnızca JS varken uygulanır: betik çalışmazsa ya da tarayıcı
+   sekmeyi kısarsa içerik görünür kalır, boş sayfa görünmez. */
+.js .reveal{opacity:0;transform:translateY(20px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.js .reveal.in{opacity:1;transform:none}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .reveal{opacity:1;transform:none;transition:none}
-  .hint em{animation:none}
-  .audio.on button i{animation:none;height:9px}
-  .audio.nudge{animation:none}
-  .feed-bot-dot{animation:none}
-  .cursor-dot,.cursor-ring{display:none}
-  body.pointer-fine{cursor:auto}
+  .js .reveal{opacity:1;transform:none;transition:none}
+  /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
+     renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır. Etkinlik satırı
+     anında açılır; alan katmanı zaten tek durağan kare çizer.
+     Seçici .js ile eşleşmek zorunda: kapalı hali kuran kural .js .tl .detay
+     (0,3,0) ve sade .tl .detay (0,2,0) özgüllük yarışını kaybediyor. İşaretin
+     dönmesi de uzamsal hareket, o da burada iptal. */
+  .js .tl .detay{transition:none}
+  .js .tl .detay>div{transition:none}
+  .tl .isaret{transition:stroke .3s}
+}
+
+/* --ray: taban alet rayı. --daralt: yalnızca gerçekten yer olan genişlikte
+   okuma sütunundan kısılan ek pay; ikisinin toplamı merceğin ortalanacağı
+   bölgeyi verir.
+   1400px'e kadar sıfır. Eski clamp(60px,12vw,220px) her genişlikte pay
+   kısıyordu ve hakkımızda gövde sütununu 1160px'te 279px'e — 18px'te ~31
+   karaktere — düşürüyordu. Mercek bölgesi ölçüye eklenir, ondan çıkarılmaz.
+   Metinle mercek arasındaki boşluk --ray-ara'dır ve bu değişiklikten
+   etkilenmez; ölçülen 39/49/78/96px aynı kalır. */
+:root{ --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
+       --daralt:clamp(0px, calc((100vw - 1400px) * .42), 160px); }
+
+/* ---------- alan: kaydırmayla değişen model ----------
+   Okunabilirlik burada opasiteyle değil geometriyle korunuyor: WebGL yalnızca
+   scissor dikdörtgeninin içine boyayabiliyor, o dikdörtgen de ya sağdaki boş
+   alet rayı ya da içinde hiç metin bulunmayan bölüm arası bölge oluyor.  */
+#alan{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* Alet rayı: yalnızca ölçü taşıyan, görünmez bir yer tutucu. Yatay konumu
+   JS gerçek .wrap dikdörtgeninden okur — 100vw kaydırma çubuğunu sayar. */
+#ray{position:fixed;top:0;left:0;width:calc(var(--ray) + var(--daralt));height:8px;
+  visibility:hidden;pointer-events:none}
+@media(max-width:1151px){#ray{display:none}}
+body.no-alan #alan{display:none}
+/* Sabit tuval z-index:0'da olduğu için normal akıştaki metnin ÜSTÜNE boyar;
+   akış öğelerini bir kat yukarı almak gerekir. Yalnızca konumlandırılmamış
+   olanlar: nav (sticky, 40), .modal (fixed, 60) ve .atla (absolute, 100)
+   kendi katmanlarına sahip ve bu kural onları ezerse sticky başlık, modal ve
+   atlama bağlantısı bozulur. */
+main,footer{position:relative;z-index:1}
+
+/* Okuma sütunu sağında merceğe ait bir bölge bırakır; mercek yalnızca orada durur. */
+@media(min-width:1152px){
+  /* Kutu genişler (metin sola kayar), okuma sütunu ayrıca --daralt kadar kısılır.
+     Böylece metnin sağında mercek için gerçek bir bölge açılır ve mercek o
+     bölgenin ortasına, boyutu da bölgeye göre oturur. */
+  .wrap{max-width:min(calc(1180px + var(--ray) + var(--ray-ara)), 100%)}
+  /* Footer de içerik taşır: kapanış daveti ve düğme okuma sütununun içinde
+     kalmalı. Aynı pay verilmezse footer tam genişlikte kalıyor, düğme mercek
+     dikdörtgeninin içine düşüyor (1920px'te ölçüldü) ve alt bilgi gövdeden
+     600px sağda hizasız duruyor. nav hariç: o krom, içerik değil. */
+  main .wrap,footer .wrap{padding-right:calc(clamp(20px,5vw,56px) + var(--ray) + var(--ray-ara) + var(--daralt))}
+}
+
+/* Bölüm arası: hiç içeriği olmayan, levhanın ortaya gelip büyüdüğü bölge.
+   İçinde metin bulunmadığı için okunabilirlik sorusu burada hiç doğmuyor. */
+.gecis{min-height:min(70vh,580px)}
+body.no-alan .gecis{min-height:var(--sp-sec)}
+@media(prefers-reduced-motion:reduce){ .gecis{min-height:var(--sp-sec)} }
+/* 1152px altında alan hiç çizilmiyor, bantlar da kapanıyor.
+   Öncesinde bantlar telefonda min(72vh,540px) kalıyor ve dördü toplam
+   ~2.160px boş kaydırma üretiyordu; alan da 7.500 parçacıkla çalışmaya devam
+   ediyordu. Mercek bölgesi 1152px altında zaten yok (mercekKutusu null
+   döner), yani orada kalan tek durum levha — ve levha hiçbir bilgi
+   taşımıyor. Kampüs Discord bağlantısından gelen cihaz sınıfı bu bedeli
+   ödemesin. DESIGN.md'nin "alanın 1152px altında kaybolmasına izin ver"
+   maddesi. */
+@media(max-width:1151px){
+  #alan{display:none}
+  .gecis{min-height:var(--sp-sec)}
 }
 </style>
 </head>
 <body>
+<canvas id="alan" aria-hidden="true"></canvas>
+<div id="ray" aria-hidden="true"></div>
 
-<canvas id="scene" aria-hidden="true"></canvas>
-<div class="vignette" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
 
-<header class="nav" id="nav">
-  <a class="brand" href="#s0" data-magnet><i></i><span>ATILIM AI</span></a>
-  <nav><ul>
-    <li><a class="link" href="#s1" data-nav="1">Hakkımızda</a></li>
-    <li><a class="link" href="#s2" data-nav="2">Etkinlikler</a></li>
-    <li><a class="link" href="#s3" data-nav="3">Haftalık Rapor</a></li>
-    <li><a class="link" href="#s4" data-nav="4">Projeler</a></li>
-  </ul></nav>
-</header>
+<a class="atla" href="#icerik">İçeriğe atla</a>
 
-<div class="rail" id="rail" aria-hidden="true">
-  <b data-r="0">01</b><b data-r="1">02</b><b data-r="2">03</b>
-  <b data-r="3">04</b><b data-r="4">05</b>
-</div>
-
-<div class="audio" id="audio">
-  <button id="sndBtn" type="button" aria-pressed="false" aria-label="Sesi aç">
-    <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
-  </button>
-  <input id="sndVol" type="range" min="0" max="100" step="1" value="55" aria-label="Ses düzeyi">
-  <span class="pct" id="sndPct">55</span>
-</div>
-
-<main>
-
-<section id="s0">
-  <div class="wrap">
-    <p class="eyebrow reveal">Atılım Üniversitesi · Yapay zekâ topluluğu</p>
-    <h1 class="reveal">Yapay zekâyı birlikte öğreniyor, birlikte üretiyoruz.</h1>
-    <p class="lead reveal">Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekâyla uğraşan herkesin buluştuğu yer.</p>
-    <div class="btns reveal">
-      <a class="btn solid" href="https://discord.gg/uUzsA7uDzU" data-magnet>Topluluğa katıl</a>
-      <a class="btn ghost" href="#s4" data-magnet>Projelere göz at</a>
-    </div>
+<nav id="nav"><div class="wrap nav-in">
+  <a class="marka" href="#s0"><i aria-hidden="true"></i>ATILIM AI</a>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="baglar">Menü</button>
+  <div class="baglar" id="baglar">
+    <a href="#s1" data-b="s1">Hakkımızda</a>
+    <a href="#s2" data-b="s2">Etkinlikler</a>
+    <a href="#s3" data-b="s3">Haftalık Rapor</a>
+    <a href="#s4" data-b="s4">Projeler</a>
+    <a class="kat" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl ↗</a>
   </div>
-  <p class="hint"><em></em>Uzayda ilerlemek için kaydır</p>
-</section>
+</div></nav>
 
-<section id="s1">
-  <div class="wrap two">
-    <div>
-      <p class="eyebrow reveal">Hakkımızda</p>
+<main id="icerik">
+
+<section id="s0"><div class="wrap">
+  <h1 class="reveal">Yapay zekayı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
+  <p class="giris reveal">Atölyeler, açık kaynak projeler ve her hafta derlediğimiz gelişmeler. Kampüste yapay zekayla uğraşan herkesin buluştuğu yer.</p>
+  <div class="eylem reveal">
+    <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl</a>
+    <a class="btn s" href="#s4">Projelere göz at</a>
+  </div>
+  <!-- SAAT DOĞRULANMADI. 17.30 ekip kararıyla yer tutucu olarak yazıldı;
+       yönetim kurulu onaylayınca kesinleşecek. [ADET]'lerin aksine bu değer
+       ziyaretçiye kesin bir olgu gibi görünüyor — yanlışsa öğrenci yanlış
+       saatte gelir. Üç yerde geçiyor: burada, #s2 girişinde ve footer'da;
+       değiştirirken üçünü birlikte değiştir. -->
+  <p class="bulusma reveal"><b>Her perşembe 17.30</b> · Mühendislik B-204 · önkoşul yok, laptop yeterli</p>
+</div></section>
+
+<div class="gecis" aria-hidden="true"></div>
+
+<section id="s1"><div class="wrap iki">
+  <div>
       <h2 class="reveal">Haftada bir akşam, aynı masada.</h2>
-    </div>
-    <div>
-      <p class="lead reveal" style="max-width:52ch;margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Ortak sorun basitti: dersler teoriyi veriyordu, ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
-      <p class="lead reveal" style="max-width:52ch">Şimdi her hafta Perşembe akşamı toplanıyoruz. Kimi zaman bir makaleyi birlikte okuyup söküyoruz, kimi zaman biri ekranını paylaşıp tıkandığı yeri gösteriyor. Bölüm ayrımı yok — hukuktan da, psikolojiden de üyemiz var.</p>
-      <div class="stats reveal">
-        <div><strong>0</strong><span>Kayıtlı üye</span></div>
-        <button type="button" class="stat" data-scroll="#s4"><strong>0</strong><span>Aktif proje</span></button>
-        <button type="button" class="stat" data-modal="modal-projeler"><strong>2</strong><span>Tamamlanan proje</span></button>
-        <div><strong>7</strong><span>Tamamlanan etkinlik</span></div>
-      </div>
+  </div>
+  <div>
+    <p class="giris reveal" style="margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Ortak sorun basitti: dersler teoriyi veriyordu, ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
+    <p class="giris reveal">Şimdi her hafta Perşembe akşamı toplanıyoruz. Kimi zaman bir makaleyi birlikte okuyup söküyoruz, kimi zaman biri ekranını paylaşıp tıkandığı yeri gösteriyor. Bölüm ayrımı yok — hukuktan da, psikolojiden de üyemiz var.</p>
+    <!-- Rakamlar henüz doğrulanmadı. Yer tutucular bilerek görünür: uydurma
+         bir sayı ya da sıfır göstermektense beklemede olduğu okunsun.
+         Gerçek değerler gelince ÜÇ şeyi birden söküyorsun: .num içeriği,
+         .bekliyor sınıfı ve içerideki iki span (aria-hidden'lı jeton ile
+         .gizli açıklama). Geriye düz <b class="num">12</b> kalmalı. -->
+    <div class="olcum reveal">
+      <button type="button" data-scroll="#s4"><b class="num bekliyor"><span aria-hidden="true">[ADET]</span><span class="gizli">Sayı henüz belirlenmedi,</span></b><span>yürüyen proje</span><i class="git" aria-hidden="true">→</i></button>
+      <button type="button" data-modal="modal-projeler" aria-haspopup="dialog"><b class="num bekliyor"><span aria-hidden="true">[ADET]</span><span class="gizli">Sayı henüz belirlenmedi,</span></b><span>tamamlanan proje</span><i class="git" aria-hidden="true">→</i></button>
+      <div><b class="num bekliyor"><span aria-hidden="true">[ADET]</span><span class="gizli">Sayı henüz belirlenmedi,</span></b><span>tamamlanan etkinlik</span></div>
     </div>
   </div>
-</section>
+</div></section>
 
-<section id="s2">
-  <div class="wrap two" style="grid-template-columns:.8fr 1.4fr">
-    <div>
-      <p class="eyebrow reveal">Etkinlikler</p>
-      <h2 class="reveal">Yaklaşan etkinlikler.</h2>
-      <p class="lead reveal">Sen yoksan eksiğiz</p>
-    </div>
-    <ul class="tl reveal">
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>12 Eyl</time><span>Sıfırdan transformer: dikkat mekanizmasını elle kurmak</span><em>Mühendislik B-204</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>Dikkat mekanizmasını sıfırdan, elle kod yazarak kuruyoruz. Önkoşul yok, laptop yeterli.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>26 Eyl</time><span>Konuk sohbet — üretimde dil modelleri neyi kırıyor</span><em>Konferans salonu</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>Üretimde çalışan dil modeli sistemlerinde en sık neyin bozulduğunu konuşacağız — bir konuk konuşmacıyla açık oturum.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>10 Eki</time><span>Proje eşleşme gecesi: fikri olanla kodu olanı tanıştırma</span><em>Kulüpler binası</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>Bir proje fikrin var ama ekibin yok, ya da tam tersi — bu akşam eşleşiyoruz.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-      <li class="tl-item" tabindex="0" role="button" aria-expanded="false">
-        <time>24 Eki</time><span>Kampüs içi hackathon — 24 saat, dört kategori</span><em>Kütüphane 3. kat</em>
-        <div class="tl-detay"><div class="tl-detay-in">
-          <p>24 saat sürecek kampüs içi hackathon. Dört kategoride yarışılıyor, takım kurmadan da katılabilirsin.</p>
-          <div class="tl-kayit"><a class="btn solid" href="#" data-kayit>Kayıt ol</a><span class="uyari" hidden>Kayıt takvimi dışındasınız</span></div>
-        </div></div>
-      </li>
-    </ul>
-  </div>
-</section>
+<div class="gecis" aria-hidden="true"></div>
 
-<section id="s3">
-  <div class="wrap">
-    <p class="eyebrow reveal">Haftalık Rapor</p>
-    <h2 class="reveal">Bu hafta neler oldu?</h2>
-    <p class="lead reveal">Her Pazartesi sabahı derliyoruz. Aynı içerik otomatik olarak Discord kanalına da düşüyor.</p>
-    <div class="news">
-      <div class="feed reveal" id="feed">
-        <p class="feed-issue"><span class="feed-issue-t">Haftalık Rapor</span><span class="feed-issue-n" id="feedIssue">12. sayı</span></p>
-        <div id="feedList">
-          <article>
-            <p class="src">Model · 28 Tem</p>
-            <h4>Açık ağırlıklı modellerde bağlam penceresi yarışı</h4>
-            <p>Üç ayrı ekip aynı hafta içinde uzun bağlam sürümleri yayımladı. Karşılaştırmalı ölçümler henüz bağımsız olarak tekrarlanmadı.</p>
-          </article>
-          <article>
-            <p class="src">Araştırma · 29 Tem</p>
-            <h4>Küçük modellerde damıtmanın sınırı üzerine yeni bulgular</h4>
-            <p>Öğretmen modelin boyutu belli bir eşiği geçtiğinde öğrencinin kazancı düzleşiyor. Kod ve ağırlıklar paylaşıldı.</p>
-          </article>
-          <article>
-            <p class="src">Politika · 31 Tem</p>
-            <h4>Değerlendirme raporlaması için ortak standart önerisi</h4>
-            <p>Birkaç kurum, model kartlarında hangi ölçümlerin zorunlu olacağına dair ortak bir taslak yayımladı.</p>
-          </article>
-        </div>
-        <a class="btn solid feed-more" href="haberler.html">Tüm haberleri gör →</a>
-        <div class="feed-bot">
-          <span class="feed-bot-av">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>
-            <i class="feed-bot-dot" aria-hidden="true"></i>
-          </span>
-          <span class="feed-bot-txt">
-            <span class="feed-bot-name">Atılım AI Botu</span>
-            <span class="feed-bot-durum">Çevrimiçi</span>
-          </span>
-          <a class="feed-bot-btn" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>Sunucuya katıl</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<section id="s2"><div class="wrap">
+  <h2 class="reveal">Yaklaşan etkinlikler.</h2>
+  <!-- Bu giriş bir çelişkiyi kapatıyor: sayfa üç yerde "her perşembe" diyor,
+       aşağıdaki dört tarihin dördü de cumartesi. Tarihler doğru — bunlar
+       haftalık buluşmadan ayrı, tarihi belli özel etkinlikler. Bunu söylemeyen
+       bir liste, takvime bakan öğrenciye sayfayı hatalı gösteriyordu. -->
+  <p class="giris reveal">Haftalık buluşma her perşembe 17.30'da, Mühendislik B-204'te — kayıt yok, takvim takibi yok. Aşağıdakiler ondan ayrı, tarihi belli özel etkinlikler; hafta sonuna denk geliyorlar.</p>
+  <ul class="tl reveal" id="tl">
+    <li>
+      <button type="button" aria-expanded="false" aria-controls="etkinlik-1"><time datetime="2026-09-12">12 Eyl <span>Cumartesi</span></time><span class="baslik">Sıfırdan transformer: dikkat mekanizmasını elle kurmak</span><span class="yer">Mühendislik B-204</span><svg class="isaret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+      <div class="detay" id="etkinlik-1"><div><p>Dikkat mekanizmasını sıfırdan, elle kod yazarak kuruyoruz. Önkoşul yok, laptop yeterli.</p></div></div>
+    </li>
+    <li>
+      <button type="button" aria-expanded="false" aria-controls="etkinlik-2"><time datetime="2026-09-26">26 Eyl <span>Cumartesi</span></time><span class="baslik">Konuk sohbet — üretimde dil modelleri neyi kırıyor</span><span class="yer">Konferans salonu</span><svg class="isaret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+      <div class="detay" id="etkinlik-2"><div><p>Üretimde çalışan dil modeli sistemlerinde en sık neyin bozulduğunu konuşacağız — bir konuk konuşmacıyla açık oturum.</p></div></div>
+    </li>
+    <li>
+      <button type="button" aria-expanded="false" aria-controls="etkinlik-3"><time datetime="2026-10-10">10 Eki <span>Cumartesi</span></time><span class="baslik">Proje eşleşme gecesi: fikri olanla kodu olanı tanıştırma</span><span class="yer">Kulüpler binası</span><svg class="isaret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+      <div class="detay" id="etkinlik-3"><div><p>Bir proje fikrin var ama ekibin yok, ya da tam tersi — bu akşam eşleşiyoruz.</p></div></div>
+    </li>
+    <li>
+      <button type="button" aria-expanded="false" aria-controls="etkinlik-4"><time datetime="2026-10-24">24 Eki <span>Cumartesi</span></time><span class="baslik">Kampüs içi hackathon — 24 saat, dört kategori</span><span class="yer">Kütüphane 3. kat</span><svg class="isaret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+      <div class="detay" id="etkinlik-4"><div><p>24 saat sürecek kampüs içi hackathon. Dört kategoride yarışılıyor, takım kurmadan da katılabilirsin.</p></div></div>
+    </li>
+  </ul>
+</div></section>
 
-<section id="s4">
-  <div class="wrap">
-    <p class="eyebrow reveal">Projeler</p>
-    <h2 class="reveal">Üyelerimizin yürüttüğü işler.</h2>
-    <div class="projects">
-      <div class="card reveal tilt">
-        <p class="state live"><i></i>Yayında</p>
-        <h3>Kampüs Asistanı</h3>
-        <p>Ders programı, yemekhane menüsü ve yönetmelikleri tek yerden yanıtlayan bir asistan. Kaynak göstermeden cevap vermiyor.</p>
-        <div class="tags"><i>Python</i><i>FastAPI</i><i>pgvector</i></div>
-      </div>
-      <div class="card reveal tilt">
-        <p class="state"><i></i>Geliştirmede</p>
-        <h3>Görü</h3>
-        <p>Laboratuvar kameralarında koruyucu ekipman tespiti. Kamera görüntüsü cihazdan çıkmıyor, model uçta çalışıyor.</p>
-        <div class="tags"><i>PyTorch</i><i>YOLO</i><i>ONNX</i></div>
-      </div>
-      <div class="card reveal tilt">
-        <p class="state live"><i></i>Yayında</p>
-        <h3>Bülten</h3>
-        <p>Haftanın yapay zekâ gelişmelerini derleyip siteye ve Discord kanalımıza taşıyan otomasyon. Bu sayfadaki akışı o besliyor.</p>
-        <div class="tags"><i>Next.js</i><i>GitHub Actions</i><i>Webhook</i></div>
-      </div>
+<div class="gecis" aria-hidden="true"></div>
+
+<section id="s3"><div class="wrap">
+  <h2 class="reveal">Bu hafta neler oldu?</h2>
+  <p class="giris reveal">Her Pazartesi sabahı derliyoruz. Aynı içerik otomatik olarak Discord kanalına da düşüyor.</p>
+  <p class="meta reveal" id="feedIssue" style="margin-top:32px"></p>
+  <!-- Statik içerik, betiğin boş durumuyla aynı cümleyi söyler. Burada bir
+       zamanlar üç örnek haber satırı duruyordu; veri dosyası boşaltılınca
+       uydurma haber yayında kalmasın diye kaldırıldı (PRODUCT.md, İlke 4).
+       Betik veriyi okuyunca bu bloğu gerçek satırlarla değiştirir. -->
+  <div class="reveal" id="feedList" style="margin-top:16px">
+    <p class="feed-kalan">Henüz yayımlanmış bir sayı yok.</p>
+  </div>
+  <a class="arsiv-bag reveal" href="haberler.html">Bütün sayılar →</a>
+</div></section>
+
+<div class="gecis" aria-hidden="true"></div>
+
+<section id="s4"><div class="wrap">
+  <h2 class="reveal">Üyelerimizin yürüttüğü işler.</h2>
+  <div class="projeler">
+    <div class="kart reveal">
+      <p class="durum canli"><i aria-hidden="true"></i>Yayında</p>
+      <h3>Kampüs Asistanı</h3>
+      <p>Ders programı, yemekhane menüsü ve yönetmelikleri tek yerden yanıtlayan bir asistan. Kaynak göstermeden cevap vermiyor.</p>
+      <div class="etiketler"><span>Python</span><span>FastAPI</span><span>pgvector</span></div>
+    </div>
+    <div class="kart reveal">
+      <p class="durum"><i aria-hidden="true"></i>Geliştirmede</p>
+      <h3>Görü</h3>
+      <p>Laboratuvar kameralarında koruyucu ekipman tespiti. Kamera görüntüsü cihazdan çıkmıyor, model uçta çalışıyor.</p>
+      <div class="etiketler"><span>PyTorch</span><span>YOLO</span><span>ONNX</span></div>
+    </div>
+    <div class="kart reveal">
+      <p class="durum canli"><i aria-hidden="true"></i>Yayında</p>
+      <h3>Bülten</h3>
+      <p>Haftanın yapay zeka gelişmelerini derleyip siteye ve Discord kanalımıza taşıyan otomasyon. Bu sayfadaki akışı o besliyor.</p>
+      <div class="etiketler"><span>Node</span><span>GitHub Actions</span><span>Webhook</span></div>
     </div>
   </div>
-</section>
+</div></section>
+
+</main>
 
 <div class="modal" id="modal-projeler" aria-hidden="true">
   <div class="modal-bg" data-modal-close></div>
@@ -477,10 +592,10 @@ footer{position:relative;z-index:2;display:flex;justify-content:space-between;fl
           <svg class="gh-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>pneumonia-xray-ai</a><span class="gh-badge">Public</span>
         <p class="gh-desc bos">Açıklama eklenmemiş</p>
         <div class="gh-meta">
-          <span class="gh-lang"><i style="background:#DA5B0B"></i>Jupyter Notebook</span>
-          <span class="gh-stars"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>2</span>
-          <span class="gh-forks"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>2</span>
-          <span class="gh-upd">1 Ağu 2026 güncellendi</span>
+          <span class="gh-lang" hidden><i></i></span>
+          <span class="gh-stars" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg></span>
+          <span class="gh-forks" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg></span>
+          <span class="gh-upd" hidden></span>
         </div>
       </li>
       <li class="gh-repo" data-repo="plant-ai-project">
@@ -488,10 +603,10 @@ footer{position:relative;z-index:2;display:flex;justify-content:space-between;fl
           <svg class="gh-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>plant-ai-project</a><span class="gh-badge">Public</span>
         <p class="gh-desc bos">Açıklama eklenmemiş</p>
         <div class="gh-meta">
-          <span class="gh-lang"><i style="background:#DA5B0B"></i>Jupyter Notebook</span>
-          <span class="gh-stars"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>0</span>
-          <span class="gh-forks"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>0</span>
-          <span class="gh-upd">26 May 2026 güncellendi</span>
+          <span class="gh-lang" hidden><i></i></span>
+          <span class="gh-stars" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg></span>
+          <span class="gh-forks" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg></span>
+          <span class="gh-upd" hidden></span>
         </div>
       </li>
       <li class="gh-repo" data-repo="Project1-browsertracker">
@@ -500,9 +615,9 @@ footer{position:relative;z-index:2;display:flex;justify-content:space-between;fl
         <p class="gh-desc bos">Açıklama eklenmemiş</p>
         <div class="gh-meta">
           <span class="gh-lang" hidden><i></i></span>
-          <span class="gh-stars"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>0</span>
-          <span class="gh-forks"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>0</span>
-          <span class="gh-upd">21 Kas 2025 güncellendi</span>
+          <span class="gh-stars" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg></span>
+          <span class="gh-forks" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg></span>
+          <span class="gh-upd" hidden></span>
         </div>
       </li>
     </ul>
@@ -511,233 +626,99 @@ footer{position:relative;z-index:2;display:flex;justify-content:space-between;fl
   </div>
 </div>
 
-</main>
-
 <footer>
-  <span>Atılım AI · Ankara</span>
-  <span><a href="https://discord.gg/uUzsA7uDzU" style="color:var(--red);text-decoration:none">Discord'a katıl</a> · Prototip, içerik örnektir</span>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<div class="wrap kapanis">
+  <p class="kapanis-soz">Önümüzdeki perşembe, aynı masadayız.</p>
+  <p class="kapanis-sart">Perşembe 17.30 · Mühendislik B-204 · önkoşul yok, laptop yeterli</p>
+  <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl</a>
+</div>
+<div class="wrap foot">
+  <span class="foot-bulusma">Atılım AI · Ankara</span>
+  <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
+  <span class="sag">
+    <a href="haberler.html">Haberler</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord</a>
+    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub</a>
+  </span>
+</div></footer>
 <script>
 (function(){
 "use strict";
 
+document.documentElement.classList.add("js");
+
 var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-var fine    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-var mobile  = window.innerWidth < 900;
-if (fine && !reduced) document.body.classList.add("pointer-fine");
 
 /* ============================================================
-   1. Sound — everything here is synthesised at runtime, no files.
+   1. Kabuk — nav durumu, mobil menü, aktif bölüm
 
-   Layers:  drone  detuned triangles + sub through a slowly swept lowpass
-            pad    chord tones, each breathing on its own slow LFO
-            bells  sparse pentatonic plucks, mostly reverb
-            sfx    hover / click blips, section swell
-   The chord root follows the scroll section, so the harmony moves
-   with the morph instead of looping underneath it.
+   Aktif bölüm gerçek bölüm konumundan okunur. Eskiden toplam
+   kaydırma oranına bakılıyordu; bölümler farklı yükseklikte
+   olduğu için işaret kayıyordu.
    ============================================================ */
-var Sound = (function(){
-  var ctx, master, dry, conv, filt, droneG, padG, bellDry, noiseBuf;
-  var oscs = [], pads = [];
-  var live = false, vol = 0.55, timer = null, cur = 0;
+var nav = document.getElementById("nav");
+window.addEventListener("scroll", function(){
+  nav.classList.toggle("yapisik", window.scrollY > 24);
+}, {passive:true});
 
-  /* No thirds anywhere. Sus2/add9 voicings read as open and calm instead of
-     major-cheerful or minor-sad, and the bells use a major pentatonic so no
-     flat third or flat seventh can creep in. */
-  var ROOT  = [0, 5, 3, 7, 0];               // semitones from A1, one per section
-  var CHORD = [0, 7, 12, 14];
-  var PENT  = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
-
-  function hz(semi){ return 55 * Math.pow(2, semi/12); }
-
-  function impulse(sec, decay){
-    var n = Math.floor(ctx.sampleRate * sec);
-    var b = ctx.createBuffer(2, n, ctx.sampleRate);
-    for (var c = 0; c < 2; c++){
-      var d = b.getChannelData(c);
-      for (var i = 0; i < n; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/n, decay);
-    }
-    return b;
-  }
-
-  function build(){
-    master = ctx.createGain();
-    master.gain.value = 0.0001;
-    /* Rolls the top off the whole mix so nothing can turn brittle. */
-    var soften = ctx.createBiquadFilter();
-    soften.type = "lowpass"; soften.frequency.value = 5200; soften.Q.value = 0.7;
-    master.connect(soften); soften.connect(ctx.destination);
-
-    conv = ctx.createConvolver();
-    conv.buffer = impulse(5.2, 3.1);
-    var wet = ctx.createGain(); wet.gain.value = 0.92;
-    conv.connect(wet); wet.connect(master);
-
-    dry = ctx.createGain(); dry.gain.value = 1;
-    dry.connect(master);
-
-    /* drone */
-    filt = ctx.createBiquadFilter();
-    filt.type = "lowpass"; filt.frequency.value = 430; filt.Q.value = 0.8;
-    droneG = ctx.createGain(); droneG.gain.value = 0.115;
-    filt.connect(droneG); droneG.connect(dry); droneG.connect(conv);
-
-    [[-6,"triangle",1], [6,"triangle",1], [0,"sine",0.5]].forEach(function(cfg){
-      var o = ctx.createOscillator();
-      o.type = cfg[1];
-      o.detune.value = cfg[0];
-      o.frequency.value = hz(ROOT[0] + 12) * cfg[2];
-      o.connect(filt); o.start();
-      oscs.push({ osc:o, mul:cfg[2] });
-    });
-
-    var lfo = ctx.createOscillator(); lfo.frequency.value = 0.04;
-    var lg  = ctx.createGain();       lg.gain.value = 150;
-    lfo.connect(lg); lg.connect(filt.frequency); lfo.start();
-
-    /* pad */
-    padG = ctx.createGain(); padG.gain.value = 0.085;
-    padG.connect(dry); padG.connect(conv);
-    CHORD.forEach(function(iv, k){
-      var o = ctx.createOscillator();
-      o.type = "sine";
-      o.frequency.value = hz(ROOT[0] + iv + 24);
-      var g = ctx.createGain(); g.gain.value = 0.2;
-      var l = ctx.createOscillator(); l.frequency.value = 0.022 + k * 0.013;
-      var a = ctx.createGain();       a.gain.value = 0.15;
-      l.connect(a); a.connect(g.gain); l.start();
-      o.connect(g); g.connect(padG); o.start();
-      pads.push({ osc:o, iv:iv });
-    });
-
-    bellDry = ctx.createGain(); bellDry.gain.value = 0.32;
-    bellDry.connect(dry);
-
-    /* one noise buffer, reused by every section swell */
-    var n = Math.floor(ctx.sampleRate * 2);
-    noiseBuf = ctx.createBuffer(1, n, ctx.sampleRate);
-    var nd = noiseBuf.getChannelData(0);
-    for (var i = 0; i < n; i++) nd[i] = Math.random()*2 - 1;
-  }
-
-  function bell(){
-    if (!live) { timer = null; return; }
-    var t = ctx.currentTime;
-    var o = ctx.createOscillator();
-    o.type = "sine";
-    o.frequency.value = hz(ROOT[cur] + PENT[Math.floor(Math.random()*PENT.length)] + 24);
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.075, t + 0.09);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 4.6);
-    o.connect(g); g.connect(conv); g.connect(bellDry);
-    o.start(t); o.stop(t + 4.8);
-    timer = setTimeout(bell, 3200 + Math.random()*5200);
-  }
-
-  function blip(freq, dur, level){
-    if (!live) return;
-    var t = ctx.currentTime;
-    var o = ctx.createOscillator();
-    o.type = "sine";
-    o.frequency.setValueAtTime(freq, t);
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(level, t + 0.035);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g); g.connect(dry); g.connect(conv);
-    o.start(t); o.stop(t + dur + 0.03);
-  }
-
-  function swell(){
-    if (!live) return;
-    var t = ctx.currentTime, dur = 1.9;
-    var src = ctx.createBufferSource(); src.buffer = noiseBuf;
-    var bp = ctx.createBiquadFilter();
-    bp.type = "lowpass"; bp.Q.value = 0.7;
-    bp.frequency.setValueAtTime(260, t);
-    bp.frequency.exponentialRampToValueAtTime(900, t + dur*0.5);
-    bp.frequency.exponentialRampToValueAtTime(300, t + dur);
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.028, t + 0.55);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    src.connect(bp); bp.connect(g); g.connect(conv); g.connect(dry);
-    src.start(t); src.stop(t + dur);
-  }
-
-  return {
-    isOn: function(){ return live; },
-    enable: function(){
-      if (!ctx){
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return false;
-        try { ctx = new AC(); build(); } catch(e){ ctx = null; return false; }
-      }
-      if (ctx.state === "suspended" && ctx.resume) ctx.resume();
-      live = true;
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.setTargetAtTime(vol, ctx.currentTime, 0.45);
-      if (!timer) timer = setTimeout(bell, 700);
-      return true;
-    },
-    disable: function(){
-      live = false;
-      if (timer){ clearTimeout(timer); timer = null; }
-      if (!ctx) return;
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.3);
-    },
-    volume: function(v){
-      vol = Math.max(0.0001, Math.min(1, v));
-      if (live && ctx) master.gain.setTargetAtTime(vol, ctx.currentTime, 0.12);
-    },
-    duck: function(down){
-      if (!ctx || !live) return;
-      master.gain.setTargetAtTime(down ? 0.0001 : vol, ctx.currentTime, 0.25);
-    },
-    section: function(i){
-      cur = Math.max(0, Math.min(ROOT.length-1, i));
-      if (!live || !ctx) return;
-      var t = ctx.currentTime;
-      oscs.forEach(function(x){ x.osc.frequency.setTargetAtTime(hz(ROOT[cur] + 12) * x.mul, t, 1.4); });
-      pads.forEach(function(x){ x.osc.frequency.setTargetAtTime(hz(ROOT[cur] + x.iv + 24), t, 1.7); });
-      swell();
-    },
-    hover: function(){ blip(1046, 0.26, 0.020); },
-    click: function(){ blip(587, 0.34, 0.036); setTimeout(function(){ blip(880, 0.30, 0.026); }, 90); }
-  };
+(function(){
+  var btn = document.getElementById("menuBtn");
+  var kutu = document.getElementById("baglar");
+  if (!btn || !kutu) return;
+  btn.addEventListener("click", function(){
+    var acik = kutu.classList.toggle("gorunur");
+    btn.setAttribute("aria-expanded", acik ? "true" : "false");
+  });
+  kutu.addEventListener("click", function(e){
+    if (e.target.tagName !== "A") return;
+    kutu.classList.remove("gorunur");
+    btn.setAttribute("aria-expanded", "false");
+  });
+  /* Panelin dışına dokunmak kapatmıyordu; telefonda kapatmanın en doğal
+     jesti buydu ve ya boşa gidiyor ya panelin arkasındaki bağlantıya
+     çarpıyordu. Kendi düğmesi hariç: o zaten toggle ediyor. */
+  document.addEventListener("click", function(e){
+    if (!kutu.classList.contains("gorunur")) return;
+    if (kutu.contains(e.target) || btn.contains(e.target)) return;
+    kutu.classList.remove("gorunur");
+    btn.setAttribute("aria-expanded", "false");
+  });
+  /* Açılan her katman Escape ile kapanmalı; modal zaten kapanıyordu, menü
+     kapanmıyordu. Odak düğmeye geri veriliyor, yoksa klavye kullanıcısı
+     kapattığı menünün yerinde kalır. */
+  document.addEventListener("keydown", function(e){
+    if (e.key !== "Escape" || !kutu.classList.contains("gorunur")) return;
+    kutu.classList.remove("gorunur");
+    btn.setAttribute("aria-expanded", "false");
+    btn.focus();
+  });
 })();
 
-/* ============================================================
-   2. Scroll progress + section state (works with or without 3D)
-   ============================================================ */
-var progress = 0, smooth = 0, section = 0;
-var railBits = [].slice.call(document.querySelectorAll("#rail b"));
-var navLinks = [].slice.call(document.querySelectorAll(".link"));
-var nav = document.getElementById("nav");
+var baglar   = [].slice.call(document.querySelectorAll(".baglar a[data-b]"));
+var bolumler = baglar.map(function(a){ return document.getElementById(a.dataset.b); });
+var aktif = -1;
 
-function readScroll(){
-  var max = document.documentElement.scrollHeight - window.innerHeight;
-  progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-  nav.classList.toggle("stuck", window.scrollY > 40);
-  var s = Math.round(progress * 4);
-  if (s !== section){
-    section = s;
-    railBits.forEach(function(b,i){ b.classList.toggle("on", i === section); });
-    navLinks.forEach(function(a){ a.classList.toggle("on", +a.dataset.nav === section); });
-    Sound.section(section);
-  }
+if ("IntersectionObserver" in window){
+  var bolumIO = new IntersectionObserver(function(girisler){
+    girisler.forEach(function(g){
+      if (!g.isIntersecting) return;
+      var i = bolumler.indexOf(g.target);
+      if (i < 0 || i === aktif) return;
+      aktif = i;
+      /* Alt çizgi yalnızca göze işaret ediyordu; aria-current aynı bilgiyi
+         ekran okuyucuya da veriyor. */
+      baglar.forEach(function(a, j){
+        a.classList.toggle("acik", j === i);
+        if (j === i) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+    });
+  }, {rootMargin:"-45% 0px -45% 0px"});
+  bolumler.forEach(function(s){ if (s) bolumIO.observe(s); });
 }
-window.addEventListener("scroll", readScroll, {passive:true});
-window.addEventListener("resize", readScroll);
-readScroll();
-smooth = progress;
 
 /* ============================================================
-   3. Reveal on scroll
+   2. Belirme
    ============================================================ */
 var revealables = [].slice.call(document.querySelectorAll(".reveal"));
 if ("IntersectionObserver" in window && !reduced){
@@ -745,10 +726,10 @@ if ("IntersectionObserver" in window && !reduced){
     entries.forEach(function(e){
       if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
     });
-  }, {threshold:.18, rootMargin:"0px 0px -8% 0px"});
+  }, {threshold:.15, rootMargin:"0px 0px -6% 0px"});
   [].slice.call(document.querySelectorAll("section")).forEach(function(sec){
     [].slice.call(sec.querySelectorAll(".reveal")).forEach(function(el, i){
-      el.style.transitionDelay = (Math.min(i, 6) * 75) + "ms";
+      el.style.transitionDelay = (Math.min(i, 5) * 70) + "ms";
       io.observe(el);
     });
   });
@@ -757,230 +738,203 @@ if ("IntersectionObserver" in window && !reduced){
 }
 
 /* ============================================================
-   4. Audio controls
+   3. Haftalık rapor
 
-   Sound stays off until the visitor asks for it. That is also what
-   satisfies the browser autoplay rules — the AudioContext is created
-   inside the click, so it is allowed to make noise straight away.
-   ============================================================ */
-var sndWrap = document.getElementById("audio");
-var sndBtn  = document.getElementById("sndBtn");
-var sndVol  = document.getElementById("sndVol");
-var sndPct  = document.getElementById("sndPct");
-var touched = false;
+   content/haberler.json'dan çizilir; site ve Discord botu aynı
+   dosyayı okur. Fetch başarısız olursa sayfadaki içerik kalır —
+   index.html'i doğrudan diskten açtığında olan budur.
 
-function paintAudio(on){
-  sndWrap.classList.toggle("on", on);
-  sndBtn.setAttribute("aria-pressed", on ? "true" : "false");
-  sndBtn.setAttribute("aria-label", on ? "Sesi kapat" : "Sesi aç");
-}
-
-sndBtn.addEventListener("click", function(){
-  touched = true;
-  sndWrap.classList.remove("nudge");
-  if (Sound.isOn()){
-    Sound.disable();
-    paintAudio(false);
-  } else {
-    Sound.volume(sndVol.value / 100);
-    if (Sound.enable()){
-      paintAudio(true);
-      Sound.section(section);
-    } else {
-      sndWrap.style.display = "none";   // no Web Audio support, hide the control
-    }
-  }
-});
-
-sndVol.addEventListener("input", function(){
-  touched = true;
-  sndPct.textContent = sndVol.value;
-  Sound.volume(sndVol.value / 100);
-});
-
-/* One quiet nudge so the control is noticed, then never again. */
-if (!reduced) setTimeout(function(){
-  if (!touched) sndWrap.classList.add("nudge");
-}, 5200);
-
-document.addEventListener("visibilitychange", function(){
-  Sound.duck(document.hidden);
-});
-
-if (fine){
-  var HOVERABLE = ".link,.btn,.brand,.card,.tl li,.feed article";
-  var lastHovered = null;
-  document.addEventListener("pointerover", function(e){
-    var el = e.target && e.target.closest ? e.target.closest(HOVERABLE) : null;
-    if (el === lastHovered) return;
-    lastHovered = el;
-    if (el) Sound.hover();
-  });
-  document.addEventListener("click", function(e){
-    if (e.target && e.target.closest && e.target.closest(".link,.btn,.brand")) Sound.click();
-  });
-}
-
-/* ============================================================
-   5. Custom cursor + magnetic buttons + card tilt
-   ============================================================ */
-var mx = window.innerWidth/2, my = window.innerHeight/2;
-var nx = 0, ny = 0;
-
-if (fine && !reduced){
-  var dot  = document.querySelector(".cursor-dot");
-  var ring = document.querySelector(".cursor-ring");
-  var rx = mx, ry = my;
-
-  window.addEventListener("mousemove", function(e){
-    mx = e.clientX; my = e.clientY;
-    nx = (mx / window.innerWidth)  * 2 - 1;
-    ny = -((my / window.innerHeight) * 2 - 1);
-    dot.style.transform = "translate(" + mx + "px," + my + "px)";
-  });
-
-  (function cursorLoop(){
-    rx += (mx - rx) * .16;
-    ry += (my - ry) * .16;
-    ring.style.transform = "translate(" + rx + "px," + ry + "px)";
-    requestAnimationFrame(cursorLoop);
-  })();
-
-  [].slice.call(document.querySelectorAll("[data-magnet]")).forEach(function(el){
-    el.addEventListener("mouseenter", function(){ ring.classList.add("grab"); });
-    el.addEventListener("mouseleave", function(){
-      ring.classList.remove("grab");
-      el.style.transform = "";
-    });
-    el.addEventListener("mousemove", function(e){
-      var r = el.getBoundingClientRect();
-      var dx = (e.clientX - (r.left + r.width/2)) * .22;
-      var dy = (e.clientY - (r.top + r.height/2)) * .22;
-      el.style.transform = "translate(" + dx + "px," + dy + "px)";
-    });
-  });
-
-  [].slice.call(document.querySelectorAll(".tilt")).forEach(function(card){
-    card.style.transition = "transform .5s cubic-bezier(.16,1,.3,1),border-color .4s,scale .35s cubic-bezier(.16,1,.3,1)";
-    card.addEventListener("mousemove", function(e){
-      var r = card.getBoundingClientRect();
-      var px = (e.clientX - r.left) / r.width  - .5;
-      var py = (e.clientY - r.top)  / r.height - .5;
-      card.style.transition = "transform .12s linear,border-color .4s,scale .35s cubic-bezier(.16,1,.3,1)";
-      card.style.transform = "perspective(900px) rotateY(" + (px*8).toFixed(2) +
-                             "deg) rotateX(" + (-py*8).toFixed(2) + "deg) translateZ(6px)";
-    });
-    card.addEventListener("mouseleave", function(){
-      card.style.transition = "transform .5s cubic-bezier(.16,1,.3,1),border-color .4s,scale .35s cubic-bezier(.16,1,.3,1)";
-      card.style.transform = "";
-    });
-  });
-}
-
-/* ============================================================
-   6. Weekly report
-
-   Rendered from content/haberler.json so the site and the Discord
-   bot read the same file — one place to edit, not two.
-
-   If the fetch fails the markup already in the page stays put. That
-   is what you get opening index.html straight off disk, since fetch
-   cannot read local files over file://.
+   Her şey textContent ile basılır: panelden gelen metin HTML
+   olarak yorumlanmaz.
    ============================================================ */
 (function(){
+  var GOSTER = 3;   /* ana sayfada gosterilen haber sayisi; gerisi arsivde */
   var feedList  = document.getElementById("feedList");
   var feedIssue = document.getElementById("feedIssue");
   if (!feedList || !window.fetch) return;
 
-  function article(h, sayiNo, sira){
-    /* Tam metni olan haber, arşivdeki ayrıntı sayfasına bağlanır. Ana sayfa
-       özet akışı olduğu için burada kart açılmıyor; okuma haberler.html
-       tarafında sürüyor. */
+  function satir(h, sayiNo, sira){
     var ayrinti = h.icerik ? "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira : "";
-    var art = document.createElement("article");
+    var kap = document.createElement("div");
+    kap.className = "haber";
 
-    var src = document.createElement("p");
-    src.className = "src";
-    src.textContent = [h.etiket, h.tarih].filter(Boolean).join(" · ");
+    var tarih = document.createElement("span");
+    tarih.className = "meta";
+    tarih.textContent = h.tarih || "";
 
-    var ttl = document.createElement("h4");
-    if (ayrinti){
-      var ia = document.createElement("a");
-      ia.className = "ic";
-      ia.href = ayrinti;
-      ia.textContent = h.baslik || "";
-      ttl.appendChild(ia);
-    } else if (h.link){
+    var etiket = document.createElement("span");
+    etiket.className = "etiket";
+    etiket.textContent = h.etiket || "";
+
+    var govde = document.createElement("div");
+
+    var h3 = document.createElement("h3");
+    if (ayrinti || h.link){
       var a = document.createElement("a");
-      a.href = h.link;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.style.color = "inherit";
-      a.style.textDecoration = "none";
+      a.href = ayrinti || h.link;
+      if (!ayrinti){ a.target = "_blank"; a.rel = "noopener noreferrer"; }
       a.textContent = h.baslik || "";
-      ttl.appendChild(a);
+      h3.appendChild(a);
     } else {
-      ttl.textContent = h.baslik || "";
+      h3.textContent = h.baslik || "";
     }
+    govde.appendChild(h3);
 
-    var sum = document.createElement("p");
-    sum.textContent = h.ozet || "";
-
-    art.appendChild(src); art.appendChild(ttl); art.appendChild(sum);
+    if (h.ozet){
+      var p = document.createElement("p");
+      p.textContent = h.ozet;
+      govde.appendChild(p);
+    }
 
     if (ayrinti){
       var devam = document.createElement("a");
       devam.className = "devam";
       devam.href = ayrinti;
       devam.textContent = "Devamını oku →";
-      art.appendChild(devam);
+      govde.appendChild(devam);
     }
 
-    return art;
+    kap.appendChild(tarih); kap.appendChild(etiket); kap.appendChild(govde);
+    return kap;
   }
 
-  fetch("content/haberler.json", { cache: "no-cache" })
-    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function(d){
-      var issue = d && d.sayilar && d.sayilar[0];
-      if (!issue || !issue.haberler || !issue.haberler.length) return;
+  /* Üç durum üç ayrı cümle söyler. Eskiden yalnızca ikisi vardı ve ağ hatası
+     sayfayı olduğu gibi bırakıyordu — statik biçimlendirme "Henüz yayımlanmış
+     bir sayı yok." dediği için bugün bu doğruydu, ama ilk sayı yayımlandığı
+     gün bağlantısı kopan her ziyaretçiye sayfa hiç yayın yapılmadığını
+     söyleyecekti. İlke 4'ün yasakladığı şey buydu.
+     Betik yoksa statik cümle olduğu gibi kalır; oradaki tek doğru cümle o. */
+  function tekSatir(sinif, metin){
+    feedList.textContent = "";
+    var el = document.createElement("p");
+    el.className = sinif;
+    el.textContent = metin;
+    feedList.appendChild(el);
+    return el;
+  }
 
-      if (feedIssue && issue.sayi) feedIssue.textContent = issue.sayi + ". sayı";
+  function hataGoster(){
+    if (feedIssue) feedIssue.textContent = "";
+    var el = tekSatir("feed-hata", "Haftalık rapor şu an yüklenemedi.");
+    var tekrar = document.createElement("button");
+    tekrar.type = "button";
+    tekrar.textContent = "Yeniden dene";
+    tekrar.addEventListener("click", function(){ tekrar.disabled = true; getir(); });
+    el.appendChild(tekrar);
+  }
 
-      feedList.textContent = "";
-      issue.haberler.forEach(function(h, i){ feedList.appendChild(article(h, issue.sayi, i)); });
-    })
-    .catch(function(){ /* sayfadaki içerik olduğu gibi kalır */ });
+  var istekVar = false;
+  function getir(){
+    if (istekVar) return;
+    istekVar = true;
+    /* Yükleniyor satırı boş durumla aynı yüksekliği tutar; iki durum arasında
+       geçiş yaparken düzen kaymıyor. */
+    tekSatir("feed-kalan", "Haftalık rapor yükleniyor…");
+
+    fetch("content/haberler.json", { cache: "no-cache" })
+      .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(d){
+        istekVar = false;
+        var issue = d && d.sayilar && d.sayilar[0];
+        /* Veri okundu, içinde sayı yok. Ağ hatasından ayrı bir durum. */
+        if (!issue || !issue.haberler || !issue.haberler.length){
+          tekSatir("feed-kalan", "Henüz yayımlanmış bir sayı yok.");
+          if (feedIssue) feedIssue.textContent = "";
+          return;
+        }
+        if (feedIssue && issue.sayi) feedIssue.textContent = issue.sayi + ". sayı";
+        feedList.textContent = "";
+
+        var hepsi = issue.haberler;
+        hepsi.slice(0, GOSTER).forEach(function(h, i){
+          feedList.appendChild(satir(h, issue.sayi, i));
+        });
+
+        if (hepsi.length > GOSTER){
+          var kalan = document.createElement("p");
+          kalan.className = "feed-kalan";
+          kalan.textContent = "Bu sayının kalan " + (hepsi.length - GOSTER) + " haberi arşivde.";
+          feedList.appendChild(kalan);
+        }
+      })
+      .catch(function(){ istekVar = false; hataGoster(); });
+  }
+
+  getir();
 })();
 
 /* ============================================================
-   7. Stats & modal
+   4. Ölçümler ve modal
+
+   Modal artık odağı içeri alıyor, içeride tuzaklıyor ve kapanınca
+   tetikleyen düğmeye geri veriyor.
    ============================================================ */
 (function(){
-  document.querySelectorAll(".stats [data-scroll]").forEach(function(btn){
+  var sonTetik = null;
+  var ODAKLANABILIR = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
+
+  document.querySelectorAll(".olcum [data-scroll]").forEach(function(btn){
     btn.addEventListener("click", function(){ location.hash = btn.dataset.scroll; });
   });
 
-  function openModal(id){
+  /* Modal açıkken arka plan kayıyordu. Kaydırma çubuğunun kaybettiği genişlik
+     dolgu olarak geri veriliyor, yoksa overflow:hidden sayfayı yana sıçratır —
+     ve bu sayfada hiçbir yerde overflow-x:hidden yok, taşma kaynağında
+     çözülüyor. Üst üste binen katman yok ama sayaç yine de tutuluyor. */
+  var kilitSayaci = 0;
+  function kaydirmayiKilitle(){
+    if (kilitSayaci++ > 0) return;
+    var kok = document.documentElement;
+    var fark = window.innerWidth - kok.clientWidth;
+    kok.style.overflow = "hidden";
+    if (fark > 0) kok.style.paddingRight = fark + "px";
+  }
+  function kaydirmayiAc(){
+    if (kilitSayaci === 0 || --kilitSayaci > 0) return;
+    var kok = document.documentElement;
+    kok.style.overflow = "";
+    kok.style.paddingRight = "";
+  }
+
+  function ac(id, tetik){
     var m = document.getElementById(id);
     if (!m) return;
-    m.classList.add("open");
+    sonTetik = tetik || null;
+    m.classList.add("acik");
     m.setAttribute("aria-hidden", "false");
+    kaydirmayiKilitle();
+    var ilk = m.querySelector(ODAKLANABILIR);
+    if (ilk) ilk.focus();
     if (id === "modal-projeler") depolariTazele();
   }
 
+  function kapat(m){
+    if (!m || !m.classList.contains("acik")) return;
+    m.classList.remove("acik");
+    m.setAttribute("aria-hidden", "true");
+    kaydirmayiAc();
+    if (sonTetik && sonTetik.focus) sonTetik.focus();
+    sonTetik = null;
+  }
+
   /* GitHub'daki güncel bilgiyi çeker; başarısız olursa HTML'deki değerler kalır.
-     Yetkisiz istek, saatte 60 çağrıyla sınırlı — bu yüzden bir kez çalışır. */
+     Yetkisiz istek saatte 60 çağrıyla sınırlı — bu yüzden bir kez çalışır. */
   var depoDurum = "bekliyor";
   function depolariTazele(){
     if (depoDurum !== "bekliyor" || !window.fetch) return;
     depoDurum = "istendi";
 
-    /* Simgeyi (svg/i) koruyarak yanındaki metni günceller */
+    /* Değeri yazar ve alanı görünür kılar. Bu alanlar statik biçimlendirmede
+       hidden geliyor: eskiden yıldız/çatal sayıları, dil ve güncelleme tarihi
+       HTML'e gömülüydü ve istek sessizce düştüğünde (kimliksiz GitHub çağrısı
+       kampüs IP'sinde saatte 60 ile sınırlı) fosil değerler canlı veri gibi
+       ekranda kalıyordu. Artık ya gerçek değer var ya hiçbir şey. */
     function metniYaz(el, deger){
+      if (!el) return;
       var son = el.lastChild;
       if (son && son.nodeType === 3) son.nodeValue = deger;
       else el.appendChild(document.createTextNode(deger));
+      el.hidden = false;
     }
 
     var AYLAR = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
@@ -990,6 +944,8 @@ if (fine && !reduced){
     fetch("https://api.github.com/users/atilimai/repos?per_page=100")
       .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(list){
+        var eskiNot = document.querySelector("#ghList .gh-note");
+        if (eskiNot) eskiNot.remove();
         var byName = {};
         list.forEach(function(r){ byName[r.name] = r; });
 
@@ -1003,7 +959,11 @@ if (fine && !reduced){
           var lang = li.querySelector(".gh-lang");
           if (r.language){
             lang.hidden = false;
-            lang.querySelector("i").style.background = RENK[r.language] || "#8792AE";
+            /* Bilinmeyen dil: nötr nokta. Eskiden burada #8A8175 vardı —
+               --kagit-t'nin emekli edilmiş eski değeri; belirteci okuyoruz ki
+               token değişince burası da değişsin. */
+            lang.querySelector("i").style.background = RENK[r.language] ||
+              getComputedStyle(document.documentElement).getPropertyValue("--kagit-t").trim();
             metniYaz(lang, r.language);
           } else { lang.hidden = true; }
 
@@ -1015,436 +975,640 @@ if (fine && !reduced){
             d.getDate() + " " + AYLAR[d.getMonth()] + " " + d.getFullYear() + " güncellendi";
         });
       })
-      .catch(function(){ /* sayfadaki değerler olduğu gibi kalır */ });
-  }
-  function closeModal(m){
-    m.classList.remove("open");
-    m.setAttribute("aria-hidden", "true");
+      .catch(function(){
+        /* Sessiz kalmak olmayan veriyi varmış gibi göstermekten iyi ama
+           yetmiyor: ziyaretçi neden sayı görmediğini bilsin. Depo adları ve
+           bağlantıları statik biçimlendirmede gerçek, onlar duruyor.
+           Durum "bekliyor"a dönüyor ki modal tekrar açıldığında yeniden
+           denenebilsin. */
+        depoDurum = "bekliyor";
+        var liste = document.getElementById("ghList");
+        if (!liste || liste.querySelector(".gh-note")) return;
+        var not = document.createElement("li");
+        not.className = "gh-note";
+        not.textContent = "Yıldız ve güncelleme bilgisi şu an GitHub'dan alınamadı.";
+        liste.appendChild(not);
+      });
   }
 
   document.addEventListener("click", function(e){
-    var opener = e.target.closest("[data-modal]");
-    if (opener){ openModal(opener.dataset.modal); return; }
-    var closer = e.target.closest("[data-modal-close]");
-    if (closer){ closeModal(closer.closest(".modal")); }
+    var acan = e.target.closest("[data-modal]");
+    if (acan){ ac(acan.dataset.modal, acan); return; }
+    var kapayan = e.target.closest("[data-modal-close]");
+    if (kapayan){ kapat(kapayan.closest(".modal")); }
   });
+
   document.addEventListener("keydown", function(e){
-    if (e.key === "Escape"){
-      var open = document.querySelector(".modal.open");
-      if (open) closeModal(open);
-    }
+    var acik = document.querySelector(".modal.acik");
+    if (!acik) return;
+    if (e.key === "Escape"){ kapat(acik); return; }
+    if (e.key !== "Tab") return;
+    var oge = [].slice.call(acik.querySelectorAll(ODAKLANABILIR))
+                .filter(function(el){ return el.offsetParent !== null; });
+    if (!oge.length) return;
+    var ilk = oge[0], son = oge[oge.length - 1];
+    if (e.shiftKey && document.activeElement === ilk){ e.preventDefault(); son.focus(); }
+    else if (!e.shiftKey && document.activeElement === son){ e.preventDefault(); ilk.focus(); }
   });
 })();
 
 /* ============================================================
-   8. Event accordion
+   5. Etkinlik akordeonu
+
+   Satırlar gerçek <button> olduğu için klavye desteği kendiliğinden
+   geliyor. Eskiden <li role="button" tabindex="0"> vardı ve yalnızca
+   click dinleniyordu; Enter/Space hiç çalışmıyordu.
    ============================================================ */
 (function(){
-  var tl = document.querySelector(".tl");
+  var tl = document.getElementById("tl");
   if (!tl) return;
   tl.addEventListener("click", function(e){
-    var kayit = e.target.closest("[data-kayit]");
-    if (kayit){
-      var href = kayit.getAttribute("href");
-      if (!href || href === "#"){
-        e.preventDefault();
-        kayit.parentElement.querySelector(".uyari").hidden = false;
-      }
-      return;
-    }
-    var item = e.target.closest(".tl-item");
-    if (!item) return;
-    item.classList.toggle("open");
-    item.setAttribute("aria-expanded", item.classList.contains("open"));
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    /* aria-expanded gerçek denetimin, yani button'ın üzerinde durur; <li>
+       etkileşimli değildir ve orada duran durumu ekran okuyucu okumaz.
+       aria-controls düğmeyi açtığı bölgeye bağlar; bölge kapalıyken
+       visibility:hidden ile ağaçtan da çıkıyor (CSS'teki nota bak).
+       Görünüm yine sınıfla sürülüyor, böylece :has() desteği gerekmiyor. */
+    var acik = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", acik ? "false" : "true");
+    btn.parentElement.classList.toggle("acik", !acik);
   });
 })();
-
-/* ============================================================
-   9. The 3D field
-   ============================================================ */
-var canvas = document.getElementById("scene");
-if (typeof THREE === "undefined"){ document.body.classList.add("no-webgl"); return; }
-
-var renderer;
-try {
-  renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:false, alpha:true, powerPreference:"high-performance"});
-} catch(err){
-  document.body.classList.add("no-webgl");
-  return;
-}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x070A14, 1);
-
-var scene  = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 400);
-camera.position.set(0, 0, 80);
-
-var COUNT = mobile ? 9000 : 26000;
-
-/* ---- helpers ---- */
-function rnd(a,b){ return a + Math.random()*(b-a); }
-function gauss(){ return (Math.random()+Math.random()+Math.random()-1.5)/1.5; }
-
-/* ---- target 0: hero — breathing sphere shell ---- */
-function makeSphere(i, out){
-  var y  = 1 - (i / (COUNT-1)) * 2;
-  var r  = Math.sqrt(Math.max(0, 1 - y*y));
-  var th = i * 2.39996;
-  var rad = 22 * (0.86 + Math.random()*0.22);
-  out[0] = Math.cos(th) * r * rad;
-  out[1] = y * rad;
-  out[2] = Math.sin(th) * r * rad;
-}
-
-/* ---- target 1: neural network graph ---- */
-var LAYERS = [5, 8, 8, 4];
-var nodes = [], layerIdx = [];
-(function buildNodes(){
-  var span = 58, x0 = -span/2;
-  for (var l = 0; l < LAYERS.length; l++){
-    var n = LAYERS[l], list = [];
-    var x = x0 + (span / (LAYERS.length - 1)) * l;
-    for (var k = 0; k < n; k++){
-      var y = (n === 1) ? 0 : (k/(n-1) - .5) * (n * 3.6);
-      list.push([x, y, rnd(-3,3)]);
-    }
-    nodes.push(list); layerIdx.push(n);
-  }
-})();
-function makeNet(i, out){
-  var atNode = (i % 5) < 2;
-  if (atNode){
-    var l = Math.floor(Math.random()*nodes.length);
-    var p = nodes[l][Math.floor(Math.random()*nodes[l].length)];
-    out[0] = p[0] + gauss()*1.5;
-    out[1] = p[1] + gauss()*1.5;
-    out[2] = p[2] + gauss()*1.5;
-  } else {
-    var la = Math.floor(Math.random()*(nodes.length-1));
-    var a  = nodes[la][Math.floor(Math.random()*nodes[la].length)];
-    var b  = nodes[la+1][Math.floor(Math.random()*nodes[la+1].length)];
-    var t  = Math.random();
-    out[0] = a[0] + (b[0]-a[0])*t + gauss()*0.5;
-    out[1] = a[1] + (b[1]-a[1])*t + gauss()*0.5;
-    out[2] = a[2] + (b[2]-a[2])*t + gauss()*0.5;
-  }
-}
-
-/* ---- target 2: floating project frames ---- */
-var FRAMES = [];
-(function buildFrames(){
-  var w = 17, h = 11;
-  for (var r = 0; r < 2; r++){
-    for (var c = 0; c < 3; c++){
-      FRAMES.push({ x:(c-1)*22, y:(r===0?9:-9), z:rnd(-9,9), w:w, h:h });
-    }
-  }
-})();
-function makeFrames(i, out){
-  var f = FRAMES[i % FRAMES.length];
-  var onEdge = (i % 4) !== 0;
-  var u, v;
-  if (onEdge){
-    var side = Math.floor(Math.random()*4);
-    var t = Math.random();
-    if (side === 0){ u = -f.w/2 + f.w*t; v =  f.h/2; }
-    else if (side === 1){ u = -f.w/2 + f.w*t; v = -f.h/2; }
-    else if (side === 2){ u = -f.w/2; v = -f.h/2 + f.h*t; }
-    else { u = f.w/2; v = -f.h/2 + f.h*t; }
-  } else {
-    u = rnd(-f.w/2, f.w/2); v = rnd(-f.h/2, f.h/2);
-  }
-  out[0] = f.x + u + gauss()*0.35;
-  out[1] = f.y + v + gauss()*0.35;
-  out[2] = f.z + gauss()*0.8;
-}
-
-/* ---- target 3: timeline helix ---- */
-function makeHelix(i, out){
-  var t = i / COUNT;
-  var a = t * Math.PI * 11;
-  var rad = 13 + Math.sin(t * 22) * 1.6;
-  var tick = (i % 9 === 0);
-  out[0] = Math.cos(a) * rad + gauss()*0.7;
-  out[1] = Math.sin(a) * rad + gauss()*0.7;
-  out[2] = -68 + t * 104 + (tick ? 0 : gauss()*1.4);
-}
-
-/* ---- target 4: tunnel walls (centre kept clear) ---- */
-function makeTunnel(i, out){
-  var a = Math.random() * Math.PI * 2;
-  var rad = rnd(30, 44);
-  out[0] = Math.cos(a) * rad;
-  out[1] = Math.sin(a) * rad * 0.72;
-  out[2] = rnd(-72, 26);
-}
-
-/* ---- target 5: the wordmark, sampled from a canvas ---- */
-function sampleWord(){
-  var c = document.createElement("canvas");
-  c.width = 640; c.height = 160;
-  var g = c.getContext("2d");
-  if (!g) return null;
-  g.fillStyle = "#fff";
-  g.textAlign = "center";
-  g.textBaseline = "middle";
-  g.font = "700 96px 'Space Grotesk', Arial, sans-serif";
-  g.fillText("ATILIM AI", 320, 82);
-  var d;
-  try { d = g.getImageData(0, 0, c.width, c.height).data; } catch(e){ return null; }
-  var pts = [];
-  for (var y = 0; y < c.height; y += 2){
-    for (var x = 0; x < c.width; x += 2){
-      if (d[(y*c.width + x)*4 + 3] > 128){
-        pts.push([ (x - c.width/2) * 0.115, -(y - c.height/2) * 0.115 ]);
-      }
-    }
-  }
-  return pts.length > 200 ? pts : null;
-}
-var glyphs = sampleWord();
-function makeWord(i, out){
-  if (!glyphs){ makeSphere(i, out); return; }
-  var p = glyphs[Math.floor(Math.random()*glyphs.length)];
-  out[0] = p[0] + gauss()*0.32;
-  out[1] = p[1] + gauss()*0.32;
-  out[2] = gauss()*1.6;
-}
-
-/* One scroll target per section. The wordmark is no longer a scroll target —
-   it now plays once on load, then dissolves into the hero sphere. */
-var builders = [makeSphere, makeNet, makeHelix, makeTunnel, makeFrames];
-var buffers  = builders.map(function(){ return new Float32Array(COUNT*3); });
-var wordBuf  = new Float32Array(COUNT*3);
-var sizes    = new Float32Array(COUNT);
-var rnds     = new Float32Array(COUNT);
-var cols     = new Float32Array(COUNT*3);
-var tmp      = [0,0,0];
-
-var C_BLUE = [0.24,0.42,1.00], C_SOFT = [0.55,0.64,1.00], C_RED = [0.90,0.23,0.29];
-for (var i = 0; i < COUNT; i++){
-  for (var b = 0; b < builders.length; b++){
-    builders[b](i, tmp);
-    buffers[b][i*3]   = tmp[0];
-    buffers[b][i*3+1] = tmp[1];
-    buffers[b][i*3+2] = tmp[2];
-  }
-  makeWord(i, tmp);
-  wordBuf[i*3] = tmp[0]; wordBuf[i*3+1] = tmp[1]; wordBuf[i*3+2] = tmp[2];
-
-  sizes[i] = rnd(0.9, 2.5);
-  rnds[i]  = Math.random();
-  var c = (i % 13 === 0) ? C_RED : (i % 3 === 0 ? C_SOFT : C_BLUE);
-  cols[i*3] = c[0]; cols[i*3+1] = c[1]; cols[i*3+2] = c[2];
-}
-
-var geo = new THREE.BufferGeometry();
-geo.setAttribute("position", new THREE.BufferAttribute(buffers[0], 3));
-geo.setAttribute("t1", new THREE.BufferAttribute(buffers[1], 3));
-geo.setAttribute("t2", new THREE.BufferAttribute(buffers[2], 3));
-geo.setAttribute("t3", new THREE.BufferAttribute(buffers[3], 3));
-geo.setAttribute("t4", new THREE.BufferAttribute(buffers[4], 3));
-geo.setAttribute("tW", new THREE.BufferAttribute(wordBuf, 3));
-geo.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
-geo.setAttribute("aRnd",  new THREE.BufferAttribute(rnds, 1));
-geo.setAttribute("aCol",  new THREE.BufferAttribute(cols, 3));
-geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 200);
-
-var uniforms = {
-  w0:{value:1}, w1:{value:0}, w2:{value:0}, w3:{value:0}, w4:{value:0},
-  uTime:{value:0}, uIntro:{value:reduced?1:0}, uDrift:{value:1},
-  uWord:{value:reduced?0:1},
-  uRepel:{value:(fine && !reduced) ? 1 : 0},
-  uMouse:{value:new THREE.Vector2(9999,9999)},
-  uPix:{value:renderer.getPixelRatio()}
-};
-
-var material = new THREE.ShaderMaterial({
-  uniforms: uniforms,
-  transparent: true,
-  depthWrite: false,
-  depthTest: false,
-  blending: THREE.AdditiveBlending,
-  vertexShader: [
-    "attribute vec3 t1; attribute vec3 t2; attribute vec3 t3;",
-    "attribute vec3 t4; attribute vec3 tW;",
-    "attribute float aSize; attribute float aRnd; attribute vec3 aCol;",
-    "uniform float w0,w1,w2,w3,w4;",
-    "uniform float uTime,uIntro,uDrift,uRepel,uPix,uWord;",
-    "uniform vec2 uMouse;",
-    "varying vec3 vCol; varying float vFade;",
-    "void main(){",
-    "  vec3 p = position*w0 + t1*w1 + t2*w2 + t3*w3 + t4*w4;",
-    "  p = mix(p, tW, uWord);",
-    "  float dr = uDrift * (1.0 - uWord*0.88);",
-    "  float s = aRnd * 6.2831853;",
-    "  p.x += sin(uTime*0.35 + s)       * dr * (0.4 + aRnd);",
-    "  p.y += cos(uTime*0.29 + s*1.7)   * dr * (0.4 + aRnd);",
-    "  p.z += sin(uTime*0.23 + s*2.3)   * dr * 0.7;",
-    "  vec3 start = p * (2.1 + aRnd*3.6);",
-    "  p = mix(start, p, uIntro);",
-    "  vec2 d = p.xy - uMouse;",
-    "  float dist = length(d) + 0.001;",
-    "  p.xy += (d/dist) * (uRepel * 110.0 / (dist*dist + 34.0));",
-    "  vec4 mv = modelViewMatrix * vec4(p, 1.0);",
-    "  gl_Position = projectionMatrix * mv;",
-    "  float depth = max(1.0, -mv.z);",
-    "  gl_PointSize = min(aSize * uPix * (120.0 / depth), 6.5 * uPix);",
-    "  float far  = 1.0 - smoothstep(60.0, 235.0, depth);",
-    "  float near = smoothstep(2.0, 14.0, depth);",
-    "  vCol  = aCol;",
-    "  vFade = uIntro * far * near;",
-    "}"
-  ].join("\n"),
-  fragmentShader: [
-    "precision mediump float;",
-    "varying vec3 vCol; varying float vFade;",
-    "void main(){",
-    "  vec2 c = gl_PointCoord - 0.5;",
-    "  float d = length(c);",
-    "  if (d > 0.5) discard;",
-    "  float a = pow(1.0 - d*2.0, 2.2);",
-    "  gl_FragColor = vec4(vCol, a * vFade);",
-    "}"
-  ].join("\n")
-});
-
-var points = new THREE.Points(geo, material);
-points.frustumCulled = false;
-scene.add(points);
-
-/* The wordmark is sampled before the web font finishes loading, so redo it
-   once Space Grotesk is actually available. */
-if (glyphs && document.fonts && document.fonts.ready){
-  document.fonts.ready.then(function(){
-    var tW = geo.getAttribute("tW");
-    glyphs = sampleWord();
-    if (!glyphs) return;
-    var o = [0,0,0];
-    for (var n = 0; n < COUNT; n++){
-      makeWord(n, o);
-      tW.array[n*3] = o[0]; tW.array[n*3+1] = o[1]; tW.array[n*3+2] = o[2];
-    }
-    tW.needsUpdate = true;
-  }).catch(function(){});
-}
-
-/* ---- neural-net edges, visible only in section 2 ---- */
-var edgePos = [];
-for (var l = 0; l < nodes.length - 1; l++){
-  for (var a = 0; a < nodes[l].length; a++){
-    for (var b2 = 0; b2 < nodes[l+1].length; b2++){
-      edgePos.push(nodes[l][a][0], nodes[l][a][1], nodes[l][a][2]);
-      edgePos.push(nodes[l+1][b2][0], nodes[l+1][b2][1], nodes[l+1][b2][2]);
-    }
-  }
-}
-var edgeGeo = new THREE.BufferGeometry();
-edgeGeo.setAttribute("position", new THREE.Float32BufferAttribute(edgePos, 3));
-var edgeMat = new THREE.LineBasicMaterial({
-  color:0x3D6BFF, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending
-});
-var edges = new THREE.LineSegments(edgeGeo, edgeMat);
-scene.add(edges);
-
-/* ---- per-section camera + drift settings ----
-   Order: hero / hakkımızda / etkinlikler / haftalık rapor / projeler.
-   Camera x is inverted relative to the composition: pushing the camera left
-   moves the particle mass right, away from whichever column holds the text. */
-var CAM_Z   = [82, 78, 72, 8, 74];
-var CAM_X   = [-14, 9, 13, 0, 0];
-var CAM_Y   = [0, 5, 4, 0, -4];
-var DRIFT   = [1.05, 0.35, 0.55, 0.80, 0.30];
-var weights = [uniforms.w0, uniforms.w1, uniforms.w2, uniforms.w3, uniforms.w4];
-
-function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
-function lerpArr(arr, seg, t){
-  var i = Math.max(0, Math.min(arr.length-2, Math.floor(seg)));
-  return arr[i] + (arr[i+1] - arr[i]) * t;
-}
-
-/* ---- intro ---- */
-var introStart = performance.now();
-var wordAmt    = reduced ? 0 : 1;
-var camTarget  = new THREE.Vector3(0,0,82);
-var mouseWorld = new THREE.Vector3();
-var camX = 0, camY = 0;
-
-function resize(){
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  uniforms.uPix.value = renderer.getPixelRatio();
-}
-window.addEventListener("resize", resize);
-
-var last = performance.now();
-function frame(now){
-  requestAnimationFrame(frame);
-  var dt = Math.max(0, Math.min(0.05, (now - last)/1000));
-  last = now;
-
-  if (!reduced){
-    uniforms.uTime.value += dt;
-    var sec = (now - introStart) / 1000;
-    uniforms.uIntro.value = ease(Math.min(1, sec / 1.5));
-    /* Particles fly in as the wordmark, hold, then dissolve into the hero.
-       Scrolling early cuts the hold short. */
-    var want = (sec < 2.0 && progress < 0.015) ? 1 : 0;
-    wordAmt += (want - wordAmt) * Math.min(1, dt * 2.6);
-    uniforms.uWord.value = wordAmt;
-    smooth += (progress - smooth) * Math.min(1, dt * 4.2);
-  } else {
-    smooth = progress;
-    uniforms.uWord.value = 0;
-  }
-
-  var seg = Math.max(0, Math.min(1, smooth)) * 4;
-  var idx = Math.max(0, Math.min(3, Math.floor(seg)));
-  var t   = ease(seg - idx);
-
-  for (var k = 0; k < 5; k++) weights[k].value = 0;
-  weights[idx].value     = 1 - t;
-  weights[idx + 1].value = t;
-
-  uniforms.uDrift.value = lerpArr(DRIFT, seg, t);
-  edgeMat.opacity = Math.max(0, (weights[1].value - 0.45)) * 0.5 * (1 - wordAmt);
-  edges.visible = edgeMat.opacity > 0.002;
-
-  /* Centre the frame while the wordmark is up, then drift to the section offset. */
-  camTarget.set(
-    lerpArr(CAM_X, seg, t) * (1 - wordAmt),
-    lerpArr(CAM_Y, seg, t) * (1 - wordAmt),
-    lerpArr(CAM_Z, seg, t)
-  );
-
-  if (!reduced){
-    camX += (camTarget.x + nx * 7 - camX) * Math.min(1, dt * 2.4);
-    camY += (camTarget.y + ny * 5 - camY) * Math.min(1, dt * 2.4);
-  } else {
-    camX = camTarget.x; camY = camTarget.y;
-  }
-  camera.position.set(camX, camY, camTarget.z);
-  camera.lookAt(camX * 0.35, camY * 0.35, camTarget.z - 82);
-  camera.updateMatrixWorld();
-
-  points.rotation.y = reduced ? 0 : Math.sin(uniforms.uTime.value * 0.06) * 0.14 * weights[0].value;
-
-  if (uniforms.uRepel.value > 0){
-    mouseWorld.set(nx, ny, 0.5).unproject(camera).sub(camera.position).normalize();
-    var k2 = (0 - camera.position.z) / (mouseWorld.z || -1);
-    uniforms.uMouse.value.set(
-      camera.position.x + mouseWorld.x * k2,
-      camera.position.y + mouseWorld.y * k2
-    );
-  }
-
-  renderer.render(scene, camera);
-}
-requestAnimationFrame(frame);
 
 })();
 </script>
+<script>
+/* ============================================================
+   6. Alan — kaydırmayla değişen model katmanı.
+   Bağımlılık yok, CDN yok: ham WebGL, sayfanın içinde.
+
+   Okunabilirlik sözleşmesi: WebGL yalnızca scissor dikdörtgeninin içine
+   boyayabilir. O dikdörtgen ya sağdaki boş alet rayı ya da içinde hiç metin
+   olmayan bölüm arası bölgedir. Metnin üstüne düşmesi mümkün değildir.
+   ============================================================ */
+(function(){
+"use strict";
+
+var tuval = document.getElementById("alan");
+var ray   = document.getElementById("ray");
+if (!tuval || !ray) return;
+
+function kapat(){ document.body.classList.add("no-alan"); }
+
+var kisik = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+var gl = null;
+try {
+  var sec = {alpha:false, antialias:false, depth:false, stencil:false,
+             powerPreference:"high-performance"};
+  gl = tuval.getContext("webgl2", sec) || tuval.getContext("webgl", sec);
+} catch(e){ gl = null; }
+if (!gl){ kapat(); return; }
+
+var mobil = window.matchMedia("(max-width:760px)").matches;
+var SAYI  = mobil ? 7500 : 18000;
+
+function ras(a,b){ return a + Math.random()*(b-a); }
+function cn(){ return (Math.random()+Math.random()+Math.random()-1.5)/1.5; }
+function daha(a,b,x){ var t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*t*(t*(t*6-15)+10); }
+
+/* ---------- 0. monogram ---------- */
+var harf = null;
+function ornekle(ciz, W, H, esik, olcX, olcY){
+  var c = document.createElement("canvas"); c.width = W; c.height = H;
+  var g = c.getContext("2d"); if (!g) return null;
+  ciz(g);
+  var d; try { d = g.getImageData(0,0,W,H).data; } catch(e){ return null; }
+  var p = [];
+  for (var y=0;y<H;y++) for (var x=0;x<W;x++){
+    if (d[(y*W+x)*4+3] > esik) p.push([(x/W-0.5)*olcX, -(y/H-0.5)*olcY]);
+  }
+  return p.length > 260 ? p : null;
+}
+function monogramYap(i,out){
+  if (!harf){ out[0]=cn()*0.7; out[1]=cn()*0.5; out[2]=cn()*0.4; return; }
+  var p = harf[(Math.random()*harf.length)|0];
+  out[0]=p[0]+cn()*0.014; out[1]=p[1]+cn()*0.014; out[2]=cn()*0.075;
+}
+
+/* ---------- 1. sinir ağı ---------- */
+/* Katmanlar düz (z=0) ve eşit aralıklı; düğüm aralığı her katmanda aynı, öyle
+   ki sütunlar dümdüz dursun. Bağlantılar rastgele seçilmiyor — katmanlar tam
+   bağlı, çünkü yoğun katmanın kendisi öyle. */
+var KATMAN=[4,5,5,3], ADIM=0.38, dugum=[], agKenar=[];
+(function(){
+  var l,k,n,kat,x;
+  for (l=0;l<KATMAN.length;l++){
+    n=KATMAN[l]; kat=[]; x=(l/(KATMAN.length-1)-0.5)*3.05;
+    for (k=0;k<n;k++) kat.push([x, (k-(n-1)*0.5)*ADIM, 0]);
+    dugum.push(kat);
+  }
+  for (l=0;l<dugum.length-1;l++)
+    for (var a=0;a<dugum[l].length;a++)
+      for (var b=0;b<dugum[l+1].length;b++)
+        agKenar.push([dugum[l][a], dugum[l+1][b]]);
+})();
+function agYap(i,out){
+  if (i%4 === 0){
+    var l=(Math.random()*dugum.length)|0, p=dugum[l][(Math.random()*dugum[l].length)|0];
+    out[0]=p[0]+cn()*0.026; out[1]=p[1]+cn()*0.026; out[2]=cn()*0.028;
+  } else {
+    var e=agKenar[(Math.random()*agKenar.length)|0], a=e[0], b=e[1], t=Math.random();
+    out[0]=a[0]+(b[0]-a[0])*t;
+    out[1]=a[1]+(b[1]-a[1])*t+cn()*0.005;
+    out[2]=cn()*0.012;
+  }
+}
+
+/* ---------- 2. dikkat matrisi ---------- */
+/* Nedensel maske: bir belirteç yalnızca kendinden öncekilere bakabilir, bu
+   yüzden üst üçgen boştur ve matris keskin bir köşegen kenarla okunur.
+   Hücreler gaussian leke değil dolu kare yamalar; parlaklık ağırlıktan gelir. */
+var N=16, agir=new Float32Array(N*N), kum=new Float32Array(N*N), top=0;
+(function(){
+  for (var j=0;j<N;j++) for (var i2=0;i2<N;i2++){
+    /* Maskeli hücreler tamamen boş değil, çok sönük: matrisin karesi görünür
+       kalıyor, maske de o karenin içindeki bir yokluk olarak okunuyor. */
+    var w = 0.022;
+    if (i2 <= j){
+      var d = j - i2;
+      w = 0.20
+        + Math.exp(-(d*d)/2.0)*1.85          /* en yakın belirteçler */
+        + (i2 === 0 ? 1.05 : 0)              /* ilk belirtece dönen dikkat */
+        + (Math.random() < 0.06 ? Math.random()*1.25 : 0);
+    }
+    agir[j*N+i2]=w; top+=w; kum[j*N+i2]=top;
+  }
+})();
+var HX = 2.62/(N-1), HY = 1.86/(N-1);
+function matrisYap(i,out){
+  var r=Math.random()*top, lo=0, hi=N*N-1;
+  while (lo<hi){ var m=(lo+hi)>>1; if (kum[m]<r) lo=m+1; else hi=m; }
+  var cx=lo%N, cy=(lo/N)|0, w=agir[lo];
+  out[0]=(cx/(N-1)-0.5)*2.62 + (Math.random()-0.5)*HX*0.66;
+  out[1]=-(cy/(N-1)-0.5)*1.86 + (Math.random()-0.5)*HY*0.66;
+  out[2]=(Math.min(w,2.4)-0.7)*0.26 + cn()*0.012;
+}
+
+/* ---------- 3. belirteç akışı ---------- */
+var TOK=34, tokY=new Float32Array(TOK), tokB=new Float32Array(TOK);
+(function(){
+  for (var k=0;k<TOK;k++){
+    var u=k/(TOK-1);
+    tokY[k]=Math.sin(u*6.1)*0.20+Math.sin(u*15.0+1.2)*0.075;
+    tokB[k]=0.14+Math.abs(Math.sin(u*11.0+0.4))*0.62;
+  }
+})();
+function akisYap(i,out){
+  if (i%6 === 0){                       /* diziyi taşıyan ince taban */
+    var k2=(Math.random()*(TOK-1))|0, u=Math.random();
+    var x0=(k2/(TOK-1)-0.5)*2.90, x1=((k2+1)/(TOK-1)-0.5)*2.90;
+    out[0]=x0+(x1-x0)*u;
+    out[1]=tokY[k2]+(tokY[k2+1]-tokY[k2])*u-0.02+cn()*0.006;
+    out[2]=cn()*0.06;
+  } else {                              /* tek tek belirteçler */
+    var k=(Math.random()*TOK)|0;
+    out[0]=(k/(TOK-1)-0.5)*2.90 + cn()*0.0085;
+    out[1]=tokY[k] + (Math.random()-0.5)*tokB[k];
+    out[2]=cn()*0.12;
+  }
+}
+
+/* ---------- 4. gradyan inişi ---------- */
+/* Hata yüzeyi tel kafes olarak çizilir, iniş yolu gerçek gradyan adımlarıyla
+   üretilir: adımlar eğim azaldıkça kendiliğinden kısalır. Yol, adım sayısına
+   göre değil yay uzunluğuna göre örneklenir — yoksa bütün parçacıklar
+   adımların kısaldığı dipte yığılıp beyaz bir leke oluşturuyor. */
+var EGIM = 0.52, EC = Math.cos(EGIM), ES = Math.sin(EGIM), ORT = 0.55, KENAR_U = 0.88, KENAR_V = 0.80;
+function hata(u,v){ return 0.62*(0.95*u*u + 1.05*v*v) - 0.30*Math.cos(2.9*u)*Math.cos(2.6*v); }
+function egimU(u,v){ return 1.178*u + 0.870*Math.sin(2.9*u)*Math.cos(2.6*v); }
+function egimV(u,v){ return 1.302*v + 0.780*Math.cos(2.9*u)*Math.sin(2.6*v); }
+function yerlestir(u,v,y,out){
+  /* Zemin düzlemi (u,v), yükseklik h. Sahne X ekseni etrafında EGIM kadar
+     döner: A=0'da yükseklik doğrudan yukarı, A=90°'de kuş bakışı olur.
+     Kamera +Z'ye bakar, yani büyük z uzaktır — v arttıkça hem yukarı hem
+     uzağa gitmeli, yükselen nokta ise izleyiciye yaklaşmalı. */
+  var h = y - ORT;
+  out[0] = u*1.16;
+  out[1] =  h*EC + v*ES;
+  out[2] = -h*ES + v*EC;
+}
+var YOL = [], YOLU = [], YOLTOP = 0;
+(function(){
+  var u=-0.80, v=0.68, lr=0.14, s;
+  YOL.push([u,v]);
+  for (s=0;s<46;s++){ var a=egimU(u,v), b=egimV(u,v); u-=lr*a; v-=lr*b; YOL.push([u,v]); }
+  YOLU.push(0);
+  for (s=1;s<YOL.length;s++){
+    var dx=YOL[s][0]-YOL[s-1][0], dy=YOL[s][1]-YOL[s-1][1];
+    YOLTOP += Math.sqrt(dx*dx+dy*dy); YOLU.push(YOLTOP);
+  }
+})();
+function inisYap(i,out){
+  if (i%4 === 0){                       /* iniş yolu */
+    var r=Math.random()*YOLTOP, lo=1, hi=YOLU.length-1;
+    while (lo<hi){ var m=(lo+hi)>>1; if (YOLU[m]<r) lo=m+1; else hi=m; }
+    var g0=YOLU[lo-1], g1=YOLU[lo];
+    var tt=(g1>g0) ? (r-g0)/(g1-g0) : 0;
+    var a=YOL[lo-1], b=YOL[lo];
+    var u=a[0]+(b[0]-a[0])*tt, v=a[1]+(b[1]-a[1])*tt;
+    yerlestir(u, v, hata(u,v)+0.075, out);
+    out[0]+=cn()*0.006; out[1]+=cn()*0.006;
+  } else {                              /* hata yüzeyinin tel kafesi */
+    var uu, vv;
+    if (Math.random() < 0.5){
+      vv = (((Math.random()*13)|0)/12 - 0.5)*2*KENAR_V;
+      uu = (Math.random()*2-1)*KENAR_U;
+    } else {
+      uu = (((Math.random()*15)|0)/14 - 0.5)*2*KENAR_U;
+      vv = (Math.random()*2-1)*KENAR_V;
+    }
+    yerlestir(uu, vv, hata(uu,vv), out);
+    out[1]+=cn()*0.004; out[2]+=cn()*0.004;
+  }
+}
+
+var yapici = [monogramYap, agYap, matrisYap, akisYap, inisYap];
+
+/* ---------- shader ---------- */
+var VS =
+"attribute vec3 a0;attribute vec3 a1;attribute vec3 a2;attribute vec3 a3;attribute vec3 a4;"+
+"attribute float aBoy;attribute float aTohum;"+
+"uniform float w0,w1,w2,w3,w4;"+
+"uniform float uZaman,uEn,uDon,uSup,uSurukle,uSig,uNokta,uItme;"+
+"uniform vec2 uFare;"+
+"varying float vIsik;varying float vSol;"+
+"void main(){"+
+"  vec3 p = a0*w0+a1*w1+a2*w2+a3*w3+a4*w4;"+
+"  float f = aTohum*6.2831853;"+
+"  p += vec3(sin(uZaman*0.34+f),cos(uZaman*0.27+f*1.7),sin(uZaman*0.21+f*2.3))*(0.020*uSurukle);"+
+"  float c=cos(uDon), s=sin(uDon);"+
+"  p = vec3(p.x*c+p.z*s, p.y, -p.x*s+p.z*c);"+
+"  float z = p.z + 3.30;"+
+"  vec2 nd = p.xy*(2.05/z)*uSig; nd.x /= uEn;"+
+"  if (uItme > 0.0001){"+
+"    vec2 fd = nd - uFare;"+
+"    nd += normalize(fd + vec2(1e-4)) * (uItme * exp(-dot(fd,fd)*8.5));"+
+"  }"+
+"  gl_Position = vec4(nd,0.0,1.0);"+
+"  gl_PointSize = clamp(aBoy*(2.05/z)*uSig*uNokta, 1.55, 18.0);"+
+"  vIsik = exp(-pow((p.x-uSup)*1.55,2.0));"+
+"  vSol  = 1.0 - smoothstep(3.55,5.10,z);"+
+"}";
+var FS =
+"precision mediump float;"+
+"varying float vIsik;varying float vSol;"+
+"uniform vec3 uSoguk;uniform vec3 uSicak;uniform float uKazanc;uniform float uVurgu;"+
+"void main(){"+
+"  vec2 d = gl_PointCoord-0.5; float r2 = dot(d,d);"+
+"  if (r2 > 0.25) discard;"+
+"  float a = 1.0-r2*4.0; a*=a;"+
+"  float h = vIsik*uVurgu;"+
+"  vec3 col = mix(uSoguk,uSicak,h);"+
+"  gl_FragColor = vec4(col*(0.62+0.55*h)*(a*vSol*uKazanc*0.50), 1.0);"+
+"}";
+
+function derle(tip, kod){
+  var s = gl.createShader(tip);
+  gl.shaderSource(s, kod); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) return null;
+  return s;
+}
+
+var prog = null, konum = {}, tampon = [];
+/* Her modelin gerçek yarı-genişliği: sığdırma bunlardan hesaplanır. */
+var sinirX = [1,1,1,1,1], sinirY = [1,1,1,1,1];
+/* Çerçevenin ne kadarını dolduracağı modele göre: işaret kendinden emin
+   durmalı, diyagramların ise nefes alacak kenar boşluğu olmalı. */
+/* Doluluk, sürüklenme payı ve nokta yarıçapı için kenarda boşluk bırakır;
+   itme sırasında ayrıca küçülür (aşağıya bak), böylece parçacıklar çerçeveyi
+   hiçbir durumda aşıp kırpılmaz. */
+var DOLGU = [0.925, 0.885, 0.900, 0.905, 0.890];
+/* Modeli kendi sınırlayıcı kutusunun merkezine oturtur ve yarı-genişliklerini
+   kaydeder. Sınırın mutlak değerden okunması, gradyan inişi gibi simetrik
+   olmayan modelleri çerçevenin bir yarısına itiyordu. */
+/* Sınırlar MODEL uzayında değil, İZDÜŞÜM uzayında ölçülür. Perspektif
+   katsayısı 2.05/(z+3.30) noktadan noktaya değişir; gradyan inişi gibi eğik bir
+   yüzeyin z yayılımı ±1.19 olduğu için en yakın noktalarda katsayı 0.97'ye,
+   yani sabit varsayılan 0.62'nin 1.57 katına çıkar. Model uzayında yapılan
+   sığdırma bunu göremez ve o noktalar dikdörtgeni aşıp kırpılır.
+   Ölçüm ayrıca yalpalama aralığı boyunca taranır: dönme x ile z'yi karıştırdığı
+   için derin bir modelin izdüşüm genişliği açıya göre değişir. */
+var YALPA = [-0.30, -0.15, 0, 0.15, 0.30];
+function ortala(dizi, k){
+  var mnx=1e9, mxx=-1e9, mny=1e9, mxy=-1e9, i, x, y;
+  for (i=0;i<SAYI;i++){
+    x=dizi[i*3]; y=dizi[i*3+1];
+    if (x<mnx) mnx=x; if (x>mxx) mxx=x;
+    if (y<mny) mny=y; if (y>mxy) mxy=y;
+  }
+  var ox=(mnx+mxx)*0.5, oy=(mny+mxy)*0.5;
+  for (i=0;i<SAYI;i++){ dizi[i*3]-=ox; dizi[i*3+1]-=oy; }
+
+  var ex=0, ey=0, a, c, s, rx, rz, kk, px, py, z;
+  for (a=0;a<YALPA.length;a++){
+    c=Math.cos(YALPA[a]); s=Math.sin(YALPA[a]);
+    for (i=0;i<SAYI;i++){
+      x=dizi[i*3]; y=dizi[i*3+1]; z=dizi[i*3+2];
+      rx =  x*c + z*s;
+      rz = -x*s + z*c;
+      kk = 2.05/Math.max(0.9, rz + 3.30);
+      px = Math.abs(rx*kk); if (px>ex) ex=px;
+      py = Math.abs(y*kk);  if (py>ey) ey=py;
+    }
+  }
+  sinirX[k]=Math.max(0.05, ex);
+  sinirY[k]=Math.max(0.05, ey);
+}
+/* sinirX/sinirY zaten izdüşüm birimindedir; burada ikinci bir 0.62 uygulanmaz. */
+function sigdir(w, en){
+  var ex=0, ey=0, d=0;
+  for (var i=0;i<5;i++){ ex+=w[i]*sinirX[i]; ey+=w[i]*sinirY[i]; d+=w[i]*DOLGU[i]; }
+  ex=Math.max(0.05,ex); ey=Math.max(0.05,ey); d=Math.max(0.2,d);
+  return Math.min(d*en/ex, d/ey);
+}
+
+function kur(){
+  var vs = derle(gl.VERTEX_SHADER, VS), fs = derle(gl.FRAGMENT_SHADER, FS);
+  if (!vs || !fs) return false;
+  prog = gl.createProgram();
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
+  gl.useProgram(prog);
+
+  var poz = [], boy = new Float32Array(SAYI), toh = new Float32Array(SAYI), t3=[0,0,0];
+  for (var b=0;b<5;b++) poz.push(new Float32Array(SAYI*3));
+  for (var i=0;i<SAYI;i++){
+    for (var k=0;k<5;k++){
+      yapici[k](i,t3); poz[k][i*3]=t3[0]; poz[k][i*3+1]=t3[1]; poz[k][i*3+2]=t3[2];
+    }
+    /* i%4===0 her modelde yapısal öğedir: ağda düğüm, inişte yol.
+       Boyutu oradan alıyoruz — kenarlar ve tel kafes ince toz kalıyor. */
+    boy[i]=(i%4===0) ? ras(1.60,2.75) : ras(0.95,1.75);
+    toh[i]=Math.random();
+  }
+  for (b=0;b<5;b++) ortala(poz[b], b);
+
+  function bagla(ad, veri, boyut){
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, veri, gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, ad);
+    if (loc >= 0){ gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, boyut, gl.FLOAT, false, 0, 0); }
+    tampon.push(buf);
+  }
+  for (var q=0;q<5;q++) bagla("a"+q, poz[q], 3);
+  bagla("aBoy", boy, 1);
+  bagla("aTohum", toh, 1);
+
+  ["w0","w1","w2","w3","w4","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare",
+   "uSoguk","uSicak","uKazanc","uVurgu"].forEach(function(ad){ konum[ad]=gl.getUniformLocation(prog, ad); });
+
+  gl.uniform3f(konum.uSoguk, 0.561, 0.706, 0.839);  /* ekran  #8FB4D6 */
+  gl.uniform3f(konum.uSicak, 0.910, 0.639, 0.239);  /* lamba  #E8A33D */
+  gl.uniform1f(konum.uVurgu, 0.85);
+  gl.disable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE);
+  gl.clearColor(0.06275, 0.05098, 0.03922, 1.0);   /* gece #100D0A */
+  return true;
+}
+
+/* ---------- ölçüler ---------- */
+var dpr = 1, EN = 0, BOY = 0;
+function boyutla(){
+  dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+  EN = window.innerWidth; BOY = window.innerHeight;
+  tuval.width  = Math.round(EN*dpr);
+  tuval.height = Math.round(BOY*dpr);
+}
+
+/* Merceğin yeri okuma sütununun dışındaki rayın dış ucudur ve her karede
+   gerçek .wrap dikdörtgeninden hesaplanır — resize olayına güvenilmez.
+   Temel dolgu clamp(20px,5vw,56px), .wrap ile birebir aynı. */
+var refWrap = document.querySelector("#s1 .wrap") || document.querySelector("main .wrap");
+var MERCEK_TAVAN = 560;
+function mercekKutusu(){
+  if (EN < 1152 || !refWrap) return null;
+  var d = ray.getBoundingClientRect();
+  if (d.width < 80) return null;
+  var w = refWrap.getBoundingClientRect();
+  var temel = Math.min(56, Math.max(20, EN*0.05));
+  var sag = w.right - temel, sol = sag - d.width;          /* mercek bölgesi */
+  var lw = Math.min(d.width, MERCEK_TAVAN);
+  var lh = Math.min(lw*1.18, BOY*0.74);
+  return {x: sol + (d.width - lw)*0.5, y: BOY*0.52 - lh*0.5, w: lw, h: lh};
+}
+
+var gecis  = Array.prototype.slice.call(document.querySelectorAll(".gecis"));
+
+var kutu = {x:0,y:0,w:0,h:0};
+/* Etkileşim yalnızca çizilen dikdörtgenin içinde ve yalnızca imleç gerçekten
+   hareket ederken çalışır. Park edilmiş bir imleç hiçbir şey yapmaz — main branch'teki
+   sayfa geneline yayılan sürekli tepki tam olarak yorucu olan şeydi. */
+var fx=-9999, fy=-9999, fareVar=false, sonHareket=-99, ilgi=0, saat=0;
+/* Kaydırmadan gelen değerler doğrudan kullanılırsa dokunmatik kaydırmanın
+   kesikli ve ataletli adımları modele birebir yansır; telefonda geçiş
+   sıçrayarak olur. Hedefe zaman sabitiyle yaklaşıyoruz. */
+var pYum = 0, tYum = 0, sonZaman = -1;
+var ince = window.matchMedia("(pointer:fine)").matches;
+
+function cizim(zaman){
+  /* --- okumalar ---
+     Dönüşüm bölüm merkezleri arasına yayılmıyor: geçiş bölgesinin ilk yarısında
+     tamamlanıp orada duruyor. Böylece çerçeve tam açıldığında ekranda iki
+     modelin ortalaması değil, saf bir model bulunuyor. */
+  var vm = BOY*0.5, i, p = 0;
+  /* Bant dikdörtgenleri. Eskiden bu da "dt" idi ve aynı işlev kapsamında
+     aşağıda dt bir sayı olarak yeniden bildiriliyordu; dizi o satırdan önce
+     tamamen tüketildiği için çalışıyordu, ama o satırdan sonra diziyi okuyan
+     her değişiklik sessizce kırılırdı. */
+  var ort = 0, zr = null, bantlar = [];
+  for (i=0;i<gecis.length;i++){
+    var g = gecis[i].getBoundingClientRect();
+    bantlar.push(g);
+    var gor = Math.min(g.bottom, BOY) - Math.max(g.top, 0);
+    var o = Math.max(0, gor)/BOY;
+    if (o > ort){ ort = o; zr = g; }
+  }
+  for (i=bantlar.length-1; i>=0; i--){
+    if (bantlar[i].top <= vm){
+      p = (vm <= bantlar[i].bottom)
+        ? i + daha(0.04, 0.46, (vm - bantlar[i].top)/Math.max(1, bantlar[i].height))
+        : i + 1;
+      break;
+    }
+  }
+
+  var rr = mercekKutusu();
+  var rayVar = !!rr;
+
+  /* --- hedef dikdörtgen ---
+     Genişleme, ekranın ne kadarının boş olduğuna göre: bölge ne kadar
+     kaplarsa çerçeve o kadar açılır. Eşik bölgenin erişebileceği en yüksek
+     kaplamaya göre ölçeklenir, böylece kısa ekranlarda da tam açılır. */
+  var maks = zr ? Math.min(1, zr.height/BOY) : 0;
+  var t = (zr && maks > 0.05) ? daha(0.14*maks, 0.90*maks, ort) : 0;
+
+  /* dt'ye bağlı yumuşatma: kare hızı düşse de aynı hızda yaklaşır. */
+  var dt = (sonZaman < 0) ? 1 : Math.min(0.1, Math.max(0.001, zaman - sonZaman));
+  sonZaman = zaman;
+  if (kisik || dt >= 1){ pYum = p; tYum = t; }
+  else {
+    pYum += (p - pYum) * (1 - Math.exp(-dt/0.17));
+    tYum += (t - tYum) * (1 - Math.exp(-dt/0.13));
+    if (Math.abs(p-pYum) < 0.0004) pYum = p;
+    if (Math.abs(t-tYum) < 0.0004) tYum = t;
+  }
+  /* Ekranda hiç bant yoksa geçilecek bir hedef de yok: açıklık anında sıfırlanır,
+     yoksa levha dikdörtgeni yokken t hala 1'e yakın kalıp kutuyu bozar. */
+  if (!zr) { tYum = 0; }
+  p = pYum; t = tYum;
+
+  var lx, ly, lw, lh, px, py, pw, ph;
+  if (zr){
+    var ust = Math.max(0, zr.top);
+    var alt = Math.min(BOY, zr.bottom);
+    /* Levha bir "tam ekran anı" değil: mercekle aynı cinsten, yalnızca daha
+       büyük ve ekranın ortasına gelmiş bir dikdörtgen. Görünür bir kenarlığı
+       yok; sınırı ekranın her kenarında kalan boşluk çiziyor. */
+    var kenar = Math.min(96, EN*0.08);
+    pw = Math.min(EN - kenar*2, 800); px = (EN-pw)*0.5;
+    var bosluk = Math.max(0, alt-ust);
+    ph = Math.min(bosluk, 500);
+    py = ust + (bosluk - ph)*0.5;
+  } else { px=0; py=0; pw=EN; ph=0; }
+
+  if (rayVar){ lx=rr.x; ly=rr.y; lw=rr.w; lh=rr.h; }
+  else {
+    lw = 132; lh = 150;
+    lx = EN*0.5 - lw*0.5;
+    ly = (zr ? (py + ph*0.5) : BOY*0.5) - lh*0.5;
+  }
+
+  kutu.x = lx + (px-lx)*t;
+  kutu.y = ly + (py-ly)*t;
+  kutu.w = lw + (pw-lw)*t;
+  kutu.h = lh + (ph-lh)*t;
+
+  /* İmleç çerçevenin içinde mi ve son 1,5 saniyede hareket etti mi? */
+  var ic = ince && !kisik && fareVar && kutu.w > 4 && kutu.h > 4 &&
+           fx >= kutu.x && fx <= kutu.x + kutu.w &&
+           fy >= kutu.y && fy <= kutu.y + kutu.h &&
+           (saat - sonHareket) < 1.5;
+  ilgi += ((ic ? 1 : 0) - ilgi) * (ic ? 0.10 : 0.045);
+  if (ilgi < 0.002) ilgi = 0;
+
+  /* Çizilen dikdörtgenin görünür bir kenarlığı yoktur; alanın sınırı yalnızca
+     scissor'dır. Merceğin uyandığını kazanç ve parçacıkların açılması söyler. */
+  var kazanc = (0.58 + 0.42*t) * (rayVar ? 1 : t) * (1 + 0.32*ilgi);
+
+  gl.disable(gl.SCISSOR_TEST);
+  gl.viewport(0,0,tuval.width,tuval.height);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  if (kutu.h < 3 || kutu.w < 3 || kazanc < 0.012) return;
+
+  var gx = Math.round(kutu.x*dpr);
+  var gw = Math.round(kutu.w*dpr);
+  var gh = Math.round(kutu.h*dpr);
+  var gy = Math.round(tuval.height - (kutu.y+kutu.h)*dpr);
+  gl.enable(gl.SCISSOR_TEST);
+  gl.scissor(gx, gy, gw, gh);
+  gl.viewport(gx, gy, gw, gh);
+
+  var idx = Math.max(0, Math.min(3, Math.floor(p)));
+  var f = daha(0, 1, p - idx);
+  var w = [0,0,0,0,0];
+  w[idx] = 1-f; w[idx+1] = f;
+  if (p >= 4){ w=[0,0,0,0,1]; }
+  for (i=0;i<5;i++) gl.uniform1f(konum["w"+i], w[i]);
+
+  gl.uniform1f(konum.uZaman, zaman);
+  var en = gw/Math.max(1,gh);
+  gl.uniform1f(konum.uEn, en);
+  /* Model her dikdörtgeni doldursun: hangi eksen önce dolarsa o sınırlar. */
+  /* İtme parçacıkları en çok uItme kadar dışarı taşır; model tam o kadar
+     küçülünce taşan hiçbir nokta çerçevenin dışına çıkmaz. */
+  var itme = 0.115*ilgi;
+  gl.uniform1f(konum.uSig, sigdir(w, en) * (1 - 0.07*t) * (1 - itme));
+  gl.uniform1f(konum.uItme, itme);
+  /* Nokta boyutu dikdörtgenle doğrusal ölçeklenirse küçük durumda orantısız
+     incelir ve çizgiler kaybolur; karekök her iki durumu da ~2,9 aygıt
+     pikselinde buluşturur. */
+  gl.uniform1f(konum.uNokta, gh*0.0026*Math.sqrt(1100/Math.max(240,gh)));
+  var fnx = ((fx-kutu.x)/kutu.w)*2 - 1, fny = 1 - ((fy-kutu.y)/kutu.h)*2;
+  gl.uniform2f(konum.uFare, fnx, fny);
+  gl.uniform1f(konum.uDon, kisik ? 0 : (Math.sin(zaman*0.06)*0.13 + fnx*0.16*ilgi));
+  gl.uniform1f(konum.uSup, kisik ? 9 : (-2.4 + ((zaman*0.20)%1)*4.8));
+  gl.uniform1f(konum.uSurukle, kisik ? 0 : (0.55 + 0.45*t));
+  gl.uniform1f(konum.uKazanc, kazanc);
+  gl.drawArrays(gl.POINTS, 0, SAYI);
+}
+
+/* ---------- döngü ---------- */
+var t0 = 0, calisiyor = false;
+function kare(now){
+  if (!calisiyor) return;
+  requestAnimationFrame(kare);
+  if (document.hidden) return;
+  /* CSS 1152px altında tuvali gizliyor; döngünün de durması gerekiyor, yoksa
+     telefon görünmeyen bir kareyi çizmeye devam eder. Kare istemeye devam
+     ediyoruz ki geniş ekrana dönüldüğünde kendiliğinden geri gelsin. */
+  if (EN < 1152) return;
+  if (!t0) t0 = now;
+  saat = (now-t0)/1000;
+  cizim(saat);
+}
+
+if (!kur()){ kapat(); return; }
+boyutla();
+
+window.addEventListener("resize", function(){ boyutla(); if (kisik) cizim(0); }, {passive:true});
+if (ince && !kisik){
+  window.addEventListener("mousemove", function(e){
+    fx = e.clientX; fy = e.clientY; fareVar = true; sonHareket = saat;
+  }, {passive:true});
+}
+
+var img = new Image();
+/* Yedek: görsel gelmezse ya da file:// altında tuval kirlenirse harfle çiz. */
+function yedekHarf(){
+  return ornekle(function(g){
+    g.fillStyle="#fff"; g.textAlign="center"; g.textBaseline="middle";
+    g.font = '300 104px Newsreader, Georgia, serif';
+    g.fillText("ai", 140, 74);
+  }, 280, 140, 110, 2.20, 1.10);
+}
+img.onload = function(){
+  harf = ornekle(function(g){ g.drawImage(img,0,0,158,158); }, 158, 158, 84, 1.78, 1.78)
+      || yedekHarf();
+  baslat();
+};
+img.onerror = function(){ harf = yedekHarf(); baslat(); };
+
+var basladi = false;
+function baslat(){
+  if (basladi) return; basladi = true;
+  /* monogram tamponunu gerçek harfle yeniden yaz */
+  var poz = new Float32Array(SAYI*3), t3=[0,0,0];
+  for (var i=0;i<SAYI;i++){
+    monogramYap(i,t3); poz[i*3]=t3[0]; poz[i*3+1]=t3[1]; poz[i*3+2]=t3[2];
+  }
+  ortala(poz, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, tampon[0]);
+  gl.bufferData(gl.ARRAY_BUFFER, poz, gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, "a0");
+  if (loc >= 0){ gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0); }
+
+  if (kisik){ cizim(0); return; }
+  calisiyor = true;
+  requestAnimationFrame(kare);
+}
+img.src = "images/ai_mark.png";
+
+})();
+</script>
+
 </body>
 </html>

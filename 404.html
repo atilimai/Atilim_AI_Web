@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sayfa bulunamadı — Atılım AI</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#100D0A">
+<!-- GitHub Pages bu sayfayı eksik olan HER yol için sunuyor: /a/b/c adresinde
+     göreli bir href, /a/b/haberler.html'e çözülüp kırılır. Bu dosyadaki bütün
+     yollar bu yüzden kökten mutlak. Depo adı değişirse hepsi güncellenmeli. -->
+<link rel="icon" href="/Atilim_AI_Web/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/Atilim_AI_Web/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/Atilim_AI_Web/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+/* Gece dünyası — index.html ile aynı belirteçler, DESIGN.md.
+
+   Mekanik denetleyici bu dosyada "flat type hierarchy (13/15/16/18px)" diyor.
+   Yanlış: h1 bir clamp() ve araç onu çözemediği için yalnızca literal px'leri
+   görüyor. DESIGN.md → Typography bu yanılgıyı adıyla kaydediyor. 28px'lik
+   sahte bir literal ekleyerek susturma. */
+:root{
+  --gece:#100D0A; --tezgah:#191512; --tezgah-2:#211B16;
+  --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
+  --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
+  --lamba:#E8A33D; --lamba-h:#F5B65C; --on-lamba:#241703;
+  --disp:"Newsreader",Georgia,serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --r-xs:4px; --r-md:8px;
+  --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--gece);color:var(--kagit);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;display:flex;align-items:center;padding:var(--sp-xxl) 0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);width:100%}
+.kod{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--lamba)}
+/* display-xl, DESIGN.md'deki adimin aynisi. Kendi olcegini uydurma:
+   h1 dort sayfada da bu clamp'i tasiyor. */
+h1{font-family:var(--disp);font-weight:300;
+  font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;
+  max-width:17ch;text-wrap:balance;margin-top:var(--sp-md)}
+h1 em{font-style:italic;color:var(--lamba)}
+.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:56ch;margin-top:20px}
+/* Denenen adres kullanıcı girdisidir: textContent ile basılıyor, satır sonu
+   verilmezse uzun bir yol telefonda yatay taşma yapıyor. */
+.adres{font-family:var(--mono);font-size:13px;color:var(--kagit-t);margin-top:var(--sp-lg);
+  padding-top:var(--sp-md);border-top:1px solid var(--hair);max-width:52ch;
+  overflow-wrap:anywhere;min-width:0}
+.adres b{color:var(--kagit-s);font-weight:400}
+.eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
+.btn{font-family:var(--body);font-size:15px;font-weight:500;padding:0 22px;min-height:48px;
+  border-radius:var(--r-md);display:inline-flex;align-items:center;border:1px solid transparent;
+  text-decoration:none;cursor:pointer;
+  transition:background .3s var(--ease),border-color .3s var(--ease),color .3s var(--ease)}
+.btn.p{background:var(--lamba);color:var(--on-lamba)}
+.btn.p:hover{background:var(--lamba-h)}
+.btn.s{background:var(--tezgah);border-color:var(--hair-s);color:var(--kagit)}
+.btn.s:hover{background:var(--tezgah-2);border-color:var(--hair-t)}
+:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
+footer{border-top:1px solid var(--hair);padding:var(--sp-lg) 0}
+footer .wrap{display:flex;gap:var(--sp-md) var(--sp-lg);flex-wrap:wrap;align-items:baseline}
+footer p{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
+footer .posta{margin-right:auto;overflow-wrap:anywhere}
+footer a{font-family:var(--mono);font-size:13px;color:var(--kagit-s);text-decoration:none;
+  min-height:44px;display:inline-flex;align-items:center}
+footer a:hover{color:var(--lamba)}
+@media(prefers-reduced-motion:reduce){
+  /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
+     renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır.
+     Bu sayfadaki tek geçiş zaten zemin ve kenarlık rengi; kaldırılacak bir
+     hareket yok. Burada bir süre *{transition:none!important} durdu ve tam
+     olarak korunması gereken geri bildirimi siliyordu. */
+}
+</style>
+</head>
+<body>
+
+<main>
+  <div class="wrap">
+    <p class="kod">404</p>
+    <h1>Bu adreste <em>bir şey yok.</em></h1>
+    <p class="giris">Bağlantı eskimiş, adres yanlış yazılmış ya da sayfa taşınmış olabilir.
+      Aşağıdaki iki kapıdan biri seni doğru yere götürür.</p>
+    <p class="adres" id="adres" hidden>Denenen adres: <b id="yol"></b></p>
+    <div class="eylem">
+      <a class="btn p" href="/Atilim_AI_Web/">Ana sayfa</a>
+      <a class="btn s" href="/Atilim_AI_Web/haberler.html">Haber arşivi</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Atılım AI · Ankara</p>
+    <a class="posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord ↗</a>
+    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</footer>
+
+<script>
+/* Yanlış yazılmış bir adresi görmek, kullanıcının hatayı kendi bulmasını
+   sağlıyor. Betik yoksa satır gizli kalır — boş bir etiket göstermez. */
+(function(){
+  var yol = location.pathname + location.search;
+  if (yol.length > 160) yol = yol.slice(0, 160) + "…";
+  document.getElementById("yol").textContent = yol;
+  document.getElementById("adres").hidden = false;
+})();
+</script>
+
+</body>
+</html>

@@ -28,7 +28,11 @@ const KURU    = process.env.KURU_CALISMA === "1";
 
 const DATA  = path.join("content", "haberler.json");
 const STATE = path.join("content", ".son-gonderilen");
-const RENK  = parseInt("E63A4B", 16);   // sitedeki --red
+/* Embed şeridi sitenin eylem rengini taşır. Burada uzun süre E63A4B durdu
+ * ve yorumu "sitedeki --red" diyordu; --red silinmiş bir paletten kalmaydı ve
+ * depoda başka hiçbir yerde geçmiyordu. Her haftalık rapor gönderisi,
+ * toplulugun tek katılım kanalına sitede bulunmayan bir kırmızıyla düşüyordu. */
+const RENK  = parseInt("E8A33D", 16);   // --lamba, DESIGN.md
 
 /* Discord'un sert sınırları. Aşılırsa istek 400 döner.
  * "toplam" TEK BİR EMBED'in değil, bir mesajdaki TÜM embed'lerin toplamıdır;
@@ -77,7 +81,12 @@ try {
 }
 
 const sayi = veri && Array.isArray(veri.sayilar) ? veri.sayilar[0] : null;
-if (!sayi) cik(1, "haberler.json içinde sayı yok.");
+/* Boş dizi hata değil: site ilk sayı yayımlanana kadar bu halde duruyor ve
+ * üç sayfa da bunu ayrı bir durum olarak gösteriyor. Burada exit 1 vermek
+ * haberler.json'a dokunan her push'ta iş akışını kırmızı yakıyordu —
+ * gönderilecek bir şey olmaması başarısızlık değil. Gerçek bozukluklar
+ * (geçersiz JSON, habersiz sayı) exit 1 vermeye devam ediyor. */
+if (!sayi) cik(0, "haberler.json'da sayı yok, gönderilecek bir şey yok.");
 if (!Array.isArray(sayi.haberler) || sayi.haberler.length === 0) {
   cik(1, `${sayi.sayi}. sayıda hiç haber yok.`);
 }
