@@ -1,4 +1,31 @@
 {
   "_aciklama": "Sayılar en yeniden eskiye doğru sıralanır. Site sayilar[0] gösterir, Discord botu da onu gönderir. Yeni sayı eklerken dizinin BAŞINA ekleyin.",
-  "sayilar": []
+  "sayilar": [
+    {
+      "sayi": 1,
+      "tarih": "2026-09-23",
+      "haberler": [
+        {
+          "etiket": "Model",
+          "tarih": "23 Eyl",
+          "baslik": "Anthropic, Claude Opus 5.5 Modelini Tanıttı!",
+          "ozet": "Claude 5.5 ailesinin ilk üyesi tanıtıldı, peki bu modelde bizleri neler bekliyor?",
+          "icerik": "Claude Opus 5.5, Claude 5.5 ailesinin ilk üyesi olmasının yanı sıra Anthropic'in CEO'su Dario Amodei'nin yapay zeka yarışının yavaşlaması gerektiğini söylediğinden bu yana çıkardığı ilk model oldu.\n\nAnthropic verilerine göre Opus 5.5 modeli, Opus 5 modelinden tipik iş yüklerinde maliyet olarak %40 daha uygun ve çoğu iş yükünde Fable 5.1 seviyesinde performans gösteriyor. Benchmarklar ile de oldukça önde gözüküyor:\n\nhttps://ares.shiftdelete.net/2026/09/anthropic-claude-opus-5-5-tanitildi-daha-hizli-ve-ucuz-3.webp\n\nFakat Opus 5.5 ne kadar lider gibi gözükse de Anthropic, kendi kullanımlarında Opus 5.5 ile Fable 5.1 arasındaki farkın skorların gösterdiğinden daha dar olduğunu ve bu benchmarkların gerçek kullanımdaki farkları göstermekte giderek daha az güvenilir hale geldiğini belirtiyor.\n\nYeni model performansının yanı sıra hızıyla da etkileyici. Anthropic'in paylaştığına göre bir test kullanıcısı 680.000 satırlık bir kod geçişini bir günden kısa sürede tamamladı. Bu, normalde bir mühendis ekibinin haftalarını alacak bir iş.\n\nGüvenlik açısından da bugüne kadar gördüğümüz en güçlü model olarak öne çıkıyor, Anthropic'e göre rakip modellere kıyasla geri döndürülemez hatalar yapma ihtimali ve kendisine verilen sınırların dışına çıkma ihtimali oldukça düşük. Ayrıca \"prompt injection\" ve benzeri saldırılara karşı Opus 5'e kıyasla daha dayanıklı.\n\nİletişim konusunda ise Opus 5 hakkında en sık şikayet edilen sorunlardan birisi çözülmüş. Test kullanıcıları Opus 5.5'in oldukça yalın ve takip edilmesi kolay yazdığını, öbür modellerden daha doğal iletişim kurduğunu söyledi.\n\nAnthropic, Sonnet 5.5 ve Haiku 5.5'in de önümüzdeki haftalarda geleceğini açıkladı. Siz Claude 5.5 ailesinin ilk üyesi hakkında ne düşünüyorsunuz?",
+          "link": "https://www.anthropic.com/claude-opus-5-5",
+          "gorsel": "https://ares.shiftdelete.net/2026/09/anthropic-claude-opus-5-5-tanitildi-daha-hizli-ve-ucuz.webp",
+          "kaynak": "https://www.anthropic.com/claude-opus-5-5"
+        },
+        {
+          "etiket": "Model",
+          "tarih": "23 Eyl",
+          "baslik": "OpenAI, GPT 6 Sol ve Luna Modellerini Tanıttı!",
+          "ozet": "GPT-6 ailesinin yeni üyeleri tanıtıldı, peki bu yeni modellerde bizleri neler bekliyor?",
+          "icerik": "GPT-6 Sol ve GPT-6 Luna, bu ayın başında tanıtılan GPT-6 Astra'dan sonra GPT-6 ailesine katılan yeni modeller olmasının yanı sıra, Anthropic'in Claude Opus 5.5'i duyurmasından yalnızca 90 dakika sonra tanıtıldı.\n\nOpenAI verilerine göre iki model de Astra'ya benzer yöntemlerle eğitildi, ancak asıl odak noktaları maliyet verimliliği. Sol kodlama gibi karmaşık işler için, Luna ise belge özetleme ve bilgi çıkarma gibi yüksek hacimli işler için konumlanıyor. OpenAI'a göre Sol, iş süreçlerini ölçen AutomationBench'te en yüksek ayardaki Claude Opus 5'i, onun görev başı maliyetinin yalnızca %9'uyla geride bırakıyor:\n\nhttps://pbs.twimg.com/media/HS1xHtmakAAM4WN?format=png&name=medium\n\nDoğruluk konusunda da önemli bir ilerleme var. OpenAI'ın kendi testlerine göre GPT-6 Sol, 5.6 Sol modeline kıyasla yaklaşık yarı yarıya daha az hata yapıyor ve çok daha düşük maliyetle Astra seviyesindeki güvenilirliğe yaklaşıyor. Ayrıca iki model de GPT-5.6'daki karşılıklarına göre kodlama işleri hakkında daha az yanıltıcı iddiada bulunuyor.\n\nİletişim tarafında da değişiklikler var. OpenAI, yeni modellerin daha net ve daha yalın yazdığını, daha az tuhaf ifade ve gereksiz detay kullandığını söylüyor. Yanıtlar da özünü kaybetmeden biraz daha kısa.\n\nGPT-6 Sol ve Luna, ChatGPT Work ve Codex'te tüm Plus, Pro, Business, Enterprise ve Edu kullanıcılarına sunuldu. Siz GPT-6 ailesinin yeni üyeleri hakkında ne düşünüyorsunuz?",
+          "link": "https://openai.com/index/introducing-gpt-6-sol-and-luna/",
+          "gorsel": "https://pbs.twimg.com/media/HS1yUEtbEAAJjYB?format=webp&name=large",
+          "kaynak": "https://openai.com/index/introducing-gpt-6-sol-and-luna/"
+        }
+      ]
+    }
+  ]
 }
