@@ -134,6 +134,14 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .yazi p{font-family:var(--disp);font-size:19px;line-height:1.85;color:var(--murekkep);
   margin-top:var(--sp-lg);max-width:66ch}
 .yazi p:first-of-type{margin-top:0}
+/* Metin arası görsel doğal oranında durur: kapaktaki 16/9 kırpma bir ekran
+   görüntüsünü ya da tabloyu okunmaz hâle getirirdi. */
+.yazi figure{margin:var(--sp-xl) 0 0;max-width:66ch}
+.yazi figure img{width:100%;height:auto;display:block;border-radius:var(--r-lg);
+  border:1px solid transparent}
+.yazi figure img.yuklendi{border-color:var(--cizgi)}
+.yazi figcaption{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);
+  margin-top:var(--sp-sm);line-height:1.5}
 .yazi-alt{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;
   margin-top:var(--sp-xxl);padding-top:var(--sp-lg);border-top:1px solid var(--cizgi)}
 .kaynak{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
@@ -300,6 +308,41 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     return;
   }
 
+  /* Tek başına bir satırda duran adres = metin arası görsel.
+   *
+   * Uzantıya BAKMIYORUZ, bilerek: panelden gelen adreslerin bir kısmının
+   * yolunda uzantı yok (ör. pbs.twimg.com/media/…?format=png). Görseli çizmeyi
+   * deniyoruz; yüklenemezse figür bağlantı paragrafına dönüyor. Aynı kuralın
+   * kopyaları: haberler.html, scripts/discord-gonder.js ve paneldeki
+   * src/lib/site/news.ts (icerikBloklari). */
+  var TEK_ADRES = /^https?:\/\/\S+$/;
+
+  function gorselFigur(src, aciklama){
+    var fig = document.createElement("figure");
+    var img = document.createElement("img");
+    img.src = src;
+    img.alt = aciklama || "";
+    img.loading = "lazy";
+    img.onload = function(){ this.classList.add("yuklendi"); };
+    img.onerror = function(){
+      var p = document.createElement("p");
+      var a = document.createElement("a");
+      a.href = src;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = aciklama || src;
+      p.appendChild(a);
+      if (fig.parentNode) fig.parentNode.replaceChild(p, fig);
+    };
+    fig.appendChild(img);
+    if (aciklama){
+      var yazi = document.createElement("figcaption");
+      yazi.textContent = aciklama;
+      fig.appendChild(yazi);
+    }
+    return fig;
+  }
+
   function ciz(sayi, h){
     /* Panel başlığı 200 karaktere kadar gelebiliyor; sekme, yer imi ve
        geçmiş kaydı bunu olduğu gibi taşımasın. Sayfadaki <h1> tam metni
@@ -354,10 +397,17 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       yazi.appendChild(img);
     }
 
-    /* Boş satır paragrafı ayırır; tek satır sonları paragraf içinde kalır. */
+    /* Boş satır paragrafı ayırır; tek satır sonları paragraf içinde kalır.
+       İlk satırı tek başına adres olan blok, metin arası görsel olur. */
     (h.icerik || "").split(/\n\s*\n/).forEach(function(parca){
       var metin = parca.replace(/\s+$/, "");
       if (!metin) return;
+      var satirlar = metin.split("\n");
+      var ilk = satirlar[0].trim();
+      if (TEK_ADRES.test(ilk)){
+        yazi.appendChild(gorselFigur(ilk, satirlar.slice(1).join("\n").trim()));
+        return;
+      }
       var p = document.createElement("p");
       p.textContent = metin;
       yazi.appendChild(p);

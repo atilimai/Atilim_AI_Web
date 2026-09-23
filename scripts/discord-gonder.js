@@ -108,15 +108,43 @@ function detayAdresi(sira) {
   return `${SITE}/haber.html?sayi=${encodeURIComponent(sayi.sayi)}&sira=${sira}`;
 }
 
+/* Tek basina bir satirda duran adres, sitede metin arasi gorsel olarak
+ * ciziliyor (bkz. haberler.html / haber.html). Discord'da ayni satir ciplak
+ * bir baglanti olarak duruyor: hem cirkin hem de 6000'lik kotadan yiyor.
+ * Metinden cikariyoruz, varsa aciklamasini italik birakiyoruz ve haberin
+ * kendi gorseli yoksa ilkini embed gorseli yapiyoruz.
+ * Kuralin kopyalari: haberler.html, haber.html, paneldeki lib/site/news.ts. */
+const TEK_ADRES = /^https?:\/\/\S+$/;
+
+function icerigiAyir(icerik) {
+  const metinler = [];
+  const gorseller = [];
+  for (const parca of String(icerik == null ? "" : icerik).split(/\n\s*\n/)) {
+    const blok = parca.replace(/\s+$/, "");
+    if (!blok) continue;
+    const satirlar = blok.split("\n");
+    const ilk = satirlar[0].trim();
+    if (TEK_ADRES.test(ilk)) {
+      gorseller.push(ilk);
+      const aciklama = satirlar.slice(1).join(" ").trim();
+      if (aciklama) metinler.push(`*${aciklama}*`);
+      continue;
+    }
+    metinler.push(blok);
+  }
+  return { metin: metinler.join("\n\n"), gorseller };
+}
+
 const embedler = sayi.haberler.map((h, sira) => {
   const detay = detayAdresi(sira);
+  const icerik = icerigiAyir(h.icerik);
 
   /* Ozet ve tam metin arka arkaya; ikisi de varsa aralarinda bos satir.
    * Site icerigi bos satirla ayrilmis paragraflar olarak isliyor (haber.html),
    * Discord da ayni sekilde gosterdigi icin metne dokunmuyoruz. */
   const parcalar = [];
   if (h.ozet) parcalar.push(String(h.ozet).trim());
-  if (h.icerik) parcalar.push(String(h.icerik).trim());
+  if (icerik.metin) parcalar.push(icerik.metin);
 
   /* Dis kaynak linki basliga konmadiysa aciklamanin sonunda dursun ki
    * haber hem sitedeki haline hem de kaynagina baglansin. */
@@ -148,12 +176,16 @@ const embedler = sayi.haberler.map((h, sira) => {
   const adres = detay || (httpMu(h.link) ? h.link : "");
   if (adres) embed.url = adres;
 
-  if (httpMu(h.gorsel)) {
-    embed.image = { url: h.gorsel.trim() };
+  /* Kapak gorseli yoksa metnin ilk gorseli embed'e cikiyor: haber Discord'da
+   * da gorselsiz kalmasin. Metindeki digerleri sitede duruyor. */
+  const gorsel = httpMu(h.gorsel) ? h.gorsel.trim() : icerik.gorseller[0] || "";
+
+  if (gorsel) {
+    embed.image = { url: gorsel };
     /* Dogrudan resim adresi olmayan bir link (ornegin bir arama/yonlendirme
      * adresi) 400 vermez ama Discord'da hicbir sey gostermez; veriyi
      * duzeltebilmek icin uyariyoruz. */
-    if (!/\.(png|jpe?g|gif|webp|avif)(\?|$)/i.test(h.gorsel.trim())) {
+    if (!/\.(png|jpe?g|gif|webp|avif)(\?|$)/i.test(gorsel)) {
       console.error(`  uyarı: "${kirp(h.baslik, 40)}" görseli doğrudan bir resim adresi değil, Discord'da görünmeyebilir.`);
     }
   } else if (h.gorsel) {

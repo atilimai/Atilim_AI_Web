@@ -217,6 +217,28 @@ Kurallar:
 - `icerik` **düz metindir.** Boş satır paragrafları ayırır, tek satır sonu
   paragraf içinde kalır. Sayfalar metni `textContent` ile bastığı için
   içindeki etiketler yazıya dönüşür, çalışmaz.
+- **Metin arası görsel:** ilk satırı tek başına bir adres olan blok, paragraf
+  değil `<figure>` olarak çizilir; bloğun kalan satırları `<figcaption>` olur.
+
+  ```
+  Benchmarklar ile de önde gözüküyor:
+
+  https://atilimai.github.io/Atilim_AI_Web/images/haberler/9f2c4a1b.webp
+  Şekil 1 — SWE-bench sonuçları
+
+  Fakat ne kadar lider gözükse de…
+  ```
+
+  Adresin **uzantısına bakılmaz** (panelden gelen bazı adreslerin yolunda
+  uzantı yok, ör. `pbs.twimg.com/media/…?format=png`); görsel yüklenemezse
+  figür, hedefe giden bir bağlantı paragrafına dönüşür. Kural üç yerde
+  kopyalanmış durumda — biri değişirse hepsi değişmeli: `haberler.html`,
+  `haber.html` ve `scripts/discord-gonder.js`. Paneldeki ikizi
+  `src/lib/site/news.ts` → `icerikBloklari`.
+
+  Panelden yüklenen görseller `images/haberler/<içerik hash'i>.webp` yolunda
+  durur; haberden çıkarılınca panel onları depodan da siler. `images/`
+  altındaki diğer dosyalar sitenin kendi varlıkları, panel onlara dokunmaz.
 - `icerik` doluysa: arşivde kart açılır, ana sayfada "Devamını oku" çıkar,
   başlık ayrıntı sayfasına bağlanır. Boşsa eski davranış sürer — başlık
   doğrudan `link`'e gider.
@@ -237,6 +259,10 @@ ve alan sırasını koruyarak yazıyor.
 - Her haber ayrı bir embed olur. Discord bir mesajda en fazla 10 embed ve
   toplam 6000 karakter kabul ettiği için embed'ler gruplanıp arka arkaya
   birkaç mesaj halinde gönderilir.
+- **Metin arası görsel satırları açıklamadan çıkarılır** (Discord'da çıplak bir
+  bağlantı olarak durup kotadan yiyorlardı); varsa görselin açıklaması italik
+  kalır. Haberin kendi `gorsel` alanı boşsa metindeki **ilk** görsel embed
+  görseli olur — haber Discord'da da görselsiz kalmasın.
 - Gönderimden sonra `.son-gonderilen` dosyasını `main`'e geri push eder
   (commit mesajında `[skip ci]` var, kendini tetiklemez).
 - Webhook adresi `DISCORD_WEBHOOK` secret'ından gelir. **Asla koda yazma** —
