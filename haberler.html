@@ -131,6 +131,13 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 .tam p{font-family:var(--disp);font-size:19px;line-height:1.8;color:var(--murekkep);
   margin-top:var(--sp-md);max-width:66ch}
 .tam p:first-child{margin-top:0}
+/* Metin arası görsel. Kapak görselinin 16/9 kırpması buraya UYGULANMAZ:
+   ekran görüntüsü ya da tablo kırpılırsa okunmaz olur, o yüzden doğal oran.
+   .haber img kuralını bastırmak için aspect-ratio açıkça sıfırlanıyor. */
+.tam figure{margin-top:var(--sp-lg);max-width:66ch}
+.tam figure img{aspect-ratio:auto;height:auto;object-fit:contain;margin-top:0}
+.tam figcaption{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);
+  margin-top:var(--sp-xs);line-height:1.5}
 .kalici{display:inline-flex;align-items:center;min-height:44px;margin-top:var(--sp-sm);
   font-family:var(--mono);font-size:13px;
   color:var(--lamba-d);border-bottom:1px solid var(--lamba-alt);padding-bottom:3px}
@@ -243,12 +250,58 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     return "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira;
   }
 
-  /* Tam metni paragraflara böler: boş satır ayırır, tek satır sonu ayırmaz. */
+  /* Tek başına bir satırda duran adres = metin arası görsel.
+   *
+   * Uzantıya BAKMIYORUZ, bilerek: panelden gelen adreslerin bir kısmının
+   * yolunda uzantı yok (ör. pbs.twimg.com/media/…?format=png). Görseli
+   * çizmeyi deniyoruz; yüklenemezse aşağıdaki onerror figürü bağlantı
+   * paragrafına çeviriyor, yani yanılma bedeli kırık ikon değil tıklanabilir
+   * bir adres. Aynı kuralın kopyaları: haber.html, scripts/discord-gonder.js
+   * ve paneldeki src/lib/site/news.ts (icerikBloklari). */
+  var TEK_ADRES = /^https?:\/\/\S+$/;
+
+  function gorselFigur(src, aciklama){
+    var fig = document.createElement("figure");
+    var img = document.createElement("img");
+    img.src = src;
+    img.alt = aciklama || "";
+    img.loading = "lazy";
+    img.onload = function(){ this.classList.add("yuklendi"); };
+    /* Adres ölmüş ya da görsel değilse metnin akışı bozulmasın: figürün
+       yerine okurun nereye gittiğini gördüğü bir bağlantı koyuyoruz. */
+    img.onerror = function(){
+      var p = document.createElement("p");
+      var a = document.createElement("a");
+      a.href = src;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = aciklama || src;
+      p.appendChild(a);
+      if (fig.parentNode) fig.parentNode.replaceChild(p, fig);
+    };
+    fig.appendChild(img);
+    if (aciklama){
+      var yazi = document.createElement("figcaption");
+      yazi.textContent = aciklama;
+      fig.appendChild(yazi);
+    }
+    return fig;
+  }
+
+  /* Tam metni bloklara böler: boş satır ayırır, tek satır sonu ayırmaz.
+     İlk satırı tek başına adres olan blok görsel olur, bloğun kalanı da
+     görselin açıklaması. */
   function paragraflar(metin){
     var kap = document.createDocumentFragment();
     (metin || "").split(/\n\s*\n/).forEach(function(parca){
       var t = parca.replace(/\s+$/, "");
       if (!t) return;
+      var satirlar = t.split("\n");
+      var ilk = satirlar[0].trim();
+      if (TEK_ADRES.test(ilk)){
+        kap.appendChild(gorselFigur(ilk, satirlar.slice(1).join("\n").trim()));
+        return;
+      }
       var p = document.createElement("p");
       p.textContent = t;
       kap.appendChild(p);
