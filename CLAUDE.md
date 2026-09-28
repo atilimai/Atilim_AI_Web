@@ -19,5 +19,6 @@ Bağımlılık eklenmeyecek: site bilerek düz HTML/CSS/JS, derleme adımı yok 
 CDN'den betik çekilmiyor — 3B alan da bu yüzden ham WebGL, kütüphane değil.
 Panelden gelen metin `textContent` ile basılır, `innerHTML` kullanılmaz.
 
-**Henüz hiçbir bülten yayımlanmadı.** `content/haberler.json`'daki üç kayıt da
-yer tutucu; sitenin yayımlama geçmişi varmış gibi metin yazma.
+**Arşivde tek sayı var.** İlk bülten (1. sayı, 2 haber) 23 Eylül 2026'da
+panelden yayımlandı. Metin yazarken arşivin gösterdiğinden uzun bir yayın
+geçmişi ima etme.

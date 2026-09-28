@@ -295,7 +295,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   if (qSayi === null || qSayi === "" || qSira === null || qSira === ""){
     durum("Adres eksik",
           "Bu sayfa tek bir haberi gösterir ve adresinde sayı numarasıyla sıra bilgisini bekler. " +
-          "Haberi haberler sayfasından açarsanız adres kendiliğinden doğru kurulur.");
+          "Haberi haberler sayfasından açarsan adres kendiliğinden doğru kurulur.");
     return;
   }
 
@@ -304,7 +304,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
   if (!Number.isInteger(sayiNo) || !Number.isInteger(sira) || sira < 0){
     durum("Adres bozuk",
-          "Adresteki sayı numarası ya da sıra bilgisi okunamadı. Haberi haberler sayfasından açın.");
+          "Adresteki sayı numarası ya da sıra bilgisi okunamadı. Haberi haberler sayfasından aç.");
     return;
   }
 
@@ -460,7 +460,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       if (!h){
         durum("Haber bulunamadı",
               "Bu adres bir haberi işaret etmiyor. Sayı düzenlenmiş ve haberin sırası değişmiş olabilir; " +
-              "haberi arşivden yeniden açın.");
+              "haberi arşivden yeniden aç.");
         return;
       }
       if (!h.icerik){

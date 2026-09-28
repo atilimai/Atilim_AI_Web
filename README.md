@@ -13,9 +13,8 @@ onu çalıştırıyor.
 > taşıyor ve dosyanın büyük bölümü kaydırmayla değişen 3B alan katmanı;
 > rehber, nereye bakman gerektiğini baştan söylüyor.
 
-> **Not:** Henüz hiçbir bülten yayımlanmadı. `content/haberler.json` boş
-> (`sayilar: []`) ve her iki sayfa da "Henüz yayımlanmış bir sayı yok."
-> gösteriyor. İlk sayı yönetim panelinden yayımlanacak.
+> **Not:** Arşivde tek sayı var. İlk bülten (1. sayı, 2 haber) 23 Eylül
+> 2026'da yönetim panelinden yayımlandı ve Discord kanalına gitti.
 
 ## Çalıştırma
 

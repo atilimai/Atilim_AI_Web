@@ -328,11 +328,11 @@ label, breaks the metaphor and the hierarchy in the same stroke. This rule was b
 by the four section kickers until 2026-09-10 — see Overview.
 
 **A standing note on `ekran`.** Its only consumer on `index.html` is `.etiket`, the news
-row's category label, and the digest is empty by design, so **the screen colour currently
-renders nowhere on the landing page** outside the particle field. That is a consequence of
-the empty archive, not a design decision, and it resolves itself the day the first issue
-publishes. Do not "fix" it by finding something else to paint blue: the rule is one job per
-source, and the screen's job is the category label.
+row's category label. While the digest was empty the screen colour rendered nowhere on the
+landing page outside the particle field; since issue 1 published on 2026-09-23 it labels
+each news row again. If the archive is ever empty, do not "fix" the missing blue by finding
+something else to paint: the rule is one job per source, and the screen's job is the
+category label.
 
 **The No-Shadow Rule.** There is no `box-shadow` in this codebase. When an element comes
 forward it moves up one surface level and one hairline level. The only exception is the
@@ -344,8 +344,14 @@ land on, not the page ground. `kagit-t` on `gece` is 5.54:1; on `tezgah-2` it is
 that second number is the one that governs.
 
 **The Unverified Figure Rule.** A number the society has not confirmed does not get the
-lamp. `.olcum b.bekliyor` drops to `kagit-t` at 15px with 0.06em tracking, so a placeholder
-reads as pending rather than as a headline figure.
+lamp. From 2026-09-10 to 2026-09-28 the three `.olcum` figures were `[ADET]` placeholders in
+`kagit-t` at 15px with 0.06em tracking, so they read as pending rather than as headline
+figures. The team supplied real values on 2026-09-28 and the placeholder styling was removed
+with them. An unconfirmed figure that returns comes back in that form, never as a guess.
+Confirmed figures are mono 16px, weight 500, in lamp, at the row's own text scale. The first
+version shipped them at 28px, which turned three rows under two paragraphs into a
+big-number strip heavier than the section heading; at 16px the rows keep the 58px rhythm
+they had with placeholders.
 
 ## Typography
 
@@ -642,6 +648,11 @@ to them, so verify with a keyboard, not by reading the global rule.
 
 ### Cards (night world)
 tezgah ground, hair border, `lg` radius, 24px padding. Hover moves to tezgah-2 and hair-s.
+Each project card links to its repository: the `h3` link's `::after` covers the whole card,
+and the focus ring moves to that `::after` so it outlines the card, not the title. The cards
+had a hover state before they had anything to click. Four cards sit in a fixed two-column
+grid, one column at 760px and below; `auto-fit` put three on the first row at 1440px and left
+the fourth alone.
 **No fixed heights** — content flows to the real data ceilings (title 200 chars, summary 800).
 
 ### Navigation
@@ -730,6 +741,12 @@ follow in `kagit-s`, separated by `·`. The footer repeats it in prose so the pa
 the invitation rather than on a card.
 
 ### Events list
+**Empty since 2026-09-28.** No special events are scheduled, so the list is out of the page
+and a `.tl-bos` footnote stands in its place: the feed's empty-row voice (mono 13px,
+`kagit-t`) plus the list's own top hairline and `xl` margin, so the section starts in the same
+place when the list returns. The row markup is kept as a comment inside `#s2`; the styles and
+the accordion script below stay in place.
+
 Each row is a real `<button>` inside its `<li>`, so keyboard operation needs no extra code.
 `aria-expanded` lives on that button — the `<li>` is not operable, and state parked there is
 never announced. Appearance is driven by a separate `.acik` class on the `<li>`, the same
@@ -931,23 +948,20 @@ no longer existed, threw, and landed back on the same error card. It hides them 
 `ciz()` unhides them. Verified end to end: file removed → error card → file restored → retry →
 90 paragraphs, category, date and meta line all back.
 
-### Visually hidden label (`.gizli`)
+### Visually hidden label (`.gizli`) — removed 2026-09-28
 
-The system's one screen-reader-only utility: `position:absolute`, 1×1, `clip-path:inset(50%)`,
-`white-space:nowrap`, and — this part matters — `letter-spacing:normal`.
+Removed together with the `[ADET]` placeholders it existed for; nothing else used it. The
+record below is kept because the same trap applies to any screen-reader-only utility that
+comes back: `position:absolute`, 1×1, `clip-path:inset(50%)`, `white-space:nowrap`, and
+`letter-spacing:normal`.
 
-It exists for the unverified figures. `[ADET]` tells a sighted reader "pending" through the
-Unverified Figure Rule's styling; to a screen reader it was a bracket token and nothing else, so
-the placeholder's whole purpose reached one class of visitor and not the other. Each figure now
-pairs an `aria-hidden` token with a hidden sentence, and the three rows read as
-*"Sayı henüz belirlenmedi, yürüyen proje"*. The visible box is unchanged (59×15px, rows 58px).
+`[ADET]` told a sighted reader "pending" through the Unverified Figure Rule's styling; to a
+screen reader it was a bracket token and nothing else. Each figure paired an `aria-hidden`
+token with a hidden sentence, so the rows read as *"Sayı henüz belirlenmedi, yürüyen proje"*.
 
-The `letter-spacing:normal` is not hygiene theatre: the hidden span inherits `.bekliyor`'s
-0.06em, and without the reset the detector reads three spans of tracked body text and
-`index.html` goes from **0 findings to 3**. A hidden string carries no display tracking.
-
-**When the real figures arrive, three things come out together:** the `.num` content, the
-`.bekliyor` class, and both spans. What is left is `<b class="num">12</b>`.
+The `letter-spacing:normal` was not hygiene theatre: the hidden span inherited `.bekliyor`'s
+0.06em, and without the reset the detector read three spans of tracked body text and
+`index.html` went from **0 findings to 3**. A hidden string carries no display tracking.
 
 ### The no-script body (`.betiksiz`)
 
@@ -1107,5 +1121,6 @@ Three values sit outside the palette deliberately. All are recorded so a reviewe
   line, in both worlds.
 - **Don't** let a new page re-derive the system. It takes `--ease`, the radius steps and the
   reduced-motion vocabulary from the existing pages or it is not in the system.
-- **Don't** fill an unverified statistic — the counters are visibly marked placeholders by
-  team decision, and `PRODUCT.md` records that they must not be invented.
+- **Don't** fill an unverified statistic with a guess. The current figures came from the team
+  on 2026-09-28; a figure nobody has confirmed goes back to a visible placeholder, and
+  `PRODUCT.md` records that it must not be invented.

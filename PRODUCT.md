@@ -39,14 +39,14 @@ commits to this repository, GitHub Pages publishes the site, and a GitHub Action
 the same issue to Discord exactly once. That machinery is a fact about the society, not a
 marketing claim.
 
-**No issue has been published yet.** `content/haberler.json` was cleared on 2026-09-09 by
-team decision; it now holds an empty `sayilar` array and both reading surfaces state
-*"Henüz yayımlanmış bir sayı yok."* The entries it used to hold were placeholders, and the
-issue numbers in them (12, 13, 14) were placeholders too — they were never a count of
-anything. An earlier version of this file read the highest number as a
-total and claimed "fourteen issues exist"; that was wrong, and the mistake is recorded here
-so it is not repeated. Until the first real issue ships, the pipeline is a capability, not
-yet evidence, and no copy anywhere may imply a publishing history.
+**One issue has been published.** Issue 1, with two items, went out from the panel to the
+site and to Discord on 2026-09-23 (commit `87581c9`). Before that, `content/haberler.json`
+was cleared on 2026-09-09 by team decision. The entries it used to hold were placeholders,
+and the issue numbers in them (12, 13, 14) were placeholders too — they were never a count
+of anything, and numbering restarted at 1. An earlier version of this file read the highest
+number as a total and claimed "fourteen issues exist"; that was wrong, and the mistake is
+recorded here so it is not repeated. The archive is one issue deep: copy may say the report
+is published, but must not imply a longer history than the archive shows.
 
 ## Operating Context
 
@@ -67,6 +67,9 @@ yet evidence, and no copy anywhere may imply a publishing history.
   a campus hackathon — and they fall on weekends. Confirmed 2026-09-10, after the site was
   found asserting "every Thursday" above four Saturday dates with nothing explaining the
   difference. Any future events list must state which of the two it is showing.
+  **As of 2026-09-28 no special events are scheduled.** The list was removed from the page
+  and a one-line footnote under the section intro says so; the row markup is kept as a
+  comment in `index.html` for when the next event is announced.
 - Sessions vary: reading a paper together, someone sharing a screen and showing where they
   are stuck, workshops, guest talks, project matchmaking, a campus hackathon.
 - Discord is the society's live channel; the weekly digest is pushed there automatically.
@@ -129,49 +132,59 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 - The `atilimai` GitHub organisation and its public repositories.
 - The publishing pipeline itself (`scripts/discord-gonder.js`,
   `.github/workflows/haftalik-rapor.yml`).
-- The scheduled events listed on the site.
+- The three `.olcum` figures, supplied by the team on 2026-09-28: 4 completed projects,
+  10 completed events, 0 ongoing projects.
+- The four project cards in `#s4`. Three describe public repositories and take their copy
+  from each repository's README; the fourth is the publishing pipeline in this repository.
 
-**Built but not yet evidence:** `content/haberler.json` and the publishing chain around it.
-The archive is the society's strongest *potential* evidence, and it becomes evidence the day
-the first real issue lands in it. Today it is empty on purpose. The team's next step is a
-single test issue published from the panel, to exercise the chain end to end before real
-content goes in.
+**Evidence that grows weekly:** the archive in `content/haberler.json`. Issue 1
+(2026-09-23, two items) exercised the whole chain end to end — panel commit, Pages, one
+Discord post. One issue proves the machinery works; the archive becomes the society's
+strongest evidence as the weeks after it fill in.
 
-**Not established — must not be fabricated.** Member count, active project count, and
-completed event count are unknown. The site currently shows **visibly marked placeholders**
-(`[ADET]`, styled by `.olcum b.bekliyor`) in their place, by the team's decision, so that a
-reader can tell a number is pending rather than reading a fabricated or broken-looking
-figure. Reconfirmed 2026-09-10: they stay as they are until the board supplies real
-figures. Replace them then; never invent one, and never quietly fill a placeholder with a
-guess.
+**Not established — must not be fabricated.** Member count is unknown and appears nowhere
+on the site.
 
-A design review on 2026-09-10 argued the placeholders read as an unfinished website at
-exactly the moment a visitor is judging whether the society is serious, and proposed
-dropping the statistic shape altogether. The team declined for now, on the grounds that the
-numbers are coming from the board. The argument is recorded, not acted on — but note the
-open question it raises: whether a *count* is the evidence a student actually wants, or
-whether three sentences about what happened last Thursday would answer "is this serious?"
-without any figure at all.
+**Resolved 2026-09-28 — the `[ADET]` placeholders are gone.** From 2026-09-10 the three
+`.olcum` figures were visibly marked placeholders by team decision. The team supplied the
+real values on 2026-09-28 and they replaced the placeholders together with their styling
+(`.olcum b.bekliyor`) and screen-reader label (`.gizli`). If a figure ever needs to be shown
+before it is confirmed, it goes back to a visible placeholder, never to a guess.
 
-`.olcum b` was changed from a fixed `width:56px` to `min-width:56px` on 2026-09-10 so a real
-four-digit figure will not overflow when the placeholders are replaced.
+Two consequences of those figures, both decided by the team on 2026-09-28:
+
+- **Zero ongoing projects.** The `#s4` cards used to describe two projects with no public
+  repository (Kampüs Asistanı, Görü), one of them marked "in development", which the zero
+  contradicted. They were replaced by the completed work, and the "0 yürüyen proje" row no
+  longer scrolls to `#s4`, since there is nothing ongoing to show there.
+- **Four completed projects, three public repositories.** The fourth has no public
+  repository. The repository dialog lists the three and says nothing about the fourth.
+
+The 2026-09-10 design review's open question still stands: whether a *count* is the
+evidence a student actually wants, or whether three sentences about what happened last
+Thursday would answer "is this serious?" better.
+
+`.olcum b` has `min-width:56px` rather than a fixed width so a four-digit figure fits.
 
 **Resolved 2026-09-09 — no invented news remains in the repository.** The archive had been
 carrying three placeholder issues live, presenting invented news as the society's weekly
 digest, which is what Principle 4 forbids. Both halves of that are now gone:
 
-- `content/haberler.json` holds an empty `sayilar` array. Both reading surfaces already
-  handled this and show *"Henüz yayımlanmış bir sayı yok."* with no layout break, and the
-  Discord job exits with `haberler.json içinde sayı yok.` A failed fetch is still treated
+- `content/haberler.json` held an empty `sayilar` array until issue 1 arrived on
+  2026-09-23. Both reading surfaces handle that case and show *"Henüz yayımlanmış bir sayı
+  yok."* with no layout break, and the Discord job exits with `haberler.json içinde sayı
+  yok.` A failed fetch is still treated
   differently and leaves the page as-is, because an unreachable file is not evidence that
   nothing was published.
 - `index.html`'s three static example rows in `#feedList` were replaced by the same empty-
   state sentence the script renders, so the no-JS and failed-fetch paths tell the truth too.
   The section keeps its design fallback; it just no longer invents news to fill it.
 
-**Discord will fire on the next publish.** `content/.son-gonderilen` holds `14`, so the job
-sends only an issue numbered above it. A test issue numbered 14 or lower reaches the site
-and stays silent on Discord; 15 or higher posts to the channel.
+**How the Discord job decides.** `content/.son-gonderilen` holds the number of the last
+issue sent, now `1`. The job skips only when the newest issue's number *equals* that value;
+any other number, higher or lower, is sent. This file used to say only issues numbered above
+14 would be sent. The script never compared that way, which is why issue 1 posted while the
+file held 15. A correction to issue 1 stays silent; issue 2 posts.
 
 ## Product Principles
 

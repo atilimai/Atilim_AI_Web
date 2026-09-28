@@ -53,7 +53,7 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 | 2 · Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
 | **3 · Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
 | 4 · Ölçümler ve modal | Sayaçlar, GitHub depo listesi modali, arka plan kaydırma kilidi |
-| 5 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti |
+| 5 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti. Liste şu an boş; `#tl` yoksa betik hiçbir şey yapmaz |
 | **6 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
 
 Haberle ilgili her iş "Haftalık rapor" bölümünde. **Akışın üç durumu var ve
@@ -64,9 +64,10 @@ göreceğin budur.
 
 Bu ayrım şart, çünkü eskiden hata dalı sayfayı olduğu gibi bırakıyordu ve
 statik biçimlendirme *"Henüz yayımlanmış bir sayı yok."* dediği için ağ hatası
-boş arşiv gibi görünüyordu. Arşiv bugün gerçekten boş olduğundan bu doğruydu —
-ama **ilk sayı yayımlandığı gün** bağlantısı kopan her ziyaretçiye site hiç
-yayın yapılmadığını söyleyecekti. İki durumu bir daha birleştirme.
+boş arşiv gibi görünüyordu. Arşiv o sırada gerçekten boş olduğundan bu doğruydu,
+ama ilk sayı 23 Eylül 2026'da yayımlandığından beri bağlantısı kopan her
+ziyaretçiye site hiç yayın yapılmadığını söylerdi. İki durumu bir daha
+birleştirme.
 
 Ana sayfa sayının **tamamını değil ilk üç haberini** çiziyor (`GOSTER`
 sabiti); gerisi sessizce düşmüyor, "kalan N haberi arşivde" satırıyla anılıp
@@ -334,12 +335,18 @@ HTML'i önbellekte tutabiliyor.
 - **Araç klasörleri.** `.serena/`, `.playwright-mcp/` ve `.impeccable/` üçü de
   `.gitignore`'da. `.impeccable/` tasarım sistemi sidecar'ını ve kritik arşivini
   tutar; yerel araç durumudur, depoya girmemeli.
-- **Henüz hiçbir bülten yayımlanmadı ve arşiv artık boş.** `content/haberler.json`
-  9 Eylül 2026'da temizlendi: `sayilar` boş bir dizi. `index.html`'deki üç örnek
-  haber satırı da kaldırıldı; yerinde betiğin bastığı boş durum cümlesi duruyor.
-  Metin yazarken siteye yayımlama geçmişi atfetme. İlk gerçek sayı panelden
-  gelecek; `content/.son-gonderilen` **14** olduğu için Discord'a yalnızca
-  14'ten büyük numaralı bir sayı gider.
+- **Arşivde tek sayı var.** İlk bülten (1. sayı, 2 haber) 23 Eylül 2026'da
+  panelden yayımlandı ve Discord'a gitti. Ondan önce `content/haberler.json`
+  9 Eylül'de temizlenmişti; eski kayıtlar yer tutucuydu ve numaraları (12–14)
+  hiçbir şey saymıyordu, numaralandırma 1'den başladı. Metin yazarken arşivin
+  gösterdiğinden uzun bir yayın geçmişi ima etme. `index.html`'deki statik boş
+  durum cümlesi yerinde kalıyor: betik yoksa gösterilen tek metin o.
+- **Discord yalnızca aynı numarayı atlar.** `content/.son-gonderilen` şu an
+  **1**. Betik en yeni sayının numarası bu değere *eşitse* hiçbir şey
+  göndermiyor; farklı her numarayı, daha küçük olsa bile, gönderiyor. Bu
+  dosyada eskiden "yalnızca 14'ten büyük numaralar gider" yazıyordu; betik hiç
+  öyle karşılaştırmadı, 1. sayı da dosyada 15 dururken bu yüzden gitti. Bir
+  sonraki sayıya 2 numarasını ver; 1. sayıdaki bir düzeltme Discord'a gitmez.
 - **Dokunma hedefi 44 px, satır sonu `overflow-wrap:anywhere`.** İkisi de
   ölçülerek getirildi: panelin izin verdiği 200 karakterlik bölünmez bir başlık
   okuma sayfalarında binlerce piksel yatay taşma yapıyordu. Panelden **ya da
@@ -347,7 +354,7 @@ HTML'i önbellekte tutabiliyor.
   vermeyi unutma — ızgara ve flex çocuklarına `min-width:0` da gerekiyor, yoksa
   kural yazsan bile öğe içeriğinin altına inemez.
 - **Buluşma saati "17.30" doğrulanmış değil.** Yönetim kurulu onaylayana kadar
-  yer tutucu. `[ADET]`'lerin aksine kendini yer tutucu olarak *ilan etmiyor*:
+  yer tutucu. Kendini yer tutucu olarak *ilan etmiyor*:
   ziyaretçi kesin bir olgu okuyor, yanlışsa öğrenci yanlış saatte gelir.
   `index.html`'de üç yerde görünüyor — kahraman satırı, etkinlikler bölümünün
   girişi, footer'ın kapanış satırı. `grep -n "17.30" index.html` dördünü
@@ -355,10 +362,17 @@ HTML'i önbellekte tutabiliyor.
   değiştir, yorumu da güncelle ya da kaldır.**
 - **Etkinlik listesi haftalık buluşma değil.** Haftalık buluşma her perşembe,
   tarih takibi gerektirmiyor. Listedeki tarihli satırlar ondan ayrı, hafta
-  sonuna denk gelen özel etkinlikler. Bölümün girişi bu ayrımı açıkça söylüyor;
-  silme. Söylenmediğinde sayfa üç yerde "her perşembe" derken dört cumartesi
-  tarihi listeliyor ve takvime bakan öğrenci siteyi olgusal bir hatada
-  yakalıyor.
+  sonuna denk gelen özel etkinlikler. 28 Eylül 2026'dan beri planlanmış özel
+  etkinlik yok: liste kaldırıldı, yerinde `.tl-bos` dipnotu duruyor, satır
+  kalıbı da `#s2`'nin içinde yorum olarak saklanıyor. Listeyi geri koyarken
+  girişe bu ayrımı söyleyen cümleyi de geri ekle. Söylenmediğinde sayfa üç
+  yerde "her perşembe" derken cumartesi tarihleri listeliyor ve takvime bakan
+  öğrenci siteyi olgusal bir hatada yakalıyor.
+- **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (4 tamamlanan
+  proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi.
+  Tahminle güncelleme; doğrulanmamış bir rakam gösterilecekse görünür bir yer
+  tutucuyla gösterilir. Proje kartlarının metni depoların README'lerinden;
+  README'de olmayan bir iddia ekleme.
 - **Bölüm başlıklarının üstüne etiket koyma.** Dört tanesi vardı (mono 12 px,
   büyük harf, kehribar) ve kaldırıldı: `DESIGN.md`'nin kod yazılmadan önce isim
   vererek reddettiği kalıbın kendisiydi, ayrıca kategori etiketini eylem
