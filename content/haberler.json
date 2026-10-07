@@ -2,6 +2,62 @@
   "_aciklama": "Sayılar en yeniden eskiye doğru sıralanır. Site sayilar[0] gösterir, Discord botu da onu gönderir. Yeni sayı eklerken dizinin BAŞINA ekleyin.",
   "sayilar": [
     {
+      "sayi": 2,
+      "tarih": "2026-10-06",
+      "haberler": [
+        {
+          "etiket": "Model",
+          "tarih": "28 Eyl",
+          "baslik": "Anthropic, Claude Sonnet 5.5 Modelini Tanıttı!",
+          "ozet": "Claude 5.5 ailesinin yeni üyesi tanıtıldı, peki bu modelde bizleri neler bekliyor?",
+          "icerik": "Claude Sonnet 5.5, Claude 5.5 ailesinin ikinci üyesi olmasının yanı sıra, Anthropic'in Opus 5.5 duyurusunda önümüzdeki haftalarda geleceğini açıkladığı iki modelden ilki olarak bu duyurudan altı gün sonra tanıtıldı.\n\nAnthropic verilerine göre Sonnet 5.5, Sonnet 5'ten %30'dan fazla hızlı çalışıyor ve görev başına maliyeti şirketin testlerinde %30'a kadar düşürüyor. Fiyat Sonnet 5 ile aynı.\n\nŞirketin paylaştığı sonuçlara göre model, ajan tabanlı kodlama (agentic coding) testi Terminal-Bench 4.0'da %70,6 skor aldı. Sonnet 5'in skoru %10,3, Opus 5.5'in Xhigh ayarındaki en yüksek skoru ise %66,4. Gerçek iş görevlerini ölçen GDPval-AA'da Sonnet 5.5, Opus 5.5'in iki puan altında kaldı.\n\nhttps://atilimai.github.io/Atilim_AI_Web/images/haberler/57aee5c3b4404e82.webp\n\nFakat Anthropic, benchmark skorlarının bir modelin yeteneklerinin yalnızca bir yönünü yansıttığını belirtiyor. Şirketin kendi testlerine ve harici test uzmanlarının testlerine göre sürekli muhakeme gerektiren karmaşık ve açık uçlu işlerde Opus 5.5 hâlâ belirgin biçimde daha güçlü.\n\nGüvenlik tarafında Anthropic, Sonnet 5.5'in hizalama (alignment), kötüye kullanıma direnç ve dürüstlük ölçütlerinin çoğunda Sonnet 5'ten iyi ya da aynı sonucu aldığını açıkladı. Şirkete göre model, siber güvenlik önlemleriyle sunulan ilk Sonnet modeli: yüksek riskli siber güvenlik görevleri görünür biçimde Sonnet 5'e düşürülüyor.\n\nSonnet 5.5, tüm platformlarda kullanıma sunuldu. Anthropic, Claude Haiku 5.5'in de önümüzdeki haftalarda aileye katılacağını duyurdu. Siz Claude 5.5 ailesinin ikinci üyesi hakkında ne düşünüyorsunuz?",
+          "link": "https://www.anthropic.com/claude-sonnet-5-5",
+          "gorsel": "https://atilimai.github.io/Atilim_AI_Web/images/haberler/6a6d77775e9d1016.webp",
+          "kaynak": "Anthropic"
+        },
+        {
+          "etiket": "Model",
+          "tarih": "29 Eyl",
+          "baslik": "OpenAI, GPT 6.1 Sol Modelini Tanıttı!",
+          "ozet": "GPT-6 Sol modelinin çıkmasının üzerinden sadece 7 gün sonra GPT-6.1 Sol bizlerle, peki bu yeni modelde bizleri neler bekliyor?",
+          "icerik": "GPT-6.1 Sol, GPT-6 Sol'un yeni sürümü olmasının yanı sıra, Anthropic'in Claude Sonnet 5.5'i duyurmasının ertesi günü, OpenAI'ın DevDay 2026 etkinliğinde tanıtıldı.\n\nOpenAI verilerine göre GPT-6.1 Sol, ajan tabanlı kodlama (agentic coding), bilgisayar kullanımı ve profesyonel işlerde GPT-6 Astra'ya yakın performans sunuyor. Fiyatı ise Astra'nın standart token fiyatlarının beşte biri.\n\nOpenAI'ın paylaştığı sonuçlara göre model, gerçek kod tabanlarındaki yazılım görevlerini ölçen DeepSWE v1.1'de Astra'ya eşit skor aldı ve GPT-6 Sol'un en iyi skorunu daha düşük akıl yürütme ayarında 6,4 puan aştı.\n\nhttps://atilimai.github.io/Atilim_AI_Web/images/haberler/ee47560826d91f74.webp\n\nFakat OpenAI'a göre Terminal-Bench Science 0.1'de test edilen modeller arasındaki en yüksek skor hâlâ Astra'da (%68,1) ve şirket, en zor bilimsel araştırma görevleri için Astra'nın kullanılması gerektiğini belirtiyor. GPT-6.1 Sol ise aynı testte maksimum ayarda görev başına ortalama 5,47 dolara mal oluyor; bu rakam Claude Opus 5.5'te 23,21, Astra'da 23,80 dolar.\n\nOpenAI'ın kendi doğruluk testinde GPT-6.1 Sol, düşük akıl yürütme ayarında hatalı yanıt payını GPT-6 Sol'daki %11,4'ten %7,7'ye indirdi. Maksimum ayarda yapılan bir hizalama (alignment) testinde arama aracı bozukken bunu kullanıcıya bildirmeme oranı GPT-6.1 Sol'da %2,1, GPT-6 Sol'da ise %4,9. OpenAI, testlerin tipik kullanımı temsil etmediğini belirtiyor.\n\nGPT-6.1 Sol, ChatGPT Work ve Codex'te tüm Plus, Pro, Business, Enterprise ve Edu kullanıcılarına sunuldu, ancak Chat'te henüz kullanılamıyor. Model API'de gpt-6.1-sol adıyla erişilebiliyor. OpenAI, Codex'te standart hıza göre 8 kata kadar daha hızlı token üretimi sunan Ultrafast sürümünün önümüzdeki günlerde geleceğini açıkladı. Siz GPT-6.1 Sol hakkında ne düşünüyorsunuz?",
+          "link": "https://openai.com/index/introducing-gpt-6-1-sol/",
+          "gorsel": "https://atilimai.github.io/Atilim_AI_Web/images/haberler/993fba0b0d6814db.webp",
+          "kaynak": "OpenAI"
+        },
+        {
+          "etiket": "Model",
+          "tarih": "29 Eyl",
+          "baslik": "OpenAI GPT-6.1 Astra Modelini Erteleme Kararı Aldı!",
+          "ozet": "GPT-6.1 Astra modeli \"güvenlik endişeleri\" sebebi ile ertelendi. Peki bu ne anlama geliyor?",
+          "icerik": "AP'ye göre OpenAI'ın GPT-6.1 Astra modelinin lansmanını erteleme kararı, şirketin yapay zekanın gelişim hızını yavaşlatma çabalarındaki son adım olmasının yanı sıra, sektör yöneticilerinin ABD Başkanı Donald Trump ile Washington'da bir araya geleceği toplantıdan bir gün önce açıklandı.\n\nŞirketin pazartesi günü açıkladığına göre model, araştırmacılarının dile getirdiği güvenlik kaygıları nedeniyle ertelendi. Gecikmeyi ilk olarak The Wall Street Journal haberleştirdi. OpenAI'ın güvenlik sistemlerinden sorumlu başkanı Saachi Jain'in açıklamasına göre modelin bu sürümü çıtayı \"tam olarak karşılamadı\". Model görevleri tamamlamada daha ısrarcı olsa da OpenAI'ın bu yeteneği yetkisiz davranışlarla dengelemesi gerekiyordu.\n\nJain, şirketin modelin hem OpenAI'ın testlerinde hem de kullanıcıların elinde güvenli olması için kararlı olduğunu vurguladı. Güvenlik ve hizalama (alignment) konusunda son derece yüksek bir çıtaları olduğunu söyledi.\n\nOpenAI, geçen hafta en gelişmiş modellerinin eğitimine ara verdiğini açıkladı. Şirket, eğitimin yalnızca ek güvenlik önlemlerinden emin olduğunda yeniden başlayacağını belirtti. Bu adım, yapay zeka ajanlarının talimatlarını aştığı, aralarında hükümet web sitelerine yetkisiz erişimin de bulunduğu vakaları açıklamasının ardından atıldı.\n\nAP'ye göre karar, sektörde giderek daha otonom sistemlerin geliştirilmesini güvenlik önlemleri yetişene kadar yavaşlatma yönündeki daha geniş çabanın parçası. OpenAI CEO'su Sam Altman da diğer sektör liderleriyle birlikte yavaşlama çağrısı yapıyor ve şirketlerin en yetenekli sistemleri kontrol edecek yeterli önlemlere henüz sahip olmadığı uyarısında bulunuyor.\n\nAltman'ın salı günü San Francisco'da OpenAI'ın yıllık yazılım geliştiricileri konferansında ana konuşmayı yapması planlanıyor. OpenAI Başkanı Greg Brockman'ın ise aynı gün Beyaz Saray'daki etkinliğe katılması bekleniyor. Siz GPT-6.1 Astra'nın ertelenmesi hakkında ne düşünüyorsunuz?",
+          "link": "https://apnews.com/article/open-ai-artificial-intelligence-altman-trump-astra-5afb865b2cddc439efdcf31ebdc406a5",
+          "gorsel": "https://atilimai.github.io/Atilim_AI_Web/images/haberler/0fbab4f4e32cd18f.webp",
+          "kaynak": "Thomas Beaumont, Associated Press"
+        },
+        {
+          "etiket": "Agents",
+          "tarih": "29 Eyl",
+          "baslik": "Dots tanıtıldı! Yapay zeka kullanımı için yeni bir yol!",
+          "ozet": "OpenAI, kullanıcılar adına 7/24 kesintisiz çalışan yeni yapay zekâ deneyimi Dots'u duyurdu. Peki rutin işleri devralıp zaman kazandırmayı vadeden bu yeni sistem neler sunuyor?",
+          "icerik": "OpenAI, GPT-6 Astra ile çalışan, her zaman açık (always-on) yapay zeka ajanlarını dots adıyla, GPT-6.1 Astra'nın lansmanını ertelediğini açıkladığı günün ertesinde DevDay 2026 etkinliğinde tanıttı.\n\nDots, OpenAI'a göre kullanıcının önceliklerini ve tercihlerini öğrenerek onun adına çalışıyor. Her ajan kendi bulut bilgisayarını ve tarayıcısını kullanıyor, eklenti ekosistemi üzerinden 4.000'den fazla uygulamaya bağlanabiliyor. Kullanıcı ajana ChatGPT, Slack ve Teams üzerinden ulaşabiliyor.\n\nŞirketin aktardığına göre OpenAI dışından bir erken test kullanıcısının ajanı, kullanıcının bir yayın organına fatura kesmeyi unuttuğunu fark etti, faturayı hazırladı ve kullanıcı onay verdikten sonra gönderdi.\n\nGüvenlik açısından OpenAI, kullanıcı etkin olmadığında ajanların bağlı uygulamalarda yalnızca mesaj gönderemeyen ve içerik değiştiremeyen salt okunur araçlarla proaktif araştırma (proactive research) yaptığını belirtiyor. Özel Kurallar (Custom Rules) belirli eylemlere izin vermeyi, onay istemeyi ya da engellemeyi sağlıyor, şifre değiştirme gibi hassas işler ise her zaman kullanıcıda kalıyor.\n\nFakat OpenAI, ajanların hata yapabileceğini belirterek sonuçları önemli olan işlerin her zaman gözden geçirilmesini istiyor.\n\nOpenAI, kurumsal kullanım için kendi kimliği ve sistem erişimi olan uzman dots (specialist dots) önizlemesini de paylaştı. Şirket, satın alma ve fatura işleme gibi alanlardaki erken iç testlerden edindiği deneyime dayanarak odaklı kurumsal pilotlarla başlıyor. Microsoft ile de uzman dots'u Agent 365'in yönetişim ve güvenlik kontrolleriyle entegre etmek için çalışılıyor.\n\nDots, uygun pazarlarda ChatGPT Pro ve Business Premium kullanıcılarına sunulmaya başlandı. Enterprise (Edu ve Healthcare dahil) kullanıcıları, çalışma alanı yöneticisi etkinleştirdiğinde beta sürümü deneyebiliyor. İlk ajan plana ek ücret olmadan dahil ve ajanla yapılan sohbetler ChatGPT kullanım limitlerine sayılmıyor. Siz OpenAI'ın yeni ajanları dots hakkında ne düşünüyorsunuz?",
+          "link": "https://openai.com/index/introducing-dots/",
+          "gorsel": "https://atilimai.github.io/Atilim_AI_Web/images/haberler/dc9792fb61d88c88.webp",
+          "kaynak": "OpenAI"
+        },
+        {
+          "etiket": "Model",
+          "tarih": "30 Eyl",
+          "baslik": "Google, Gemini 4 Argon Modelini Tanıttı!",
+          "ozet": "Gemini 4 Argon uzun süreli bekleyişin sonunda tanıtıldı, peki bu modelde bizleri neler bekliyor?",
+          "icerik": "Gemini 4 Argon, Google'ın önce Fairwind Programı kapsamındaki güvenilir siber savunuculara sunmaya başladığı bir model olmasının yanı sıra, OpenAI'ın GPT-6.1 Sol'u tanıtmasından bir gün sonra duyuruldu.\n\nGoogle verilerine göre Argon, gerçek dünyadaki uzun soluklu yazılım mühendisliği görevlerini ölçen DeepSWE v1.1'de %77,9 ile GPT-6 Astra'yı (%74,1) ve Claude Opus 5.5'i (%74,2) geride bırakıyor. Zapier'in AutomationBench testinde ise %51,3 ile ilk sırada:\n\nhttps://atilimai.github.io/Atilim_AI_Web/images/haberler/c095d4592c2cfc1b.webp\n\nFakat Google'ın paylaştığı aynı tabloda Argon, Terminal-bench 4.0'da %57,4 ile Opus 5.5'in (%66,4), Terminal-Bench Science 0.1'de ise %57,6 ile Astra'nın (%68,1) gerisinde kalıyor.\n\nGoogle'ın aktardığına göre Argon ajanları, şirket genelinde C/C++ kod tabanlarını Rust'a taşıma üzerinde çalışıyor. Ajanlar açık kaynaklı libgav1 video çözücüsünde mevcut Rust uyarlamasındaki 32.000 satırlık SIMD kodunu değiştirerek aynı video çıktısını veren, Rust uyarlamasından 2,7 kat hızlı çalışan ve bellek güvenli bir çözücü ortaya çıkardı.\n\nSiber güvenlikte Google, güvenilir savunuculara ve iç ekiplerine Argon'u siber koruma önlemleri (guardrails) olmadan sunacağını belirtiyor. Şirkete göre Wiz'in siber savunma için kullandığı model, dünya genelinde hastanelerin kullandığı sağlık yazılımlarında hassas kişisel bilgileri açığa çıkaran kritik bir güvenlik açığı buldu. Google, modeli kademeli açarken ABD hükümetinin gönüllü ön yayın model erişimi sürecine de dahil olduğunu söylüyor.\n\nArgon'un tanıtım dönemi fiyatı, Google'a göre milyon token başına girdide 2 dolar, çıktıda 10 dolar. Önbellekteki girdi tokenlarında girdi fiyatına göre %95 indirim var. Dönem bittiğinde bu rakamlar girdide 4 dolara, çıktıda 20 dolara çıkacak.\n\nGoogle, Argon'u geliştiricilere, kurumlara ve tüketicilere önce ücretli API müşterileri ve Google AI Ultra abonelerine açmayı planlıyor, ancak tarih vermedi. Siz Gemini 4 Argon hakkında ne düşünüyorsunuz?",
+          "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/",
+          "gorsel": "https://atilimai.github.io/Atilim_AI_Web/images/haberler/8b01c0d9434d6f81.webp",
+          "kaynak": "Google"
+        }
+      ]
+    },
+    {
       "sayi": 1,
       "tarih": "2026-09-23",
       "haberler": [
