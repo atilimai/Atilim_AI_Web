@@ -208,14 +208,21 @@ with text — see **The Field** under Components.
 Reading surfaces are the other world. The archive and article pages switch to warm paper on
 a narrower measure, because an article's full text runs to 20,000 characters and long-form
 reading does not belong on a dark ground. The dark top bar stays across the transition, so
-leaving the room and opening the notebook reads as one motion rather than two sites.
+leaving the room and opening the notebook reads as one motion rather than two sites. Until
+2026-10-11 it did not actually stay: on the reading pages it sat inside the 840px reading
+measure at 60px tall, so at 1440px the wordmark jumped from x=56 to x=338 and the bar lost 4px
+the moment you followed a link. It now takes the landing page's chrome measure on every page
+(see Navigation); the reading measure belongs to the content, not to the chrome.
 
 `404.html` is the fourth page and belongs to the night world: same ground, same tokens, the
 same `display-xl` `h1` with an italic amber clause, and the two doors as `btn.p` / `btn.s`. It
 is the newest file and the one that drifted furthest — it shipped without `--ease` and
 `--r-xs`, and it reintroduced the blanket `*{transition:none!important}` that this document
-had already named and removed. All three are closed. **A new page joins the system by taking
-its tokens, not by re-deriving them.**
+had already named and removed. All three are closed. It also carried an amber, tracked
+"404" label above its `h1` — the eyebrow this document bans — and a mono footer that went
+amber on hover; both were removed on 2026-10-11 (the code now sits in the address line, and
+the footer is the landing page's). **A new page joins the system by taking its tokens, not by
+re-deriving them.**
 
 The rejected reference is specific and was named before any code was written: the generic
 AI-startup page — tracked-caps eyebrow chips over oversized headlines, purple-blue
@@ -269,7 +276,7 @@ to be that is not on top of a sentence.
 - **Hairlines** (`--hair` .13 / `--hair-s` .22 / `--hair-t` .34, all `rgba(240,234,221,α)`).
 - **Lamp underline** (`--lamba-alt`, `rgba(232,163,61,.4)`): the lamp at 40%, and the only
   place the lamp is a line rather than a fill. Three consumers, all amber text links that are
-  not buttons: "Devamını oku", "Bütün sayılar →", and the feed's retry. It was three
+  not buttons: "Devamını oku", "Bütün sayılar", and the feed's retry. It was three
   hand-expanded `rgba()` literals until 2026-09-10; nothing about the palette changed when it
   became a token, and nothing should change now that it is one.
 
@@ -331,6 +338,24 @@ reading. Italic is the emphasis mechanism — the hero's second clause is italic
 **Interface:** Public Sans (system-ui fallback).
 **Labels and figures:** IBM Plex Mono.
 
+**The faces are served from `fonts/`, not from Google Fonts** (since 2026-10-11; provenance in
+`fonts/README.md`). Google split every face into a `latin` and a `latin-ext` file, and Turkish
+needs both — `ı ş ğ İ` live in Latin Extended-A — so every page paid for two files per face
+behind a three-step render-blocking chain (HTML → googleapis CSS → gstatic), and every visit
+sent the visitor's IP to Google. The repository now carries one file per face with Latin,
+Latin-1, Latin Extended-A and typographic punctuation, its variable axes narrowed to the range
+the pages use (Newsreader `wght` 300–400 with full `opsz`; the italic `opsz` 36–72 at 300;
+Public Sans `wght` 400–500). Measured: **~430 KB → 215 KB on the landing page**, ~160 KB on
+the reading pages, where the italic is never drawn and never downloaded. The landing page
+preloads both Newsreader files because its `h1` (the LCP element) needs them; the reading
+pages preload the roman. `haberler.html` gives every `src` a second, absolute Pages address:
+the panel's preview renders that page in a sandboxed iframe on its own origin, where the
+relative path resolves to the panel and fails; Pages answers with
+`access-control-allow-origin: *`, so the fallback loads from an opaque origin. A glyph outside
+the set falls back for that glyph only. **The arrows were never in the set** — `→ ↗ ←` are
+not in Public Sans or Newsreader at all, which is why they are icons now (see Components →
+Icons).
+
 ### Hierarchy (as shipped)
 - **display-xl** — `clamp(2.75rem, 6.4vw, 4.6rem)`, 300, lh 1.06, ls -0.02em. The `h1` on all
   four pages, one per page — including every `haber.html` error state and `404.html`, both of
@@ -346,15 +371,22 @@ reading. Italic is the emphasis mechanism — the hero's second clause is italic
 - **body-sm** — 15px. Buttons, card copy, nav links, footer.
 - **meta** — mono 13px. Dates, sources, issue numbers, the "kalan N haber" line, the
   empty-events footnote, and every day-world status message.
-- **label** — mono 12px, 500, ls 0.08em, uppercase. Tags and status. **The floor.**
+- **label** — mono 12px, 500, ls 0.08em, uppercase. Status and authored tags. **The floor.**
+  Panel-fed category labels (`.etiket`) take the same size and weight **without** the
+  uppercase transform and at `.02em`, the tracking the event row's mixed-case mono already
+  used. Under `lang="tr"`, `text-transform: uppercase` maps `i` to `İ`: right for "Politika",
+  wrong for "Vision" (rendered "VİSİON"), and the page cannot know which language a category
+  is in. Authored Turkish labels ("Tamamlandı") keep the transform; text from the panel is
+  printed as written.
 
 The rendered range runs 12px → 73.6px, a ratio of about 6:1. Automated hierarchy checks
 that cannot resolve `clamp()` see only the literal `px` declarations, and for a long time
 that made them report roughly 1.8:1 and flag the ramp as flat. For a while the literal set
 on `index.html` reached 28px — the footer's closing invitation — and the warning stopped
-firing there. That block was removed on 2026-10-01, so `detect.mjs` once again reports
-`flat-type-hierarchy` on `index.html` (12 → 21px literals, 1.8:1), as it does on the other
-three pages. **The reading is an artefact of the tooling, not of the ramp.** Do not add a
+firing there. That block was removed on 2026-10-01, so `detect.mjs` once again reported
+`flat-type-hierarchy` on `index.html` (12 → 21px literals, 1.8:1), as it did on the other
+three pages. The 4.5.2 detector no longer raises it on any page (checked 2026-10-11). If a
+later version does again: **the reading is an artefact of the tooling, not of the ramp.** Do not add a
 28px literal to silence it.
 
 **Every rendered size is now on the ramp.** `.ozet` on the archive was 16.5px — a single
@@ -440,7 +472,13 @@ wrong — `--ray-ara` caps at 56px, so no width can produce them, and re-measuri
 CSS returns 56px too. Do not restore them.
 
 Vertical rhythm between sections is `--sp-sec` (96px); rhythm inside a section is picked from
-the 8px-based scale (8/12/16/24/32/48). No in-between values appear in the shipped code.
+the 8px-based scale (8/12/16/24/32/48). This file used to say no in-between values appeared
+in the shipped code; the 2026-10-11 audit counted 21 uses of `20px` and a dozen of `14px`,
+`10px`, `6px` and `11px` between elements, plus three inline `style=` margins. All of them
+were moved onto the scale that day. What remains off the scale is **component metrics**,
+recorded in the frontmatter: the button's `0 22px`, the nav link's `10px 14px`, the join
+link's `18px`, the tag's `4px 9px`, the 22px feed and event row padding, and 3–4px underline
+offsets. Those size a component; they are not rhythm between components.
 
 **Three breakpoints:** 760px (single column; news rows stack, the event row keeps its
 indicator in a second column), 900px (nav collapses to a disclosure panel, two-column
@@ -517,7 +555,10 @@ page.
 
 Motion in the shipped page is one entrance, two disclosures and one instrument: the scroll
 reveal (0.8s), the events accordion and the archive card (0.45s `grid-template-rows`), and
-the field's own morph and drift. `backdrop-filter` appears exactly once, on the stuck
+the field's own morph and drift. **The entrance starts below the first screen.** Until
+2026-10-11 the hero's `h1`, lead and primary button were `.reveal` too: every visit started
+the LCP element and the society's only way in at `opacity: 0` and waited for an observer
+callback plus 0.8s. The first screen now renders at rest. `backdrop-filter` appears exactly once, on the stuck
 navigation bar.
 
 **Reduced motion removes movement, not feedback.** The `prefers-reduced-motion` block names
@@ -655,6 +696,13 @@ clickable within 6,000px of scroll while a phone visitor had a link that followe
 Since 2026-10-01 this link is the only join affordance below the hero: the footer's closing
 invitation and its second primary button were removed (see Footer below).
 
+**The reading pages' top bar (`.ust`) takes this bar's measure**, not the reading measure:
+64px tall, `max-width: 1180px` growing to `1180px + --ray + --ray-ara` above 1152px, and the
+landing gutter `clamp(20px, 5vw, 56px)` — so the wordmark sits at the same x on every page
+(56px at 1440px). The two pages copy `--ray` and `--ray-ara` for exactly this. Its focus
+ring is the night lamp (`.ust :focus-visible { outline-color: var(--lamba) }`): the paper's
+`--lamba-d` measured 3.1:1 against `gece`.
+
 ### Brand mark
 The society's own logo, monogram only: the A-and-i figure lifted out of the full lockup,
 in `kagit` white on a transparent ground, 20px, sitting `--sp-sm` to the left of the
@@ -671,7 +719,9 @@ the monogram or the tab icon without it means redrawing them.
 ### Footer
 
 One line: "Atılım AI · Ankara", the contact address, and three links (Haberler, Discord,
-GitHub) in `body-sm`, `kagit-s` and `kagit-t`, above a `hair` top border.
+GitHub) in `body-sm`, `kagit-s` and `kagit-t`, above a `hair` top border. `404.html` carries
+the same footer and the same rules; until 2026-10-11 it had its own in mono 13px, with links
+that went `lamba` on hover — the lamp on something that is not an action.
 
 **The closing invitation (`.kapanis`) was removed on 2026-10-01.** It invited visitors to a
 weekly gathering the society no longer holds, and its primary button pointed at Discord
@@ -705,10 +755,29 @@ Before it, the row's only cue was `opacity: .78` on hover — invisible at rest,
 touch device invisible entirely. Every event description, including the repeated "önkoşul
 yok, laptop yeterli", sat behind a trigger nobody could see. The same problem and the same
 kind of fix applies to `.olcum`: its one interactive row — "4 tamamlanan proje", a link to
-`#s4` — ends in a `→` in `kagit-t` that goes `lamba` and shifts 3px on hover (reduced motion
+`#s4` — ends in an arrow icon in `kagit-t` that goes `lamba` and shifts 3px on hover (reduced motion
 keeps the colour and drops the shift's transition), while the two plain `<div>` rows have
 none. Identical-looking rows where only some were interactive was a standards break, not a
 subtlety.
+
+The archive card's **Devamını oku / Kapat** button ends in the same chevron, rotating 180° on
+`.haber.acik` over the same 0.45s; reduced motion cancels the rotation. It replaced the text
+glyphs `▾ ▴`, which fell back to a system font and were read aloud.
+
+### Icons
+
+Four authored 12×12 SVG symbols, the chevron's stroke language (1.5, round caps and joins),
+defined once per page in a hidden `<svg class="tanimlar">` and called with `<use>`:
+`i-ileri` (→, "go on"), `i-dis` (↗, opens elsewhere), `i-geri` (←, back) and `i-asagi` (the
+chevron). `.ok` sizes them at `.75em` in `currentColor`, `.4em` after the text; `.ok.bas`
+puts a leading icon `.4em` before it. Scripts build the same `<use>` with
+`createElementNS`. Every icon is `aria-hidden`.
+
+They replaced Unicode arrows (`→ ↗ ← ▾ ▴`) in link text. Neither Public Sans nor Newsreader
+contains those glyphs, so every arrow on the site was drawn in a fallback system font, and
+screen readers announced them ("north east arrow"). **A link that opens a new tab says so in
+words** — a `.gizli` "(yeni sekmede açılır)" after the icon — since the icon itself is hidden
+from assistive technology. That includes the project cards, which never had a visible icon.
 
 ### Events list
 **Empty since 2026-09-28.** No special events are scheduled, so the list is out of the page
@@ -803,6 +872,8 @@ cover's place. Every exit (content, empty, failed, timed out) removes the class.
 out of layout cannot shift, and it comes back as a new element. Measured after: **0.026**
 and **0.012**. The remainder is a 29px one-line reflow that appears and reverts within about
 40ms, consistent with the two Google Fonts subsets landing at different times; not chased.
+(The faces have been self-hosted, one file each, since 2026-10-11; the remainder was not
+re-measured.)
 With no script the class never arrives, so the footer is always there; a retry does not set
 it, because the error card is already on screen and stays until the result.
 
@@ -897,6 +968,20 @@ has to be the field itself. Outside the rectangle nothing happens, and a parked 
 mattering after 1.5s: the field answers intent, not position. Coarse pointers get none of
 it.
 
+**Sleep.** The loop stops when nothing is happening. Until 2026-10-11 it ran at 60fps for
+as long as the tab was visible at 1152px and up — 18,000 points and a full-viewport clear
+every frame, under a navigation bar whose `backdrop-filter` re-blurred each time — while a
+visitor sat reading. A self-starting animation that runs past five seconds beside content
+also fails WCAG 2.2.2. Now scroll, resize, a layout change in `main` (`ResizeObserver`: a
+late feed or a font swap moves the bands) and a pointer moving *inside the drawn rectangle*
+count as activity; a pointer in the text column does not. `UYKU` (4.6s) after the last
+activity, with the morph settled and the pointer's interest decayed to zero, the loop draws
+its last frame and stops requesting frames. The lamp sweep is faded out over the final
+`SONUS` (0.6s) first, because a highlight frozen mid-pass reads as a hang. On waking, the
+clock resumes where it stopped (`t0` is shifted by the sleep), so drift and sweep do not
+jump. Verified with a frame counter: ~4.7s of frames after load, none after; a text-column
+pointer wakes nothing; a lens pointer or a scroll wakes it and it sleeps again ~4.7s later.
+
 **Fallbacks.** No WebGL context: `body.no-alan` hides the canvas, collapses the bands to
 `--sp-sec`, and the page is exactly what it was before the field existed. The context is
 only requested at 1152px and wider, so `no-alan` only ever appears there; below, the media
@@ -974,7 +1059,11 @@ metadata — `.kaynak`, `.etiket`, the item date, figure captions, `#kapakMeta` 
 unbroken 200-character source the archive and the article both measured **1,767px wide at
 320px**. Re-measured after: 320px at 320, 1440px at 1440, on all three pages.
 
-### Visually hidden label (`.gizli`) — removed 2026-09-28
+### Visually hidden label (`.gizli`) — removed 2026-09-28, back 2026-10-11
+
+It came back on 2026-10-11 to carry "(yeni sekmede açılır)" on every new-tab link (see
+Icons), with the recipe below unchanged. The original record follows.
+
 
 Removed together with the `[ADET]` placeholders it existed for; nothing else used it. The
 record below is kept because the same trap applies to any screen-reader-only utility that
@@ -1065,6 +1154,10 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
   a saturated trope. It is a reasoned choice: article text runs to 20,000 characters. Keep it.
 - **`box-shadow: unset` on `.feed-hata button`** is not a shadow; it is what `all: unset`
   expands to in the CSSOM. The No-Shadow Rule is intact.
+- **`italic-serif-display` on `index.html` and `404.html`** is the detector reading the
+  `h1`'s italic amber clause. Italic is this system's emphasis mechanism (Typography) and the
+  clause is the whole `h1`'s point; the heading itself is roman. It is the only finding the
+  4.5.2 detector reports on the four pages (2026-10-11). Keep it.
 
 ### Do:
 - **Do** give a control a resting-state affordance, not only a hover one. A `:hover`
@@ -1082,7 +1175,9 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
 - **Do** hide an indicator that `.js` is required to operate.
 - **Do** match a reduced-motion cancel selector to the specificity of the rule that set the
   transition.
-- **Do** take every spacing value from the 8px scale and every radius from the five steps.
+- **Do** take every spacing value between elements from the 8px scale and every radius from
+  the four steps. Component metrics (button and tag padding, row padding, underline offsets)
+  are recorded in the frontmatter, not improvised.
 - **Do** tell depth by moving a surface level, never by adding a shadow.
 - **Do** keep the lamp for action and the screen for category.
 - **Do** measure contrast against the lightest surface the text can land on — and count any
@@ -1106,6 +1201,15 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
 - **Do** measure touch targets against populated data. An empty state hides the controls that
   fail.
 - **Do** keep a screen-reader-only string free of display tracking (`letter-spacing: normal`).
+
+- **Do** keep an opened reading region out of a toggle's hit area. A click inside the
+  archive's open full text, or one that ends a text selection, does nothing; the button and
+  the card's closed face toggle.
+- **Do** draw icons from the page's `<symbol>`s and hide them from assistive technology; a
+  link that opens a new tab says so in a `.gizli` sentence.
+- **Do** let anything that animates on its own stop within five seconds of the last
+  activity (WCAG 2.2.2), and fade a moving highlight out before it stops.
+- **Do** render the first screen at rest. The scroll reveal is for what the visitor scrolls to.
 
 ### Don't:
 - **Don't** put an eyebrow, kicker, or tracked-caps section label above a heading. It is
@@ -1152,3 +1256,11 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
 - **Don't** fill an unverified statistic with a guess. The current figures came from the team
   on 2026-09-28; a figure nobody has confirmed goes back to a visible placeholder, and
   `PRODUCT.md` records that it must not be invented.
+- **Don't** put a Unicode arrow or triangle in link or button text; none of the three faces
+  carries them, so they fall back to a system font and are read aloud.
+- **Don't** apply `text-transform: uppercase` to text from the panel. Its language is
+  unknown, and under `lang="tr"` the transform dots English `i`.
+- **Don't** load a face from a third party. Extend `fonts/` the way `fonts/README.md`
+  describes.
+- **Don't** put the reading pages' top bar on the reading measure. The bar is chrome and
+  keeps the landing page's measure on every page.

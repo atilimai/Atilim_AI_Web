@@ -21,13 +21,29 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Yazı tipleri depodan geliyor (fonts/README.md). Google Fonts'un üç adımlı,
+     işlemeyi bekleten zinciri ve ziyaretçi IP'sinin Google'a gitmesi bitti.
+     Başlık (LCP) iki Newsreader dosyasını bekliyor; ikisi de önceden isteniyor. -->
+<link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader-italik.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:"Newsreader";src:url(fonts/newsreader.woff2) format("woff2");
+  font-weight:300 400;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(fonts/newsreader-italik.woff2) format("woff2");
+  font-weight:300;font-style:italic;font-display:swap}
+@font-face{font-family:"Public Sans";src:url(fonts/public-sans.woff2) format("woff2");
+  font-weight:400 500;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(fonts/plex-mono-400.woff2) format("woff2");
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(fonts/plex-mono-500.woff2) format("woff2");
+  font-weight:500;font-style:normal;font-display:swap}
 /* Tasarım sistemi: DESIGN.md. Token dışında değer kullanılmaz. */
 :root{
-  --gece:#100D0A; --tezgah:#191512; --tezgah-2:#211B16;
+  /* Koyu zemin: tarayıcının kendi çizdiği kaydırma çubuğu ve denetimler de
+     koyu gelsin. Yoksa Windows ve Linux'ta #100D0A'nın yanında açık gri bir
+     çubuk duruyordu. */
+  color-scheme:dark;
+  --gece:#100D0A; --gece-cam:rgba(16,13,10,.86); --tezgah:#191512; --tezgah-2:#211B16;
   --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
   --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
   --lamba:#E8A33D; --lamba-h:#F5B65C; --lamba-alt:rgba(232,163,61,.4); --on-lamba:#241703;
@@ -56,13 +72,27 @@ a{color:var(--lamba);text-decoration:none}
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--lamba);color:var(--on-lamba);
   font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
 .atla:focus{left:20px;top:14px}
+/* Yalnızca ekran okuyucuya söylenen metin ("yeni sekmede açılır").
+   letter-spacing:normal şart: izlenimli bir kaptan aralık miras alırsa
+   dedektör onu görünür izlenimli metin sayıyor (DESIGN.md, .gizli notu). */
+.gizli{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;letter-spacing:normal}
+
+/* ---------- simge ----------
+   Oklar eskiden metin karakteriydi (→ ↗). Public Sans ve Newsreader'da bu
+   glifler yok: tarayıcı onları sistem yazı tipinden çiziyordu, ekran okuyucu
+   da "kuzeydoğu oku" diye okuyordu. Şimdi tek çizgi dilinde çizilmiş SVG:
+   etkinlik satırının chevron'u ile aynı 1.5px, yuvarlak uç. */
+.tanimlar{position:absolute;width:0;height:0;overflow:hidden}
+.ok{width:.75em;height:.75em;flex:none;margin-left:.4em;vertical-align:-.06em;
+  fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- nav ---------- */
 nav{position:sticky;top:0;z-index:40;border-bottom:1px solid transparent;
   transition:border-color .4s,background .4s}
-nav.yapisik{border-bottom-color:var(--hair);background:rgba(16,13,10,.86);backdrop-filter:blur(12px)}
+nav.yapisik{border-bottom-color:var(--hair);background:var(--gece-cam);backdrop-filter:blur(12px)}
 .nav-in{display:flex;align-items:center;gap:var(--sp-lg);height:64px;position:relative}
-.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);min-height:44px;
+.marka{display:flex;align-items:center;gap:var(--sp-sm);color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
 .marka i{width:20px;height:20px;flex:none;
   background:url(images/ai_mark.png) center/contain no-repeat}
@@ -109,8 +139,10 @@ h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;
 h1 em{font-style:italic;color:var(--lamba)}
 h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
   margin-top:var(--sp-md);text-wrap:balance;max-width:20ch}
-.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:62ch;margin-top:20px;
+.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:62ch;margin-top:var(--sp-lg);
   text-wrap:pretty}
+/* Hakkımızda sütununun ilk paragrafı başlıkla aynı hizada başlar. */
+.iki .giris:first-child{margin-top:0}
 .meta{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
 .num{font-variant-numeric:tabular-nums}
 
@@ -153,7 +185,7 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 /* ---------- etkinlik ---------- */
 .tl{list-style:none;margin-top:var(--sp-xl);border-top:1px solid var(--hair);padding-top:var(--sp-xs)}
 .tl li{border-bottom:1px solid var(--hair)}
-.tl button{width:100%;display:grid;grid-template-columns:80px 1fr auto auto;gap:20px;
+.tl button{width:100%;display:grid;grid-template-columns:80px 1fr auto auto;gap:var(--sp-lg);
   align-items:baseline;padding:22px 0;background:none;border:0;color:inherit;font:inherit;
   text-align:left;cursor:pointer;min-height:44px}
 /* Açılır satırın durağan halde hiç göstergesi yoktu: dört etkinliğin
@@ -203,7 +235,7 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 /* Sabit 88px/108px sütunlar panelden gelen veriyi taşıyor: kategori 200
    karaktere kadar gelebiliyor, sarma kuralı olmadan satırı kırıyordu.
    min-width:0 grid çocuğunun içeriğinin altına inebilmesi için. */
-.haber{display:grid;grid-template-columns:88px 108px 1fr;gap:20px;padding:22px 0;
+.haber{display:grid;grid-template-columns:88px 108px 1fr;gap:var(--sp-lg);padding:22px 0;
   border-bottom:1px solid var(--hair);align-items:baseline}
 .haber>*{min-width:0;overflow-wrap:anywhere}
 .haber:first-child{border-top:1px solid var(--hair)}
@@ -214,16 +246,23 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
    oluşturulmadığı için ölçümlere girmiyordu. */
 .haber h3 a{color:var(--kagit);transition:color .3s;padding-block:var(--sp-sm)}
 .haber h3 a:hover{color:var(--lamba)}
-.haber p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:6px;max-width:66ch;
+.haber p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:var(--sp-xs);max-width:66ch;
   overflow-wrap:anywhere}
-.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--ekran)}
+/* Kategori panelden geliyor ve dili belli değil: "Model", "Agents" de
+   gelebiliyor, "Politika" da. lang="tr" altında text-transform:uppercase
+   "Vision"ı "VİSİON" yapıyordu; Türkçe kelimeyi doğru, İngilizceyi yanlış
+   büyütüyor ve hangisinin hangisi olduğunu bilmenin yolu yok. Panelin yazdığı
+   biçim olduğu gibi basılır; küçük harfli mono için aralık .tl .yer ile aynı. */
+.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.02em;
+  color:var(--ekran)}
 .feed-kalan,.tl-bos{font-family:var(--mono);font-size:13px;color:var(--kagit-t);padding:22px 0;
   border-bottom:1px solid var(--hair)}
 /* Etkinlik listesi boşken yerini tutan dipnot. Listenin üst çizgisini ve
    boşluğunu devralıyor; liste geri gelince bölüm aynı yerde başlasın. */
 .tl-bos{margin-top:var(--sp-xl);border-top:1px solid var(--hair)}
 /* Sayı numarası yoksa boş bir <p> 32px üst boşlukla duruyordu. */
+#feedIssue{margin-top:var(--sp-xl)}
+#feedList{margin-top:var(--sp-md)}
 #feedIssue:empty{display:none}
 /* Ağ hatası boş durumdan ayrı: sorunu adıyla söyler ve yeniden dene sunar. */
 /* Yükleniyor/boş satırı 63px; bu satır 44px'lik düğme yüzünden 90px oluyor ve
@@ -246,7 +285,7 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .devam{display:inline-flex;align-items:center;min-height:44px;
   margin-top:var(--sp-xs);font-family:var(--mono);font-size:13px;
   color:var(--lamba);border-bottom:1px solid var(--lamba-alt);padding-bottom:3px}
-.arsiv-bag{display:inline-flex;align-items:center;gap:var(--sp-xs);margin-top:var(--sp-xl);
+.arsiv-bag{display:inline-flex;align-items:center;margin-top:var(--sp-xl);
   font-family:var(--mono);font-size:13px;color:var(--lamba);
   border-bottom:1px solid var(--lamba-alt);padding-bottom:4px;min-height:44px}
 @media(max-width:760px){.haber{grid-template-columns:1fr;gap:var(--sp-xs)}}
@@ -275,19 +314,19 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .durum i{width:7px;height:7px;border-radius:50%;background:var(--kagit-t)}
 .durum.canli i{background:var(--canli)}
 .durum.canli{color:var(--kagit-m)}
-.kart h3{font-size:21px;font-weight:400;margin-top:14px}
-.kart p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:10px}
-.etiketler{display:flex;gap:var(--sp-xs);flex-wrap:wrap;margin-top:20px;
+.kart h3{font-size:21px;font-weight:400;margin-top:var(--sp-sm)}
+.kart p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:var(--sp-xs)}
+.etiketler{display:flex;gap:var(--sp-xs);flex-wrap:wrap;margin-top:var(--sp-md);
   padding-top:var(--sp-md);border-top:1px solid var(--hair)}
 .etiketler span{font-family:var(--mono);font-size:12px;color:var(--kagit-t);
   border:1px solid var(--hair-s);border-radius:var(--r-sm);padding:4px 9px}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
+footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0}
 .foot-kimlik{color:var(--kagit-s);line-height:1.8}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--kagit-t)}
-.foot .sag{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
+.foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
 /* Telefonda margin-left:auto üç bağlantıyı ekran kenarına sıkıştırıyor ve
    kompozisyondan çok kazara bir kümelenme gibi okunuyordu. */
 @media(max-width:760px){.foot .sag{margin-left:0}}
@@ -300,7 +339,11 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
 
 /* ---------- belirme ---------- */
 /* Gizleme yalnızca JS varken uygulanır: betik çalışmazsa ya da tarayıcı
-   sekmeyi kısarsa içerik görünür kalır, boş sayfa görünmez. */
+   sekmeyi kısarsa içerik görünür kalır, boş sayfa görünmez.
+   Kahraman (#s0) bilerek .reveal taşımıyor. Başlık, giriş ve "Topluluğa
+   katıl" her ziyarette opacity:0'dan başlayıp gözlemci geri çağrısı + 0,8 s
+   bekliyordu: sayfanın LCP öğesi ve tek katılım yolu bir animasyonun
+   arkasındaydı. İlk ekran dinlenik çizilir; belirme aşağıdaki bölümlerde. */
 .js .reveal{opacity:0;transform:translateY(20px);
   transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .js .reveal.in{opacity:1;transform:none}
@@ -382,6 +425,11 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 </style>
 </head>
 <body>
+<!-- Simgeler: bir kez tanımlanır, <use> ile çağrılır. Betik de aynı kimlikleri kullanıyor. -->
+<svg class="tanimlar" aria-hidden="true" focusable="false">
+  <symbol id="i-dis" viewBox="0 0 12 12"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></symbol>
+  <symbol id="i-ileri" viewBox="0 0 12 12"><path d="M2 6h8M6.5 2.5 10 6 6.5 9.5"/></symbol>
+</svg>
 <canvas id="alan" aria-hidden="true"></canvas>
 <div id="ray" aria-hidden="true"></div>
 
@@ -396,17 +444,17 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
     <a href="#s2" data-b="s2">Etkinlikler</a>
     <a href="#s3" data-b="s3">Haftalık rapor</a>
     <a href="#s4" data-b="s4">Projeler</a>
-    <a class="kat" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl ↗</a>
+    <a class="kat" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
   </div>
 </div></nav>
 
 <main id="icerik">
 
 <section id="s0"><div class="wrap">
-  <h1 class="reveal">Yapay zekayı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
-  <p class="giris reveal">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.</p>
-  <div class="eylem reveal">
-    <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl ↗</a>
+  <h1>Yapay zekayı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
+  <p class="giris">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.</p>
+  <div class="eylem">
+    <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
     <a class="btn s" href="#s4">Projelere göz at</a>
   </div>
 </div></section>
@@ -418,13 +466,13 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
       <h2 class="reveal">Teoriden çalışan modele.</h2>
   </div>
   <div>
-    <p class="giris reveal" style="margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
+    <p class="giris reveal">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
     <p class="giris reveal">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
     <!-- Rakamlar ekipten, 28 Eylül 2026. Değişince yalnızca .num içeriğini
          güncelle. Yürüyen proje sıfırken o satır bir yere götürmüyor; proje
          başlayınca o da bir bağlantı olup #s4'e gidebilir. -->
     <div class="olcum reveal">
-      <a href="#s4"><b class="num">4</b><span>tamamlanan proje</span><i class="git" aria-hidden="true">→</i></a>
+      <a href="#s4"><b class="num">4</b><span>tamamlanan proje</span><svg class="ok git" aria-hidden="true"><use href="#i-ileri"/></svg></a>
       <div><b class="num">10</b><span>tamamlanan etkinlik</span></div>
       <div><b class="num">0</b><span>yürüyen proje</span></div>
     </div>
@@ -453,15 +501,15 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <section id="s3"><div class="wrap">
   <h2 class="reveal">Yapay zekada neler oldu?</h2>
   <p class="giris reveal">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler. Her sayı burada çıkar, aynısı otomatik olarak Discord kanalına da gider.</p>
-  <p class="meta reveal" id="feedIssue" style="margin-top:32px"></p>
+  <p class="meta reveal" id="feedIssue"></p>
   <!-- Statik içerik, betiğin boş durumuyla aynı cümleyi söyler. Burada bir
        zamanlar üç örnek haber satırı duruyordu; veri dosyası boşaltılınca
        uydurma haber yayında kalmasın diye kaldırıldı (PRODUCT.md, İlke 4).
        Betik veriyi okuyunca bu bloğu gerçek satırlarla değiştirir. -->
-  <div class="reveal" id="feedList" style="margin-top:16px">
+  <div class="reveal" id="feedList">
     <p class="feed-kalan">Henüz yayımlanmış bir sayı yok.</p>
   </div>
-  <a class="arsiv-bag reveal" href="haberler.html">Bütün sayılar →</a>
+  <a class="arsiv-bag reveal" href="haberler.html">Bütün sayılar<svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
@@ -473,24 +521,24 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
   <div class="projeler">
     <div class="kart reveal">
       <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/plant-ai-project" target="_blank" rel="noopener">Yaprak hastalığı sınıflandırıcı</a></h3>
+      <h3><a href="https://github.com/atilimai/plant-ai-project" target="_blank" rel="noopener">Yaprak hastalığı sınıflandırıcı<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
       <p>Yaprak fotoğrafına bakıp 14 bitki türünde hastalığı tanıyan modeller. Aynı yaprağın fotoğrafları hem eğitime hem teste girmesin diye veri yaprak düzeyinde bölündü.</p>
       <div class="etiketler"><span>PyTorch</span><span>EfficientNet</span><span>MobileNetV2</span></div>
     </div>
     <div class="kart reveal">
       <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/pneumonia-xray-ai" target="_blank" rel="noopener">Röntgende zatürre tespiti</a></h3>
+      <h3><a href="https://github.com/atilimai/pneumonia-xray-ai" target="_blank" rel="noopener">Röntgende zatürre tespiti<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
       <p>Göğüs röntgenini zatürre ya da normal diye sınıflandıran bir model. Araştırma ve öğrenme amaçlı; tıbbi teşhis için kullanılmaz.</p>
       <div class="etiketler"><span>PyTorch</span><span>timm</span><span>ResNet-50</span></div>
     </div>
     <div class="kart reveal">
       <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/Project1-browsertracker" target="_blank" rel="noopener">Project1-browsertracker</a></h3>
+      <h3><a href="https://github.com/atilimai/Project1-browsertracker" target="_blank" rel="noopener">Project1-browsertracker<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
       <p>Atılım AI üyelerinin geliştirdiği yapay zeka projelerini sergilemek ve bilgi paylaşmak için açılan depo.</p>
     </div>
     <div class="kart reveal">
       <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/EEG-Emotion-Models" target="_blank" rel="noopener">EEG'den duygu tanıma</a></h3>
+      <h3><a href="https://github.com/atilimai/EEG-Emotion-Models" target="_blank" rel="noopener">EEG'den duygu tanıma<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
       <p>Beyin dalgası (EEG) kayıtlarından duygu durumunu tanıyan modeller. Beş frekans bandını tek tek inceliyor, EEG'ye kalp (EKG) verisini de ekleyebiliyor; şimdilik yalnızca DREAMER veri setiyle çalışıyor.</p>
       <div class="etiketler"><span>scikit-learn</span><span>TensorFlow</span><span>PyTorch</span></div>
     </div>
@@ -505,8 +553,8 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
   <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
   <span class="sag">
     <a href="haberler.html">Haberler</a>
-    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord ↗</a>
-    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub ↗</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
   </span>
 </div></footer>
 <script>
@@ -650,6 +698,23 @@ if ("IntersectionObserver" in window && !reduced){
     el.focus();
   }
 
+  /* Oklar sayfanın başındaki <symbol>'lerden çağrılır; ekran okuyucu görmez. */
+  function ikon(ad){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "ok");
+    svg.setAttribute("aria-hidden", "true");
+    var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#" + ad);
+    svg.appendChild(use);
+    return svg;
+  }
+  function yeniSekme(a){
+    var g = document.createElement("span");
+    g.className = "gizli";
+    g.textContent = " (yeni sekmede açılır)";
+    a.appendChild(g);
+  }
+
   function satir(h, sayiNo, sira){
     var ayrinti = h.icerik ? "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira : "";
     var kap = document.createElement("div");
@@ -669,8 +734,8 @@ if ("IntersectionObserver" in window && !reduced){
     if (ayrinti || h.link){
       var a = document.createElement("a");
       a.href = ayrinti || h.link;
-      if (!ayrinti){ a.target = "_blank"; a.rel = "noopener noreferrer"; }
       a.textContent = h.baslik || "";
+      if (!ayrinti){ a.target = "_blank"; a.rel = "noopener noreferrer"; yeniSekme(a); }
       h3.appendChild(a);
     } else {
       h3.textContent = h.baslik || "";
@@ -687,7 +752,8 @@ if ("IntersectionObserver" in window && !reduced){
       var devam = document.createElement("a");
       devam.className = "devam";
       devam.href = ayrinti;
-      devam.textContent = "Devamını oku →";
+      devam.textContent = "Devamını oku";
+      devam.appendChild(ikon("i-ileri"));
       govde.appendChild(devam);
     }
 
@@ -1151,7 +1217,6 @@ function kur(){
 
   gl.uniform3f(konum.uSoguk, 0.561, 0.706, 0.839);  /* ekran  #8FB4D6 */
   gl.uniform3f(konum.uSicak, 0.910, 0.639, 0.239);  /* lamba  #E8A33D */
-  gl.uniform1f(konum.uVurgu, 0.85);
   gl.disable(gl.DEPTH_TEST);
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.ONE, gl.ONE);
@@ -1197,6 +1262,17 @@ var fx=-9999, fy=-9999, fareVar=false, sonHareket=-99, ilgi=0, saat=0;
    sıçrayarak olur. Hedefe zaman sabitiyle yaklaşıyoruz. */
 var pYum = 0, tYum = 0, sonZaman = -1;
 var ince = window.matchMedia("(pointer:fine)").matches;
+/* Uyku. Döngü eskiden sekme görünür olduğu sürece hiç durmuyordu: okur
+   kaydırmadan okurken bile her karede 18.000 nokta çiziliyor, tam ekran tuval
+   temizleniyor, üstündeki backdrop-filter'lı menü de her karede yeniden
+   bulanıklaşıyordu. Kendiliğinden beş saniyeden uzun süren hareket ayrıca
+   WCAG 2.2.2'ye takılıyor. Şimdi kaydırma, imleç ve yeniden boyutlandırma
+   etkinlik sayılıyor; son etkinlikten UYKU saniye sonra, dönüşüm oturmuş ve
+   imleç çekilmişse döngü durgun bir karede uyuyor. Kehribar tarama ondan önce
+   SONUS saniyede söner: taramanın ortasında donmuş bir ışık takılmış gibi
+   okunurdu. Uyanınca saat kaldığı yerden sürer, ışık yeniden yükselir. */
+var UYKU = 4.6, SONUS = 0.6;
+var durgun = false, sonEtkinlik = 0, vurguYum = 1;
 
 function cizim(zaman){
   /* --- okumalar ---
@@ -1238,6 +1314,9 @@ function cizim(zaman){
   /* dt'ye bağlı yumuşatma: kare hızı düşse de aynı hızda yaklaşır. */
   var dt = (sonZaman < 0) ? 1 : Math.min(0.1, Math.max(0.001, zaman - sonZaman));
   sonZaman = zaman;
+  /* Uykuya SONUS saniye kala tarama söner, etkinlik gelince yeniden yükselir. */
+  var vurguHedef = (zaman - sonEtkinlik) < UYKU - SONUS ? 1 : 0;
+  vurguYum = (kisik || dt >= 1) ? vurguHedef : vurguYum + (vurguHedef - vurguYum) * (1 - Math.exp(-dt/0.15));
   if (kisik || dt >= 1){ pYum = p; tYum = t; }
   else {
     pYum += (p - pYum) * (1 - Math.exp(-dt/0.17));
@@ -1248,6 +1327,7 @@ function cizim(zaman){
   /* Ekranda hiç bant yoksa geçilecek bir hedef de yok: açıklık anında sıfırlanır,
      yoksa levha dikdörtgeni yokken t hala 1'e yakın kalıp kutuyu bozar. */
   if (!zr) { tYum = 0; }
+  durgun = (pYum === p) && (tYum === t);
   p = pYum; t = tYum;
 
   var lx, ly, lw, lh, px, py, pw, ph;
@@ -1327,6 +1407,7 @@ function cizim(zaman){
   gl.uniform1f(konum.uSup, kisik ? 9 : (-2.4 + ((zaman*0.20)%1)*4.8));
   gl.uniform1f(konum.uSurukle, kisik ? 0 : (0.55 + 0.45*t));
   gl.uniform1f(konum.uKazanc, kazanc);
+  gl.uniform1f(konum.uVurgu, 0.85*vurguYum);
   gl.drawArrays(gl.POINTS, 0, SAYI);
 }
 
@@ -1336,18 +1417,33 @@ function cizim(zaman){
    artık medya sorgusunun change olayı sağlıyor. İstek kimliği tutuluyor:
    daralıp bekleyen kare gelmeden yeniden genişlenirse iki zincir birden
    dönmesin. */
-var t0 = 0, calisiyor = false, istek = 0;
+var t0 = 0, calisiyor = false, istek = 0, uykuSaat = -1;
 function kare(now){
   if (!calisiyor) return;
-  istek = requestAnimationFrame(kare);
-  if (document.hidden) return;
+  if (document.hidden){ istek = requestAnimationFrame(kare); return; }
   if (!t0) t0 = now;
+  /* Uykudan ya da daralmadan dönüşte saat kaldığı yerden sürer: sürüklenme ve
+     tarama sıçramaz, dt de tek karelik kalır. */
+  if (uykuSaat >= 0){ t0 = now - uykuSaat*1000; uykuSaat = -1; }
   saat = (now-t0)/1000;
   cizim(saat);
+  if (durgun && ilgi === 0 && vurguYum < 0.01 && saat - sonEtkinlik > UYKU){
+    calisiyor = false; istek = 0; uykuSaat = saat;
+    return;
+  }
+  istek = requestAnimationFrame(kare);
 }
 function dur(){
   calisiyor = false;
   if (istek){ cancelAnimationFrame(istek); istek = 0; }
+  uykuSaat = saat;
+}
+/* Etkinlik: saati işaretle, uyuyorsa döngüyü kaldır. Uykudayken saat donuk
+   olduğu için işaret, uyanınca sürecek zamanla aynı eksende kalır. */
+function uyandir(){
+  sonEtkinlik = saat;
+  if (calisiyor || kisik || durum !== 1 || !basladi || !genis.matches) return;
+  calisiyor = true; istek = requestAnimationFrame(kare);
 }
 
 var img = new Image();
@@ -1401,10 +1497,22 @@ function kurulum(){
   window.addEventListener("resize", function(){
     boyutla();
     if (kisik && basladi && genis.matches) cizim(0);
+    else uyandir();
   }, {passive:true});
+  window.addEventListener("scroll", uyandir, {passive:true});
+  /* Kaydırmadan gelen yerleşim değişikliği de uyandırır: rapor geç gelip
+     bölümleri iterse, yazı tipi yerleşince satırlar kayarsa bantların yeri
+     değişir ve uyuyan kare eski yerinde kalırdı. */
+  if ("ResizeObserver" in window){
+    var ana = document.querySelector("main");
+    if (ana) new ResizeObserver(function(){ uyandir(); }).observe(ana);
+  }
   if (ince && !kisik){
+    /* İmleç yalnızca çizilen dikdörtgenin içindeyken uyandırır: metin
+       sütununda dolaşan fare alanı oynatmasın. */
     window.addEventListener("mousemove", function(e){
       fx = e.clientX; fy = e.clientY; fareVar = true; sonHareket = saat;
+      if (fx >= kutu.x && fx <= kutu.x + kutu.w && fy >= kutu.y && fy <= kutu.y + kutu.h) uyandir();
     }, {passive:true});
   }
   img.src = "images/ai_mark.png";

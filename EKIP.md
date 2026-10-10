@@ -90,7 +90,11 @@ olduğunu işaretler (tam metni olmayan kartta hiç yoktur), `.acik` ise o an
 
 Tek bir tıklama dinleyicisi kartın üstünde durur ve bağlantı tıklamalarını
 dışarıda bırakır — yoksa kaynağı yeni sekmede açarken kart da açılıp
-kapanıyordu.
+kapanıyordu. **Açık `.tam` içine gelen tıklamaları da yok sayar**, ve kart
+içinde seçili metin varsa hiçbir şey yapmaz. 11 Ekim 2026'ya kadar paragrafa
+ya da metin arası görsele tıklamak kartı kapatıyordu: okur yazının ortasında
+yerini kaybediyor, telefonda metne dokunmak bile yetiyordu. "Devamını oku" /
+"Kapat" düğmesi bu süzgeçlere takılmaz; klavye de oradan çalışır.
 
 ### `haber.html`
 
@@ -122,7 +126,9 @@ belirteçleriyle; kendi kopyasını taşır, ortak stil dosyası yok.
 **İçindeki her yol kökten mutlaktır** (`/Atilim_AI_Web/...`) ve bu bilinçli:
 Pages bu dosyayı eksik olan *her* yol için sunuyor, `/a/b/c` adresinde göreli
 bir `haberler.html` `/a/b/haberler.html`'e çözülüp kırılıyordu. **Depo adı
-değişirse bu dosyadaki bütün yolları güncelle** — hiçbiri göreli değil.
+değişirse bu dosyadaki bütün yolları güncelle** — yazı tipleri dahil, hiçbiri
+göreli değil. Yerelde (`python3 -m http.server`) bu yüzden yazı tipleri ve
+sekme simgesi bu sayfada yüklenmez; yayında yüklenir.
 
 Denenen adresi `location.pathname`'den okuyup `textContent` ile basar; betik
 yoksa o satır `hidden` kalır, boş bir etiket göstermez.
@@ -198,6 +204,14 @@ alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
 - **Değişiklik yaptıysan kırpılma testini koştur:** modeli her iki halde çizip
   tuvali geri oku, scissor dikdörtgeninin dış 3 pikselinde yanan piksel say.
   Sıfırdan büyük her sonuç, modelin kesildiği anlamına gelir.
+- **Döngü uyur.** Kaydırma, yeniden boyutlandırma, `main`'in boyut değişikliği
+  ve *çizilen dikdörtgenin içinde* hareket eden imleç etkinlik sayılır. Son
+  etkinlikten `UYKU` (4,6 s) sonra, dönüşüm oturmuş ve imleç çekilmişse döngü
+  son kareyi çizip durur; kehribar tarama ondan önce `SONUS` (0,6 s) içinde
+  söner. Uyanınca saat kaldığı yerden sürer. Eskiden döngü sekme görünür
+  olduğu sürece saniyede 60 kare dönüyordu (pil, ısı) ve kendiliğinden beş
+  saniyeden uzun süren hareket WCAG 2.2.2'ye takılıyordu. Yeni bir etkinlik
+  kaynağı eklersen `uyandir()`'ı çağır; çağırmazsan alan uyuyan karede kalır.
 
 Ayrıntılı gerekçeler ve ölçülmüş kanıtlar `DESIGN.md` → Components → The field.
 
@@ -330,9 +344,28 @@ HTML'i önbellekte tutabiliyor.
   `fetch("content/haberler.json")` çağrısını taslak veriye yönlendirerek
   çiziyor. Yani o çağrının biçimini değiştirirsen panelin önizlemesi bozulur;
   buna dokunacaksan panel tarafında `src/lib/site/preview.ts` dosyasına da bak.
-- **Dış betik yok.** Site hiçbir CDN'den kod çekmiyor; tek dış kaynak Google
-  Fonts stil dosyası. Bir kütüphaneye ihtiyacın olduğunu düşünüyorsan önce
-  "Kilitli kararlar"a bak.
+- **Dış kaynak yok.** Site hiçbir CDN'den kod çekmiyor; 11 Ekim 2026'dan beri
+  yazı tiplerini de Google Fonts'tan değil `fonts/` klasöründen sunuyor (nasıl
+  üretildikleri `fonts/README.md`'de). Google her yüzü latin + latin-ext diye
+  ikiye bölüyordu ve Türkçe ikisini birden indiriyordu; ziyaretçinin IP'si de
+  Google'a gidiyordu. Ana sayfada ~430 KB'tan 215 KB'a indi. Yeni bir karakter
+  ya da ağırlık gerekirse dosyayı aynı yolla yeniden üret — CSS'e Google
+  bağlantısı geri ekleme. `haberler.html`'deki her `src`'nin ikinci, mutlak
+  Pages adresi panelin önizlemesi için: önizleme sayfayı kendi kökeninde
+  çiziyor, göreli yol orada kırılıyor. Bir kütüphaneye ihtiyacın olduğunu
+  düşünüyorsan önce "Kilitli kararlar"a bak.
+- **Oklar simge, karakter değil.** `→ ↗ ← ▾` sitenin üç yazı tipinde de yok;
+  sistem yazı tipinden çiziliyor ve ekran okuyucu "kuzeydoğu oku" diye
+  okuyordu. Her sayfanın başında gizli bir `<svg class="tanimlar">` içinde
+  `<symbol>`'ler var (`i-ileri`, `i-dis`, `i-geri`, `i-asagi`); bağlantıya
+  `<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg>` koy, betikte
+  `ikon("i-dis")`. **Yeni sekmede açılan her bağlantı** bunu `.gizli` bir
+  " (yeni sekmede açılır)" ile söyler — betikte `yeniSekme(a)`.
+- **Panelden gelen metni büyük harfe çevirme.** `.etiket` eskiden
+  `text-transform:uppercase` taşıyordu; `lang="tr"` altında bu "Vision"ı
+  "VİSİON" yapıyor. Kategorinin dili belli değil, o yüzden panelin yazdığı
+  biçim basılıyor. Sitenin kendi Türkçe etiketleri ("Tamamlandı") büyük harf
+  kalabilir.
 - **Logo varlıkları türetilmiştir ve zincir beş dosya.** `images/ai_s.png`
   kaynaktır. Ondan üretilenler: `favicon.png` ve `images/ai_mark.png` (renkler
   ters çevrilip siyah atılarak), `favicon.svg` ve `apple-touch-icon.png` (A

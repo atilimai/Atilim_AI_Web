@@ -82,7 +82,9 @@ binding):
   manager, no bundler, no CDN script. The site is plain HTML/CSS/JS served directly from
   GitHub Pages. The three.js CDN script that once drove the background particle field was
   removed; the scroll-driven field on the landing page is now raw WebGL written inline in
-  `index.html` (see DESIGN.md → Components → The field).
+  `index.html` (see DESIGN.md → Components → The field). Since 2026-10-11 there is no
+  third-party font service either: the three faces are served from `fonts/`, subset for
+  Turkish (`fonts/README.md`). Font files are assets, not dependencies.
 - **Text from the panel is printed with `textContent`, never `innerHTML`.** Panel copy is
   user input; a tag in a news item must render as text, not run as code.
 - **Four places share one data contract.** `content/haberler.json` field names are read by
@@ -253,5 +255,23 @@ Six more closed on 2026-09-10, in the same spirit:
   contest to `.js .tl .detay` (0,3,0). Both the transition and the indicator's rotation are
   cancelled again.
 
+Five more closed on 2026-10-11, after an audit of all four pages:
+
+- Clicking inside an archive card's open full text — a paragraph, an inline image, the end of
+  a text selection — collapsed the card, and the reader lost their place. The open text is
+  now a reading surface; only the button and the card's closed face toggle.
+- The landing page's field animated on its own for as long as the tab was visible, beside
+  content and with no way to stop it (WCAG 2.2.2). It now sleeps 4.6s after the last scroll,
+  resize or in-field pointer movement.
+- On the reading pages the `h1` sat in a body-level `<header>` (a banner landmark) outside
+  `<main>`, so "İçeriğe atla" and a screen reader's "go to main" both skipped the page title.
+  The heading is inside `<main>` now and the article region is named after it.
+- Link text carried Unicode arrows (`→ ↗ ←`, `▾ ▴`) that screen readers read aloud, and links
+  that open a new tab did not say so. The arrows are hidden SVG icons; new-tab links end in a
+  visually hidden "(yeni sekmede açılır)".
+- The dark top bar on the reading pages used the paper's focus colour, 3.1:1 against `gece`.
+  It now uses the night lamp, 9:1.
+
 Turkish is the interface language; `lang="tr"` is set on every page and must stay set for
-screen-reader pronunciation.
+screen-reader pronunciation. Panel text is never uppercased by CSS: under `lang="tr"` the
+transform dots an English `i` ("VİSİON"), and the language of a category is unknown.

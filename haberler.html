@@ -21,12 +21,28 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Yazı tipleri depodan geliyor (fonts/README.md). Her src'nin ikinci adresi
+     panelin önizlemesi için: önizleme bu sayfayı kendi adresinde, sandbox'lı bir
+     iframe'de çiziyor ve göreli yol orada panelin sunucusuna çözülüp 404 veriyor.
+     Tarayıcı ilk adresi yükleyemezse ikinciyi dener; Pages
+     access-control-allow-origin:* gönderdiği için opak kökenden de iner. -->
+<link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:"Newsreader";font-weight:300 400;font-style:normal;font-display:swap;
+  src:url(fonts/newsreader.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/newsreader.woff2) format("woff2")}
+@font-face{font-family:"Public Sans";font-weight:400 500;font-style:normal;font-display:swap;
+  src:url(fonts/public-sans.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/public-sans.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;font-display:swap;
+  src:url(fonts/plex-mono-400.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/plex-mono-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-style:normal;font-display:swap;
+  src:url(fonts/plex-mono-500.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/plex-mono-500.woff2) format("woff2")}
 /* Gündüz dünyası — DESIGN.md. Uzun metin karanlık zeminde okunmuyor. */
 :root{
+  color-scheme:light;
   --gece:#100D0A; --hair-d:rgba(240,234,221,.13);
   --kagit:#F0EADD; --kagit-s:#A69C8C;
   --gunduz:#F2EDE3; --kart:#FBF8F1;
@@ -39,6 +55,8 @@
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
   --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
   --ease:cubic-bezier(.16,1,.3,1);
+  /* Üst çubuğun ölçüsü ana sayfanınkiyle aynı (index.html --ray, --ray-ara). */
+  --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -53,11 +71,28 @@ a{color:var(--lamba-d);text-decoration:none}
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--murekkep);color:var(--gunduz);
   font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
 .atla:focus{left:20px;top:14px}
+/* Yalnızca ekran okuyucuya söylenen metin. letter-spacing:normal: DESIGN.md, .gizli notu. */
+.gizli{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;letter-spacing:normal}
+/* Simgeler: index.html'deki çizgi dili (1.5, yuvarlak uç). Oklar eskiden metin
+   karakteriydi ve yazı tiplerinde yoktular; sistem yazı tipinden çiziliyorlardı. */
+.tanimlar{position:absolute;width:0;height:0;overflow:hidden}
+.ok{width:.75em;height:.75em;flex:none;margin-left:.4em;vertical-align:-.06em;
+  fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ok.bas{margin-left:0;margin-right:.4em}
 
-/* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. */
+/* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. Ölçüsü de odanınki:
+   ana sayfanın menüsüyle aynı yükseklik, aynı kap, aynı kenar boşluğu. Eskiden
+   840px'lik okuma kabındaydı ve 1440px'te sayfa değişince logo 56px'ten 338px'e
+   kayıyor, çubuk 4px kısalıyordu — iki ayrı site gibi. Okuma ölçüsü içeriğin,
+   krom onu taşımaz. */
 .ust{background:var(--gece);border-bottom:1px solid var(--hair-d)}
-.ust-in{display:flex;align-items:center;gap:var(--sp-md);height:60px}
-.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);min-height:44px;
+.ust .wrap{max-width:1180px;padding-inline:clamp(20px,5vw,56px)}
+@media(min-width:1152px){.ust .wrap{max-width:min(calc(1180px + var(--ray) + var(--ray-ara)), 100%)}}
+.ust-in{display:flex;align-items:center;gap:var(--sp-md);height:64px}
+/* Koyu çubukta odak halkası gecenin lambası: kâğıdın --lamba-d'si burada 3,1:1. */
+.ust :focus-visible{outline-color:var(--lamba)}
+.marka{display:flex;align-items:center;gap:var(--sp-sm);color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
 .marka i{width:20px;height:20px;flex:none;
   background:url(images/ai_mark.png) center/contain no-repeat}
@@ -75,7 +110,7 @@ h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
    overflow-wrap — ikisi birlikte, biri tek başına yetmiyor. */
 .sayi-bar h2,.haber h3,.ozet,.tam p,.kaynak,.etiket,.haber-tarih,.tam figcaption{overflow-wrap:anywhere}
 .haber>*{min-width:0}
-.giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
+.giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:var(--sp-lg)}
 .sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
   padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
 /* Sayaç boşken üst çizgisiyle birlikte 40px ölü boşluk bırakıyordu. */
@@ -93,7 +128,9 @@ h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
    etkileşimli değil; halka bir denetim varmış gibi okunurdu. */
 [tabindex="-1"]:focus{outline:none}
 
-main.wrap{padding-bottom:clamp(64px,10vw,112px)}
+/* Liste .wrap taşıyor; alt boşluk kimlikle veriliyor ki .wrap'in padding'i ezmesin
+   (DESIGN.md, Shorthand Rule). */
+#liste{padding-bottom:clamp(64px,10vw,112px)}
 .sayi{margin-top:var(--sp-xxl)}
 .sayi-bar{display:flex;align-items:baseline;gap:var(--sp-sm);padding-bottom:var(--sp-sm);
   border-bottom:2px solid var(--murekkep)}
@@ -106,8 +143,10 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 .haber.acilir:hover{background:var(--kart)}
 .haber-tarih{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);line-height:1.7;text-align:right}
 .haber-tarih b{display:block;color:var(--murekkep);font-weight:400;font-size:15px}
-.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--ekran-d)}
+/* Panelden gelen kategori olduğu gibi basılır: dili belli değil ve lang="tr"
+   altında büyük harf dönüşümü "Vision"ı "VİSİON" yapıyordu (index.html .etiket). */
+.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.02em;
+  color:var(--ekran-d)}
 .haber h3{font-size:28px;font-weight:400;line-height:1.28;margin-top:var(--sp-sm)}
 /* Aynı kalıp: satır içi dolgu düzeni büyütmez, dokunma alanını 44px'e
    çıkarır. Buradaki kutu 28px'ti — WCAG 2.5.8 tabanını geçiyordu ama
@@ -129,9 +168,14 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
   transition:background .3s,border-color .3s}
 .oku:hover,.ac:hover{background:var(--kart);border-color:var(--murekkep-s)}
 .ac{margin-left:auto}
+/* Göstergesi etkinlik satırının chevron'u: kapalıyken aşağı, açıkken yukarı. */
+.ac .ok{transition:transform .45s var(--ease)}
+.haber.acik .ac .ok{transform:rotate(180deg)}
 
 .tam{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
 .haber.acik .tam{grid-template-rows:1fr}
+/* Açık metin tıklamayla kapanmıyor; imleç de tıklanabilir olduğunu söylemesin. */
+.haber.acilir .tam{cursor:auto}
 /* Kırpmak yetmiyor: 0fr satırın içindeki kalıcı bağlantı yüksekliği sıfır
    olmasına rağmen odaklanabilir kalıyordu. 25 haberlik bir sayıda bu, klavye
    kullanıcısı için 25 görünmez sekme durağı demek — odak halkası hiçbir yerde
@@ -166,7 +210,7 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--murekkep-s)}
-.foot .sag{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
+.foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
 /* Telefonda margin-left:auto bağlantıları ekran kenarına sıkıştırıyor ve
    kompozisyondan çok kazara bir kümelenme gibi okunuyor (index.html ile aynı). */
 @media(max-width:760px){.foot .sag{margin-left:0}}
@@ -182,18 +226,30 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
      .tam>div üzerinde duruyor, orada da kaldırılıyor. */
   .tam{transition:none}
   .tam>div{transition:none}
+  .ac .ok{transition:none}
 }
 </style>
 </head>
 <body>
+<!-- Simgeler: bir kez tanımlanır, <use> ile çağrılır; betik de aynı kimlikleri kullanıyor. -->
+<svg class="tanimlar" aria-hidden="true" focusable="false">
+  <symbol id="i-dis" viewBox="0 0 12 12"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></symbol>
+  <symbol id="i-ileri" viewBox="0 0 12 12"><path d="M2 6h8M6.5 2.5 10 6 6.5 9.5"/></symbol>
+  <symbol id="i-geri" viewBox="0 0 12 12"><path d="M10 6H2M5.5 2.5 2 6l3.5 3.5"/></symbol>
+  <symbol id="i-asagi" viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5"/></symbol>
+</svg>
 
-<a class="atla" href="#liste">İçeriğe atla</a>
+<a class="atla" href="#icerik">İçeriğe atla</a>
 
 <nav class="ust"><div class="wrap ust-in">
   <a class="marka" href="index.html"><i aria-hidden="true"></i>ATILIM AI</a>
-  <a class="geri" href="index.html">← Ana sayfa</a>
+  <a class="geri" href="index.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg>Ana sayfa</a>
 </div></nav>
 
+<!-- Başlık <main>'in içinde. Eskiden <header> gövde düzeyinde, yani banner
+     bölgesiydi: "ana içeriğe git" diyen ekran okuyucu kullanıcısı da "İçeriğe
+     atla" bağlantısı da sayfanın başlığını ve giriş cümlesini atlıyordu. -->
+<main id="icerik">
 <header class="kapak wrap">
   <h1>Haberler</h1>
   <p class="giris">Her salı yayımlanan haftalık yapay zeka raporunun bütün sayıları: her haberin özeti, kaynağı ve varsa tam metni.</p>
@@ -208,19 +264,20 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       JavaScript gerekiyor. JavaScript'i tarayıcı ayarlarından açabilir ya da
       haftalık raporu Discord kanalımızdan takip edebilirsin.</p>
     <p class="durum-eylem">
-      <a class="oku" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord'a git ↗</a>
-      <a class="oku" href="index.html">← Ana sayfa</a>
+      <a class="oku" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord'a git<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+      <a class="oku" href="index.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg>Ana sayfa</a>
     </p>
   </noscript>
 </header>
 
-<main class="wrap" id="liste"></main>
+<div class="wrap" id="liste"></div>
+</main>
 
 <footer><div class="wrap foot">
   <span>Atılım AI · Ankara</span>
   <span class="sag">
     <a href="index.html">Ana sayfa</a>
-    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord ↗</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
   </span>
 </div></footer>
 
@@ -284,6 +341,24 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     catch (e){ return s; }
   }
 
+  /* Oklar sayfanın başındaki <symbol>'lerden çağrılır; ekran okuyucu görmez.
+     Yeni sekmede açılan bağlantı bunu sözle söyler, ok yerine. */
+  function ikon(ad, bas){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", bas ? "ok bas" : "ok");
+    svg.setAttribute("aria-hidden", "true");
+    var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#" + ad);
+    svg.appendChild(use);
+    return svg;
+  }
+  function yeniSekme(a){
+    var g = document.createElement("span");
+    g.className = "gizli";
+    g.textContent = " (yeni sekmede açılır)";
+    a.appendChild(g);
+  }
+
   /* Bekleme her çıkışta biter: arşiv, boş arşiv ya da hata. */
   function bitti(){ document.body.classList.remove("bekliyor"); }
 
@@ -338,6 +413,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       a.textContent = aciklama || src;
+      yeniSekme(a);
       p.appendChild(a);
       if (fig.parentNode) fig.parentNode.replaceChild(p, fig);
     };
@@ -409,6 +485,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       a.textContent = h.baslik || "";
+      yeniSekme(a);
       h3.appendChild(a);
     } else {
       h3.textContent = h.baslik || "";
@@ -449,14 +526,19 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
         oku.href = h.link;
         oku.target = "_blank";
         oku.rel = "noopener noreferrer";
-        oku.textContent = "Kaynağa git ↗";
+        oku.textContent = "Kaynağa git";
+        oku.appendChild(ikon("i-dis"));
+        yeniSekme(oku);
         alt.appendChild(oku);
       }
       if (ayrinti){
         var dugme = document.createElement("button");
         dugme.type = "button";
         dugme.className = "ac";
-        dugme.textContent = "Devamını oku ▾";
+        var dugmeYazi = document.createElement("span");
+        dugmeYazi.textContent = "Devamını oku";
+        dugme.appendChild(dugmeYazi);
+        dugme.appendChild(ikon("i-asagi"));
         dugme.setAttribute("aria-expanded", "false");
         dugme.setAttribute("aria-controls", tamId);
         alt.appendChild(dugme);
@@ -476,7 +558,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       var kalici = document.createElement("a");
       kalici.className = "kalici";
       kalici.href = ayrinti;
-      kalici.textContent = "Haberi kendi sayfasında aç →";
+      kalici.textContent = "Haberi kendi sayfasında aç";
+      kalici.appendChild(ikon("i-ileri"));
       icerik.appendChild(kalici);
 
       sar.appendChild(icerik);
@@ -488,10 +571,23 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
          açılıp kapanıyordu. */
       art.addEventListener("click", function(olay){
         if (olay.target.closest("a")) return;
+        /* Düğme her zaman çalışır; klavyeden gelen Enter/Boşluk da buraya
+           düşüyor. Kartın geri kalanı yalnızca okumayı bozmuyorsa çalışır. */
+        if (!olay.target.closest(".ac")){
+          /* Açık tam metin bir okuma yüzeyi, tetik değil. Eskiden paragrafa
+             ya da metin arası görsele tıklamak kartı kapatıyordu: okur
+             yazının ortasında yerini kaybediyor, sayfa yüzlerce piksel
+             kısalıyordu. Telefonda metne dokunmak da aynı şeyi yapıyordu. */
+          if (olay.target.closest(".tam")) return;
+          /* Aynı öğe içinde sürükleyerek metin seçmek de click üretiyor;
+             başlığı ya da özeti kopyalamak isteyen kartı açıp kapatmasın. */
+          var secim = window.getSelection && window.getSelection();
+          if (secim && !secim.isCollapsed && art.contains(secim.anchorNode)) return;
+        }
         var acik = art.classList.toggle("acik");
         var d = art.querySelector(".ac");
         if (d){
-          d.textContent = acik ? "Kapat ▴" : "Devamını oku ▾";
+          d.querySelector("span").textContent = acik ? "Kapat" : "Devamını oku";
           d.setAttribute("aria-expanded", acik ? "true" : "false");
         }
       });
@@ -564,7 +660,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     var ana = document.createElement("a");
     ana.className = "oku";
     ana.href = "index.html";
-    ana.textContent = "← Ana sayfa";
+    ana.appendChild(ikon("i-geri", true));
+    ana.appendChild(document.createTextNode("Ana sayfa"));
     eylem.appendChild(ana);
     liste.appendChild(eylem);
     odakla(tekrar);

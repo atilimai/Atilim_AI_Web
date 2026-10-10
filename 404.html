@@ -12,17 +12,25 @@
 <link rel="icon" href="/Atilim_AI_Web/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/Atilim_AI_Web/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/Atilim_AI_Web/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<!-- Yazı tipleri depodan, kökten mutlak yolla (fonts/README.md). -->
+<link rel="preload" href="/Atilim_AI_Web/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:"Newsreader";src:url(/Atilim_AI_Web/fonts/newsreader.woff2) format("woff2");
+  font-weight:300 400;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url(/Atilim_AI_Web/fonts/newsreader-italik.woff2) format("woff2");
+  font-weight:300;font-style:italic;font-display:swap}
+@font-face{font-family:"Public Sans";src:url(/Atilim_AI_Web/fonts/public-sans.woff2) format("woff2");
+  font-weight:400 500;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(/Atilim_AI_Web/fonts/plex-mono-400.woff2) format("woff2");
+  font-weight:400;font-style:normal;font-display:swap}
 /* Gece dünyası — index.html ile aynı belirteçler, DESIGN.md.
 
-   Mekanik denetleyici bu dosyada "flat type hierarchy (13/15/16/18px)" diyor.
-   Yanlış: h1 bir clamp() ve araç onu çözemediği için yalnızca literal px'leri
-   görüyor. DESIGN.md → Typography bu yanılgıyı adıyla kaydediyor. 28px'lik
-   sahte bir literal ekleyerek susturma. */
+   Mekanik denetleyicinin eski sürümleri bu dosyada "flat type hierarchy"
+   diyordu: h1 bir clamp() ve araç yalnızca literal px'leri görüyordu. 4.5.2
+   bunu artık söylemiyor; söyleyen bir sürüm gelirse DESIGN.md → Typography
+   yanılgıyı adıyla kaydediyor. 28px'lik sahte bir literalle susturma. */
 :root{
+  color-scheme:dark;
   --gece:#100D0A; --tezgah:#191512; --tezgah-2:#211B16;
   --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
   --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
@@ -30,23 +38,30 @@
   --disp:"Newsreader",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
-  --r-xs:4px; --r-md:8px;
+  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
   --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
   --ease:cubic-bezier(.16,1,.3,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--gece);color:var(--kagit);font-family:var(--body);
+  font-size:16px;line-height:1.65;
   -webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+/* Yalnızca ekran okuyucuya söylenen metin. letter-spacing:normal: DESIGN.md, .gizli notu. */
+.gizli{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;letter-spacing:normal}
+/* Simgeler: index.html'deki çizgi dili (1.5, yuvarlak uç). */
+.tanimlar{position:absolute;width:0;height:0;overflow:hidden}
+.ok{width:.75em;height:.75em;flex:none;margin-left:.4em;vertical-align:-.06em;
+  fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 main{flex:1;display:flex;align-items:center;padding:var(--sp-xxl) 0}
 .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);width:100%}
-.kod{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--lamba)}
 /* display-xl, DESIGN.md'deki adimin aynisi. Kendi olcegini uydurma:
    h1 dort sayfada da bu clamp'i tasiyor. */
 h1{font-family:var(--disp);font-weight:300;
   font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;
-  max-width:17ch;text-wrap:balance;margin-top:var(--sp-md)}
+  max-width:17ch;text-wrap:balance}
 h1 em{font-style:italic;color:var(--lamba)}
-.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:56ch;margin-top:20px}
+.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:56ch;margin-top:var(--sp-lg)}
 /* Denenen adres kullanıcı girdisidir: textContent ile basılıyor, satır sonu
    verilmezse uzun bir yol telefonda yatay taşma yapıyor. */
 .adres{font-family:var(--mono);font-size:13px;color:var(--kagit-t);margin-top:var(--sp-lg);
@@ -63,13 +78,18 @@ h1 em{font-style:italic;color:var(--lamba)}
 .btn.s{background:var(--tezgah);border-color:var(--hair-s);color:var(--kagit)}
 .btn.s:hover{background:var(--tezgah-2);border-color:var(--hair-t)}
 :focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
-footer{border-top:1px solid var(--hair);padding:var(--sp-lg) 0}
-footer .wrap{display:flex;gap:var(--sp-md) var(--sp-lg);flex-wrap:wrap;align-items:baseline}
-footer p{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
-footer .posta{margin-right:auto;overflow-wrap:anywhere}
-footer a{font-family:var(--mono);font-size:13px;color:var(--kagit-s);text-decoration:none;
-  min-height:44px;display:inline-flex;align-items:center}
-footer a:hover{color:var(--lamba)}
+/* Alt bilgi index.html'dekiyle aynı: Public Sans 15px, aynı renkler, aynı dokunma
+   alanı. Eskiden mono 13px'ti ve üzerine gelince kehribara dönüyordu — alt bilgi
+   bir eylem değil, lamba ona ait değil. */
+footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0}
+.foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
+  font-size:15px;color:var(--kagit-t)}
+.foot-kimlik{color:var(--kagit-s);line-height:1.8}
+.foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
+@media(max-width:760px){.foot .sag{margin-left:0}}
+.foot-posta{overflow-wrap:anywhere}
+.foot a{color:var(--kagit-s);text-decoration:none;padding-block:var(--sp-sm)}
+.foot a:hover{color:var(--kagit)}
 @media(prefers-reduced-motion:reduce){
   /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
      renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır.
@@ -80,14 +100,19 @@ footer a:hover{color:var(--lamba)}
 </style>
 </head>
 <body>
+<svg class="tanimlar" aria-hidden="true" focusable="false">
+  <symbol id="i-dis" viewBox="0 0 12 12"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></symbol>
+</svg>
 
 <main>
   <div class="wrap">
-    <p class="kod">404</p>
+    <!-- Başlığın üstündeki kehribar "404" etiketi kaldırıldı: DESIGN.md'nin
+         adını koyarak yasakladığı üst etiket kalıbı, üstelik eylem rengiyle.
+         Kod adres satırına indi; orada bir bilgi, başlık değil. -->
     <h1>Bu adreste <em>bir şey yok.</em></h1>
     <p class="giris">Bağlantı eskimiş, adres yanlış yazılmış ya da sayfa taşınmış olabilir.
       Ana sayfadan ya da haber arşivinden devam edebilirsin.</p>
-    <p class="adres" id="adres" hidden>Denenen adres: <b id="yol"></b></p>
+    <p class="adres">Hata 404<span id="adres" hidden> · Denenen adres: <b id="yol"></b></span></p>
     <div class="eylem">
       <a class="btn p" href="/Atilim_AI_Web/">Ana sayfa</a>
       <a class="btn s" href="/Atilim_AI_Web/haberler.html">Haber arşivi</a>
@@ -96,17 +121,20 @@ footer a:hover{color:var(--lamba)}
 </main>
 
 <footer>
-  <div class="wrap">
-    <p>Atılım AI · Ankara</p>
-    <a class="posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
-    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord ↗</a>
-    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub ↗</a>
+  <div class="wrap foot">
+    <span class="foot-kimlik">Atılım AI · Ankara</span>
+    <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
+    <span class="sag">
+      <a href="/Atilim_AI_Web/haberler.html">Haberler</a>
+      <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+      <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+    </span>
   </div>
 </footer>
 
 <script>
 /* Yanlış yazılmış bir adresi görmek, kullanıcının hatayı kendi bulmasını
-   sağlıyor. Betik yoksa satır gizli kalır — boş bir etiket göstermez. */
+   sağlıyor. Betik yoksa adres parçası gizli kalır, satırda yalnızca kod durur. */
 (function(){
   var yol = location.pathname + location.search;
   if (yol.length > 160) yol = yol.slice(0, 160) + "…";

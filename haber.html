@@ -27,12 +27,20 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Public+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Yazı tipleri depodan geliyor (fonts/README.md). Yazının gövdesi Newsreader. -->
+<link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:"Newsreader";src:url(fonts/newsreader.woff2) format("woff2");
+  font-weight:300 400;font-style:normal;font-display:swap}
+@font-face{font-family:"Public Sans";src:url(fonts/public-sans.woff2) format("woff2");
+  font-weight:400 500;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(fonts/plex-mono-400.woff2) format("woff2");
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(fonts/plex-mono-500.woff2) format("woff2");
+  font-weight:500;font-style:normal;font-display:swap}
 /* Gündüz dünyası — DESIGN.md. Uzun metin karanlık zeminde okunmuyor. */
 :root{
+  color-scheme:light;
   --gece:#100D0A; --hair-d:rgba(240,234,221,.13);
   --kagit:#F0EADD; --kagit-s:#A69C8C;
   --gunduz:#F2EDE3; --kart:#FBF8F1;
@@ -45,6 +53,8 @@
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
   --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
   --ease:cubic-bezier(.16,1,.3,1);
+  /* Üst çubuğun ölçüsü ana sayfanınkiyle aynı (index.html --ray, --ray-ara). */
+  --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -58,11 +68,24 @@ a{color:var(--lamba-d);text-decoration:none}
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--murekkep);color:var(--gunduz);
   font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
 .atla:focus{left:20px;top:14px}
+/* Yalnızca ekran okuyucuya söylenen metin. letter-spacing:normal: DESIGN.md, .gizli notu. */
+.gizli{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;letter-spacing:normal}
+/* Simgeler: index.html'deki çizgi dili (1.5, yuvarlak uç). */
+.tanimlar{position:absolute;width:0;height:0;overflow:hidden}
+.ok{width:.75em;height:.75em;flex:none;margin-left:.4em;vertical-align:-.06em;
+  fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ok.bas{margin-left:0;margin-right:.4em}
 
-/* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. */
+/* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. Ölçüsü de odanınki —
+   gerekçe haberler.html'deki aynı kuralda. */
 .ust{background:var(--gece);border-bottom:1px solid var(--hair-d)}
-.ust-in{display:flex;align-items:center;gap:var(--sp-md);height:60px}
-.marka{display:flex;align-items:center;gap:11px;color:var(--kagit);min-height:44px;
+.ust .wrap{max-width:1180px;padding-inline:clamp(20px,5vw,56px)}
+@media(min-width:1152px){.ust .wrap{max-width:min(calc(1180px + var(--ray) + var(--ray-ara)), 100%)}}
+.ust-in{display:flex;align-items:center;gap:var(--sp-md);height:64px}
+/* Koyu çubukta odak halkası gecenin lambası: kâğıdın --lamba-d'si burada 3,1:1. */
+.ust :focus-visible{outline-color:var(--lamba)}
+.marka{display:flex;align-items:center;gap:var(--sp-sm);color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
 .marka i{width:20px;height:20px;flex:none;
   background:url(images/ai_mark.png) center/contain no-repeat}
@@ -85,11 +108,13 @@ h1.uzun{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em}
    sayfa 1.767px'e açılıyordu. */
 h1,.kaynak,.yazi p,.sayac,.etiket,.kapak-ust .tarih,.yazi figcaption{overflow-wrap:anywhere}
 .kapak-ust>*{min-width:0}
-.giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
+.giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:var(--sp-lg)}
 .sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
   padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
 
-main.wrap{padding-bottom:clamp(64px,10vw,112px)}
+/* Gövde .wrap taşıyor; alt boşluk kimlikle veriliyor ki .wrap'in padding'i ezmesin
+   (DESIGN.md, Shorthand Rule). */
+#govde{padding-bottom:clamp(64px,10vw,112px)}
 
 .durum{color:var(--murekkep-s);font-family:var(--mono);font-size:13px;line-height:1.8;
   margin-top:var(--sp-xl);padding:var(--sp-lg);border:1px solid var(--cizgi);border-radius:var(--r-lg);
@@ -119,7 +144,7 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
 footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--murekkep-s)}
-.foot .sag{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
+.foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
 /* Telefonda margin-left:auto bağlantıları ekran kenarına sıkıştırıyor ve
    kompozisyondan çok kazara bir kümelenme gibi okunuyor (index.html ile aynı). */
 @media(max-width:760px){.foot .sag{margin-left:0}}
@@ -136,8 +161,10 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
 /* ---------- okuma sayfası ---------- */
 .kapak-ust{display:flex;align-items:center;gap:var(--sp-sm);flex-wrap:wrap;margin-bottom:var(--sp-md)}
-.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--ekran-d)}
+/* Panelden gelen kategori olduğu gibi basılır: dili belli değil ve lang="tr"
+   altında büyük harf dönüşümü "Vision"ı "VİSİON" yapıyordu (index.html .etiket). */
+.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.02em;
+  color:var(--ekran-d)}
 /* Panelden gelen tarih serbest metin ("3 Ağustos 2026"); makine okunur bir
    karşılığı yok. datetime'sız <time>, içeriği geçerli bir tarih dizisi
    değilse geçersiz biçimlendirme — o yüzden <span>. Sayı tarihi (sayi.tarih)
@@ -168,6 +195,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   padding:0 var(--sp-md);min-height:44px;display:inline-flex;align-items:center;cursor:pointer;
   transition:background .3s var(--ease),border-color .3s var(--ease)}
 .oku:hover{background:var(--kart);border-color:var(--murekkep-s)}
+/* Yazı altındaki satırda geri bağlantısı sağa yaslanır. */
+.yazi-alt .sona{margin-left:auto}
 /* Baskı — bu blok stil sayfasının en sonunda durmak zorunda. Medya sorgusu
    özgüllük eklemez, kaskadı kaynak sırası belirler; blok yukarıda dururken
    .oku (0,1,0) ve .yazi p (0,1,1) gibi eşit özgüllüklü ekran kuralları onu
@@ -193,14 +222,22 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 </style>
 </head>
 <body>
+<!-- Simgeler: bir kez tanımlanır, <use> ile çağrılır; betik de aynı kimlikleri kullanıyor. -->
+<svg class="tanimlar" aria-hidden="true" focusable="false">
+  <symbol id="i-dis" viewBox="0 0 12 12"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></symbol>
+  <symbol id="i-geri" viewBox="0 0 12 12"><path d="M10 6H2M5.5 2.5 2 6l3.5 3.5"/></symbol>
+</svg>
 
-<a class="atla" href="#govde">İçeriğe atla</a>
+<a class="atla" href="#icerik">İçeriğe atla</a>
 
 <nav class="ust"><div class="wrap ust-in">
   <a class="marka" href="index.html"><i aria-hidden="true"></i>ATILIM AI</a>
-  <a class="geri" href="haberler.html">← Haberler</a>
+  <a class="geri" href="haberler.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg>Haberler</a>
 </div></nav>
 
+<!-- Başlık <main>'in içinde: banner bölgesinde dururken "İçeriğe atla" da
+     ekran okuyucunun "ana içerik" komutu da yazının başlığını atlıyordu. -->
+<main id="icerik">
 <header class="kapak wrap" id="kapak" hidden>
   <div class="kapak-ust" id="kapakUst"></div>
   <h1 id="baslik"></h1>
@@ -208,7 +245,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   <p class="sayac" id="kapakMeta"></p>
 </header>
 
-<main class="wrap" id="govde">
+<div class="wrap" id="govde">
   <!-- Betik yoksa bu sayfada tek bir cümle bile yoktu: #kapak hidden, gövde
        boş, gezinme çubuğuyla alt bilgi üst üste biniyordu. Bağlantı
        önizlemeleri ve tarayıcı botları da bunu görüyordu. Diğer dört hata
@@ -219,10 +256,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       için JavaScript gerekiyor. JavaScript'i tarayıcı ayarlarından açabilir
       ya da haftalık raporu Discord kanalımızdan takip edebilirsin.</p>
     <p class="durum-eylem">
-      <a class="oku" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord'a git ↗</a>
-      <a class="oku" href="index.html">← Ana sayfa</a>
+      <a class="oku" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord'a git<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+      <a class="oku" href="index.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg>Ana sayfa</a>
     </p>
   </div></noscript>
+</div>
 </main>
 
 <footer><div class="wrap foot">
@@ -230,7 +268,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   <span class="sag">
     <a href="haberler.html">Haberler</a>
     <a href="index.html">Ana sayfa</a>
-    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord ↗</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
   </span>
 </div></footer>
 
@@ -269,6 +307,32 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
      gelmesin. */
   function gizle(el){ if (!el) return; el.textContent = ""; el.hidden = true; }
   function goster(el){ if (el) el.hidden = false; }
+
+  /* Oklar sayfanın başındaki <symbol>'lerden çağrılır; ekran okuyucu görmez.
+     Yeni sekmede açılan bağlantı bunu sözle söyler, ok yerine. */
+  function ikon(ad, bas){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", bas ? "ok bas" : "ok");
+    svg.setAttribute("aria-hidden", "true");
+    var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#" + ad);
+    svg.appendChild(use);
+    return svg;
+  }
+  function yeniSekme(a){
+    var g = document.createElement("span");
+    g.className = "gizli";
+    g.textContent = " (yeni sekmede açılır)";
+    a.appendChild(g);
+  }
+  function butunHaberler(sinif){
+    var a = document.createElement("a");
+    a.className = sinif;
+    a.href = "haberler.html";
+    a.appendChild(ikon("i-geri", true));
+    a.appendChild(document.createTextNode("Bütün haberler"));
+    return a;
+  }
 
   /* Bekleme her çıkışta biter: yazı ya da durum kartı. */
   var bekle = null;
@@ -359,11 +423,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       });
       sar.appendChild(dugme);
     }
-    var link = document.createElement("a");
-    link.className = "oku";
-    link.href = "haberler.html";
-    link.textContent = "← Bütün haberler";
-    sar.appendChild(link);
+    sar.appendChild(butunHaberler("oku"));
     govde.appendChild(sar);
     odakla(dugme || bas);
   }
@@ -411,6 +471,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       a.textContent = aciklama || src;
+      yeniSekme(a);
       p.appendChild(a);
       if (fig.parentNode) fig.parentNode.replaceChild(p, fig);
     };
@@ -468,6 +529,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
     var yazi = document.createElement("article");
     yazi.className = "yazi";
+    /* Başlık kapakta, yazının dışında; bölge adını ondan alsın. */
+    yazi.setAttribute("aria-labelledby", "baslik");
 
     if (h.gorsel){
       var img = document.createElement("img");
@@ -509,15 +572,12 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       oku.href = h.link;
       oku.target = "_blank";
       oku.rel = "noopener noreferrer";
-      oku.textContent = "Kaynağa git ↗";
+      oku.textContent = "Kaynağa git";
+      oku.appendChild(ikon("i-dis"));
+      yeniSekme(oku);
       alt.appendChild(oku);
     }
-    var geri = document.createElement("a");
-    geri.className = "oku";
-    geri.href = "haberler.html";
-    geri.textContent = "← Bütün haberler";
-    geri.style.marginLeft = "auto";
-    alt.appendChild(geri);
+    alt.appendChild(butunHaberler("oku sona"));
     yazi.appendChild(alt);
 
     govde.appendChild(yazi);
