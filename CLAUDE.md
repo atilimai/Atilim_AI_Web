@@ -10,7 +10,7 @@ git, dosyayı baştan sona okuma:
 | Ne arıyorsan | Nasıl bulacaksın |
 |---|---|
 | haber akışı | `grep -n "haberler.json" index.html` |
-| 3B alan katmanı | `grep -n "6. Alan" index.html` |
+| 3B alan katmanı | `grep -n "5. Alan" index.html` |
 | betiğin bölümleri | `grep -n "^/\* ===" -A2 index.html` |
 
 Görsel bir karar vereceksen `DESIGN.md`, ürün bağlamı gerekiyorsa `PRODUCT.md`.
@@ -19,6 +19,6 @@ Bağımlılık eklenmeyecek: site bilerek düz HTML/CSS/JS, derleme adımı yok 
 CDN'den betik çekilmiyor — 3B alan da bu yüzden ham WebGL, kütüphane değil.
 Panelden gelen metin `textContent` ile basılır, `innerHTML` kullanılmaz.
 
-**Arşivde tek sayı var.** İlk bülten (1. sayı, 2 haber) 23 Eylül 2026'da
-panelden yayımlandı. Metin yazarken arşivin gösterdiğinden uzun bir yayın
+**Arşivde iki sayı var.** İlk bülten (1. sayı, 2 haber) 23 Eylül 2026'da,
+2. sayı (5 haber) 6 Ekim 2026'da panelden yayımlandı. Metin yazarken arşivin gösterdiğinden uzun bir yayın
 geçmişi ima etme.

@@ -10,9 +10,8 @@ web
 
 **Primary: a student deciding whether to join.** They arrive knowing little or nothing
 about the society, usually from a link shared in a campus channel or from a search. Their
-job is to work out two things quickly: is this a serious place, and is turning up on a
-Thursday evening worth it. They are not looking to be sold to; they are looking for
-evidence.
+job is to work out two things quickly: is this a serious place, and is joining worth it.
+They are not looking to be sold to; they are looking for evidence.
 
 **Secondary: existing members.** They come for the weekly report, upcoming events, and
 project status. Their needs are real but never override the primary user when the two
@@ -29,15 +28,15 @@ It exists so that a student who has never heard of the society can understand wh
 and how to join, and so that the digest the society publishes every week has somewhere to
 live that is not a chat channel.
 
-Success is a student showing up on a Thursday who found the society through this site.
+Success is a student who found the society through this site joining it.
 
 ## Positioning
 
 What the society actually does, rather than what it says about itself, is the position: it
-meets every week, and it has built the machinery to publish every week. An admin panel
-commits to this repository, GitHub Pages publishes the site, and a GitHub Actions job posts
-the same issue to Discord exactly once. That machinery is a fact about the society, not a
-marketing claim.
+finishes projects, it runs events, and it has built the machinery to publish every week.
+An admin panel commits to this repository, GitHub Pages publishes the site, and a GitHub
+Actions job posts the same issue to Discord exactly once. That machinery is a fact about
+the society, not a marketing claim.
 
 **One issue has been published.** Issue 1, with two items, went out from the panel to the
 site and to Discord on 2026-09-23 (commit `87581c9`). Before that, `content/haberler.json`
@@ -50,28 +49,15 @@ is published, but must not imply a longer history than the archive shows.
 
 ## Operating Context
 
-- The society meets **every Thursday**, currently in Mühendislik B-204. The standing
-  meeting is the society's core ritual and the thing the site is ultimately inviting
-  people to. The room is expected to change at some point (team, 2026-09-10); it is a
-  current fact, not a permanent one.
-- **The standing meeting's start time is recorded on the site as 17.30, and it is NOT
-  confirmed.** The team wrote it on 2026-09-10 as a placeholder pending board approval.
-  This is the one unverified figure on the site that does *not* announce itself as
-  pending: a visitor reads "17.30" as a fact and a student who trusts it may arrive at
-  the wrong hour. It appears in three places in `index.html` — the hero `.bulusma` line,
-  the `#s2` lead paragraph, and the footer `.kapanis-sart` line — and all three must
-  change together. Replace it with the confirmed time as soon as the board decides.
-- **Two different kinds of gathering, and the site must keep them apart.** The weekly
-  Thursday meeting needs no date tracking and no registration. The dated items in the
-  events list are *separate special events* — workshops, guest talks, project matchmaking,
-  a campus hackathon — and they fall on weekends. Confirmed 2026-09-10, after the site was
-  found asserting "every Thursday" above four Saturday dates with nothing explaining the
-  difference. Any future events list must state which of the two it is showing.
-  **As of 2026-09-28 no special events are scheduled.** The list was removed from the page
-  and a one-line footnote under the section intro says so; the row markup is kept as a
-  comment in `index.html` for when the next event is announced.
-- Sessions vary: reading a paper together, someone sharing a screen and showing where they
-  are stuck, workshops, guest talks, project matchmaking, a campus hackathon.
+- **There is no standing weekly meeting.** The team discontinued it on 2026-10-01, and
+  every reference to it — day, time and room — was removed from the site and from these
+  documents the same day. Do not reintroduce a recurring schedule, a meeting room or an
+  invitation to a weekly gathering without a new team decision.
+- **Events are dated, one-off occasions** — workshops, guest talks, project matchmaking, a
+  campus hackathon — and they have fallen on weekends. **As of 2026-09-28 none are
+  scheduled.** The list was removed from the page and a one-line footnote under the section
+  heading says so; the row markup is kept as a comment in `index.html` for when the next
+  event is announced.
 - Discord is the society's live channel; the weekly digest is pushed there automatically.
   It is currently the **only** join path. The team intends to add a second one and will
   decide its shape before it ships (2026-09-10), so nothing should be built that assumes
@@ -123,8 +109,8 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 - Open-source work lives under the `atilimai` GitHub organisation.
 - Content is written in Turkish. The site's interface language is Turkish; internal
   documentation (this file, `DESIGN.md`) is English.
-- The society's own framing of itself is deliberately unglamorous — "haftada bir akşam,
-  aynı masada", no department requirement, no prerequisite. Copy should not inflate it.
+- The society's own framing of itself is deliberately unglamorous — no department
+  requirement, no prerequisite. Copy should not inflate it.
 
 ## Evidence on Hand
 
@@ -134,8 +120,11 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
   `.github/workflows/haftalik-rapor.yml`).
 - The three `.olcum` figures, supplied by the team on 2026-09-28: 4 completed projects,
   10 completed events, 0 ongoing projects.
-- The four project cards in `#s4`. Three describe public repositories and take their copy
-  from each repository's README; the fourth is the publishing pipeline in this repository.
+- The four project cards in `#s4`, one per completed project, each linking to its public
+  repository. Each takes its copy from the repository's README. Until
+  2026-10-05 the fourth card was the publishing pipeline in this repository ("Bülten",
+  marked live); the team replaced it with `EEG-Emotion-Models`. The pipeline is still a fact
+  about the society — it is simply no longer presented as a project card.
 
 **Evidence that grows weekly:** the archive in `content/haberler.json`. Issue 1
 (2026-09-23, two items) exercised the whole chain end to end — panel commit, Pages, one
@@ -157,12 +146,16 @@ Two consequences of those figures, both decided by the team on 2026-09-28:
   repository (Kampüs Asistanı, Görü), one of them marked "in development", which the zero
   contradicted. They were replaced by the completed work, and the "0 yürüyen proje" row no
   longer scrolls to `#s4`, since there is nothing ongoing to show there.
-- **Four completed projects, three public repositories.** The fourth has no public
-  repository. The repository dialog lists the three and says nothing about the fourth.
+- **Four completed projects, four public repositories.** Each `#s4` card links to one of
+  them. Until 2026-10-05 this file said the fourth had no public repository; the team then
+  named it — `atilimai/EEG-Emotion-Models`. A repository dialog, opened by the "4 tamamlanan
+  proje" row, listed the same four a second time with star and fork counts from the GitHub
+  API. It was removed on 2026-10-06 as a duplicate of the cards, and the row now links to
+  `#s4`.
 
 The 2026-09-10 design review's open question still stands: whether a *count* is the
-evidence a student actually wants, or whether three sentences about what happened last
-Thursday would answer "is this serious?" better.
+evidence a student actually wants, or whether three sentences about what happened at the
+last event would answer "is this serious?" better.
 
 `.olcum b` has `min-width:56px` rather than a fixed width so a four-digit figure fits.
 
@@ -189,11 +182,11 @@ file held 15. A correction to issue 1 stays silent; issue 2 posts.
 ## Product Principles
 
 1. **Evidence over persuasion.** The visitor is deciding whether this is a serious place.
-   Show the archive, the schedule, and the working machinery; do not argue.
-2. **The Thursday meeting is the product.** Everything else — the digest, the projects, the
-   site — exists around a standing weekly invitation. If a change makes the next meeting
-   harder to find, it is the wrong change.
-3. **No prerequisites, on the page as in the room.** The society admits any faculty and
+   Show the archive, the events, and the working machinery; do not argue.
+2. **The way in is the product.** Everything else — the digest, the projects, the site —
+   exists around an invitation to join. If a change makes the way in harder to find, it is
+   the wrong change.
+3. **No prerequisites, on the page as in the society.** The society admits any faculty and
    assumes no background; the site must not gate understanding behind jargon.
 4. **Never fabricate a fact to fill a layout.** An empty statistic, an invented member
    count, or a plausible-sounding claim costs more trust than a missing field does.
@@ -206,7 +199,8 @@ file held 15. A correction to issue 1 stays silent; issue 2 posts.
 on the shipped pages, not asserted: **zero contrast failures** across all three pages at
 desktop and phone widths, **zero horizontal overflow** from 320px to 1970px, **zero
 interactive targets under 44px**, no heading-level skips, a skip link and full landmark set
-on every page, and a modal with focus trap, Escape, and focus return. The type floor is
+on every page, a mobile menu that closes on Escape and returns focus, and a **Yeniden dene**
+that keeps focus through the retry and hands it to the result. The type floor is
 12px. `prefers-reduced-motion` cancels the spatial transitions by name and leaves colour and
 opacity feedback intact; the scroll-driven field draws one static frame and its bands
 collapse.
@@ -243,9 +237,9 @@ Six more closed on 2026-09-10, in the same spirit:
 - With scripts disabled, `.tl .detay` was collapsed by an ungated rule, so four
   `aria-expanded="false"` buttons could never expand and their descriptions were
   permanently unreachable. The collapse now sits behind the `.js` gate.
-- The `.olcum` button that opens the repository dialog had no `aria-haspopup="dialog"`.
-- The modal did not lock background scroll. It now does, compensating for the scrollbar
-  width so nothing shifts.
+- The `.olcum` button that opened the repository dialog had no `aria-haspopup="dialog"`.
+- The dialog did not lock background scroll; the fix compensated for the scrollbar width so
+  nothing shifted. The dialog itself was removed on 2026-10-06 (see Evidence on Hand).
 - The mobile disclosure panel did not close on an outside tap — the most natural dismissal
   gesture on a phone either did nothing or hit a link behind the panel.
 - `prefers-reduced-motion` stopped cancelling the disclosure transition when the collapse

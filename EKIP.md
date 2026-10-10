@@ -19,7 +19,7 @@ Aradığın yeri numarayla değil, arayarak bul:
 | Ne arıyorsan | Nasıl bulacaksın |
 |---|---|
 | haber akışı | `grep -n "haberler.json" index.html` |
-| 3B alan katmanı | `grep -n "6. Alan" index.html` |
+| 3B alan katmanı | `grep -n "5. Alan" index.html` |
 | betiğin bölümleri | `grep -n "^/\* ===" -A2 index.html` |
 | bir stil kuralı | `grep -n "^\.sinif-adi{" index.html` |
 
@@ -52,15 +52,15 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 | 1 · Kabuk | Nav durumu, mobil menü, aktif bölüm işareti |
 | 2 · Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
 | **3 · Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
-| 4 · Ölçümler ve modal | Sayaçlar, GitHub depo listesi modali, arka plan kaydırma kilidi |
-| 5 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti. Liste şu an boş; `#tl` yoksa betik hiçbir şey yapmaz |
-| **6 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
+| 4 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti. Liste şu an boş; `#tl` yoksa betik hiçbir şey yapmaz |
+| **5 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
 
 Haberle ilgili her iş "Haftalık rapor" bölümünde. **Akışın üç durumu var ve
 üçü ayrı cümle söyler:** yükleniyor, veri okundu ama sayı yok, istek düştü.
 Üçüncüsü *"Haftalık rapor şu an yüklenemedi."* der ve bir **Yeniden dene**
 düğmesi verir — yerelde `file://` ile açtığında ya da bağlantın koptuğunda
-göreceğin budur.
+göreceğin budur. Yanıtın ilk baytı 10 saniyede gelmezse de bu duruma geçilir
+(`ZAMAN_ASIMI`, üç sayfada aynı); geç gelen yanıt yine çizilir.
 
 Bu ayrım şart, çünkü eskiden hata dalı sayfayı olduğu gibi bırakıyordu ve
 statik biçimlendirme *"Henüz yayımlanmış bir sayı yok."* dediği için ağ hatası
@@ -101,7 +101,11 @@ alanını paragraflara bölerek basar.
 **Beş ayrı durum ayrı ayrı karşılanır** ve her biri gerçek bir `<h1>` ve kendi
 `document.title`'ı ile çizilir; sayfa hiçbir durumda boş ya da başlıksız
 kalmaz: adres eksik · adres bozuk · haber bulunamadı · tam metni yok ·
-yüklenemedi. Hepsini `grep -n 'durum("' haber.html` ile görürsün.
+yüklenemedi. Hepsini `grep -n 'durum("' haber.html` ile görürsün. Veri
+gelene kadar da boş değil: *"Yazı yükleniyor…"* satırı duruyor (`.yukleniyor`).
+Bu satır `<main>`'in **dışında**, kapağın yerinde durur ve istek uçuştayken gövde
+ile alt bilgi yerleşimde yoktur — nedeni "Tuzaklar"da, yükleme sırasında alt
+bilgi maddesinde.
 
 "Adres eksik" ile "adres bozuk" neden ayrı: `Number(null)` sıfır olduğu için
 hiç parametresiz bir adres sayısal testi geçiyor ve kullanıcıya "sayı
@@ -126,7 +130,7 @@ yoksa o satır `hidden` kalır, boş bir etiket göstermez.
 ## Alan katmanı
 
 `index.html`'in içinde, ayrı bir `<script>` içinde duran ham WebGL katmanı.
-`grep -n "6. Alan" index.html` seni oraya götürür. **Kütüphane yok** — three.js
+`grep -n "5. Alan" index.html` seni oraya götürür. **Kütüphane yok** — three.js
 bilerek kaldırıldı, yerine gölgelendirici ve model üreticileri elle yazıldı.
 
 Ne yapar: kaydırdıkça beş model arasında dönüşür — monogram, sinir ağı, dikkat
@@ -156,11 +160,25 @@ alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
   değiştiği için model uzayında hesaplanan sınır yanıltır ve eğik modeller
   (gradyan inişi) kırpılır. `ortala()` bunu her noktanın izdüşümünden, yalpalama
   aralığını tarayarak ölçüyor. Formülü basitleştirmeye kalkma.
-- **1152 px altında alan katmanı hiç yok.** Ne mercek, ne levha: bir medya
-  sorgusu tuvali gizliyor, `.gecis` bantları `--sp-sec`'e kapanıyor ve çizim
-  döngüsünde `EN < 1152` guard'ı var. Döngü kare istemeye devam ettiği için
-  pencereyi genişletince alan kendiliğinden geri gelir; yeniden yükleme
-  gerekmiyor.
+- **1152 px altında alan katmanı hiç yok — kurulmuyor da.** Ne mercek, ne
+  levha: bir medya sorgusu tuvali gizliyor, `.gecis` bantları `--sp-sec`'e
+  kapanıyor, betik de ne WebGL bağlamı açıyor, ne parçacık üretiyor, ne kare
+  istiyor. Kurulum `matchMedia("(min-width:1152px)")` ilk kez eşleşince
+  yapılıyor (yüklemede ya da pencere genişleyince); aynı sorgunun `change`
+  olayı daralınca döngüyü durduruyor, genişleyince geri getiriyor. Yeniden
+  yükleme gerekmiyor. Bekleyen karenin kimliği tutulup iptal ediliyor: hızlı
+  daralıp genişleyen pencerede iki döngü birden dönmesin.
+
+  1 Ekim 2026'ya kadar döngü yalnızca *çizmeyi* atlıyordu (`EN < 1152`
+  guard'ı) ve geri dönebilmek için kare istemeye devam ediyordu. Telefon yine
+  de bağlamı açıp beş model için 7.500 parçacık üretiyor, sonra saniyede 60
+  kez uyanıp hiçbir şey çizmiyordu. 390 px'de, işlemci 4× yavaşlatılarak
+  ölçüldü: alan kurulumu ~38 ms + logo görseli gelince ~15 ms (sayfanın kalan
+  kurulum betiği ~3 ms), boştayken saniyede 4,4 ms ana iş parçacığı yükü.
+  Sonra: ~2 ms, 0, bağlam yok, **0 kare**. Masaüstünde çizim pikselleri eski ve
+  yeni kodla geri okunup karşılaştırıldı; aynı. Yan etki olarak bir hata da
+  kapandı: dar açılıp genişletilen sayfa masaüstünde 7.500'lük seyrek alanla
+  kalıyordu.
 
   Eskiden telefonda levha çalışıyordu ve bantlar `min(72vh,540px)` kalıyordu:
   dördü toplam ~1.780 px boş kaydırma ekliyor, arkasında da 7.500 parçacık
@@ -168,12 +186,13 @@ alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
   Discord bağlantısından gelen cihaz sınıfı bilgi taşımayan bir katman için pil
   ve ısı ödemesin. **Bu sınırı gevşetirsen o bedeli geri getirirsin.**
 - **WebGL yoksa** gövdeye `no-alan` eklenir, tuval gizlenir, bantlar kapanır ve
-  sayfa alan katmanı hiç yokmuş gibi görünür. `prefers-reduced-motion` açıksa
-  döngü hiç başlamaz, tek durağan kare çizilir.
+  sayfa alan katmanı hiç yokmuş gibi görünür. Bu soru yalnızca 1152 px ve
+  üstünde soruluyor; altında sınıf hiç gelmez, aynı işi medya sorgusu görür.
+  `prefers-reduced-motion` açıksa döngü hiç başlamaz, tek durağan kare çizilir.
 - **İçerik taşıyan hiçbir kap merceğin bölgesine girmemeli.** 1152 px üstünde
   `main .wrap` *ve* `footer .wrap` aynı sağ payı alıyor. `nav` bilerek dışarıda:
   o krom, hem de dikey olarak merceğin üstünde duruyor. Footer'a bu pay
-  verilmeden önce kapanış düğmesi 1920 px'de merceğin dikdörtgeninin içine
+  verilmeden önce o zamanki kapanış düğmesi 1920 px'de merceğin dikdörtgeninin içine
   düşüyordu, alt bilgi de gövde metninden ~600 px sağda hizasız duruyordu.
   Sayfaya tam genişlikte yeni bir içerik kabı eklersen aynı tuzağa düşersin.
 - **Değişiklik yaptıysan kırpılma testini koştur:** modeli her iki halde çizip
@@ -292,7 +311,14 @@ HTML'i önbellekte tutabiliyor.
   `textContent` ile basılıyor ve bu bilinçli. Tek istisna, sayfaların kendi
   oluşturduğu DOM düğümleridir.
 - **Bağlantı alanları `href`/`src` niteliğine giriyor.** Panel `http(s)` dışını
-  reddediyor; burada da varsayma, doğrulanmış veriye güven.
+  reddediyor, ama dosya elle de düzenlenebiliyor. Üç sayfa da her haberi
+  çizmeden önce `temizHaber()`'den geçiriyor: `link` ve `gorsel` yalnızca
+  `http(s)` ise kalıyor (`javascript:` bir bağlantı tıklanınca çalışırdı),
+  metin alanları metne çevriliyor, nesne olmayan kayıt atlanıyor. Atlanan
+  kayıt **sırayı kaydırmaz** — `?sira=` özgün dizindeki konumdur. Eskiden tek
+  bir `null` kayıt bütün akışı ve arşivi "şu an yüklenemedi" diye düşürüyordu;
+  ağ hatası olmayan bir şeyi ağ hatası diye. Yeni bir alan eklersen süzgece
+  de ekle, üç kopyası var.
 - **Üç sayfa aynı JSON'u okuyor.** Alan adı değiştirirsen `index.html`
   ("Haftalık rapor" bölümü), `haberler.html`, `haber.html` ve
   `scripts/discord-gonder.js` — dördü birden güncellenmeli. Panel tarafındaki
@@ -335,8 +361,8 @@ HTML'i önbellekte tutabiliyor.
 - **Araç klasörleri.** `.serena/`, `.playwright-mcp/` ve `.impeccable/` üçü de
   `.gitignore`'da. `.impeccable/` tasarım sistemi sidecar'ını ve kritik arşivini
   tutar; yerel araç durumudur, depoya girmemeli.
-- **Arşivde tek sayı var.** İlk bülten (1. sayı, 2 haber) 23 Eylül 2026'da
-  panelden yayımlandı ve Discord'a gitti. Ondan önce `content/haberler.json`
+- **Arşivde iki sayı var.** İlk bülten (1. sayı, 2 haber) 23 Eylül 2026'da,
+  2. sayı (5 haber) 6 Ekim 2026'da panelden yayımlandı ve Discord'a gitti. Ondan önce `content/haberler.json`
   9 Eylül'de temizlenmişti; eski kayıtlar yer tutucuydu ve numaraları (12–14)
   hiçbir şey saymıyordu, numaralandırma 1'den başladı. Metin yazarken arşivin
   gösterdiğinden uzun bir yayın geçmişi ima etme. `index.html`'deki statik boş
@@ -353,21 +379,14 @@ HTML'i önbellekte tutabiliyor.
   GitHub API'sinden** veri basan yeni bir metin öğesi eklersen `overflow-wrap`
   vermeyi unutma — ızgara ve flex çocuklarına `min-width:0` da gerekiyor, yoksa
   kural yazsan bile öğe içeriğinin altına inemez.
-- **Buluşma saati "17.30" doğrulanmış değil.** Yönetim kurulu onaylayana kadar
-  yer tutucu. Kendini yer tutucu olarak *ilan etmiyor*:
-  ziyaretçi kesin bir olgu okuyor, yanlışsa öğrenci yanlış saatte gelir.
-  `index.html`'de üç yerde görünüyor — kahraman satırı, etkinlikler bölümünün
-  girişi, footer'ın kapanış satırı. `grep -n "17.30" index.html` dördünü
-  listeler; dördüncüsü kahramanın üstündeki uyarı yorumudur. **Üçünü birlikte
-  değiştir, yorumu da güncelle ya da kaldır.**
-- **Etkinlik listesi haftalık buluşma değil.** Haftalık buluşma her perşembe,
-  tarih takibi gerektirmiyor. Listedeki tarihli satırlar ondan ayrı, hafta
-  sonuna denk gelen özel etkinlikler. 28 Eylül 2026'dan beri planlanmış özel
+- **Düzenli haftalık buluşma yok.** Ekip 1 Ekim 2026'da bu buluşmadan
+  vazgeçti; gün, saat ve oda o gün hem siteden hem bu belgelerden kaldırıldı.
+  Yeni bir ekip kararı olmadan sayfaya tekrarlayan bir program, bir oda ya da
+  haftalık bir buluşmaya davet ekleme.
+- **Etkinlikler tarihli, tek seferlik.** 28 Eylül 2026'dan beri planlanmış
   etkinlik yok: liste kaldırıldı, yerinde `.tl-bos` dipnotu duruyor, satır
-  kalıbı da `#s2`'nin içinde yorum olarak saklanıyor. Listeyi geri koyarken
-  girişe bu ayrımı söyleyen cümleyi de geri ekle. Söylenmediğinde sayfa üç
-  yerde "her perşembe" derken cumartesi tarihleri listeliyor ve takvime bakan
-  öğrenci siteyi olgusal bir hatada yakalıyor.
+  kalıbı da `#s2`'nin içinde yorum olarak saklanıyor. Yeni etkinlik eklerken
+  dipnotu kaldırıp listeyi geri koy.
 - **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (4 tamamlanan
   proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi.
   Tahminle güncelleme; doğrulanmamış bir rakam gösterilecekse görünür bir yer
@@ -378,12 +397,14 @@ HTML'i önbellekte tutabiliyor.
   vererek reddettiği kalıbın kendisiydi, ayrıca kategori etiketini eylem
   rengiyle basmak İki Kaynak Kuralı'nı kırıyordu. Başlıklar kendi ağırlığını
   taşıyor, bölüm adları menüde zaten var.
-- **API'den gelen sayıyı biçimlendirmeye gömme.** Depo modalindeki dil, yıldız,
-  çatal ve güncelleme tarihi `hidden` geliyor ve yalnızca yanıt ulaşınca
-  açılıyor. Eskiden değerler HTML'in içindeydi; kimliksiz GitHub çağrısı saatte
-  60 ile sınırlı ve kampüs ağı tek IP paylaştığı için istek sessizce düştüğünde
-  fosil sayılar canlı veri gibi ekranda kalıyordu. İstek başarısız olursa tek
-  satırlık dürüst bir not basılıyor.
+- **API'den gelen sayıyı biçimlendirmeye gömme.** Ana sayfada artık dış API
+  çağrısı yok: GitHub'dan dil, yıldız ve çatal sayısı çeken depo penceresi
+  6 Ekim 2026'da kaldırıldı, çünkü Projeler kartlarının zaten bağladığı dört
+  depoyu ikinci kez listeliyordu. "4 tamamlanan proje" satırı artık `#s4`'e
+  giden bir bağlantı. Böyle bir veri geri gelirse kural aynı: değer `hidden`
+  gelir ve yalnızca yanıt ulaşınca açılır. Kimliksiz GitHub çağrısı saatte 60
+  ile sınırlı ve kampüs ağı tek IP paylaşıyor; istek sessizce düşünce HTML'e
+  gömülü bir sayı canlı veri gibi ekranda kalır.
 - **Açılır bir satıra durağan halde gösterge ver.** Etkinlik satırları ve
   ölçüm satırları yalnızca `:hover` opaklığıyla işaretliydi — imleç gelene
   kadar görünmez, dokunmatikte hiç görünmez. Etkinliklerin açıklamaları,
@@ -396,6 +417,19 @@ HTML'i önbellekte tutabiliyor.
   `.tl .detay` (0,2,0) kaldı — `prefers-reduced-motion` kaynakta doğru
   görünürken sessizce çalışmayı bıraktı. Bir kurala kapı sınıfı eklersen
   azaltılmış hareket bloğuna da ekle.
+- **Yükleme sırasında alt bilgi yok.** `haberler.html` ve `haber.html` ilk
+  isteği başlatırken `<body>`'ye `bekliyor` koyuyor; `.bekliyor footer`
+  (ayrıntı sayfasında ayrıca `.bekliyor #govde`) `display:none`. Her çıkış —
+  içerik, boş arşiv, hata, zaman aşımı — sınıfı kaldırıyor; betik yoksa sınıf
+  hiç gelmiyor. Neden: masaüstünde boş listenin altındaki alt bilgi ilk ekranın
+  ortasında duruyor, veri gelince ekrandan itiliyordu. Ayrıntı sayfasında
+  kapak gövdenin *üstünde* açıldığı için gövde 448 px birden aşağı sıçrıyordu.
+  1440 × 900'de ölçülen CLS 0,134 ve 0,548'di (iyi sınırı 0,1; 0,25 üstü
+  kötü), şimdi 0,026 ve 0,012. Telefonda hiç görünmüyordu, çünkü orada alt
+  bilgi zaten ekranın altında başlıyor — **yükleme hâlini masaüstü boyutunda
+  ölç.** Yeni bir yükleme hâli eklersen, içerik geldiğinde ittiği her görünür
+  öğeyi o sırada yerleşimden çıkar, ve yeni bir çıkış yolu eklersen `bitti()`'yi
+  çağır.
 
 ## Kilitli kararlar
 

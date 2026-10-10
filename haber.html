@@ -79,8 +79,12 @@ h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em;
    ekran). Uzun başlık ramptaki bir alt basamağa iniyor — display-lg; yeni bir
    ölçek uydurulmuyor. Eşik ölçümle seçildi, aşağıdaki betiğe bak. */
 h1.uzun{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em}
-/* Panelden gelen başlık, kaynak ve tam metin bölünmez tek bir dizi olabilir. */
-h1,.kaynak,.yazi p{overflow-wrap:anywhere}
+/* Panelden gelen başlık, kaynak ve tam metin bölünmez tek bir dizi olabilir.
+   Kapak satırı (#kapakMeta) kaynağı da taşıyor, etiket, tarih ve görsel
+   açıklaması da panelden geliyor; bunlar listede yokken uç değerlerle 320px'te
+   sayfa 1.767px'e açılıyordu. */
+h1,.kaynak,.yazi p,.sayac,.etiket,.kapak-ust .tarih,.yazi figcaption{overflow-wrap:anywhere}
+.kapak-ust>*{min-width:0}
 .giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:20px}
 .sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
   padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
@@ -98,6 +102,20 @@ main.wrap{padding-bottom:clamp(64px,10vw,112px)}
    taşır (padding shorthand'i .wrap üzerinde kullanma kuralı gereği
    padding-block). */
 .betiksiz{padding-block:clamp(48px,8vw,80px) 0}
+/* Veri gelene kadar tek satır: kapağın üst boşluğunda, gündüz dünyasının
+   durum sesiyle (mono 13px, murekkep-s). Yazı gelince yerini kapak alıyor. */
+.yukleniyor{padding-block:clamp(48px,8vw,80px) 0;font-family:var(--mono);font-size:13px;
+  color:var(--murekkep-s)}
+/* İlk istek uçuştayken gövde ve alt bilgi yerleşimde yok; yükleme satırı
+   gövdenin dışında, kapağın yerinde duruyor. Eskiden satır gövdenin içindeydi
+   ve yazı gelince kapak gövdenin ÜSTÜNDE açılıyordu: masaüstünde gövde 448px
+   aşağı sıçrıyor, alt bilgi ekrandan itiliyordu — ölçülen CLS 0,55 (kötü
+   sınırı 0,25). Görünür olmayan öğe kayamaz; geri geldiğinde yeni öğe
+   sayılır. Sınıfı betik koyar — betik yoksa ikisi de hep görünür. */
+.bekliyor #govde,.bekliyor footer{display:none}
+/* Yeniden denemeden sonra odak başlığa ya da sayaca taşınıyor. Bunlar
+   etkileşimli değil; halka bir denetim varmış gibi okunurdu. */
+[tabindex="-1"]:focus{outline:none}
 footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--murekkep-s)}
@@ -198,11 +216,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   <noscript><div class="betiksiz">
     <h1>Yazı görüntülenemiyor</h1>
     <p class="durum">Bu sayfa yazının metnini tarayıcıda hazırlıyor ve bunun
-      için JavaScript gerekiyor. Tarayıcı ayarlarından açabilir ya da arşivden
-      devam edebilirsin.</p>
+      için JavaScript gerekiyor. JavaScript'i tarayıcı ayarlarından açabilir
+      ya da haftalık raporu Discord kanalımızdan takip edebilirsin.</p>
     <p class="durum-eylem">
-      <a class="oku" href="haberler.html">← Bütün haberler</a>
-      <a class="oku" href="index.html">Ana sayfa</a>
+      <a class="oku" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord'a git ↗</a>
+      <a class="oku" href="index.html">← Ana sayfa</a>
     </p>
   </div></noscript>
 </main>
@@ -212,7 +230,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   <span class="sag">
     <a href="haberler.html">Haberler</a>
     <a href="index.html">Ana sayfa</a>
-    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord ↗</a>
   </span>
 </div></footer>
 
@@ -252,7 +270,59 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   function gizle(el){ if (!el) return; el.textContent = ""; el.hidden = true; }
   function goster(el){ if (el) el.hidden = false; }
 
+  /* Bekleme her çıkışta biter: yazı ya da durum kartı. */
+  var bekle = null;
+  function bitti(){
+    document.body.classList.remove("bekliyor");
+    if (bekle && bekle.parentNode) bekle.parentNode.removeChild(bekle);
+    bekle = null;
+  }
+
+  /* Panel doğruluyor ama dosya elle de düzenlenebiliyor. Sayı olarak gelen bir
+     tam metin split() çağrısında patlıyor, hata .catch'e düşüyor ve sayfa
+     "Bağlantın kesilmiş olabilir" diyordu — ağ hatası olmayan bir şeyi ağ
+     hatası diye, hiç başaramayacak bir "Yeniden dene" ile. Metin alanları
+     metne çevrilir; bağlantı alanları href/src'ye girdiği için yalnızca
+     http(s) ise kalır — "javascript:" bir bağlantı tıklanınca çalışırdı.
+     Aynı süzgeç haberler.html ve index.html'de. */
+  function metinAl(v){
+    if (typeof v === "string") return v.trim();
+    return typeof v === "number" ? String(v) : "";
+  }
+  function adres(v){
+    v = metinAl(v);
+    return /^https?:\/\//i.test(v) ? v : "";
+  }
+  function temizHaber(h){
+    if (!h || typeof h !== "object") return null;
+    return { etiket: metinAl(h.etiket), tarih: metinAl(h.tarih), baslik: metinAl(h.baslik),
+             ozet: metinAl(h.ozet), icerik: metinAl(h.icerik), link: adres(h.link),
+             gorsel: adres(h.gorsel), kaynak: metinAl(h.kaynak) };
+  }
+
+  /* Sözleşmede kaynak bir ad ("Anthropic"); panel adres de kabul ediyor ve
+     1. sayıda iki kaynak da tam adres. Adresin kendisi "Kaynağa git"
+     düğmesinde; kapak satırında ve altta alan adı yeter. */
+  function kaynakAdi(s){
+    if (!/^https?:\/\//i.test(s)) return s;
+    try { return new URL(s).hostname.replace(/^www\./, "") || s; }
+    catch (e){ return s; }
+  }
+
+  /* "Yeniden dene"ye basan kişinin odağı, düğme silindiğinde <body>'ye
+     düşüyordu; klavye ve ekran okuyucu kullanıcısı denemenin sonucunu hiç
+     duymuyordu. Sonuç çizilince odak oraya taşınır: yeni hata kartındaki
+     düğmeye ya da yazının başlığına. */
+  var odakIste = false;
+  function odakla(el){
+    if (!odakIste || !el) return;
+    odakIste = false;
+    if (!el.matches("a[href],button")) el.tabIndex = -1;
+    el.focus();
+  }
+
   function durum(baslik, metin, tekrar){
+    bitti();
     document.title = baslik + " — Atılım AI";
     var bas = document.getElementById("baslik");
     bas.textContent = baslik;
@@ -272,12 +342,21 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
     var sar = document.createElement("p");
     sar.className = "durum-eylem";
+    var dugme = null;
     if (tekrar){
-      var dugme = document.createElement("button");
+      dugme = document.createElement("button");
       dugme.type = "button";
       dugme.className = "oku";
       dugme.textContent = "Yeniden dene";
-      dugme.addEventListener("click", function(){ dugme.disabled = true; tekrar(); });
+      /* disabled değil aria-disabled: devre dışı kalan düğme odağı bırakıyor.
+         Deneme sürerken kart yerinde kalır, düğme ne olduğunu söyler. */
+      dugme.addEventListener("click", function(){
+        if (istekVar) return;
+        dugme.setAttribute("aria-disabled", "true");
+        dugme.textContent = "Deneniyor…";
+        odakIste = true;
+        tekrar(true);
+      });
       sar.appendChild(dugme);
     }
     var link = document.createElement("a");
@@ -286,6 +365,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     link.textContent = "← Bütün haberler";
     sar.appendChild(link);
     govde.appendChild(sar);
+    odakla(dugme || bas);
   }
 
   var q = new URLSearchParams(location.search);
@@ -294,8 +374,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
   if (qSayi === null || qSayi === "" || qSira === null || qSira === ""){
     durum("Adres eksik",
-          "Bu sayfa tek bir haberi gösterir ve adresinde sayı numarasıyla sıra bilgisini bekler. " +
-          "Haberi haberler sayfasından açarsan adres kendiliğinden doğru kurulur.");
+          "Bu adres hangi haberin açılacağını belirtmiyor. Haberi arşivden açabilirsin.");
     return;
   }
 
@@ -304,7 +383,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
   if (!Number.isInteger(sayiNo) || !Number.isInteger(sira) || sira < 0){
     durum("Adres bozuk",
-          "Adresteki sayı numarası ya da sıra bilgisi okunamadı. Haberi haberler sayfasından aç.");
+          "Bu adresteki haber bilgisi okunamadı; adres yanlış kopyalanmış olabilir. " +
+          "Haberi arşivden açabilirsin.");
     return;
   }
 
@@ -350,6 +430,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     var sekme = h.baslik || "Haber";
     if (sekme.length > 70) sekme = sekme.slice(0, 69).replace(/\s+$/, "") + "…";
     document.title = sekme + " — Atılım AI";
+    bitti();
     /* Önceki bir hata kartı bunları gizlemiş olabilir. */
     govde.textContent = "";
     goster(kapakUst);
@@ -377,10 +458,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     bas.classList.toggle("uzun", (h.baslik || "").length > 70);
 
     var ozet = document.getElementById("ozet");
-    if (h.ozet){ ozet.textContent = h.ozet; ozet.hidden = false; } else if (ozet) ozet.remove();
+    /* Kaldırılmaz, gizlenir: iskeleti silmek yeniden denemeyi kırıyordu. */
+    if (h.ozet){ ozet.textContent = h.ozet; ozet.hidden = false; } else gizle(ozet);
 
     document.getElementById("kapakMeta").textContent =
-      sayi.sayi + ". sayı · " + tarihYaz(sayi.tarih) + (h.kaynak ? " · " + h.kaynak : "");
+      sayi.sayi + ". sayı · " + tarihYaz(sayi.tarih) + (h.kaynak ? " · " + kaynakAdi(h.kaynak) : "");
 
     kapak.hidden = false;
 
@@ -418,7 +500,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     if (h.kaynak){
       var k = document.createElement("span");
       k.className = "kaynak";
-      k.textContent = "Kaynak: " + h.kaynak;
+      k.textContent = "Kaynak: " + kaynakAdi(h.kaynak);
       alt.appendChild(k);
     }
     if (h.link){
@@ -439,33 +521,64 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     yazi.appendChild(alt);
 
     govde.appendChild(yazi);
+    odakla(bas);
   }
 
-  /* Uçuştaki istek varken ikinci dokunuş iki kart üst üste bindirmesin. */
-  var istekVar = false;
-  function getir(){
+  /* Uçuştaki istek varken ikinci dokunuş iki kart üst üste bindirmesin.
+
+     Bu sayfanın yükleniyor hâli yoktu: veri gelene kadar gezinme çubuğuyla
+     alt bilgi arasında boş bir sayfa duruyordu — Discord'daki bağlantıdan
+     telefonla gelen okurun ilk gördüğü şey. Bağlantı kopmadan donan bir ağda
+     da bu boşluk hiç bitmiyordu. Şimdi bir satır ne olduğunu söylüyor; yanıtın
+     ilk baytı ZAMAN_ASIMI içinde gelmezse hata kartı çizilir. fetch'e
+     AbortSignal verilmiyor (haberler.html ile aynı gerekçe, panel önizlemesi
+     window.fetch'i sarmalıyor); geç gelen yanıt yine de çizilir, sonIstek
+     yalnızca yerini yeni bir denemeye bırakmış eski isteği susturur. */
+  var ZAMAN_ASIMI = 10000;
+  var istekVar = false, sonIstek = 0;
+  function getir(yeniden){
     if (istekVar) return;
     istekVar = true;
+    var no = ++sonIstek, dustu = false;
+    if (!yeniden){
+      govde.textContent = "";
+      bekle = document.createElement("p");
+      bekle.className = "yukleniyor wrap";
+      bekle.textContent = "Yazı yükleniyor…";
+      govde.parentNode.insertBefore(bekle, govde);
+      document.body.classList.add("bekliyor");
+    }
+    function dusur(){
+      istekVar = false;
+      durum("Yazı şu an yüklenemedi",
+            "İnternet bağlantın kesilmiş ya da çok yavaş olabilir.",
+            getir);
+    }
+    var sure = setTimeout(function(){
+      if (no !== sonIstek) return;
+      dustu = true; dusur();
+    }, ZAMAN_ASIMI);
 
     fetch("content/haberler.json", { cache: "no-cache" })
-    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(r){ clearTimeout(sure); if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(d){
+      if (no !== sonIstek) return;
       istekVar = false;
-      var sayilar = (d && d.sayilar) || [];
+      var sayilar = Array.isArray(d && d.sayilar) ? d.sayilar : [];
       var sayi = null;
       for (var i = 0; i < sayilar.length; i++){
-        if (Number(sayilar[i].sayi) === sayiNo){ sayi = sayilar[i]; break; }
+        if (sayilar[i] && Number(sayilar[i].sayi) === sayiNo){ sayi = sayilar[i]; break; }
       }
-      var h = sayi && (sayi.haberler || [])[sira];
+      var h = sayi && Array.isArray(sayi.haberler) ? temizHaber(sayi.haberler[sira]) : null;
       if (!h){
         durum("Haber bulunamadı",
-              "Bu adres bir haberi işaret etmiyor. Sayı düzenlenmiş ve haberin sırası değişmiş olabilir; " +
-              "haberi arşivden yeniden aç.");
+              "Haber sonradan kaldırılmış ya da sayıdaki yeri değişmiş olabilir. " +
+              "Arşivden yeniden açmayı dene.");
         return;
       }
       if (!h.icerik){
         durum("Tam metin yok",
-              "Bu haberin tam metni yayımlanmamış. Özeti haberler sayfasında duruyor.");
+              "Bu haber yalnızca özetiyle yayımlandı. Özeti arşivde okuyabilirsin.");
         return;
       }
       ciz(sayi, h);
@@ -475,10 +588,9 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
        hiçbir şey anlatmıyordu. index.html aynı dosyayı okuyor ve bunu doğru
        yapıyor; kalıp oradan geliyor. */
     .catch(function(){
-      istekVar = false;
-      durum("Yazı şu an yüklenemedi",
-            "Bağlantın kesilmiş olabilir. Yeniden deneyebilir ya da arşivden devam edebilirsin.",
-            getir);
+      clearTimeout(sure);
+      if (no !== sonIstek || dustu) return;
+      dusur();
     });
   }
 

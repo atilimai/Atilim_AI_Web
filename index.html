@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Atılım AI — Yapay Zeka Topluluğu</title>
-<meta name="description" content="Atılım Üniversitesi Yapay Zeka Topluluğu. Her perşembe akşamı buluşuyoruz; bölüm şartı ve önkoşul yok. Açık kaynak projelerimiz GitHub'da.">
+<meta name="description" content="Atılım Üniversitesi Yapay Zeka Topluluğu. Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Bölüm şartı da önkoşul da yok.">
 <meta name="theme-color" content="#100D0A">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Atılım AI">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:title" content="Atılım AI — Yapay Zeka Topluluğu">
-<meta property="og:description" content="Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, gelebilirsin.">
+<meta property="og:description" content="Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.">
 <meta property="og:url" content="https://atilimai.github.io/Atilim_AI_Web/">
 <link rel="canonical" href="https://atilimai.github.io/Atilim_AI_Web/">
 <meta property="og:image" content="https://atilimai.github.io/Atilim_AI_Web/images/og.jpg">
@@ -35,7 +35,7 @@
   --disp:"Newsreader",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
-  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px;
+  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
   --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px; --sp-sec:96px;
   --ease:cubic-bezier(.16,1,.3,1);
 }
@@ -46,6 +46,9 @@ body{background:var(--gece);color:var(--kagit);font-family:var(--body);
 h1,h2,h3{font-family:var(--disp);font-weight:300}
 a{color:var(--lamba);text-decoration:none}
 :focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
+/* Yeniden denemeden sonra odak, akış boşsa durum satırına taşınıyor. O satır
+   etkileşimli değil; halka bir denetim varmış gibi okunurdu. */
+[tabindex="-1"]:focus{outline:none}
 
 .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);position:relative}
 
@@ -115,11 +118,6 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 #s0{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
 #s0>.wrap{width:100%}
 .eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
-/* Toplanti sabiti: gun, oda ve onkosul, her kirilma noktasinda sayfanin akisinda. */
-.bulusma{font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--kagit-s);
-  margin-top:var(--sp-lg);padding-top:var(--sp-md);border-top:1px solid var(--hair);
-  max-width:52ch}
-.bulusma b{color:var(--kagit);font-weight:400}
 
 /* ---------- düğme ---------- */
 .btn{font-family:var(--body);font-size:15px;font-weight:500;padding:0 22px;min-height:48px;
@@ -134,7 +132,7 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .iki{display:grid;grid-template-columns:1fr 1.3fr;gap:clamp(32px,6vw,80px)}
 @media(max-width:900px){.iki{grid-template-columns:1fr;gap:var(--sp-xl)}}
 .olcum{margin-top:var(--sp-xl);border-top:1px solid var(--hair)}
-.olcum div{display:flex;align-items:baseline;gap:var(--sp-md);padding:var(--sp-md) 0;
+.olcum div,.olcum a{display:flex;align-items:baseline;gap:var(--sp-md);padding:var(--sp-md) 0;
   border-bottom:1px solid var(--hair)}
 /* Rakam satırın metin ölçüsünde: 28px'lik kehribar rakam, altındaki 15px
    etiketle "büyük sayı, küçük etiket" kalıbına dönüyor ve paragrafların
@@ -143,21 +141,14 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .olcum b{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--lamba);
   line-height:1.5;min-width:32px;flex:0 0 auto}
 .olcum span{font-size:15px;color:var(--kagit-s)}
-.olcum button{all:unset;display:flex;align-items:baseline;gap:var(--sp-md);width:100%;
-  padding:var(--sp-md) 0;border-bottom:1px solid var(--hair);cursor:pointer;
-  min-height:44px;box-sizing:border-box}
-/* Üç satır da aynı görünüyordu, ikisi düğmeydi. Sondaki ok satırın
-   tıklanabilir olduğunu durağan halde söyler; opasite değişimi yalnızca
-   imleç üstündeyken vardı ve dokunmatikte hiç yoktu. */
-.olcum button span{flex:1 1 auto}
+/* Satırlardan biri bağlantı. Sondaki ok onun gidilebilir olduğunu durağan
+   halde söyler; opasite değişimi yalnızca imleç üstündeyken vardı ve
+   dokunmatikte hiç yoktu. */
+.olcum a span{flex:1 1 auto}
 .olcum .git{flex:none;font-size:15px;color:var(--kagit-t);
   transition:color .3s,transform .3s var(--ease)}
-.olcum button:hover .git,.olcum button:focus-visible .git{
+.olcum a:hover .git,.olcum a:focus-visible .git{
   color:var(--lamba);transform:translateX(3px)}
-/* all:unset outline'ı da sıfırlar ve özgüllükte genel :focus-visible kuralını
-   yener; halkayı burada geri vermek zorundayız. */
-.olcum button:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;
-  border-radius:var(--r-xs)}
 
 /* ---------- etkinlik ---------- */
 .tl{list-style:none;margin-top:var(--sp-xl);border-top:1px solid var(--hair);padding-top:var(--sp-xs)}
@@ -175,8 +166,8 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
   transition:transform .45s var(--ease),stroke .3s}
 .tl button:hover .isaret,.tl button:focus-visible .isaret{stroke:var(--lamba)}
 .tl li.acik .isaret{transform:rotate(180deg);stroke:var(--lamba)}
-/* Tarih hücresi iki satır: gün adı basılmadan, dördü de cumartesi olan bir
-   liste "her perşembe" diyen sayfayla çelişiyor görünüyordu. Gün adı 12px
+/* Tarih hücresi iki satır: özel etkinlikler hafta sonuna düşüyor, takvime
+   bakan öğrenci günü tarihten hesaplamak zorunda kalmasın. Gün adı 12px
    --kagit-t (5.54:1), 80px sütuna sığar ("Cumartesi" mono 12px'te ~65px). */
 .tl time{font-family:var(--mono);font-size:13px;color:var(--lamba);display:block}
 .tl time span{display:block;margin-top:3px;font-size:12px;letter-spacing:.02em;
@@ -261,8 +252,9 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 @media(max-width:760px){.haber{grid-template-columns:1fr;gap:var(--sp-xs)}}
 
 /* ---------- proje ---------- */
-/* Dört kart: auto-fit 1440px'te 3+1 diziyordu, Bülten tek başına alt satırda
-   kalıyordu. İki sütun dördü de eşit taşıyor ve 21px başlıklara yer açıyor. */
+/* Dört kart: auto-fit 1440px'te 3+1 diziyordu, dördüncü kart tek başına alt
+   satırda kalıyordu. İki sütun dördü de eşit taşıyor ve 21px başlıklara yer
+   açıyor. Kart sayısı tekleşirse sonuncusu yine yalnız kalır. */
 .projeler{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:var(--sp-md);margin-top:var(--sp-xl)}
 @media(max-width:760px){.projeler{grid-template-columns:1fr}}
@@ -292,24 +284,7 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
-/* Kapanış daveti: sayfa en düşük enerjili anında, hiçbir ası olmadan
-   bitiyordu. Gün, oda ve "önkoşul yok" burada da tipte duruyor — hiçbir
-   kırılma noktasında kaybolmuyor. Kahramandaki birincil düğmeyle aynı
-   ekranda hiç bulunmuyorlar; aralarında 6.000px var. */
-.kapanis{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-lg);
-  padding-bottom:var(--sp-xxl);margin-bottom:var(--sp-xl);
-  border-bottom:1px solid var(--hair)}
-.kapanis-soz{font-family:var(--disp);font-size:28px;font-weight:400;line-height:1.28;
-  color:var(--kagit);max-width:22ch;text-wrap:balance}
-.kapanis-sart{font-family:var(--mono);font-size:13px;line-height:1.7;
-  color:var(--kagit-s);flex:1 1 220px;max-width:40ch}
-.kapanis .btn{flex:none;margin-left:auto}
-@media(max-width:760px){
-  .kapanis{display:block;padding-bottom:var(--sp-xl);margin-bottom:var(--sp-lg)}
-  .kapanis-sart{margin-top:var(--sp-sm)}
-  .kapanis .btn{margin-top:var(--sp-lg)}
-}
-.foot-bulusma{color:var(--kagit-s);line-height:1.8}
+.foot-kimlik{color:var(--kagit-s);line-height:1.8}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
   font-size:15px;color:var(--kagit-t)}
 .foot .sag{margin-left:auto;display:flex;gap:20px;flex-wrap:wrap}
@@ -322,54 +297,6 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
 .foot-posta{overflow-wrap:anywhere}
 .foot a{color:var(--kagit-s);padding-block:var(--sp-sm)}
 .foot a:hover{color:var(--kagit)}
-
-/* ---------- modal ---------- */
-.modal{position:fixed;inset:0;z-index:60;display:none}
-.modal.acik{display:block}
-.modal-bg{position:absolute;inset:0;background:rgba(16,13,10,.78)}
-.modal-panel{position:relative;max-width:560px;margin:12vh auto 0;background:var(--tezgah-2);
-  border:1px solid var(--hair-t);border-radius:var(--r-xl);overflow:hidden}
-.modal-x{position:absolute;top:12px;right:12px;width:44px;height:44px;background:none;border:0;
-  color:var(--kagit-s);font-size:18px;cursor:pointer;border-radius:var(--r-sm);z-index:2}
-.modal-x:hover{color:var(--kagit);background:var(--tezgah)}
-.gh-head{display:flex;align-items:center;gap:13px;padding:20px var(--sp-lg);
-  border-bottom:1px solid var(--hair)}
-.gh-mark{width:24px;height:24px;fill:var(--kagit);flex:none}
-.gh-head h3{font-size:21px;font-weight:400}
-.gh-sub{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
-.gh-list{list-style:none;max-height:52vh;overflow-y:auto}
-.gh-repo{padding:var(--sp-md) var(--sp-lg);border-bottom:1px solid var(--hair)}
-/* Panel overflow:hidden; API'den gelen uzun bir depo adı ya da bölünmeyen bir
-   URL sarma kuralı olmadan kırpılıyordu. min-width:0 flex çocuğunun içeriğinin
-   altına inebilmesi için gerekli. */
-.gh-name{display:inline-flex;align-items:center;gap:var(--sp-xs);color:var(--lamba);
-  font-weight:500;min-width:0;overflow-wrap:anywhere}
-.gh-name:hover{text-decoration:underline}
-.gh-ico{width:15px;height:15px;fill:var(--kagit-t);flex:none}
-.gh-desc{color:var(--kagit-s);font-size:15px;line-height:1.55;margin-top:7px;
-  max-width:52ch;overflow-wrap:anywhere}
-.gh-desc.bos{color:var(--kagit-t);font-style:italic}
-/* Bu sınıfın dosyada hiç kuralı yoktu: "Public" biçimlendirilmemiş 16px gövde
-   yazısı olarak kehribar depo bağlantısına yapışıyor ve satırın en parlak
-   metni oluyordu. .etiketler span ile aynı dil. */
-.gh-badge{margin-left:var(--sp-xs);font-family:var(--mono);font-size:12px;
-  color:var(--kagit-t);border:1px solid var(--hair-s);border-radius:var(--r-sm);
-  padding:3px 8px;white-space:nowrap}
-/* Canlı veri çekilemediğinde sessiz ama dürüst bir satır. */
-.gh-note{font-family:var(--mono);font-size:13px;color:var(--kagit-t);
-  padding:var(--sp-md) var(--sp-lg);border-bottom:1px solid var(--hair)}
-.gh-meta{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;margin-top:10px;
-  font-family:var(--mono);font-size:12px;color:var(--kagit-t)}
-.gh-meta span{display:inline-flex;align-items:center;gap:5px}
-.gh-meta span[hidden]{display:none}
-.gh-meta svg{width:12px;height:12px;fill:currentColor}
-.gh-lang i{width:9px;height:9px;border-radius:50%;display:block;flex:none;
-  background:var(--kagit-t)}
-.gh-lang{overflow-wrap:anywhere}
-.gh-all{display:block;text-align:center;padding:var(--sp-md);font-size:15px;color:var(--kagit-s);
-  min-height:44px}
-.gh-all:hover{color:var(--kagit);background:var(--tezgah)}
-@media(max-width:760px){.modal-panel{margin:8vh var(--sp-md) 0}}
 
 /* ---------- belirme ---------- */
 /* Gizleme yalnızca JS varken uygulanır: betik çalışmazsa ya da tarayıcı
@@ -390,6 +317,7 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
   .js .tl .detay{transition:none}
   .js .tl .detay>div{transition:none}
   .tl .isaret{transition:stroke .3s}
+  .olcum .git{transition:color .3s}
 }
 
 /* --ray: taban alet rayı. --daralt: yalnızca gerçekten yer olan genişlikte
@@ -416,9 +344,9 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0 56px}
 body.no-alan #alan{display:none}
 /* Sabit tuval z-index:0'da olduğu için normal akıştaki metnin ÜSTÜNE boyar;
    akış öğelerini bir kat yukarı almak gerekir. Yalnızca konumlandırılmamış
-   olanlar: nav (sticky, 40), .modal (fixed, 60) ve .atla (absolute, 100)
-   kendi katmanlarına sahip ve bu kural onları ezerse sticky başlık, modal ve
-   atlama bağlantısı bozulur. */
+   olanlar: nav (sticky, 40) ve .atla (absolute, 100) kendi katmanlarına
+   sahip ve bu kural onları ezerse sticky başlık ve atlama bağlantısı
+   bozulur. */
 main,footer{position:relative;z-index:1}
 
 /* Okuma sütunu sağında merceğe ait bir bölge bırakır; mercek yalnızca orada durur. */
@@ -427,10 +355,10 @@ main,footer{position:relative;z-index:1}
      Böylece metnin sağında mercek için gerçek bir bölge açılır ve mercek o
      bölgenin ortasına, boyutu da bölgeye göre oturur. */
   .wrap{max-width:min(calc(1180px + var(--ray) + var(--ray-ara)), 100%)}
-  /* Footer de içerik taşır: kapanış daveti ve düğme okuma sütununun içinde
-     kalmalı. Aynı pay verilmezse footer tam genişlikte kalıyor, düğme mercek
-     dikdörtgeninin içine düşüyor (1920px'te ölçüldü) ve alt bilgi gövdeden
-     600px sağda hizasız duruyor. nav hariç: o krom, içerik değil. */
+  /* Footer da içerik taşır ve okuma sütununun içinde kalmalı. Aynı pay
+     verilmezse footer tam genişlikte kalıyor, alt bilgi gövdeden ~600px sağda
+     hizasız duruyor ve içeriği mercek dikdörtgenine girebiliyor (eski kapanış
+     düğmesi 1920px'te girmişti). nav hariç: o krom, içerik değil. */
   main .wrap,footer .wrap{padding-right:calc(clamp(20px,5vw,56px) + var(--ray) + var(--ray-ara) + var(--daralt))}
 }
 
@@ -466,7 +394,7 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
   <div class="baglar" id="baglar">
     <a href="#s1" data-b="s1">Hakkımızda</a>
     <a href="#s2" data-b="s2">Etkinlikler</a>
-    <a href="#s3" data-b="s3">Haftalık Rapor</a>
+    <a href="#s3" data-b="s3">Haftalık rapor</a>
     <a href="#s4" data-b="s4">Projeler</a>
     <a class="kat" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl ↗</a>
   </div>
@@ -476,33 +404,27 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <section id="s0"><div class="wrap">
   <h1 class="reveal">Yapay zekayı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
-  <p class="giris reveal">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, gelebilirsin.</p>
+  <p class="giris reveal">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.</p>
   <div class="eylem reveal">
-    <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl</a>
+    <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl ↗</a>
     <a class="btn s" href="#s4">Projelere göz at</a>
   </div>
-  <!-- SAAT DOĞRULANMADI. 17.30 ekip kararıyla yer tutucu olarak yazıldı;
-       yönetim kurulu onaylayınca kesinleşecek. Ziyaretçiye kesin bir olgu
-       gibi görünüyor — yanlışsa öğrenci yanlış saatte gelir. Üç yerde
-       geçiyor: burada, #s2 girişinde ve footer'da; değiştirirken üçünü
-       birlikte değiştir. -->
-  <p class="bulusma reveal"><b>Her perşembe 17.30</b> · Mühendislik B-204 · önkoşul yok, laptop yeterli</p>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
 
 <section id="s1"><div class="wrap iki">
   <div>
-      <h2 class="reveal">Haftada bir akşam, aynı masada.</h2>
+      <h2 class="reveal">Teoriden çalışan modele.</h2>
   </div>
   <div>
     <p class="giris reveal" style="margin-top:0">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
-    <p class="giris reveal">Şimdi her perşembe akşamı toplanıyoruz. Kimi zaman bir makaleyi birlikte okuyup söküyoruz, kimi zaman biri ekranını paylaşıp tıkandığı yeri gösteriyor. Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
+    <p class="giris reveal">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
     <!-- Rakamlar ekipten, 28 Eylül 2026. Değişince yalnızca .num içeriğini
          güncelle. Yürüyen proje sıfırken o satır bir yere götürmüyor; proje
-         başlayınca yeniden düğme yapılıp #s4'e bağlanabilir. -->
+         başlayınca o da bir bağlantı olup #s4'e gidebilir. -->
     <div class="olcum reveal">
-      <button type="button" data-modal="modal-projeler" aria-haspopup="dialog"><b class="num">4</b><span>tamamlanan proje</span><i class="git" aria-hidden="true">→</i></button>
+      <a href="#s4"><b class="num">4</b><span>tamamlanan proje</span><i class="git" aria-hidden="true">→</i></a>
       <div><b class="num">10</b><span>tamamlanan etkinlik</span></div>
       <div><b class="num">0</b><span>yürüyen proje</span></div>
     </div>
@@ -513,16 +435,9 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <section id="s2"><div class="wrap">
   <h2 class="reveal">Yaklaşan etkinlikler.</h2>
-  <!-- Haftalık buluşma ile tarihli özel etkinlikler ayrı şeyler: giriş
-       birincisini, dipnot ikincisini söylüyor. Liste 28 Eylül 2026'da
-       boşaltıldı; stili ve akordeon betiği (5. bölüm) yerinde duruyor.
-
-       Yeni etkinlik eklerken:
-       1. .tl-bos dipnotunu kaldır, yerine aşağıdaki listeyi koy.
-       2. Girişe, listedekilerin haftalık buluşmadan ayrı, tarihi belli özel
-          etkinlikler olduğunu söyleyen cümleyi geri ekle. Söylenmezse sayfa
-          "her perşembe" derken hafta sonu tarihleri listeliyor ve takvime
-          bakan öğrenci bunu hata sanıyor (PRODUCT.md, Operating Context).
+  <!-- Liste 28 Eylül 2026'da boşaltıldı; stili ve akordeon betiği (5. bölüm)
+       yerinde duruyor. Yeni etkinlik eklerken .tl-bos dipnotunu kaldır,
+       yerine aşağıdaki listeyi koy.
 
        <ul class="tl reveal" id="tl">
          <li>
@@ -530,15 +445,14 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
            <div class="detay" id="etkinlik-1"><div><p>Açıklama.</p></div></div>
          </li>
        </ul> -->
-  <p class="giris reveal">Haftalık buluşma her perşembe 17.30'da, Mühendislik B-204'te. Kayıt yok, gelmen yeterli.</p>
-  <p class="tl-bos reveal">Haftalık buluşmanın dışında şu an planlanmış bir etkinlik yok.</p>
+  <p class="tl-bos reveal">Şu an planlanmış bir etkinlik yok.</p>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
 
 <section id="s3"><div class="wrap">
-  <h2 class="reveal">Bu hafta neler oldu?</h2>
-  <p class="giris reveal">Rapor her hafta burada yayımlanır; aynı içerik otomatik olarak Discord kanalına da düşer.</p>
+  <h2 class="reveal">Yapay zekada neler oldu?</h2>
+  <p class="giris reveal">Haftalık rapor, o haftanın yapay zeka haberlerini derler. Her sayı burada yayımlanır, aynısı otomatik olarak Discord kanalına da gider.</p>
   <p class="meta reveal" id="feedIssue" style="margin-top:32px"></p>
   <!-- Statik içerik, betiğin boş durumuyla aynı cümleyi söyler. Burada bir
        zamanlar üç örnek haber satırı duruyordu; veri dosyası boşaltılınca
@@ -553,7 +467,7 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <div class="gecis" aria-hidden="true"></div>
 
 <section id="s4"><div class="wrap">
-  <h2 class="reveal">Üyelerimizin bitirdiği işler.</h2>
+  <h2 class="reveal">Üyelerimizin yürüttüğü işler.</h2>
   <!-- Kart metinleri depoların README dosyalarından alındı. Açıklama
        değişirse README'yi kaynak al, buraya bilgi uydurma. -->
   <div class="projeler">
@@ -575,82 +489,24 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
       <p>Atılım AI üyelerinin geliştirdiği yapay zeka projelerini sergilemek ve bilgi paylaşmak için açılan depo.</p>
     </div>
     <div class="kart reveal">
-      <p class="durum canli"><i aria-hidden="true"></i>Yayında</p>
-      <h3><a href="https://github.com/atilimai/Atilim_AI_Web" target="_blank" rel="noopener">Bülten</a></h3>
-      <p>Yönetim panelinde yazılan haftalık raporu bu siteye ve Discord kanalına taşıyan otomasyon. Yukarıdaki rapor bölümünü o besliyor.</p>
-      <div class="etiketler"><span>Node</span><span>GitHub Actions</span><span>Webhook</span></div>
+      <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
+      <h3><a href="https://github.com/atilimai/EEG-Emotion-Models" target="_blank" rel="noopener">EEG'den duygu tanıma</a></h3>
+      <p>Beyin dalgası (EEG) kayıtlarından duygu durumunu tanıyan modeller. Beş frekans bandını tek tek inceliyor, EEG'ye kalp (EKG) verisini de ekleyebiliyor; şimdilik yalnızca DREAMER veri setiyle çalışıyor.</p>
+      <div class="etiketler"><span>scikit-learn</span><span>TensorFlow</span><span>PyTorch</span></div>
     </div>
   </div>
 </div></section>
 
 </main>
 
-<div class="modal" id="modal-projeler" aria-hidden="true">
-  <div class="modal-bg" data-modal-close></div>
-  <div class="modal-panel gh" role="dialog" aria-modal="true" aria-labelledby="modal-projeler-t">
-    <button class="modal-x" type="button" data-modal-close aria-label="Kapat">✕</button>
-
-    <div class="gh-head">
-      <svg class="gh-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
-      <div>
-        <h3 id="modal-projeler-t">Tamamlanan projeler</h3>
-        <p class="gh-sub">github.com/atilimai</p>
-      </div>
-    </div>
-
-    <ul class="gh-list" id="ghList">
-      <li class="gh-repo" data-repo="pneumonia-xray-ai">
-        <a class="gh-name" href="https://github.com/atilimai/pneumonia-xray-ai" target="_blank" rel="noopener">
-          <svg class="gh-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>pneumonia-xray-ai</a><span class="gh-badge">Public</span>
-        <p class="gh-desc">Göğüs röntgenlerini transfer öğrenmeyle zatürre ya da normal olarak sınıflandıran bir derin öğrenme projesi.</p>
-        <div class="gh-meta">
-          <span class="gh-lang" hidden><i></i></span>
-          <span class="gh-stars" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg></span>
-          <span class="gh-forks" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg></span>
-          <span class="gh-upd" hidden></span>
-        </div>
-      </li>
-      <li class="gh-repo" data-repo="plant-ai-project">
-        <a class="gh-name" href="https://github.com/atilimai/plant-ai-project" target="_blank" rel="noopener">
-          <svg class="gh-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>plant-ai-project</a><span class="gh-badge">Public</span>
-        <p class="gh-desc">PlantVillage verisiyle eğitilmiş yaprak hastalığı sınıflandırıcıları; aynı yaprağın fotoğrafları eğitimle test arasında bölünmüyor.</p>
-        <div class="gh-meta">
-          <span class="gh-lang" hidden><i></i></span>
-          <span class="gh-stars" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg></span>
-          <span class="gh-forks" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg></span>
-          <span class="gh-upd" hidden></span>
-        </div>
-      </li>
-      <li class="gh-repo" data-repo="Project1-browsertracker">
-        <a class="gh-name" href="https://github.com/atilimai/Project1-browsertracker" target="_blank" rel="noopener">
-          <svg class="gh-ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>Project1-browsertracker</a><span class="gh-badge">Public</span>
-        <p class="gh-desc">Atılım AI üyelerinin geliştirdiği yapay zeka projelerini sergilemek ve bilgi paylaşmak için açılan depo.</p>
-        <div class="gh-meta">
-          <span class="gh-lang" hidden><i></i></span>
-          <span class="gh-stars" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg></span>
-          <span class="gh-forks" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg></span>
-          <span class="gh-upd" hidden></span>
-        </div>
-      </li>
-    </ul>
-
-    <a class="gh-all" href="https://github.com/atilimai?tab=repositories" target="_blank" rel="noopener">Tüm depoları GitHub'da gör ↗</a>
-  </div>
-</div>
-
 <footer>
-<div class="wrap kapanis">
-  <p class="kapanis-soz">Önümüzdeki perşembe, aynı masadayız.</p>
-  <p class="kapanis-sart">Perşembe 17.30 · Mühendislik B-204 · önkoşul yok, laptop yeterli</p>
-  <a class="btn p" href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Topluluğa katıl</a>
-</div>
 <div class="wrap foot">
-  <span class="foot-bulusma">Atılım AI · Ankara</span>
+  <span class="foot-kimlik">Atılım AI · Ankara</span>
   <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
   <span class="sag">
     <a href="haberler.html">Haberler</a>
-    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord</a>
-    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://discord.gg/uUzsA7uDzU" target="_blank" rel="noopener">Discord ↗</a>
+    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub ↗</a>
   </span>
 </div></footer>
 <script>
@@ -695,9 +551,8 @@ window.addEventListener("scroll", function(){
     kutu.classList.remove("gorunur");
     btn.setAttribute("aria-expanded", "false");
   });
-  /* Açılan her katman Escape ile kapanmalı; modal zaten kapanıyordu, menü
-     kapanmıyordu. Odak düğmeye geri veriliyor, yoksa klavye kullanıcısı
-     kapattığı menünün yerinde kalır. */
+  /* Açılan katman Escape ile kapanmalı. Odak düğmeye geri veriliyor, yoksa
+     klavye kullanıcısı kapattığı menünün yerinde kalır. */
   document.addEventListener("keydown", function(e){
     if (e.key !== "Escape" || !kutu.classList.contains("gorunur")) return;
     kutu.classList.remove("gorunur");
@@ -761,9 +616,39 @@ if ("IntersectionObserver" in window && !reduced){
    ============================================================ */
 (function(){
   var GOSTER = 3;   /* ana sayfada gosterilen haber sayisi; gerisi arsivde */
+  var ZAMAN_ASIMI = 10000;
   var feedList  = document.getElementById("feedList");
   var feedIssue = document.getElementById("feedIssue");
   if (!feedList || !window.fetch) return;
+
+  /* Panel doğruluyor ama dosya elle de düzenlenebiliyor. Tek bir null kayıt
+     çizimi yarıda kesiyor, hata .catch'e düşüyor ve akış "şu an
+     yüklenemedi" diyordu — ağ hatası olmayan bir şeyi ağ hatası diye, hiç
+     başaramayacak bir "Yeniden dene" ile. Bozuk kayıt atlanır. Bağlantı
+     alanı href'e girdiği için yalnızca http(s) ise kalır: "javascript:" bir
+     bağlantı tıklanınca çalışırdı. Aynı süzgeç haberler.html ve haber.html'de. */
+  function metinAl(v){
+    if (typeof v === "string") return v.trim();
+    return typeof v === "number" ? String(v) : "";
+  }
+  function temizHaber(h){
+    if (!h || typeof h !== "object") return null;
+    var link = metinAl(h.link);
+    return { etiket: metinAl(h.etiket), tarih: metinAl(h.tarih), baslik: metinAl(h.baslik),
+             ozet: metinAl(h.ozet), icerik: metinAl(h.icerik),
+             link: /^https?:\/\//i.test(link) ? link : "" };
+  }
+
+  /* "Yeniden dene"ye basan kişinin odağı, düğme silindiğinde <body>'ye
+     düşüyordu; klavye ve ekran okuyucu kullanıcısı denemenin sonucunu hiç
+     duymuyordu. Sonuç çizilince odak oraya taşınır. */
+  var odakIste = false;
+  function odakla(el){
+    if (!odakIste || !el) return;
+    odakIste = false;
+    if (!el.matches("a[href],button")) el.tabIndex = -1;
+    el.focus();
+  }
 
   function satir(h, sayiNo, sira){
     var ayrinti = h.icerik ? "haber.html?sayi=" + encodeURIComponent(sayiNo) + "&sira=" + sira : "";
@@ -831,35 +716,63 @@ if ("IntersectionObserver" in window && !reduced){
     var tekrar = document.createElement("button");
     tekrar.type = "button";
     tekrar.textContent = "Yeniden dene";
-    tekrar.addEventListener("click", function(){ tekrar.disabled = true; getir(); });
+    /* disabled değil aria-disabled: devre dışı kalan düğme odağı bırakıyor.
+       Deneme sürerken satır yerinde kalır, düğme ne olduğunu söyler. */
+    tekrar.addEventListener("click", function(){
+      if (istekVar) return;
+      tekrar.setAttribute("aria-disabled", "true");
+      tekrar.textContent = "Deneniyor…";
+      odakIste = true;
+      getir(true);
+    });
     el.appendChild(tekrar);
+    odakla(tekrar);
   }
 
-  var istekVar = false;
-  function getir(){
+  /* Askıda kalan istek: bağlantı kopmadan donan bir ağda "yükleniyor…"
+     sonsuza kadar ekranda kalıyordu. Yanıtın ilk baytı ZAMAN_ASIMI içinde
+     gelmezse hata satırı çizilir. İstek iptal edilmiyor (haberler.html ile
+     aynı fetch biçimi), geç gelen yanıt yine çizilir; sonIstek yalnızca
+     yerini yeni bir denemeye bırakmış eski isteği susturur. */
+  var istekVar = false, sonIstek = 0;
+  function getir(yeniden){
     if (istekVar) return;
     istekVar = true;
+    var no = ++sonIstek, dustu = false;
     /* Yükleniyor satırı boş durumla aynı yüksekliği tutar; iki durum arasında
        geçiş yaparken düzen kaymıyor. */
-    tekSatir("feed-kalan", "Haftalık rapor yükleniyor…");
+    if (!yeniden) tekSatir("feed-kalan", "Haftalık rapor yükleniyor…");
+    var sure = setTimeout(function(){
+      if (no !== sonIstek) return;
+      dustu = true; istekVar = false; hataGoster();
+    }, ZAMAN_ASIMI);
 
     fetch("content/haberler.json", { cache: "no-cache" })
-      .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(r){ clearTimeout(sure); if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(d){
+        if (no !== sonIstek) return;
         istekVar = false;
-        var issue = d && d.sayilar && d.sayilar[0];
+        var issue = d && Array.isArray(d.sayilar) && d.sayilar[0];
+        /* Sıra, atlanan bozuk kayıtlar dahil özgün dizindeki sıradır: ayrıntı
+           adresi (?sira=) ve Discord'daki eski bağlantılar ona dayanıyor. */
+        var hepsi = [];
+        if (issue && Array.isArray(issue.haberler)){
+          issue.haberler.forEach(function(ham, i){
+            var h = temizHaber(ham);
+            if (h) hepsi.push({ h: h, sira: i });
+          });
+        }
         /* Veri okundu, içinde sayı yok. Ağ hatasından ayrı bir durum. */
-        if (!issue || !issue.haberler || !issue.haberler.length){
-          tekSatir("feed-kalan", "Henüz yayımlanmış bir sayı yok.");
+        if (!hepsi.length){
+          odakla(tekSatir("feed-kalan", "Henüz yayımlanmış bir sayı yok."));
           if (feedIssue) feedIssue.textContent = "";
           return;
         }
         if (feedIssue && issue.sayi) feedIssue.textContent = issue.sayi + ". sayı";
         feedList.textContent = "";
 
-        var hepsi = issue.haberler;
-        hepsi.slice(0, GOSTER).forEach(function(h, i){
-          feedList.appendChild(satir(h, issue.sayi, i));
+        hepsi.slice(0, GOSTER).forEach(function(k){
+          feedList.appendChild(satir(k.h, issue.sayi, k.sira));
         });
 
         if (hepsi.length > GOSTER){
@@ -868,164 +781,20 @@ if ("IntersectionObserver" in window && !reduced){
           kalan.textContent = "Bu sayının kalan " + (hepsi.length - GOSTER) + " haberi arşivde.";
           feedList.appendChild(kalan);
         }
+        odakla(feedList.querySelector("a[href]") || feedList.firstElementChild);
       })
-      .catch(function(){ istekVar = false; hataGoster(); });
+      .catch(function(){
+        clearTimeout(sure);
+        if (no !== sonIstek || dustu) return;
+        istekVar = false; hataGoster();
+      });
   }
 
   getir();
 })();
 
 /* ============================================================
-   4. Ölçümler ve modal
-
-   Modal artık odağı içeri alıyor, içeride tuzaklıyor ve kapanınca
-   tetikleyen düğmeye geri veriyor.
-   ============================================================ */
-(function(){
-  var sonTetik = null;
-  var ODAKLANABILIR = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
-
-  document.querySelectorAll(".olcum [data-scroll]").forEach(function(btn){
-    btn.addEventListener("click", function(){ location.hash = btn.dataset.scroll; });
-  });
-
-  /* Modal açıkken arka plan kayıyordu. Kaydırma çubuğunun kaybettiği genişlik
-     dolgu olarak geri veriliyor, yoksa overflow:hidden sayfayı yana sıçratır —
-     ve bu sayfada hiçbir yerde overflow-x:hidden yok, taşma kaynağında
-     çözülüyor. Üst üste binen katman yok ama sayaç yine de tutuluyor. */
-  var kilitSayaci = 0;
-  function kaydirmayiKilitle(){
-    if (kilitSayaci++ > 0) return;
-    var kok = document.documentElement;
-    var fark = window.innerWidth - kok.clientWidth;
-    kok.style.overflow = "hidden";
-    if (fark > 0) kok.style.paddingRight = fark + "px";
-  }
-  function kaydirmayiAc(){
-    if (kilitSayaci === 0 || --kilitSayaci > 0) return;
-    var kok = document.documentElement;
-    kok.style.overflow = "";
-    kok.style.paddingRight = "";
-  }
-
-  function ac(id, tetik){
-    var m = document.getElementById(id);
-    if (!m) return;
-    sonTetik = tetik || null;
-    m.classList.add("acik");
-    m.setAttribute("aria-hidden", "false");
-    kaydirmayiKilitle();
-    var ilk = m.querySelector(ODAKLANABILIR);
-    if (ilk) ilk.focus();
-    if (id === "modal-projeler") depolariTazele();
-  }
-
-  function kapat(m){
-    if (!m || !m.classList.contains("acik")) return;
-    m.classList.remove("acik");
-    m.setAttribute("aria-hidden", "true");
-    kaydirmayiAc();
-    if (sonTetik && sonTetik.focus) sonTetik.focus();
-    sonTetik = null;
-  }
-
-  /* GitHub'daki güncel bilgiyi çeker; başarısız olursa HTML'deki değerler kalır.
-     Yetkisiz istek saatte 60 çağrıyla sınırlı — bu yüzden bir kez çalışır. */
-  var depoDurum = "bekliyor";
-  function depolariTazele(){
-    if (depoDurum !== "bekliyor" || !window.fetch) return;
-    depoDurum = "istendi";
-
-    /* Değeri yazar ve alanı görünür kılar. Bu alanlar statik biçimlendirmede
-       hidden geliyor: eskiden yıldız/çatal sayıları, dil ve güncelleme tarihi
-       HTML'e gömülüydü ve istek sessizce düştüğünde (kimliksiz GitHub çağrısı
-       kampüs IP'sinde saatte 60 ile sınırlı) fosil değerler canlı veri gibi
-       ekranda kalıyordu. Artık ya gerçek değer var ya hiçbir şey. */
-    function metniYaz(el, deger){
-      if (!el) return;
-      var son = el.lastChild;
-      if (son && son.nodeType === 3) son.nodeValue = deger;
-      else el.appendChild(document.createTextNode(deger));
-      el.hidden = false;
-    }
-
-    var AYLAR = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
-    var RENK  = { "Jupyter Notebook":"#DA5B0B", "Python":"#3572A5", "TypeScript":"#3178C6",
-                  "JavaScript":"#F1E05A", "HTML":"#E34C26", "CSS":"#563D7C", "C++":"#F34B7D" };
-
-    fetch("https://api.github.com/users/atilimai/repos?per_page=100")
-      .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function(list){
-        var eskiNot = document.querySelector("#ghList .gh-note");
-        if (eskiNot) eskiNot.remove();
-        var byName = {};
-        list.forEach(function(r){ byName[r.name] = r; });
-
-        document.querySelectorAll("#ghList .gh-repo").forEach(function(li){
-          var r = byName[li.dataset.repo];
-          if (!r) return;
-
-          var desc = li.querySelector(".gh-desc");
-          if (r.description){ desc.textContent = r.description; desc.classList.remove("bos"); }
-
-          var lang = li.querySelector(".gh-lang");
-          if (r.language){
-            lang.hidden = false;
-            /* Bilinmeyen dil: nötr nokta. Eskiden burada #8A8175 vardı —
-               --kagit-t'nin emekli edilmiş eski değeri; belirteci okuyoruz ki
-               token değişince burası da değişsin. */
-            lang.querySelector("i").style.background = RENK[r.language] ||
-              getComputedStyle(document.documentElement).getPropertyValue("--kagit-t").trim();
-            metniYaz(lang, r.language);
-          } else { lang.hidden = true; }
-
-          metniYaz(li.querySelector(".gh-stars"), r.stargazers_count);
-          metniYaz(li.querySelector(".gh-forks"), r.forks_count);
-
-          var d = new Date(r.pushed_at);
-          li.querySelector(".gh-upd").textContent =
-            d.getDate() + " " + AYLAR[d.getMonth()] + " " + d.getFullYear() + " güncellendi";
-        });
-      })
-      .catch(function(){
-        /* Sessiz kalmak olmayan veriyi varmış gibi göstermekten iyi ama
-           yetmiyor: ziyaretçi neden sayı görmediğini bilsin. Depo adları ve
-           bağlantıları statik biçimlendirmede gerçek, onlar duruyor.
-           Durum "bekliyor"a dönüyor ki modal tekrar açıldığında yeniden
-           denenebilsin. */
-        depoDurum = "bekliyor";
-        var liste = document.getElementById("ghList");
-        if (!liste || liste.querySelector(".gh-note")) return;
-        var not = document.createElement("li");
-        not.className = "gh-note";
-        not.textContent = "Yıldız ve güncelleme bilgisi şu an GitHub'dan alınamadı.";
-        liste.appendChild(not);
-      });
-  }
-
-  document.addEventListener("click", function(e){
-    var acan = e.target.closest("[data-modal]");
-    if (acan){ ac(acan.dataset.modal, acan); return; }
-    var kapayan = e.target.closest("[data-modal-close]");
-    if (kapayan){ kapat(kapayan.closest(".modal")); }
-  });
-
-  document.addEventListener("keydown", function(e){
-    var acik = document.querySelector(".modal.acik");
-    if (!acik) return;
-    if (e.key === "Escape"){ kapat(acik); return; }
-    if (e.key !== "Tab") return;
-    var oge = [].slice.call(acik.querySelectorAll(ODAKLANABILIR))
-                .filter(function(el){ return el.offsetParent !== null; });
-    if (!oge.length) return;
-    var ilk = oge[0], son = oge[oge.length - 1];
-    if (e.shiftKey && document.activeElement === ilk){ e.preventDefault(); son.focus(); }
-    else if (!e.shiftKey && document.activeElement === son){ e.preventDefault(); ilk.focus(); }
-  });
-})();
-
-/* ============================================================
-   5. Etkinlik akordeonu
+   4. Etkinlik akordeonu
 
    Satırlar gerçek <button> olduğu için klavye desteği kendiliğinden
    geliyor. Eskiden <li role="button" tabindex="0"> vardı ve yalnızca
@@ -1052,7 +821,7 @@ if ("IntersectionObserver" in window && !reduced){
 </script>
 <script>
 /* ============================================================
-   6. Alan — kaydırmayla değişen model katmanı.
+   5. Alan — kaydırmayla değişen model katmanı.
    Bağımlılık yok, CDN yok: ham WebGL, sayfanın içinde.
 
    Okunabilirlik sözleşmesi: WebGL yalnızca scissor dikdörtgeninin içine
@@ -1070,16 +839,19 @@ function kapat(){ document.body.classList.add("no-alan"); }
 
 var kisik = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 
-var gl = null;
-try {
-  var sec = {alpha:false, antialias:false, depth:false, stencil:false,
-             powerPreference:"high-performance"};
-  gl = tuval.getContext("webgl2", sec) || tuval.getContext("webgl", sec);
-} catch(e){ gl = null; }
-if (!gl){ kapat(); return; }
+/* 1152px altında alan hiç kurulmuyor: ne WebGL bağlamı, ne parçacık, ne kare
+   döngüsü. CSS orada tuvali zaten gizliyor, ama betik eskiden yine de bağlamı
+   açıyor, 7.500 parçacığı beş model için üretiyor, sonra saniyede 60 kez
+   uyanıp hiçbir şey çizmeden dönüyordu. 4× yavaşlatılmış telefonda ölçüldü:
+   ana iş parçacığına ~53 ms kurulum (sayfanın kalan kurulumu ~3 ms) ve
+   sonsuza dek 60 boş kare. Kurulum genişlik 1152px'e ilk ulaştığında yapılır
+   (aşağıda calistir); daralınca döngü durur, genişleyince döner. */
+var genis = window.matchMedia("(min-width:1152px)");
 
-var mobil = window.matchMedia("(max-width:760px)").matches;
-var SAYI  = mobil ? 7500 : 18000;
+var gl = null;
+/* Telefon için ayrı bir 7.500'lük sayı vardı; kurulum artık yalnızca genişken
+   yapıldığından o dal hiç çalışmıyordu. */
+var SAYI = 18000;
 
 function ras(a,b){ return a + Math.random()*(b-a); }
 function cn(){ return (Math.random()+Math.random()+Math.random()-1.5)/1.5; }
@@ -1559,28 +1331,23 @@ function cizim(zaman){
 }
 
 /* ---------- döngü ---------- */
-var t0 = 0, calisiyor = false;
+/* Döngü yalnızca genişken döner. Eskiden dar ekranda da kare istemeye devam
+   ediyordu ki geniş ekrana dönülünce kendiliğinden geri gelsin; o geri dönüşü
+   artık medya sorgusunun change olayı sağlıyor. İstek kimliği tutuluyor:
+   daralıp bekleyen kare gelmeden yeniden genişlenirse iki zincir birden
+   dönmesin. */
+var t0 = 0, calisiyor = false, istek = 0;
 function kare(now){
   if (!calisiyor) return;
-  requestAnimationFrame(kare);
+  istek = requestAnimationFrame(kare);
   if (document.hidden) return;
-  /* CSS 1152px altında tuvali gizliyor; döngünün de durması gerekiyor, yoksa
-     telefon görünmeyen bir kareyi çizmeye devam eder. Kare istemeye devam
-     ediyoruz ki geniş ekrana dönüldüğünde kendiliğinden geri gelsin. */
-  if (EN < 1152) return;
   if (!t0) t0 = now;
   saat = (now-t0)/1000;
   cizim(saat);
 }
-
-if (!kur()){ kapat(); return; }
-boyutla();
-
-window.addEventListener("resize", function(){ boyutla(); if (kisik) cizim(0); }, {passive:true});
-if (ince && !kisik){
-  window.addEventListener("mousemove", function(e){
-    fx = e.clientX; fy = e.clientY; fareVar = true; sonHareket = saat;
-  }, {passive:true});
+function dur(){
+  calisiyor = false;
+  if (istek){ cancelAnimationFrame(istek); istek = 0; }
 }
 
 var img = new Image();
@@ -1613,11 +1380,50 @@ function baslat(){
   var loc = gl.getAttribLocation(prog, "a0");
   if (loc >= 0){ gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0); }
 
-  if (kisik){ cizim(0); return; }
-  calisiyor = true;
-  requestAnimationFrame(kare);
+  calistir();
 }
-img.src = "images/ai_mark.png";
+
+/* ---------- kurulum ---------- */
+/* Tek seferlik: bağlam, modeller, dinleyiciler ve monogram görseli.
+   WebGL yoksa gövdeye no-alan eklenir; bu artık yalnızca genişken sorulduğu
+   için dar ekranda sınıf hiç gelmez — orada medya sorgusu aynı işi görüyor. */
+var durum = 0;   /* 0: kurulmadı · 1: kuruldu · -1: WebGL yok */
+function kurulum(){
+  try {
+    var sec = {alpha:false, antialias:false, depth:false, stencil:false,
+               powerPreference:"high-performance"};
+    gl = tuval.getContext("webgl2", sec) || tuval.getContext("webgl", sec);
+  } catch(e){ gl = null; }
+  if (!gl || !kur()){ durum = -1; kapat(); return; }
+  durum = 1;
+  boyutla();
+
+  window.addEventListener("resize", function(){
+    boyutla();
+    if (kisik && basladi && genis.matches) cizim(0);
+  }, {passive:true});
+  if (ince && !kisik){
+    window.addEventListener("mousemove", function(e){
+      fx = e.clientX; fy = e.clientY; fareVar = true; sonHareket = saat;
+    }, {passive:true});
+  }
+  img.src = "images/ai_mark.png";
+}
+
+/* Genişlik eşiği her geçildiğinde: dar → dur, geniş → kur (ilk kez) ve döndür.
+   Görsel henüz gelmediyse beklenir; baslat() geldiğinde burayı yeniden çağırır. */
+function calistir(){
+  if (!genis.matches){ dur(); return; }
+  if (durum === 0) kurulum();
+  if (durum < 0 || !basladi) return;
+  boyutla();
+  if (kisik){ cizim(0); return; }
+  if (!calisiyor){ calisiyor = true; istek = requestAnimationFrame(kare); }
+}
+
+if (genis.addEventListener) genis.addEventListener("change", calistir);
+else if (genis.addListener) genis.addListener(calistir);
+calistir();
 
 })();
 </script>

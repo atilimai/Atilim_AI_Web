@@ -13,8 +13,9 @@ onu çalıştırıyor.
 > taşıyor ve dosyanın büyük bölümü kaydırmayla değişen 3B alan katmanı;
 > rehber, nereye bakman gerektiğini baştan söylüyor.
 
-> **Not:** Arşivde tek sayı var. İlk bülten (1. sayı, 2 haber) 23 Eylül
-> 2026'da yönetim panelinden yayımlandı ve Discord kanalına gitti.
+> **Not:** Arşivde iki sayı var. İlk bülten (1. sayı, 2 haber) 23 Eylül
+> 2026'da, 2. sayı (5 haber) 6 Ekim 2026'da yönetim panelinden yayımlandı ve
+> Discord kanalına gitti.
 
 ## Çalıştırma
 

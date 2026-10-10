@@ -83,7 +83,6 @@ rounded:
   sm: "6px"
   md: "8px"
   lg: "12px"
-  xl: "16px"
 
 spacing:
   xs: "8px"
@@ -153,14 +152,6 @@ components:
     rounded: "{rounded.sm}"
     padding: "14px"
     height: "44px"
-  closing-statement:
-    backgroundColor: "{colors.gece}"
-    textColor: "{colors.kagit}"
-    typography: "{typography.headline}"
-  closing-terms:
-    backgroundColor: "{colors.gece}"
-    textColor: "{colors.kagit-s}"
-    typography: "{typography.meta}"
   feed-error:
     backgroundColor: "{colors.gece}"
     textColor: "{colors.kagit-m}"
@@ -171,33 +162,11 @@ components:
     textColor: "{colors.lamba}"
     typography: "{typography.meta}"
     height: "44px"
-  gh-badge:
-    backgroundColor: "{colors.tezgah-2}"
-    textColor: "{colors.kagit-t}"
-    typography: "{typography.label}"
-    rounded: "{rounded.sm}"
-    padding: "3px 8px"
-  gh-note:
-    backgroundColor: "{colors.tezgah-2}"
-    textColor: "{colors.kagit-t}"
-    typography: "{typography.meta}"
-    padding: "16px 24px"
-  meeting-line:
-    backgroundColor: "{colors.gece}"
-    textColor: "{colors.kagit-s}"
-    typography: "{typography.meta}"
-    padding: "16px 0 0"
   feed-more:
     backgroundColor: "{colors.gece}"
     textColor: "{colors.kagit-t}"
     typography: "{typography.meta}"
     padding: "22px 0"
-  modal-panel:
-    backgroundColor: "{colors.tezgah-2}"
-    textColor: "{colors.kagit}"
-    typography: "{typography.body}"
-    rounded: "{rounded.xl}"
-    width: "560px"
   day-button:
     backgroundColor: "{colors.gunduz}"
     textColor: "{colors.murekkep}"
@@ -271,7 +240,6 @@ to be that is not on top of a sentence.
 - Depth without shadows — the codebase contains zero `box-shadow` declarations
 - One easing curve, `cubic-bezier(.16, 1, .3, 1)`, used everywhere
 - Functional text never drops below 12px
-- The standing meeting is stated in plain type at every breakpoint, not left to a rail
 
 ## Colors
 
@@ -293,8 +261,7 @@ to be that is not on top of a sentence.
 - **Tezgah / Tezgah-2** (#191512 / #211B16): Card at rest, card on hover.
 - **Kagit** (#F0EADD, 16.16:1): Headings and primary text.
 - **Kagit-m** (#C4BBAA, 10.18:1): Body copy.
-- **Kagit-s** (#A69C8C, 7.15:1): Secondary information, nav links at rest, the standing
-  meeting line.
+- **Kagit-s** (#A69C8C, 7.15:1): Secondary information, nav links at rest, footer text.
 - **Kagit-t** (#918879): Dates, tags, unverified figures, the least important text.
   **4.87:1 against tezgah-2**, the lightest surface it can land on — this token was raised
   from #8A8175 precisely because the old value passed against the page ground but failed on
@@ -319,7 +286,10 @@ to be that is not on top of a sentence.
   like this and the hairlines are named here.
 
 ### Semantic
-- **Canli** (#7FB069, 7.67:1): Project status only. A state colour, not an accent.
+- **Canli** (#7FB069, 7.67:1): Project status only. A state colour, not an accent. **No
+  consumer on the page since 2026-10-05**: its one user was the "Bülten" card's *Yayında*
+  status, and that card was replaced by a completed project. `.durum.canli` stays in the
+  stylesheet for the next live project; do not repaint something else green to use it.
 
 ### Named Rules
 **The Two Sources Rule.** There are exactly two accent hues and each has one job: the lamp
@@ -337,7 +307,8 @@ category label.
 **The No-Shadow Rule.** There is no `box-shadow` in this codebase. When an element comes
 forward it moves up one surface level and one hairline level. The only exception is the
 `:focus-visible` ring. (A CSSOM reader will report one `box-shadow: unset` on
-`.olcum button`; that is the expansion of `all: unset`, not a shadow.)
+`.feed-hata button`, which exists only while the feed is in its failed state; that is the
+expansion of `all: unset`, not a shadow.)
 
 **The Hardest Surface Rule.** Contrast is measured against the lightest surface the text can
 land on, not the page ground. `kagit-t` on `gece` is 5.54:1; on `tezgah-2` it is 4.87:1, and
@@ -373,17 +344,18 @@ reading. Italic is the emphasis mechanism — the hero's second clause is italic
 - **body-lg** — 18px. Lead paragraphs.
 - **body** — 16px. Document default.
 - **body-sm** — 15px. Buttons, card copy, nav links, footer.
-- **meta** — mono 13px. Dates, sources, issue numbers, the standing meeting line, the
-  "kalan N haber" line, and every day-world status message.
+- **meta** — mono 13px. Dates, sources, issue numbers, the "kalan N haber" line, the
+  empty-events footnote, and every day-world status message.
 - **label** — mono 12px, 500, ls 0.08em, uppercase. Tags and status. **The floor.**
 
 The rendered range runs 12px → 73.6px, a ratio of about 6:1. Automated hierarchy checks
 that cannot resolve `clamp()` see only the literal `px` declarations, and for a long time
-that made them report roughly 1.8:1 and flag the ramp as flat. The literal set now reaches
-28px (the closing invitation's statement), which happens to clear the detector's threshold,
-so the false positive no longer fires. **The reading was always an artefact of the tooling,
-not of the ramp** — if a future edit removes the 28px literal the warning will come back,
-and it will still be wrong.
+that made them report roughly 1.8:1 and flag the ramp as flat. For a while the literal set
+on `index.html` reached 28px — the footer's closing invitation — and the warning stopped
+firing there. That block was removed on 2026-10-01, so `detect.mjs` once again reports
+`flat-type-hierarchy` on `index.html` (12 → 21px literals, 1.8:1), as it does on the other
+three pages. **The reading is an artefact of the tooling, not of the ramp.** Do not add a
+28px literal to silence it.
 
 **Every rendered size is now on the ramp.** `.ozet` on the archive was 16.5px — a single
 use with no role behind it — and now takes `body` (16px / 1.65). The archive summary is
@@ -502,10 +474,13 @@ and `main{padding-bottom: …}` lost the specificity contest to `.wrap{padding: 
 bottom padding never applied at all. Use `padding-block`, or raise specificity to
 `main.wrap`.
 
-**The Standing Fact Rule.** A fact a visitor needs in order to turn up — the day, the room,
-the "no prerequisite" — is stated in the flow of the page at every breakpoint, in type, not
-in a decorative rail. The hero once carried these in a `.defter` margin rail that was
-`display: none` below 760px; the rail is gone and the standing meeting line replaced it.
+**The Standing Fact Rule.** A fact a visitor needs in order to join — the way in, the "any
+department" — is stated in the flow of the page at every breakpoint, in type, not in a
+decorative rail. The hero once carried such facts in a `.defter` margin rail that was
+`display: none` below 760px; the rail is gone, and the hero's lead paragraph ("Hangi bölümde
+okursan oku, katılabilirsin.") and its primary button carry them now. The verb was
+"gelebilirsin" until 2026-10-05; with no standing meeting and no scheduled event there was
+nowhere to come to, and the button beside it says *katıl*.
 
 ## Elevation & Depth
 
@@ -620,10 +595,10 @@ each, at 1440, 1575, 1970 and 390px.
 
 ## Shapes
 
-Five steps, all used: **4 / 6 / 8 / 12 / 16px**. Buttons and inputs `md` (8), cards and images
-`lg` (12), the modal panel `xl` (16), tags and nav links `sm` (6), focus rings `xs` (4).
-`border-radius: 50%` appears only on true circles — the project status dot and the language
-dot in the repository list.
+Four steps, all used: **4 / 6 / 8 / 12px**. Buttons and inputs `md` (8), cards and images
+`lg` (12), tags and nav links `sm` (6), focus rings `xs` (4). `border-radius: 50%` appears
+only on true circles — the project status dot. A fifth step, `xl` (16), had one consumer,
+the repository dialog's panel, and left with it on 2026-10-06.
 
 There is no pill radius in this system. If a pill shape seems necessary, the element is
 probably a tag and should take `sm`.
@@ -641,10 +616,12 @@ probably a tag and should take `sm`.
   follows the world: `lamba` on the night ground, `lamba-d` on paper.
 
 **The Reset Rule.** `all: unset` also resets `outline`, and it out-specifies the global
-`:focus-visible` rule — `.olcum button` (0,1,1) beats `:focus-visible` (0,1,0). Any element
-that resets itself must restate its own focus ring; `.olcum button:focus-visible` does. The
-two placeholder stat buttons shipped without a visible ring until this was found by tabbing
-to them, so verify with a keyboard, not by reading the global rule.
+`:focus-visible` rule — `.feed-hata button` (0,1,1) beats `:focus-visible` (0,1,0). Any
+element that resets itself must restate its own focus ring; `.feed-hata button:focus-visible`
+does. The `.olcum` stat buttons shipped without a visible ring until this was found by
+tabbing to them, so verify with a keyboard, not by reading the global rule. The one
+interactive `.olcum` row has been a plain `<a>` since 2026-10-06: no reset, so the global
+ring applies unchanged.
 
 ### Cards (night world)
 tezgah ground, hair border, `lg` radius, 24px padding. Hover moves to tezgah-2 and hair-s.
@@ -672,10 +649,11 @@ there, or the desktop divider follows it into the panel).
 
 It used to be `display: none` above 900px, on the reasoning that the hero and the footer
 already carried the route. **That reasoning was wrong about the footer**: the footer's only
-join affordance was the word "Discord" among three grey text links. The decision to turn up
-is made *after* reading the events, and at that point a desktop visitor had nothing
+join affordance was the word "Discord" among three grey text links. The decision to join
+is made *after* reading the page, and at that point a desktop visitor had nothing
 clickable within 6,000px of scroll while a phone visitor had a link that followed them.
-Both halves are fixed — this link, and the closing invitation below.
+Since 2026-10-01 this link is the only join affordance below the hero: the footer's closing
+invitation and its second primary button were removed (see Footer below).
 
 ### Brand mark
 The society's own logo, monogram only: the A-and-i figure lifted out of the full lockup,
@@ -690,26 +668,23 @@ Both files are derived, and the source they are derived from is in the repositor
 `images/ai_s.png`, the society's original full lockup at 1796x1796. Keep it — regenerating
 the monogram or the tab icon without it means redrawing them.
 
-### Closing invitation (`.kapanis`)
+### Footer
 
-The footer opens with the page's second ask: a `headline` statement in Newsreader
-("Önümüzdeki perşembe, aynı masadayız."), the standing fact in `meta` mono beneath or beside
-it, and `button-primary`. Flex with `flex-wrap`, the button pushed right by `margin-left:
-auto`; below 760px the block stacks and the button drops its auto margin. A `hair` bottom
-border separates it from the meta line, which is now just "Atılım AI · Ankara" plus the
-three links.
+One line: "Atılım AI · Ankara", the contact address, and three links (Haberler, Discord,
+GitHub) in `body-sm`, `kagit-s` and `kagit-t`, above a `hair` top border.
 
-**Two primary buttons on one page is allowed here, and only here.** The rule is one per
-*screen*: the hero's button sits at y≈571 and this one at y≈5722, so no viewport ever
-contains both. Measured, not assumed.
+**The closing invitation (`.kapanis`) was removed on 2026-10-01.** It invited visitors to a
+weekly gathering the society no longer holds, and its primary button pointed at Discord
+while the join route is expected to change (PRODUCT.md, Operating Context). The page now has
+one primary button, the hero's. Do not bring the block back as a Discord-only ask.
 
 **The footer shares the reading measure.** `footer .wrap` takes the same `padding-right` as
 `main .wrap` above 1152px. Two reasons, both found by measurement: without it the footer ran
 the full box width and its right-aligned links sat ~600px right of where every other line of
-the page ended; and the closing button landed *inside the lens rectangle* at 1920px
-(button 1605–1709px, lens 1162–1722px), which is the one thing the Reading Light Rule
-forbids. `nav` is deliberately excluded — it is chrome, not content, and it sits above the
-lens vertically.
+the page ended; and footer content can reach the lens rectangle — the removed closing button
+landed *inside* it at 1920px (button 1605–1709px, lens 1162–1722px), which is the one thing
+the Reading Light Rule forbids. `nav` is deliberately excluded — it is chrome, not content,
+and it sits above the lens vertically.
 
 ### Disclosure indicator (`.isaret`)
 
@@ -729,16 +704,11 @@ open and an indicator would advertise an interaction that does not exist.
 Before it, the row's only cue was `opacity: .78` on hover — invisible at rest, and on a
 touch device invisible entirely. Every event description, including the repeated "önkoşul
 yok, laptop yeterli", sat behind a trigger nobody could see. The same problem and the same
-kind of fix applies to `.olcum`: its two button rows now end in a `→` in `kagit-t` that goes
-`lamba` and shifts 3px on hover, while the third row — a plain `<div>`, not interactive —
-has none. Three identical-looking rows where two were buttons was a standards break, not a
+kind of fix applies to `.olcum`: its one interactive row — "4 tamamlanan proje", a link to
+`#s4` — ends in a `→` in `kagit-t` that goes `lamba` and shifts 3px on hover (reduced motion
+keeps the colour and drops the shift's transition), while the two plain `<div>` rows have
+none. Identical-looking rows where only some were interactive was a standards break, not a
 subtlety.
-
-### Standing meeting line
-Mono 13px `kagit-s`, hairline above, capped at 52ch, sitting directly under the hero's
-button row at every breakpoint. The day leads in `kagit`; the room and the "no prerequisite"
-follow in `kagit-s`, separated by `·`. The footer repeats it in prose so the page closes on
-the invitation rather than on a card.
 
 ### Events list
 **Empty since 2026-09-28.** No special events are scheduled, so the list is out of the page
@@ -776,7 +746,32 @@ carry the pattern below. One file, one contract, one set of states.
 |---|---|---|
 | loading | `.feed-kalan` | *Haftalık rapor yükleniyor…* |
 | data read, no issue | `.feed-kalan` | *Henüz yayımlanmış bir sayı yok.* |
-| request failed (reject or `!r.ok`) | `.feed-hata` | *Haftalık rapor şu an yüklenemedi.* + **Yeniden dene** |
+| request failed (reject, `!r.ok`, or no first byte within 10s) | `.feed-hata` | *Haftalık rapor şu an yüklenemedi.* + **Yeniden dene** |
+
+**A stalled request is a failed request.** Until 2026-10-01 a connection that hung without
+dropping — campus Wi-Fi, a phone on one bar — left *"yükleniyor…"* on screen forever, with
+nothing to press; on `haber.html`, which had no loading line at all, it left a blank page
+between the bar and the footer. All three reading surfaces now give the response 10s
+(`ZAMAN_ASIMI`) to start arriving and then draw the failure state. The fetch is not aborted
+— no `AbortSignal`, because the panel preview wraps `window.fetch` and this repository cannot
+see how it treats a second argument — so a response that arrives late still renders. A
+request counter (`sonIstek`) silences only a request a newer retry has superseded.
+
+**A malformed record is not a network failure.** One `null` item used to throw mid-render,
+fall into `.catch()`, and replace the whole feed — and the whole archive — with *"şu an
+yüklenemedi, bağlantın kesilmiş olabilir"*, behind a retry that could never succeed. Every
+item now passes through `temizHaber()` first: non-objects are skipped, text fields are
+coerced to strings, and `link` / `gorsel` survive only as `http(s)` (a `javascript:` link
+rendered live before). A skipped record keeps its position — `?sira=` is the index in the
+original array, because Discord links depend on it.
+
+**Retry keeps focus.** The button used to be `disabled` and then destroyed, so focus fell to
+`<body>` and a keyboard or screen-reader user never learned the outcome. It now takes
+`aria-disabled` and reads *"Deneniyor…"* while the request runs; afterwards focus moves to
+the new retry button on failure, or to the content on success (the first news link, the
+archive counter, the article `h1`). Non-interactive targets take `tabindex="-1"` and
+`[tabindex="-1"]:focus{outline:none}`: a ring there would read as a control. A failure on
+first load never moves focus.
 
 The failure state is the important one. The `.catch()` used to leave the page untouched,
 and because the static markup *is* the empty state, a network failure printed *"Henüz
@@ -794,6 +789,22 @@ The retry button re-enters the same `getir()` and an in-flight guard keeps a dou
 from stacking rows. `#feedIssue` carries `:empty{display:none}` so a missing issue number
 does not leave 32px of dead space above the state line. The loading and empty lines share
 one row height, so switching between them shifts nothing.
+
+**On the reading pages, nothing the content will push is on screen while it loads.** At
+1440×900 the archive's footer sat in the middle of the first screen under an empty list, and
+the arriving issues shoved it off: CLS **0.134** on `haberler.html`, over the 0.1 "good"
+line. `haber.html` was worse. Its loading line lived inside `<main>`, and the cover
+(`#kapak`: title, summary, meta) unhides *above* `<main>`, so the body dropped 448px in one
+frame and took the footer with it: CLS **0.548**, past the 0.25 "poor" line. Phones never
+showed either, because there the footer starts below the fold. Now the first fetch puts
+`bekliyor` on `<body>`; `.bekliyor footer` — and on the article `.bekliyor #govde` — is
+`display:none`, and the article's loading line sits outside `<main>` with `.wrap`, in the
+cover's place. Every exit (content, empty, failed, timed out) removes the class. An element
+out of layout cannot shift, and it comes back as a new element. Measured after: **0.026**
+and **0.012**. The remainder is a 29px one-line reflow that appears and reverts within about
+40ms, consistent with the two Google Fonts subsets landing at different times; not chased.
+With no script the class never arrives, so the footer is always there; a retry does not set
+it, because the error card is already on screen and stays until the result.
 
 Under no-JS the static markup stands alone and states the empty case, which is the only
 true sentence available without a fetch.
@@ -816,8 +827,9 @@ ceiling of 25 items this is the difference between a 6,929px and a 9,955px page 
 
 The landing page's one instrument. **Raw WebGL, inside the page: no dependency, no build
 step, no CDN script.** The context is `webgl2` falling back to `webgl`; the shaders are
-GLSL ES 1.00, which both accept. 18,000 points on desktop, 7,500 below 760px, one
-`drawArrays`, device pixel ratio capped at 1.75.
+GLSL ES 1.00, which both accept. 18,000 points, one `drawArrays`, device pixel ratio capped
+at 1.75. There is no smaller phone count any more: the field is only ever set up at 1152px
+and wider (see *Below 1152px* at the end of this section).
 
 **Five models, five vertex attributes.** Each point carries its position in all five
 targets (`a0`–`a4`) plus a size and a seed — seven attributes, inside WebGL1's guaranteed
@@ -856,9 +868,9 @@ field that takes the whole viewport is the failure mode this system was built to
 with no outline to contain it the size cap is the only thing holding that line. Do not
 raise it.
 
-**The section-transition band** (`.gecis`) is `min(70vh, 580px)`, `min(72vh, 540px)` below
-760px — the phone value is not a shrunk desktop value; it is the scroll distance the morph
-needs, and 470px was too short for it, and is completely empty — no caption, no content of any kind. Naming the model in
+**The section-transition band** (`.gecis`) is `min(70vh, 580px)` — collapsed to `--sp-sec`
+below 1152px, under reduced motion and without WebGL — and is completely empty: no caption,
+no content of any kind. Naming the model in
 type explained a picture that does not need explaining and put a text run inside the one
 region built to have none. The morph completes
 in the **first 46%** of the band, so by the time the rectangle has finished opening the model is
@@ -886,51 +898,57 @@ mattering after 1.5s: the field answers intent, not position. Coarse pointers ge
 it.
 
 **Fallbacks.** No WebGL context: `body.no-alan` hides the canvas, collapses the bands to
-`--sp-sec`, and the page is exactly what it was before the field existed.
-`prefers-reduced-motion`: one static frame, no loop, bands collapsed to `--sp-sec`.
-Hidden tab: the loop returns early.
+`--sp-sec`, and the page is exactly what it was before the field existed. The context is
+only requested at 1152px and wider, so `no-alan` only ever appears there; below, the media
+query already does the same job. `prefers-reduced-motion`: one static frame, no loop, bands
+collapsed to `--sp-sec`. Hidden tab: the loop returns early.
 
-**Below 1152px the field does not exist at all.** `@media(max-width:1151px)` hides the
-canvas and collapses every `.gecis` to `--sp-sec`, and the draw loop carries a matching
-`if (EN < 1152) return;` so a phone is not rendering frames nobody can see. The loop keeps
-*requesting* frames, so widening the window brings the field back without a reload.
+**Below 1152px the field does not exist at all — not drawn, and not built.**
+`@media(max-width:1151px)` hides the canvas and collapses every `.gecis` to `--sp-sec`, and
+the script asks nothing of the device either: no WebGL context, no particle generation, no
+buffers, no frame loop. Setup runs the first time `matchMedia("(min-width:1152px)")`
+matches, at load or when the window is widened. Its `change` event stops the loop on
+narrowing and restarts it on widening, so the field still comes back without a reload. The
+pending frame's id is kept and cancelled on stop, so a fast narrow-and-widen cannot leave
+two loops running.
 
-This replaced a real cost, measured: the bands stayed at `min(72vh, 540px)` on a phone and
-four of them added about **1,780px of empty scroll** to a 390×844 page, while the field
-kept running 7,500 particles behind them. The device class most likely to arrive from a
-campus Discord link was paying battery, heat and four screens of black for a layer that
-carries no information. Page height at 390px went from roughly 7,100px to **5,339px**.
+This replaced two real costs, both measured. First the bands: they stayed at
+`min(72vh, 540px)` on a phone and four of them added about **1,780px of empty scroll** to a
+390×844 page. The device class most likely to arrive from a campus Discord link was paying
+battery, heat and four screens of black for a layer that carries no information. Page height
+at 390px went from roughly 7,100px to **5,339px**.
+
+Then the setup (2026-10-01). Collapsing the bands left the script behind: the loop only
+skipped *drawing* (`if (EN < 1152) return;`) and kept requesting frames so a widened window
+would recover. A phone still opened a WebGL context, generated 7,500 points for all five
+models, uploaded the buffers, and then woke 60 times a second forever to draw nothing.
+Traced at 390px with the CPU slowed 4×: **37.8ms** of field evaluation plus **14.6ms** when
+the logo image loaded, against about 3ms for the rest of the page's setup script, and
+**4.4ms of main-thread work per idle second**. After: 2.4ms, 0ms, no context, **0 frames**,
+0.07ms per idle second. Desktop was verified unchanged by reading pixels back from the old
+and new code at the same moments: identical scissor rectangles, the same lit region to
+within particle jitter. It also closed a latent bug: a page loaded narrow and then widened
+kept the 7,500-point phone count on a desktop screen — 16,883 lit pixels in the lens
+against about 25,700.
 
 The lens region does not exist below 1152px either (`mercekKutusu()` returns `null`), so the
 only state that was left down there was the plate — and the plate in a collapsed band is
 the one place the field has nothing to say.
 
-### Repository dialog (GitHub data)
+### Repository dialog — removed 2026-10-06
 
-Repo names, links and the `.gh-badge` visibility chip are static and real. **Everything the
-API supplies — language, star count, fork count, last-pushed date — ships `hidden` and is
-unhidden only when the response arrives.** It used to ship with values baked into the
-markup, so when the request failed silently (an unauthenticated GitHub call is capped at 60
-per hour and a campus network shares one IP) fossil numbers sat on screen presenting
-themselves as live data. Now it is either the real value or nothing.
+The "4 tamamlanan proje" row used to open a dialog that listed the four repositories again,
+with language, star, fork and last-pushed figures from the GitHub API. The `#s4` cards already
+link to the same four repositories, so the dialog was a second presentation of one list —
+and the most complex thing on the page: a focus trap, a scroll lock with scrollbar
+compensation, an unauthenticated API call capped at 60 per hour per campus IP, a 10s timeout
+and a failure note. Markup, styles and the script section went together; the row is now an
+`<a href="#s4">`, and the `xl` radius step left with the panel.
 
-On failure a single `.gh-note` row states it in the page's own voice — *"Yıldız ve
-güncelleme bilgisi şu an GitHub'dan alınamadı."* — and the request state resets so
-reopening the dialog tries again. On success any previous note is removed.
-
-`.gh-badge` had **no CSS rule at all** until 2026-09-10: "Public" rendered as unstyled 16px
-body text welded to the amber repo link (`pneumonia-xray-aiPublic`) and was the brightest
-thing in the row. It now takes the same vocabulary as `.etiketler span` — mono 12px,
-`kagit-t`, `hair-s` border, `r-sm`.
-
-`.gh-name` and `.gh-desc` carry `overflow-wrap: anywhere` and `min-width: 0`; the panel is
-`overflow: hidden`, so an API-supplied long repo name or an unbroken URL used to clip
-instead of wrapping.
-
-**The modal locks background scroll**, compensating for the scrollbar width with matching
-`padding-right` on `<html>` so nothing shifts sideways — measured `scrollWidth` unchanged
-at 1440px through open and close. A depth counter guards the unlock. There is no
-`overflow-x: hidden` anywhere on this site to absorb a mistake here.
+If an API-fed figure ever returns, the dialog's two lessons still bind: the value ships
+`hidden` and is unhidden only when the response arrives, never baked into markup as a
+placeholder; and a failed request says so in one line in the page's own voice instead of
+leaving stale numbers dressed as live data.
 
 ### Day-world controls and status
 Buttons drop to 44px and 16px padding on paper, and use `cizgi-s` borders on a transparent
@@ -947,6 +965,14 @@ scaffolding (`#kapakUst`, `#ozet`, `#kapakMeta`); a successful retry then wrote 
 no longer existed, threw, and landed back on the same error card. It hides them instead, and
 `ciz()` unhides them. Verified end to end: file removed → error card → file restored → retry →
 90 paragraphs, category, date and meta line all back.
+
+**A source that is a URL shows its host.** The contract's `kaynak` is a source *name*, but the
+panel accepts a URL and issue 1 carries two. The address is already behind **Kaynağa git**, so
+`.kaynak` and the article's meta line print `anthropic.com`, not the full path. Panel-fed
+metadata — `.kaynak`, `.etiket`, the item date, figure captions, `#kapakMeta` — carries
+`overflow-wrap: anywhere`, and the archive's grid children take `min-width: 0`: with one
+unbroken 200-character source the archive and the article both measured **1,767px wide at
+320px**. Re-measured after: 320px at 320, 1440px at 1440, on all three pages.
 
 ### Visually hidden label (`.gizli`) — removed 2026-09-28
 
@@ -1006,7 +1032,9 @@ not inherited from the file, because `max-height` alone leaves the box at zero h
 the image loads and then pushes every paragraph below it down. The border is applied only
 after `load` (`.yuklendi`), so a slow or hanging address shows reserved space rather than an
 empty framed box, and `onerror` removes the element outright rather than leaving a broken
-icon. Measured layout shift on both pages is **0**.
+icon. The image boxes themselves shift nothing. This file used to say measured layout shift
+on both pages was **0**; that held for the images and not for the pages — on a 1440px
+desktop the loading state cost 0.134 and 0.548 until 2026-10-01 (see News row).
 
 `haberler.html` sets `loading = "lazy"`; `haber.html` does not. The archive's images sit
 far down a long list, while the article's lead image is that page's LCP candidate. The
@@ -1029,18 +1057,13 @@ reading pages. They never meet in one document, but do not assume one rule serve
 
 ### Documented exceptions
 
-Three values sit outside the palette deliberately. All are recorded so a reviewer does not
-"fix" them:
+Two values sit outside the palette deliberately. Both are recorded so a reviewer does not
+"fix" them. (A third, the GitHub language-colour map, left with the repository dialog on
+2026-10-06.)
 
-- **GitHub language colours** (the `RENK` map in `index.html`'s script) are external
-  semantic data, not design tokens. They identify a language the way a flag identifies a
-  country; recolouring them would make them wrong. They no longer appear as inline
-  `style="background:…"` in the markup — that was the fossil-value problem, and removing it
-  also took the detector's last finding with it, so `detect.mjs` now reports **zero** on
-  `index.html`. The map itself stays, and stays exempt.
 - **The day world's cream ground** (#F2EDE3) is flagged by generic anti-pattern detectors as
   a saturated trope. It is a reasoned choice: article text runs to 20,000 characters. Keep it.
-- **`box-shadow: unset` on `.olcum button`** is not a shadow; it is what `all: unset`
+- **`box-shadow: unset` on `.feed-hata button`** is not a shadow; it is what `all: unset`
   expands to in the CSSOM. The No-Shadow Rule is intact.
 
 ### Do:
@@ -1050,6 +1073,10 @@ Three values sit outside the palette deliberately. All are recorded so a reviewe
 - **Do** give every asynchronous surface three states, not two: loading, empty, and
   failed — and make the failed one name the problem and offer the way out. An empty state
   standing in for a network error is a lie with a delivery date.
+- **Do** keep a loading state out of the path of the content that replaces it. Anything
+  visible while loading that the content will push — a footer, a body under a header that
+  unhides — stays out of layout until the first result, and the check is measured at
+  desktop size, where the footer is on the first screen.
 - **Do** ship API- and panel-supplied figures `hidden` and unhide them on arrival, so a
   failed request shows nothing rather than a stale value dressed as live data.
 - **Do** hide an indicator that `.js` is required to operate.
@@ -1086,7 +1113,8 @@ Three values sit outside the palette deliberately. All are recorded so a reviewe
 - **Don't** let `footer .wrap` or any other content container run wider than
   `main .wrap` above 1152px — the lens rectangle is there, and content will land inside it.
 - **Don't** restore a positive `--daralt` below 1400px. The reading column is the floor.
-- **Don't** leave the field or its `.gecis` bands alive below 1152px.
+- **Don't** leave the field or its `.gecis` bands alive below 1152px — and don't build it
+  there: no context, no particles, no frame loop waiting for the window to widen.
 - **Don't** bake an API value into markup as a placeholder.
 - **Don't** put two rows that look identical next to each other when only some of them are
   interactive.
