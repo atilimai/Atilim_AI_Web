@@ -271,8 +271,27 @@ Kurallar:
   `src/lib/site/news.ts` → `icerikBloklari`.
 
   Panelden yüklenen görseller `images/haberler/<içerik hash'i>.webp` yolunda
-  durur; haberden çıkarılınca panel onları depodan da siler. `images/`
-  altındaki diğer dosyalar sitenin kendi varlıkları, panel onlara dokunmaz.
+  durur (ad, dosyanın SHA-256'sının ilk 16 hanesi; `.jpg` ve `.png` de
+  kabul ediliyor); haberden çıkarılınca panel onları depodan da siler.
+  `images/` altındaki diğer dosyalar sitenin kendi varlıkları, panel onlara
+  dokunmaz.
+
+  **Açıklama satırını boş bırakma.** Ekran okuyucunun görsel için duyduğu
+  tek metin o: sayfalar onu hem `<figcaption>` hem `alt` olarak basıyor.
+  Bu arşivdeki metin arası görseller tablo ve grafik, yani süs değil içerik;
+  açıklamasız olan `alt=""` alıp ekran okuyucuda hiç duyulmuyordu (WCAG
+  1.1.1). Görselin ne olduğunu yaz, verisini değil — *"Tablo — Sonnet 5.5,
+  Sonnet 5, Opus 5.5 ve GPT-6 Sol'un sekiz testteki skorları (Anthropic)"*;
+  önemli sayılar zaten çevresindeki paragrafta. 11 Ekim 2026'da arşivdeki
+  beş açıklamasız görselin açıklaması bu biçimde yazıldı. Kapak görseli
+  (`gorsel`) ise başlığı tekrar eden tanıtım görseli sayılır ve bilerek
+  `alt=""` basılır: başlıkta olmayan bir bilgiyi kapağa değil metnin içine koy.
+
+  **Başka sitenin görselini adresiyle gösterme; panelden yükle.** Dış adres
+  ziyaretçinin IP'sini o siteye götürür, bağlantı ölünce de görsel kaybolur.
+  1. sayının dört görseli `ares.shiftdelete.net` ve `pbs.twimg.com`'dan
+  çekiliyordu; 11 Ekim 2026'da indirilip panelin adlandırmasıyla bu klasöre
+  kondu, panel onları artık kendi görseli sayıyor.
 - `icerik` doluysa: arşivde kart açılır, ana sayfada "Devamını oku" çıkar,
   başlık ayrıntı sayfasına bağlanır. Boşsa eski davranış sürer — başlık
   doğrudan `link`'e gider.
@@ -344,6 +363,15 @@ HTML'i önbellekte tutabiliyor.
   `fetch("content/haberler.json")` çağrısını taslak veriye yönlendirerek
   çiziyor. Yani o çağrının biçimini değiştirirsen panelin önizlemesi bozulur;
   buna dokunacaksan panel tarafında `src/lib/site/preview.ts` dosyasına da bak.
+- **Dört sayfa belirteçlerini kendisi taşır, bilerek.** Her sayfanın `:root`'u
+  yalnızca kullandığı belirteçleri tanımlıyor. 11 Ekim 2026'da karşılaştırıldı:
+  ortak 44 belirteçte tek fark `--lamba-alt`, o da iki dünyanın farkı (gecede
+  kehribar, gündüzde koyu kehribar). Ortak bir stil dosyası panelin
+  önizlemesini bozmazdı — önizleme şablona yayımlanmış sitenin `<base href>`'ini
+  ekliyor, göreli bir `<link>` oraya çözülür — ama her sayfanın ilk çizimine
+  engelleyici bir istek ekler, karşılığında giderilecek bir sapma yok. Bir
+  belirtecin değerini değiştirirsen dört dosyada da ara:
+  `grep -n -- "--lamba-alt:" *.html`.
 - **Dış kaynak yok.** Site hiçbir CDN'den kod çekmiyor; 11 Ekim 2026'dan beri
   yazı tiplerini de Google Fonts'tan değil `fonts/` klasöründen sunuyor (nasıl
   üretildikleri `fonts/README.md`'de). Google her yüzü latin + latin-ext diye
