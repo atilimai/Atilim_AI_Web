@@ -58,6 +58,12 @@ is published, but must not imply a longer history than the archive shows.
   scheduled.** The list was removed from the page and a one-line footnote under the section
   heading says so; the row markup is kept as a comment in `index.html` for when the next
   event is announced.
+- **The digest publishes on Tuesdays and covers Tuesday to Tuesday** — each issue gathers
+  the AI news from the previous Tuesday up to its own publication day. This is a team
+  decision, written onto the site on 2026-10-11 (the `#s3` intro on the landing page and
+  the archive's intro). Issue 1 went out on a Wednesday (2026-09-23); the rule applies from
+  issue 2 on. It is the one recurring schedule the site states; it does not license a
+  recurring meeting.
 - Discord is the society's live channel; the weekly digest is pushed there automatically.
   It is currently the **only** join path. The team intends to add a second one and will
   decide its shape before it ships (2026-09-10), so nothing should be built that assumes

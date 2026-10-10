@@ -383,6 +383,13 @@ HTML'i önbellekte tutabiliyor.
   vazgeçti; gün, saat ve oda o gün hem siteden hem bu belgelerden kaldırıldı.
   Yeni bir ekip kararı olmadan sayfaya tekrarlayan bir program, bir oda ya da
   haftalık bir buluşmaya davet ekleme.
+- **Rapor salı günü çıkar, salıdan salıya bir haftayı kapsar.** Ekip
+  kararı; 11 Ekim 2026'da siteye yazıldı: ana sayfadaki rapor girişi
+  ve arşivin giriş cümlesi bunu söylüyor. Buluşmanın aksine raporun sabit bir
+  günü var; bu ikisini karıştırma. 1. sayı bir çarşamba (23 Eylül) çıkmıştı,
+  kural ondan sonrası için geçerli — eski sayının tarihini "düzeltme". Gün
+  değişirse iki cümleyi de, bu maddeyi de, `PRODUCT.md`'deki karşılığını da
+  güncelle.
 - **Etkinlikler tarihli, tek seferlik.** 28 Eylül 2026'dan beri planlanmış
   etkinlik yok: liste kaldırıldı, yerinde `.tl-bos` dipnotu duruyor, satır
   kalıbı da `#s2`'nin içinde yorum olarak saklanıyor. Yeni etkinlik eklerken
