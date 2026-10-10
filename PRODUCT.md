@@ -180,10 +180,10 @@ digest, which is what Principle 4 forbids. Both halves of that are now gone:
   The section keeps its design fallback; it just no longer invents news to fill it.
 
 **How the Discord job decides.** `content/.son-gonderilen` holds the number of the last
-issue sent, now `1`. The job skips only when the newest issue's number *equals* that value;
+issue sent, now `2`. The job skips only when the newest issue's number *equals* that value;
 any other number, higher or lower, is sent. This file used to say only issues numbered above
 14 would be sent. The script never compared that way, which is why issue 1 posted while the
-file held 15. A correction to issue 1 stays silent; issue 2 posts.
+file held 15. A correction to issue 2 stays silent; issue 3 posts.
 
 ## Product Principles
 

@@ -368,11 +368,11 @@ HTML'i önbellekte tutabiliyor.
   gösterdiğinden uzun bir yayın geçmişi ima etme. `index.html`'deki statik boş
   durum cümlesi yerinde kalıyor: betik yoksa gösterilen tek metin o.
 - **Discord yalnızca aynı numarayı atlar.** `content/.son-gonderilen` şu an
-  **1**. Betik en yeni sayının numarası bu değere *eşitse* hiçbir şey
+  **2**. Betik en yeni sayının numarası bu değere *eşitse* hiçbir şey
   göndermiyor; farklı her numarayı, daha küçük olsa bile, gönderiyor. Bu
   dosyada eskiden "yalnızca 14'ten büyük numaralar gider" yazıyordu; betik hiç
   öyle karşılaştırmadı, 1. sayı da dosyada 15 dururken bu yüzden gitti. Bir
-  sonraki sayıya 2 numarasını ver; 1. sayıdaki bir düzeltme Discord'a gitmez.
+  sonraki sayıya 3 numarasını ver; 2. sayıdaki bir düzeltme Discord'a gitmez.
 - **Dokunma hedefi 44 px, satır sonu `overflow-wrap:anywhere`.** İkisi de
   ölçülerek getirildi: panelin izin verdiği 200 karakterlik bölünmez bir başlık
   okuma sayfalarında binlerce piksel yatay taşma yapıyordu. Panelden **ya da
