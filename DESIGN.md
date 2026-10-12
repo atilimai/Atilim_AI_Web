@@ -1192,7 +1192,8 @@ asymmetry is the point — do not harmonize the two.
 cover (`.gorsel`) is decorative and takes `alt=""`. An inline image's caption — the lines
 under its URL in the full text — is printed as both `alt` and a `figcaption` in mono 13px
 `murekkep-s`, and the link that replaces a failed image uses it as its text. An inline image
-with no caption still renders `alt=""`; the panel warns about it but does not stop it.
+with no caption still renders `alt=""`; the panel warns about it and asks again at publish,
+but does not stop it.
 This file used to say alt text was always empty and waited on a contract field; the
 contract did not change.
 

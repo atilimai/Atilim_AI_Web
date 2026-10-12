@@ -239,11 +239,12 @@ by role instead (the rule for editors is in `EKIP.md`):
   under the URL as their caption, and both reading pages print it twice: as the image's
   `alt` and as a visible `figcaption`. All five inline images in the archive carry one
   (measured 2026-10-12).
-- **The panel warns; it does not block.** Since `atilimai/Atilim_AI_Panel#3` (merged
-  2026-10-10) a news card shows a warning when an inline image has no caption, but the item
-  can still be published, and that image then renders with `alt=""`. The failure can come
-  back one item at a time. A confirmation at publish time — still not a block — is open as
-  `atilimai/Atilim_AI_Panel#4` (2026-10-12); update this line when it merges.
+- **The panel warns and asks; it does not block.** Since `atilimai/Atilim_AI_Panel#3`
+  (merged 2026-10-10) a news card shows a warning when an inline image has no caption, and
+  since `atilimai/Atilim_AI_Panel#4` (merged 2026-10-12) pressing *Yayımla* with such an image
+  opens a strip that names the affected items and offers *Yine de yayımla* or *Vazgeç*. The
+  item can still be published, and that image then renders with `alt=""`, so the failure can
+  come back one item at a time — but no longer without someone confirming it.
 
 One further weakness, not a WCAG failure:
 
