@@ -1188,8 +1188,13 @@ desktop the loading state cost 0.134 and 0.548 until 2026-10-01 (see News row).
 far down a long list, while the article's lead image is that page's LCP candidate. The
 asymmetry is the point — do not harmonize the two.
 
-Alt text is still empty — the data contract has no field for it. That is the one known
-accessibility gap the code cannot close (see PRODUCT.md).
+**Alt text follows the image's role** (since 2026-10-11; PRODUCT.md → Accessibility). The
+cover (`.gorsel`) is decorative and takes `alt=""`. An inline image's caption — the lines
+under its URL in the full text — is printed as both `alt` and a `figcaption` in mono 13px
+`murekkep-s`, and the link that replaces a failed image uses it as its text. An inline image
+with no caption still renders `alt=""`; the panel warns about it but does not stop it.
+This file used to say alt text was always empty and waited on a contract field; the
+contract did not change.
 
 **Status and error messages** use `.durum` — mono 13px `murekkep-s` in a `kart` card with a
 `cizgi` border and `lg` radius. Every state on `haber.html` (address missing, address
@@ -1215,8 +1220,10 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
   expands to in the CSSOM. The No-Shadow Rule is intact.
 - **`italic-serif-display` on `index.html`, `404.html` and `katil.html`** is the detector
   reading the `h1`'s italic amber clause. Italic is this system's emphasis mechanism
-  (Typography) and the clause is the whole `h1`'s point; the heading itself is roman. It is the
-  only finding the 4.5.2 detector reports on the five pages (2026-10-12). Keep it.
+  (Typography) and the clause is the whole `h1`'s point; the heading itself is roman. Keep it.
+  With `.impeccable/config.json` applied the 4.5.2 detector reports nothing on the five pages;
+  with `--no-config` it reports five findings, all recorded in this list — this one on three
+  pages and `cream-palette` on the two reading pages (2026-10-12).
 
 ### Do:
 - **Do** give a control a resting-state affordance, not only a hover one. A `:hover`

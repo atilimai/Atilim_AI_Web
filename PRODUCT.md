@@ -38,14 +38,18 @@ An admin panel commits to this repository, GitHub Pages publishes the site, and 
 Actions job posts the same issue to Discord exactly once. That machinery is a fact about
 the society, not a marketing claim.
 
-**One issue has been published.** Issue 1, with two items, went out from the panel to the
-site and to Discord on 2026-09-23 (commit `87581c9`). Before that, `content/haberler.json`
+**Two issues have been published.** Issue 1, with two items, went out from the panel to the
+site and to Discord on 2026-09-23 (commit `87581c9`). Issue 2, dated 2026-10-06 with five
+items, followed from the panel on 2026-10-08 (commit `16aa7a0`) and was posted to Discord
+once. Before issue 1, `content/haberler.json`
 was cleared on 2026-09-09 by team decision. The entries it used to hold were placeholders,
 and the issue numbers in them (12, 13, 14) were placeholders too — they were never a count
 of anything, and numbering restarted at 1. An earlier version of this file read the highest
 number as a total and claimed "fourteen issues exist"; that was wrong, and the mistake is
-recorded here so it is not repeated. The archive is one issue deep: copy may say the report
-is published, but must not imply a longer history than the archive shows.
+recorded here so it is not repeated. The opposite mistake happened too: until 2026-10-12
+this paragraph still said one issue, days after the second had shipped. The count here has
+to move when the archive does. The archive is two issues deep: copy may say the report is
+published, but must not imply a longer history than the archive shows.
 
 ## Operating Context
 
@@ -144,8 +148,9 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 
 **Evidence that grows weekly:** the archive in `content/haberler.json`. Issue 1
 (2026-09-23, two items) exercised the whole chain end to end — panel commit, Pages, one
-Discord post. One issue proves the machinery works; the archive becomes the society's
-strongest evidence as the weeks after it fill in.
+Discord post — and issue 2 (2026-10-06, five items) went through the same chain unchanged.
+Two issues show the machinery works; the archive becomes the society's strongest evidence
+as the weeks after them fill in.
 
 **Not established — must not be fabricated.** Member count is unknown and appears nowhere
 on the site.
@@ -212,25 +217,33 @@ file held 15. A correction to issue 2 stays silent; issue 3 posts.
 ## Accessibility & Inclusion
 
 **Target: WCAG 2.1 AA.** Not an external mandate; a standard the team has adopted. Measured
-on the shipped pages, not asserted: **zero contrast failures** across all three pages at
-desktop and phone widths, **zero horizontal overflow** from 320px to 1970px, **zero
-interactive targets under 44px**, no heading-level skips, a skip link and full landmark set
-on every page, a mobile menu that closes on Escape and returns focus, and a **Yeniden dene**
+on the shipped pages, not asserted: **zero contrast failures** across all five pages at
+desktop and phone widths (re-measured 2026-10-12 at 320, 390 and 1440px), **zero horizontal
+overflow** from 320px to 1970px (all five re-checked 2026-10-12 at 320, 390, 1440 and 1970px), **zero interactive targets under 44px**, no heading-level
+skips, a skip link and full landmark set on every page with a top bar (`404.html` has no bar,
+so nothing precedes its `main`), a mobile menu that closes on Escape and returns focus, and a **Yeniden dene**
 that keeps focus through the retry and hands it to the result. The type floor is
 12px. `prefers-reduced-motion` cancels the spatial transitions by name and leaves colour and
 opacity feedback intact; the scroll-driven field draws one static frame and its bands
 collapse.
 
-One WCAG failure remains, and it cannot be closed in this repository:
+**Closed 2026-10-11 — news images no longer publish with an empty `alt`** (WCAG 1.1.1,
+level A; commit `8015e39`). This file used to list it as the one remaining failure and
+expected an alt-text field in the contract. The team did not add a field; it split images
+by role instead (the rule for editors is in `EKIP.md`):
 
-- **News images are published with an empty `alt`** (WCAG 1.1.1, level A), which presents
-  content images as decorative. The root cause is the data contract: `news.ts` has no
-  alt-text field. The team has committed to adding one to the panel because AA requires it
-  (confirmed 2026-09-09). **Whether it has shipped is currently unknown** — as of
-  2026-09-10 the team has no active access to the panel repository and will check when
-  that is restored. Until it is confirmed shipped *and* read by the reading pages, the
-  site cannot claim AA. When the field lands it joins the shared contract, so
-  `haberler.html`, `haber.html` and the panel change together.
+- **Cover images** (`gorsel`) stay `alt=""`. They introduce a headline they repeat and
+  carry nothing of their own, so they are decorative. Information belongs in the text, not
+  on the cover.
+- **Inline images** — a full-text block whose first line is a lone URL — take the lines
+  under the URL as their caption, and both reading pages print it twice: as the image's
+  `alt` and as a visible `figcaption`. All five inline images in the archive carry one
+  (measured 2026-10-12).
+- **The panel warns; it does not block.** Since `atilimai/Atilim_AI_Panel#3` (merged
+  2026-10-10) a news card shows a warning when an inline image has no caption, but the item
+  can still be published, and that image then renders with `alt=""`. The failure can come
+  back one item at a time. A confirmation at publish time — still not a block — is open as
+  `atilimai/Atilim_AI_Panel#4` (2026-10-12); update this line when it merges.
 
 One further weakness, not a WCAG failure:
 
