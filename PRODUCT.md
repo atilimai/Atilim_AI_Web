@@ -64,10 +64,18 @@ is published, but must not imply a longer history than the archive shows.
   the archive's intro). Issue 1 went out on a Wednesday (2026-09-23); the rule applies from
   issue 2 on. It is the one recurring schedule the site states; it does not license a
   recurring meeting.
-- Discord is the society's live channel; the weekly digest is pushed there automatically.
-  It is currently the **only** join path. The team intends to add a second one and will
-  decide its shape before it ships (2026-09-10), so nothing should be built that assumes
-  Discord is the sole route forever.
+- **The join path is `katil.html`** (team decision, 2026-10-12). Every "Topluluğa katıl"
+  link — the landing page's nav link and hero button, and the footer on all four other
+  pages — goes there. It lists four channels at **equal weight**: the WhatsApp group,
+  Instagram (`@atilimai`), LinkedIn and the society's e-mail address. No channel is
+  promoted to a primary button; that equality is the decision, not an oversight. This
+  closes the 2026-09-10 note that a second join path would come.
+- **Discord is not on the site.** The same decision removed every Discord link and every
+  sentence saying the digest is posted there. The GitHub Actions job still posts each
+  issue to Discord exactly once — that is infrastructure, and site copy does not mention
+  it. Everything removed, verbatim, and how to restore it is in `discord.md`. Developer
+  comments in the HTML that explain the bot and the permanent `?sira=` scheme stay: they
+  render nowhere and they are still true.
 - Content is **not authored in this repository**. A separate private admin panel
   (`atilimai/Atilim_AI_Panel`) validates and commits `content/haberler.json`. Editing that
   file by hand is a last resort.
@@ -112,8 +120,8 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 ## Brand Commitments
 
 - Name: **Atılım AI**, the AI society of Atılım University, Ankara.
-- Discord is the join path and the society's live channel — currently the only one, with a
-  second planned (see Operating Context).
+- The join path is `katil.html`: WhatsApp group, Instagram, LinkedIn and e-mail, at equal
+  weight. Discord is not named on the site (see Operating Context).
 - Open-source work lives under the `atilimai` GitHub organisation.
 - Content is written in Turkish. The site's interface language is Turkish; internal
   documentation (this file, `DESIGN.md`) is English.

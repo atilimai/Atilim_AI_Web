@@ -35,6 +35,8 @@ Statik bir tanıtım sitesi ve haber arşivi. Derleme adımı, paket yöneticisi
 bağımlılık **yok**; dosyalar doğrudan GitHub Pages'ten sunuluyor. Üç içerik
 sayfası var ve üçü de aynı veri dosyasını okuyor: `content/haberler.json`.
 Dördüncü dosya `404.html` veri okumaz; Pages onu yalnızca eksik adreslerde sunar.
+Beşinci dosya `katil.html` da veri okumaz: her "Topluluğa katıl" bağlantısı
+oraya gider.
 
 İçerik elle düzenlenmiyor — haberleri kulübün [yönetim
 paneli](https://github.com/atilimai/Atilim_AI_Panel) bu depoya commit atarak
@@ -133,6 +135,23 @@ sekme simgesi bu sayfada yüklenmez; yayında yüklenir.
 Denenen adresi `location.pathname`'den okuyup `textContent` ile basar; betik
 yoksa o satır `hidden` kalır, boş bir etiket göstermez.
 
+### `katil.html`
+
+Katılım sayfası. Ana sayfadaki menü bağlantısı (`.kat`), kahramandaki birincil
+düğme ve dört sayfanın alt bilgisindeki "Topluluğa katıl" buraya gelir. Gece
+dünyasında; `404.html` gibi kendi belirteç kopyasını taşır. **Betik yok, veri
+okumaz** — JavaScript kapalıyken de eksiksiz çalışır.
+
+Dört eşit satır (`ul.kapilar > li > a.kapi`): WhatsApp grubu, Instagram,
+LinkedIn, e-posta. Eşitlik ekip kararı (12 Ekim 2026): sayfada bilerek birincil
+düğme yok. Her satırın altındaki mono satır hedefi söyler (adres, kullanıcı adı);
+marka logosu ve marka rengi yok. Bir kanal eklersen aynı `li` kalıbını kopyala ve
+iki `span` arasındaki boşluğu koru — o boşluk olmadan ekran okuyucu etiketle
+adresi tek kelime gibi okuyor ("WhatsApp grubuchat.whatsapp.com").
+
+Discord bu sayfada yok, sitenin başka hiçbir yerinde de yok; ayrıntı aşağıda,
+"Discord yayını" başlığında.
+
 ## Alan katmanı
 
 `index.html`'in içinde, ayrı bir `<script>` içinde duran ham WebGL katmanı.
@@ -189,7 +208,7 @@ alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
   Eskiden telefonda levha çalışıyordu ve bantlar `min(72vh,540px)` kalıyordu:
   dördü toplam ~1.780 px boş kaydırma ekliyor, arkasında da 7.500 parçacık
   dönüyordu. Ölçüldü — 390 px'de sayfa ~7.100 px'den 5.339 px'e indi. Kampüs
-  Discord bağlantısından gelen cihaz sınıfı bilgi taşımayan bir katman için pil
+  kanallarındaki bir bağlantıdan gelen cihaz sınıfı bilgi taşımayan bir katman için pil
   ve ısı ödemesin. **Bu sınırı gevşetirsen o bedeli geri getirirsin.**
 - **WebGL yoksa** gövdeye `no-alan` eklenir, tuval gizlenir, bantlar kapanır ve
   sayfa alan katmanı hiç yokmuş gibi görünür. Bu soru yalnızca 1152 px ve
@@ -302,6 +321,13 @@ Bu dosyayı elle düzenlemek yerine panelden yayımla: panel doğrulama yapıyor
 ve alan sırasını koruyarak yazıyor.
 
 ## Discord yayını
+
+**Site Discord'u anmıyor.** 12 Ekim 2026'dan beri sitede Discord bağlantısı yok
+ve site metni botun raporu Discord'a gönderdiğinden söz etmiyor (ekip kararı).
+Bot ise olduğu gibi çalışıyor. Kaldırılan her parçanın birebir kopyası ve geri
+ekleme adımları [`discord.md`](discord.md)'de. HTML'deki geliştirici yorumları
+botu ve kalıcı `?sira=` şemasını anlatmaya devam ediyor; onlar sitede görünmüyor,
+silme.
 
 `scripts/discord-gonder.js`, `.github/workflows/haftalik-rapor.yml` tarafından
 **yalnızca `content/haberler.json` değiştiğinde** çalıştırılır.
@@ -509,3 +535,6 @@ HTML'i önbellekte tutabiliyor.
 - **Tam metin düz metindir.** HTML kabul etmiyoruz; panelden ham HTML yazma
   seçeneği bilerek elendi.
 - **Discord her sayıyı bir kez gönderir.** Düzeltmeler sessizdir.
+- **Sitede Discord geçmez.** Katılım yolu `katil.html`; Discord bağlantısı ve
+  "rapor Discord'a da gider" bilgisi site metnine eklenmez. Geri dönülecekse
+  `discord.md`'den başla.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Aramadan gelen öğrencinin gireceği iki sabit adres. haber.html burada
+<!-- Aramadan gelen öğrencinin gireceği üç sabit adres. haber.html burada
      yok: her ?sayi=&sira= aynı statik HTML'i sunuyor, yani listelenecek
      ayrı bir belge değil.
 
@@ -10,4 +10,5 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://atilimai.github.io/Atilim_AI_Web/</loc></url>
   <url><loc>https://atilimai.github.io/Atilim_AI_Web/haberler.html</loc></url>
+  <url><loc>https://atilimai.github.io/Atilim_AI_Web/katil.html</loc></url>
 </urlset>

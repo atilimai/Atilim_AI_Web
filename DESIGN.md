@@ -186,6 +186,18 @@ components:
     typography: "{typography.meta}"
     rounded: "{rounded.lg}"
     padding: "24px"
+  join-row:
+    backgroundColor: "{colors.tezgah}"
+    textColor: "{colors.kagit}"
+    typography: "{typography.body}"
+    rounded: "{rounded.md}"
+    padding: "16px 22px"
+    height: "72px"
+  join-row-hover:
+    backgroundColor: "{colors.tezgah-2}"
+    textColor: "{colors.kagit}"
+    typography: "{typography.body}"
+    rounded: "{rounded.md}"
 ---
 
 # Design System: Atılım AI
@@ -223,6 +235,11 @@ had already named and removed. All three are closed. It also carried an amber, t
 amber on hover; both were removed on 2026-10-11 (the code now sits in the address line, and
 the footer is the landing page's). **A new page joins the system by taking its tokens, not by
 re-deriving them.**
+
+`katil.html` is the fifth page (2026-10-12) and the first built under that sentence from the
+start: `404.html`'s token block (plus `--ray` / `--ray-ara`, which the bar's measure needs), the reading pages' `.ust` bar on the night ground,
+the landing footer, and nothing invented. It is where every "Topluluğa katıl" link lands. Its
+one new component is the join row (see Components → Join rows).
 
 The rejected reference is specific and was named before any code was written: the generic
 AI-startup page — tracked-caps eyebrow chips over oversized headlines, purple-blue
@@ -358,7 +375,7 @@ Icons).
 
 ### Hierarchy (as shipped)
 - **display-xl** — `clamp(2.75rem, 6.4vw, 4.6rem)`, 300, lh 1.06, ls -0.02em. The `h1` on all
-  four pages, one per page — including every `haber.html` error state and `404.html`, both of
+  five pages, one per page — including every `haber.html` error state and `404.html`, both of
   which render a real heading rather than a bare paragraph.
 - **display-lg** — `clamp(2rem, 4vw, 3rem)`, 300, lh 1.1. Section headings on `index.html`, and
   the step a long article title drops to on `haber.html` (`h1.uzun`) — see The Panel Ceiling
@@ -654,7 +671,9 @@ probably a tag and should take `sm`.
   No `translateY` on hover anywhere in the system; the only `translateY` in the codebase is
   the 20px scroll-reveal entrance.
 - **Focus** — `2px` solid, 3px offset, `xs` radius, on every interactive element. The colour
-  follows the world: `lamba` on the night ground, `lamba-d` on paper.
+  follows the world: `lamba` on the night ground, `lamba-d` on paper. A component whose rule
+  comes after the global `:focus-visible` keeps its own corners — the landing page's buttons and
+  the join rows ring at `md`.
 
 **The Reset Rule.** `all: unset` also resets `outline`, and it out-specifies the global
 `:focus-visible` rule — `.feed-hata button` (0,1,1) beats `:focus-visible` (0,1,0). Any
@@ -688,9 +707,13 @@ compete with the hero's primary. Below 900px it moves to the foot of the disclos
 behind a `hair` top border (and must reset `border-left`, `margin-left` and `padding-left`
 there, or the desktop divider follows it into the panel).
 
+**Since 2026-10-12 it stays on the site.** The join link and the hero's `btn.p` both point to
+`katil.html` and end in `i-ileri`, not `i-dis`: they no longer open another site, so they no
+longer carry "(yeni sekmede açılır)". An icon says where a link goes, not how important it is.
+
 It used to be `display: none` above 900px, on the reasoning that the hero and the footer
 already carried the route. **That reasoning was wrong about the footer**: the footer's only
-join affordance was the word "Discord" among three grey text links. The decision to join
+join affordance was then a single grey text link to the old chat channel. The decision to join
 is made *after* reading the page, and at that point a desktop visitor had nothing
 clickable within 6,000px of scroll while a phone visitor had a link that followed them.
 Since 2026-10-01 this link is the only join affordance below the hero: the footer's closing
@@ -699,14 +722,16 @@ invitation and its second primary button were removed (see Footer below).
 **The reading pages' top bar (`.ust`) takes this bar's measure**, not the reading measure:
 64px tall, `max-width: 1180px` growing to `1180px + --ray + --ray-ara` above 1152px, and the
 landing gutter `clamp(20px, 5vw, 56px)` — so the wordmark sits at the same x on every page
-(56px at 1440px). The two pages copy `--ray` and `--ray-ara` for exactly this. Its focus
+(56px at 1440px). The two reading pages and `katil.html` copy `--ray` and `--ray-ara` for exactly
+this; `katil.html` shipped without them on 2026-10-12 and its wordmark sat at 186px until the
+finish pass caught it. Its focus
 ring is the night lamp (`.ust :focus-visible { outline-color: var(--lamba) }`): the paper's
 `--lamba-d` measured 3.1:1 against `gece`.
 
 ### Brand mark
 The society's own logo, monogram only: the A-and-i figure lifted out of the full lockup,
 in `kagit` white on a transparent ground, 20px, sitting `--sp-sm` to the left of the
-`ATILIM AI` wordmark on all three pages (`images/ai_mark.png`). The full lockup — circle,
+`ATILIM AI` wordmark on all four pages that carry a bar (`images/ai_mark.png`; `404.html` has none). The full lockup — circle,
 monogram and the words "ATILIM YAPAY ZEKA" — is unreadable below roughly 40px and repeats
 what the wordmark already says, so the interface takes the monogram alone. The tab icon
 (`favicon.png`) is the same monogram in white on a `gece` disc at 72% of the disc's width,
@@ -718,15 +743,49 @@ the monogram or the tab icon without it means redrawing them.
 
 ### Footer
 
-One line: "Atılım AI · Ankara", the contact address, and three links (Haberler, Discord,
-GitHub) in `body-sm`, `kagit-s` and `kagit-t`, above a `hair` top border. `404.html` carries
-the same footer and the same rules; until 2026-10-11 it had its own in mono 13px, with links
-that went `lamba` on hover — the lamp on something that is not an action.
+One line: "Atılım AI · Ankara", the contact address, and three links (Haberler, Topluluğa
+katıl, GitHub) in `body-sm`, `kagit-s` and `kagit-t`, above a `hair` top border. `404.html`
+carries the same footer and the same rules; until 2026-10-11 it had its own in mono 13px, with
+links that went `lamba` on hover — the lamp on something that is not an action. The reading
+pages and `katil.html` carry the same row with their own link set; every footer except
+`katil.html`'s own has "Topluluğa katıl", which replaced the chat-channel link on 2026-10-12.
+It is a plain internal link with no icon, like Haberler.
 
 **The closing invitation (`.kapanis`) was removed on 2026-10-01.** It invited visitors to a
-weekly gathering the society no longer holds, and its primary button pointed at Discord
-while the join route is expected to change (PRODUCT.md, Operating Context). The page now has
-one primary button, the hero's. Do not bring the block back as a Discord-only ask.
+weekly gathering the society no longer holds, and its primary button pointed at the old chat
+channel while the join route was expected to change. The page now has one primary button, the
+hero's. Do not bring the block back; the route it lacked is now `katil.html`.
+
+### Join rows (`.kapi`, `katil.html`)
+
+The join page is a door board, not a link-in-bio page: no avatar, no brand-coloured pills, no
+logos. `ul.kapilar > li > a.kapi`, four rows stacked with `--sp-sm` between them.
+
+- **Anatomy.** A label (Public Sans 16px, 500, `kagit`) over the destination (Plex Mono 13px,
+  `kagit-t`): `chat.whatsapp.com`, `@atilimai`, the LinkedIn page name, the e-mail address.
+  The mono line is data — where the link goes — which is what mono is for in this system. It
+  carries `overflow-wrap: anywhere`, and the text column `min-width: 0`, so the address cannot
+  widen the page at 320px.
+- **Surface.** The secondary button's vocabulary at row scale: `tezgah`, `hair-s` border,
+  `md` radius, `min-height: 72px` (renders 76px), `16px 22px` padding. Hover and focus move one
+  surface and one hairline level (`tezgah-2`, `hair-t`).
+- **The lamp is on the arrow only.** The trailing icon rests in `kagit-t` and goes `lamba` with
+  a 3px `translateX` on hover or focus — the `.olcum` row's pattern. Reduced motion keeps the
+  colour and drops the shift's transition. Three rows end in `i-dis` and say "(yeni sekmede
+  açılır)"; the e-mail row ends in `i-ileri`, because `mailto:` opens in place.
+- **Equal weight is the decision.** There is no primary on this page, by the team's choice
+  (2026-10-12): the four channels are presented as peers. It is the one screen in the system
+  with no `btn.p`, and that does not break "one primary per screen": the rule caps
+  primaries at one, it does not require one.
+- **The focus ring keeps the row's `md` radius.** The global `:focus-visible` rule sits before
+  the component rules, as on `index.html`, so the ring follows the row's corners instead of
+  snapping them to `xs`.
+- **The space between the two spans is load-bearing.** Flex drops it from layout, but without
+  it the accessible name runs label and destination together ("WhatsApp grubuchat.whatsapp.com").
+
+Layout: above 900px the invitation (`h1`, lead) and the rows sit in two equal columns with a
+`--sp-xxl` gap, vertically centred in `main` under the bar; at 900px and below they stack.
+The page has no script and reads no data.
 
 **The footer shares the reading measure.** `footer .wrap` takes the same `padding-right` as
 `main .wrap` above 1152px. Two reasons, both found by measurement: without it the footer ran
@@ -999,7 +1058,7 @@ two loops running.
 
 This replaced two real costs, both measured. First the bands: they stayed at
 `min(72vh, 540px)` on a phone and four of them added about **1,780px of empty scroll** to a
-390×844 page. The device class most likely to arrive from a campus Discord link was paying
+390×844 page. The device class most likely to arrive from a link shared in a campus channel was paying
 battery, heat and four screens of black for a layer that carries no information. Page height
 at 390px went from roughly 7,100px to **5,339px**.
 
@@ -1154,10 +1213,10 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
   a saturated trope. It is a reasoned choice: article text runs to 20,000 characters. Keep it.
 - **`box-shadow: unset` on `.feed-hata button`** is not a shadow; it is what `all: unset`
   expands to in the CSSOM. The No-Shadow Rule is intact.
-- **`italic-serif-display` on `index.html` and `404.html`** is the detector reading the
-  `h1`'s italic amber clause. Italic is this system's emphasis mechanism (Typography) and the
-  clause is the whole `h1`'s point; the heading itself is roman. It is the only finding the
-  4.5.2 detector reports on the four pages (2026-10-11). Keep it.
+- **`italic-serif-display` on `index.html`, `404.html` and `katil.html`** is the detector
+  reading the `h1`'s italic amber clause. Italic is this system's emphasis mechanism
+  (Typography) and the clause is the whole `h1`'s point; the heading itself is roman. It is the
+  only finding the 4.5.2 detector reports on the five pages (2026-10-12). Keep it.
 
 ### Do:
 - **Do** give a control a resting-state affordance, not only a hover one. A `:hover`

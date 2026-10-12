@@ -35,6 +35,8 @@ python -m http.server 8000
 | `index.html` | Ana sayfa: tanıtım, etkinlikler, projeler, haftalık rapor özeti + 3B alan katmanı |
 | `haberler.html` | Haber arşivi; tam metni olan kartlar yerinde açılır |
 | `haber.html` | Tek bir haberin ayrıntı sayfası (`?sayi=13&sira=0`) |
+| `katil.html` | Katılım sayfası: WhatsApp, Instagram, LinkedIn ve e-posta bağlantıları; her "Topluluğa katıl" buraya gelir |
+| `discord.md` | Siteden kaldırılan Discord parçalarının kaydı ve geri ekleme adımları |
 | `content/haberler.json` | **Tek veri kaynağı.** Site de Discord botu da bunu okur |
 | `scripts/discord-gonder.js` | Yeni sayıyı Discord'a gönderen iş |
 | `.github/workflows/haftalik-rapor.yml` | Yukarıdaki işi tetikleyen Actions akışı |
