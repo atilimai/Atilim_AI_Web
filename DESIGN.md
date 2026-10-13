@@ -1,6 +1,6 @@
 ---
 name: Atılım AI
-description: "Design system extracted from the shipped implementation. Two worlds under one identity: the landing page is a warm near-black workbench (#100D0A) lit by two named sources — a lamp (#E8A33D) for action and a screen (#8FB4D6) for category. Reading surfaces switch to warm paper (#F2EDE3) on a narrower 840px measure, because full text runs to 20,000 characters. Newsreader carries display and long-form reading, Public Sans the interface, IBM Plex Mono the labels, which never drop below 12px. Depth comes from stepped surfaces and three hairline levels; the codebase contains zero box-shadows. A dependency-free WebGL field carries five scroll-driven models, confined by a scissor rectangle that cannot reach text."
+description: "Design system extracted from the shipped implementation. Two worlds under one identity, chosen by theme since 2026-10-13: the dark theme is a warm near-black workbench (#100D0A) lit by two named sources — a lamp (#E8A33D) for action and a screen (#8FB4D6) for category — and the light theme is warm paper (#F2EDE3) with the deep lamp and screen. With no saved choice the operating system decides; the top bar stays the night room in both. Page surfaces call roles, never palette names. Reading surfaces keep a narrower 840px measure, because full text runs to 20,000 characters. Newsreader carries display and long-form reading, Public Sans the interface, IBM Plex Mono the labels, which never drop below 12px. Depth comes from stepped surfaces and three hairline levels; the codebase contains zero box-shadows. A dependency-free WebGL field carries five scroll-driven models, confined by a scissor rectangle that cannot reach text."
 
 colors:
   gece: "#100D0A"
@@ -22,6 +22,10 @@ colors:
   murekkep-s: "#6B6357"
   lamba-d: "#8A5510"
   ekran-d: "#3D6389"
+  kart-2: "#FFFDF9"
+  murekkep-t: "#70685C"
+  lamba-dh: "#6E430B"
+  canli-d: "#4A7336"
 
 typography:
   display-xl:
@@ -217,14 +221,26 @@ files rather than asks for. On the bench sits one instrument: a particle field t
 five models of how a model works, and changes shape as you scroll. It never shares space
 with text — see **The Field** under Components.
 
-Reading surfaces are the other world. The archive and article pages switch to warm paper on
-a narrower measure, because an article's full text runs to 20,000 characters and long-form
-reading does not belong on a dark ground. The dark top bar stays across the transition, so
+Reading surfaces are the other world. The archive and article pages were designed on warm
+paper on a narrower measure, because an article's full text runs to 20,000 characters and
+long-form reading was designed for paper. The dark top bar stays across the transition, so
 leaving the room and opening the notebook reads as one motion rather than two sites. Until
 2026-10-11 it did not actually stay: on the reading pages it sat inside the 840px reading
 measure at 60px tall, so at 1440px the wordmark jumped from x=56 to x=338 and the bar lost 4px
 the moment you followed a link. It now takes the landing page's chrome measure on every page
 (see Navigation); the reading measure belongs to the content, not to the chrome.
+
+**Since 2026-10-13 the world follows the theme, not the page.** The visitor picks it in the
+appearance control (Sistem / Koyu / Açık); with no saved choice the operating system decides
+through `prefers-color-scheme`, so a phone in light mode opens the landing page on paper and a
+laptop in dark mode opens the archive in the room. The two worlds did not change — the dark
+theme *is* the night world on every page, the light theme the day world — and neither did the
+one constant between them: **the top bar stays the night room in both themes**. On the reading
+pages it always was; on the landing page it is solid `gece` from the first pixel in the light
+theme, because its transparent resting state would put night-coloured links on paper. The bar
+keeping its ground, links and lamp through every state is what keeps a theme switch reading
+as the same site. That long reading belongs on paper is now a default the visitor can
+override, not a constraint; the dark reading surface is measured to the same AA floor.
 
 `404.html` is the fourth page and belongs to the night world: same ground, same tokens, the
 same `display-xl` `h1` with an italic amber clause, and the two doors as `btn.p` / `btn.s`. It
@@ -257,7 +273,7 @@ text-free bands between the sections, both of which exist so the instrument has 
 to be that is not on top of a sentence.
 
 **Key Characteristics:**
-- Two worlds, one identity; the transition is deliberate and carried by the dark top bar
+- Two worlds, one identity, chosen by theme; the dark top bar is the constant in both
 - Two named light sources instead of an abstract accent palette
 - One instrument on the bench: a scroll-driven WebGL field that is confined by geometry,
   never by opacity
@@ -280,7 +296,7 @@ to be that is not on top of a sentence.
   only, so it never competes with the lamp.
 - **Ekran-d / Screen Deep** (#3D6389, 5.38:1 on gunduz): The paper-world counterpart.
 
-### Neutral — night world (`index.html`)
+### Neutral — night world (dark theme; designed on `index.html`)
 - **Gece** (#100D0A): Ground. Warm, not blue-black.
 - **Tezgah / Tezgah-2** (#191512 / #211B16): Card at rest, card on hover.
 - **Kagit** (#F0EADD, 16.16:1): Headings and primary text.
@@ -297,7 +313,7 @@ to be that is not on top of a sentence.
   hand-expanded `rgba()` literals until 2026-09-10; nothing about the palette changed when it
   became a token, and nothing should change now that it is one.
 
-### Neutral — day world (`haberler.html`, `haber.html`)
+### Neutral — day world (light theme; designed on `haberler.html`, `haber.html`)
 - **Gunduz / Kart** (#F2EDE3 / #FBF8F1): Ground and raised card.
 - **Murekkep** (#1A1713, 15.31:1), **Murekkep-m** (#4A443B, 8.25:1),
   **Murekkep-s** (#6B6357, 5.07:1).
@@ -308,6 +324,54 @@ to be that is not on top of a sentence.
   identical in both, so splitting the name would say a difference that isn't there. Its one
   consumer is the archive's permalink line. Solid colours live in the frontmatter; alpha lines
   like this and the hairlines are named here.
+
+### Roles and themes (since 2026-10-13)
+
+Page surfaces no longer name palette tokens. Every rule outside the top bar, the mobile menu
+and the appearance control calls a **role**, and the role takes its value from the theme. The
+colour block is identical on all five pages: the palette, the dark roles in `:root`, and the
+light roles twice — under `@media (prefers-color-scheme: light)` guarded by
+`:root:not([data-tema="koyu"])`, and under `:root[data-tema="acik"]` — so the system theme works
+without JavaScript and a saved choice overrides it. The `<head>` bootstrap writes a saved
+choice to `<html data-tema>` before the first paint.
+
+| Role | Dark (room) | Light (notebook) |
+|---|---|---|
+| `--zemin` / `--yuzey` / `--yuzey-2` | gece / tezgah / tezgah-2 | gunduz / kart / **kart-2** |
+| `--metin` / `-m` / `-s` / `-t` | kagit / kagit-m / kagit-s / kagit-t | murekkep / murekkep-m / murekkep-s / **murekkep-t** |
+| `--cizgi` / `-s` / `-t` | hair .13 / .22 / .34 | ink `rgba(26,23,19,α)` .14 / .24 / .34 |
+| `--lamba-iz` (text, line, focus) / `--lamba-iz-h` | lamba / lamba-h | lamba-d / **lamba-dh** |
+| `--lamba-dolgu` / `-h` / `--lamba-ust` | lamba / lamba-h / on-lamba | lamba-d / lamba-dh / kart |
+| `--lamba-alt` | `rgba(232,163,61,.4)` | `rgba(138,85,16,.4)` |
+| `--ekran-iz` / `--canli-iz` | ekran / canli | ekran-d / **canli-d** |
+| `--cubuk-zemin` / `--cubuk-cam` | transparent / gece-cam | gece / gece |
+
+Four palette values are new, each measured against the hardest surface it can land on:
+
+- **murekkep-t** (#70685C): 4.71:1 on gunduz. For dark text on paper the hardest surface is the
+  *darkest* one — gunduz, not kart — so the Hardest Surface Rule reads the other way round in the
+  light theme. It sits 1.08:1 from murekkep-s: the four-step text ramp survives, compressed by
+  the AA floor.
+- **lamba-dh** (#6E430B): the deep lamp's hover; kart on it 8.01:1, it on gunduz 7.28:1.
+- **kart-2** (#FFFDF9): the hovered card on paper, one step lighter than kart; murekkep-t on it
+  5.41:1.
+- **canli-d** (#4A7336): the live status dot on paper, 4.74:1 on gunduz (a dot needs 3:1).
+
+**The light primary button is the deep lamp.** `btn.p` on paper is lamba-d with kart text
+(5.84:1), hovering to lamba-dh — on paper the lamp is the deep lamp, as everywhere else in the
+day world. The night amber on cream measured 1.9:1 at its edge.
+
+**The Chrome Rule.** The top bar, the mobile menu panel and the appearance control use palette
+names directly and stay night in both themes. Their focus ring is the night lamp
+(`nav :focus-visible`, `.ust :focus-visible`, `.ayar :focus-visible`): the global ring follows
+`--lamba-iz`, which turns deep on paper, and the deep lamp measures 3.1:1 on `gece`. The skip
+link opens over the bar and is the night-lamp chip on every page; the reading pages used an ink
+chip until 2026-10-13. When the landing page's bar sticks in the light theme it stays solid
+`gece` (`--cubuk-cam`): the 86% glass over paper read as a grey-brown band.
+
+*Audit test:* set `data-tema` to each value and measure every text role against `--zemin`,
+`--yuzey` and `--yuzey-2`, and `--lamba-ust` against both fills. Shipped: every pair ≥ 4.5:1 in
+both themes, on all five pages.
 
 ### Semantic
 - **Canli** (#7FB069, 7.67:1): Project status only. A state colour, not an accent. **No
@@ -757,9 +821,48 @@ what the wordmark already says, so the interface takes the monogram alone. The t
 (`favicon.png`) is the same monogram in white on a `gece` disc at 72% of the disc's width,
 because a transparent mark disappears against light browser chrome.
 
+**Since 2026-10-13 the mark is a mask, not a background image.** `.marka i` is `currentColor`
+shaped by `images/ai_mark.png` through `mask`, so the mark is always the colour of the wordmark
+beside it and no dark variant of the file is needed. It renders exactly as the white PNG did on
+the night bar (compared pixel for pixel), and the bar is night in both themes anyway; the mask
+is what keeps it from ever being a white shape on paper.
+
 Both files are derived, and the source they are derived from is in the repository:
 `images/ai_s.png`, the society's original full lockup at 1796x1796. Keep it — regenerating
 the monogram or the tab icon without it means redrawing them.
+
+### Appearance control (`.ayar`)
+
+One button at the end of every top bar opens a small panel with two groups: **Dil** (Türkçe /
+English) and **Tema** (Sistem / Koyu / Açık). Two separate 44px buttons did not fit the reading
+pages' bar at 320px — logo 123px, back link 109px and two buttons 88px against 280px of room —
+so language and theme share one door. "Sistem" exists because the default follows the
+operating system: without it, a choice once made could never be undone.
+
+- **Button.** `.menu-btn`'s vocabulary: tezgah, hair-s, md radius, mono 12px / 500 / .08em,
+  44px tall. It shows the current language code and the current theme's icon (`i-ay` /
+  `i-gunes`, authored in the chevron's 1.5 stroke language). Its accessible name is "TR · Dil ve
+  tema" and contains the visible label (WCAG 2.5.3).
+- **Panel.** Under the bar's bottom edge, right-aligned, in the mobile menu panel's vocabulary
+  (tezgah, hair-s, lg radius). Each group is `role="group"` named by its mono label; the options
+  are `aria-pressed` buttons of equal width, at least 44×44. The pressed option takes the active
+  nav link's language — one surface up and a 2px lamp underline — so state is never colour
+  alone. Language names are written in their own language and carry their own `lang`.
+- **Behaviour.** Escape closes and returns focus to the button; a tap outside closes; focus
+  leaving the control closes — only when focus actually lands somewhere, because Safari does not
+  move focus on a button click. On the landing page the mobile menu and this panel close each
+  other through the same outside-tap rule. The theme applies live; the language reloads the page
+  and focus returns to the button after the reload.
+- **No script, no control.** The button ships `hidden` and its own script reveals it. Without
+  storage — the panel's preview — the language group is hidden, since a reload cannot carry the
+  choice; the theme still switches for the session.
+- **Narrow bars.** Below 420px the reading pages' back link drops to its arrow; its text stays in
+  the accessible name through the `.gizli` recipe. Between 901 and 1100px the landing page's bar
+  gap drops to `--sp-sm` and its links are `nowrap`: the control pushed them into two lines at
+  901px, which a width check cannot see because nothing overflows.
+- **One frame without transitions.** The switch adds `.tema-degisiyor` to `<html>` for two
+  frames, which suppresses transitions so cards and links with their own `transition` do not
+  repaint at different speeds. It is not a motion rule — see Documented exceptions.
 
 ### Footer
 
@@ -1137,6 +1240,23 @@ clock resumes where it stopped (`t0` is shifted by the sleep), so drift and swee
 jump. Verified with a frame counter: ~4.7s of frames after load, none after; a text-column
 pointer wakes nothing; a lens pointer or a scroll wakes it and it sleeps again ~4.7s later.
 
+**Theme.** The field reads its colours from the theme, not from constants: `--zemin` is the clear
+colour, `--ekran-iz` the cold source, `--lamba-iz` the sweep. The canvas is opaque and
+full-viewport *above* the CSS ground, so a clear colour that differs from `--zemin` paints the
+whole page the wrong colour — the light theme first ran with a night canvas over paper at 1152px
+and up, which no computed-style check can see; the theme test now samples the painted pixel.
+In the light theme the field draws in **ink**: the blend is `ZERO, ONE_MINUS_SRC_COLOR` and the
+fragment emits `1 − colour`, so each point darkens the paper towards ekran-d or lamba-d and
+overlaps deepen the way they brighten on the dark bench. Ink gain is ×1.35 (`MUREKKEP`): at equal
+gain the model on paper measured about 65% of its dark-theme weight (mean deviation from the
+ground inside the lens 13 against 20). A theme change (`temadegisti`, sent by the appearance
+control, also on a system change in "Sistem") rewrites uniforms and the blend only; no buffer is
+uploaded again. The geometry does not depend on the theme, and the edge-ring test counts pixels
+that differ from `--zemin` rather than lit ones. Shipped result, in both themes at 1152 × 720,
+1440 × 900 and 1970 × 1100: **0 text intersections** in all six sweep runs, **0 edge pixels** in
+the ring tour, **0 buffer uploads** on a theme change, and the painted ground equal to
+`--zemin`.
+
 **Fallbacks.** No WebGL context: `body.no-alan` hides the canvas, collapses the bands to
 `--sp-sec`, and the page is exactly what it was before the field existed. The context is
 only requested at 1152px and wider, so `no-alan` only ever appears there; below, the media
@@ -1249,17 +1369,21 @@ uses) so no dead space is left. The script's first action is to fill it.
 `.betiksiz` carries only the cover's top rhythm (`padding-block: clamp(48px,8vw,80px) 0`), and
 because `<noscript>` is never constructed when scripting is on, the rule never applies there.
 
-### Print (`haber.html` only)
+### Print (`haber.html`, and the archive's roles)
 
 The one page anyone would put on paper — an article runs to 20,000 characters. The block hides
 the chrome (`.ust`, `footer`, `.durum-eylem`, `.oku`), keeps `.kaynak` so the source is named,
 drops the image border and releases the measure. Two rules govern it:
 
-**It carries no colour.** Browsers do not print background colours without
-`print-color-adjust: exact`, so the cream ground never reaches paper on its own, and `--murekkep`
-(#1A1713) is already ink. A `body{background:#fff;color:#000}` in there is not just redundant —
-the detector does not read media context, so it counted them as screen values, added two
-`design-system-color` findings and **masked the documented `cream-palette` exception**.
+**It carries no literal colour, but it rebinds the roles.** Browsers do not print background
+colours without `print-color-adjust: exact`, so no ground reaches paper on its own. A
+`body{background:#fff;color:#000}` in there is not just redundant — the detector does not read
+media context, so it counted them as screen values, added two `design-system-color` findings and
+**masked the documented `cream-palette` exception**. Since the dark theme (2026-10-13) the text
+*does* need a colour rule: the browser drops the night ground and prints `kagit` text, light grey
+on white. The block therefore points the text and line roles at the day palette
+(`--metin: var(--murekkep)` and so on) — token assignments, no literals. `haberler.html` carries
+the same role block and nothing else in its own print block.
 
 **It has to be last in the stylesheet.** A media query adds no specificity; source order decides.
 Placed mid-file the block lost every contest against equal-specificity screen rules (`.oku`
@@ -1313,14 +1437,20 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
 
 - **The day world's cream ground** (#F2EDE3) is flagged by generic anti-pattern detectors as
   a saturated trope. It is a reasoned choice: article text runs to 20,000 characters. Keep it.
+  Since 2026-10-13 the light theme brings the same ground to every page, so the detector raises
+  it on all five; `.impeccable/config.json` carries one scoped entry per page.
+- **`.tema-degisiyor *{transition:none!important}`** looks like the blanket transition kill this
+  document removed from the reduced-motion block. It is not one: it is present for two frames
+  while the theme changes, so every element repaints in the same frame instead of each at its
+  own transition speed. Reduced motion is untouched by it. Keep it.
 - **`box-shadow: unset` on `.feed-hata button`** is not a shadow; it is what `all: unset`
   expands to in the CSSOM. The No-Shadow Rule is intact.
 - **`italic-serif-display` on `index.html`, `404.html` and `katil.html`** is the detector
   reading the `h1`'s italic amber clause. Italic is this system's emphasis mechanism
   (Typography) and the clause is the whole `h1`'s point; the heading itself is roman. Keep it.
   With `.impeccable/config.json` applied the 4.5.2 detector reports nothing on the five pages;
-  with `--no-config` it reports five findings, all recorded in this list — this one on three
-  pages and `cream-palette` on the two reading pages (2026-10-12).
+  with `--no-config` it reports eight findings, all recorded in this list — this one on three
+  pages and `cream-palette` on all five (2026-10-13).
 
 ### Do:
 - **Do** give a control a resting-state affordance, not only a hover one. A `:hover`
@@ -1346,7 +1476,12 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
 - **Do** measure contrast against the lightest surface the text can land on — and count any
   background layer you add as one of those surfaces.
 - **Do** give every interactive element a visible focus ring and test it with a keyboard.
-- **Do** switch to the day world for anything read at length.
+- **Do** keep page surfaces on roles and chrome on the palette. A page rule that names `--gece`
+  or `--murekkep` is right in one theme and wrong in the other.
+- **Do** give every new string an English key, and pass every element that prints panel text
+  through `atilimai.tr()`. The digest is Turkish in both languages.
+- **Do** sample the painted pixel when a full-viewport layer is involved. Computed styles cannot
+  see a canvas.
 - **Do** confine any background layer with a scissor rectangle placed where text is not,
   and prove it with the gap measurement in The Reading Light Rule.
 - **Do** let the field vanish below 1152px, on a coarse pointer, and under reduced motion —
@@ -1375,6 +1510,11 @@ Two values sit outside the palette deliberately. Both are recorded so a reviewer
 - **Do** render the first screen at rest. The scroll reveal is for what the visitor scrolls to.
 
 ### Don't:
+- **Don't** let the top bar follow the theme. It is the room in both, and its focus ring is the
+  night lamp.
+- **Don't** hard-code a colour in the field's script; read the role.
+- **Don't** translate news items in the page. English for the digest needs contract fields, a
+  panel change and a Discord decision.
 - **Don't** put an eyebrow, kicker, or tracked-caps section label above a heading. It is
   the named anti-reference of this project and it shipped here once already.
 - **Don't** let `footer .wrap` or any other content container run wider than

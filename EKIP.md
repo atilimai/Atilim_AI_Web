@@ -56,6 +56,7 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 | **3 · Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
 | 4 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti. Liste şu an boş; `#tl` yoksa betik hiçbir şey yapmaz |
 | **5 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
+| Görünüm denetimi | Dil ve tema paneli — ayrı `<script>`, dört sayfada aynı (bkz. "Tema ve dil") |
 
 Haberle ilgili her iş "Haftalık rapor" bölümünde. **Akışın üç durumu var ve
 üçü ayrı cümle söyler:** yükleniyor, veri okundu ama sayı yok, istek düştü.
@@ -138,9 +139,10 @@ yoksa o satır `hidden` kalır, boş bir etiket göstermez.
 ### `katil.html`
 
 Katılım sayfası. Ana sayfadaki menü bağlantısı (`.kat`), kahramandaki birincil
-düğme ve dört sayfanın alt bilgisindeki "Topluluğa katıl" buraya gelir. Gece
-dünyasında; `404.html` gibi kendi belirteç kopyasını taşır. **Betik yok, veri
-okumaz** — JavaScript kapalıyken de eksiksiz çalışır.
+düğme ve dört sayfanın alt bilgisindeki "Topluluğa katıl" buraya gelir.
+`404.html` gibi kendi belirteç kopyasını taşır. **Veri okumaz.** Tek betiği
+görünüm denetimi ve çeviri (bkz. "Tema ve dil"); JavaScript kapalıyken sayfa
+Türkçe ve eksiksiz çalışır, yalnızca denetim görünmez.
 
 Dört eşit satır (`ul.kapilar > li > a.kapi`): WhatsApp grubu, Instagram,
 LinkedIn, e-posta. Eşitlik ekip kararı (12 Ekim 2026): sayfada bilerek birincil
@@ -259,6 +261,69 @@ ekrana girince model birinden ötekine sıçrıyordu; tek karede 305 px ölçül
   kaynağı eklersen `uyandir()`'ı çağır; çağırmazsan alan uyuyan karede kalır.
 
 Ayrıntılı gerekçeler ve ölçülmüş kanıtlar `DESIGN.md` → Components → The field.
+
+## Tema ve dil
+
+13 Ekim 2026'dan beri ziyaretçi temayı ve arayüz dilini kendisi seçiyor (ekip
+kararı). Dört çubuklu sayfada (`index`, `haberler`, `haber`, `katil`) çubuğun
+sonunda tek bir düğme var: o anki dilin kodu ("TR" / "EN") ve temanın simgesi
+(ay / güneş). Düğme küçük bir panel açıyor: **Dil** (Türkçe / English) ve
+**Tema** (Sistem / Koyu / Açık). `404.html`'de çubuk olmadığı için denetim de
+yok; kayıtlı tercih orada da uygulanıyor. Ayrıntılı tasarım `DESIGN.md` →
+Components → Görünüm denetimi.
+
+**Nasıl çalışıyor:**
+
+- **Başlangıç bloğu**, her sayfanın `<head>`'inde, `/* Görünüm başlangıcı`
+  yorumuyla başlıyor ve **beş sayfada birebir aynı**. Kayıtlı temayı
+  `<html data-tema>`'ya, kayıtlı dili `<html lang>`'a ilk boyamadan önce
+  yazıyor; ortak metinleri (atlama bağlantısı, denetim, gezinme, durum
+  cümleleri, ay adları) ve `window.atilimai` yardımcılarını (`t`, `cevir`,
+  `tarih`, `tr`, `ekle`) tanımlıyor. Hemen altındaki ikinci betik sayfanın
+  kendi metni: `atilimai.ekle({...})`.
+- **Depo anahtarları:** `atilimai.tema` (`koyu` | `acik`; yoksa sistem) ve
+  `atilimai.dil` (`en`; yoksa Türkçe). Dil değişince `sessionStorage`'a
+  `atilimai.odak` yazılıyor: yeniden yüklemeden sonra odak denetim düğmesine
+  dönsün diye.
+- **Tema** belirteçle çalışıyor, betikle değil. Her sayfanın renk bloğu aynı:
+  palet (gece ve gündüz) ve temaya göre değer alan roller (`--zemin`,
+  `--yuzey`, `--metin`, `--lamba-iz`…). Kayıt yoksa `prefers-color-scheme`
+  karar veriyor; JavaScript kapalıyken de. Sayfa yüzeyi **yalnızca rolleri**
+  çağırır; üst çubuk ve mobil menü paleti doğrudan kullanır, çünkü çubuk her
+  temada gece.
+- **Tema canlı değişir, dil sayfayı yeniden yükler.** Her sayfanın betiği
+  metnini tek dilde üretiyor; açık kartları ve odağı canlı yeniden çizmek
+  yerine yükleme temiz bir sayfa veriyor. Kaydırma konumunu tarayıcı koruyor.
+- **Alan katmanı** renklerini `--zemin`, `--ekran-iz`, `--lamba-iz`'den
+  okuyor; tema değişince denetimin yaydığı `temadegisti` olayıyla yalnızca
+  uniform'ları ve karışımı yeniliyor. Açık temada "mürekkep" kipinde çiziyor
+  (`ZERO, ONE_MINUS_SRC_COLOR`): noktalar kağıdı koyultuyor.
+
+**Metin eklerken:**
+
+- Türkçe metin biçimlendirmede kalır; öğeye `data-i18n="anahtar"` ver ve
+  sayfanın `atilimai.ekle` bloğuna `"anahtar": [null, "English"]` ekle.
+  Nitelik için `data-i18n-nitelik="aria-label:anahtar"`. Simge taşıyan bir
+  bağlantıda metni bir `<span>`'e al, yoksa çeviri simgeyi siler.
+- Betiğin ürettiği metin `window.atilimai.t("anahtar")` ile gelir ve
+  sözlükte iki dili birden taşır: `"anahtar": ["Türkçe", "English"]`.
+  Değişken için `{n}`: `t("sayi", {n: 2})` → "2. sayı" / "Issue 2".
+- **Panelden gelen metni çevirme.** Haberler Türkçe; basan öğeyi
+  `window.atilimai.tr(öğe)`'den geçir, İngilizcede `lang="tr"` alır.
+- **İngilizce karşılığı olmayan yeni bir metin İngilizce sayfada Türkçe
+  kalır.** Bir anahtar unutulursa sayfa bozulmaz ama tutarsız görünür.
+
+**Tuzaklar:**
+
+- `cevir()` iki kez çağrılıyor: ilk ekranın hemen ardından (ana sayfada
+  kahramandan sonra, okuma sayfalarında kapaktan ya da çubuktan sonra) ve
+  gövdenin sonunda. İlk çağrı, İngilizce seçen ziyaretçinin ilk boyamada
+  Türkçe görmemesi için; gövdeyi gizlemiyor, LCP beklemiyor. İlk ekrana yeni
+  metin eklersen ilk çağrıdan önce kalsın.
+- Panelin önizlemesinde depo yok: tema oturum boyunca değişiyor, dil satırı
+  gizli. `haberler.html`'e depoya dokunan yeni bir kod eklersen `try` içine al.
+- Denetimin CSS'i, betiği ve biçimlendirmesi dört sayfada, başlangıç ve renk
+  bloğu beş sayfada birebir aynı. Birini değiştirirsen hepsini değiştir.
 
 ## Veri sözleşmesi
 
@@ -415,15 +480,15 @@ HTML'i önbellekte tutabiliyor.
   `fetch("content/haberler.json")` çağrısını taslak veriye yönlendirerek
   çiziyor. Yani o çağrının biçimini değiştirirsen panelin önizlemesi bozulur;
   buna dokunacaksan panel tarafında `src/lib/site/preview.ts` dosyasına da bak.
-- **Dört sayfa belirteçlerini kendisi taşır, bilerek.** Her sayfanın `:root`'u
-  yalnızca kullandığı belirteçleri tanımlıyor. 11 Ekim 2026'da karşılaştırıldı:
-  ortak 44 belirteçte tek fark `--lamba-alt`, o da iki dünyanın farkı (gecede
-  kehribar, gündüzde koyu kehribar). Ortak bir stil dosyası panelin
+- **Beş sayfa belirteçlerini kendisi taşır, bilerek.** 13 Ekim 2026'dan beri
+  renk bloğu (palet, koyu roller, iki açık tema bloğu) beş sayfada birebir
+  aynı; boşluk, yarıçap ve ray belirteçleri sayfaya göre değişiyor, her sayfa
+  yalnızca kullandığını tanımlıyor. Ortak bir stil dosyası panelin
   önizlemesini bozmazdı — önizleme şablona yayımlanmış sitenin `<base href>`'ini
   ekliyor, göreli bir `<link>` oraya çözülür — ama her sayfanın ilk çizimine
   engelleyici bir istek ekler, karşılığında giderilecek bir sapma yok. Bir
-  belirtecin değerini değiştirirsen dört dosyada da ara:
-  `grep -n -- "--lamba-alt:" *.html`.
+  belirtecin değerini değiştirirsen beş dosyada da ara:
+  `grep -n -- "--lamba-d:" *.html`.
 - **Dış kaynak yok.** Site hiçbir CDN'den kod çekmiyor; 11 Ekim 2026'dan beri
   yazı tiplerini de Google Fonts'tan değil `fonts/` klasöründen sunuyor (nasıl
   üretildikleri `fonts/README.md`'de). Google her yüzü latin + latin-ext diye

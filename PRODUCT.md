@@ -74,6 +74,13 @@ published, but must not imply a longer history than the archive shows.
   Instagram (`@atilimai`), LinkedIn and the society's e-mail address. No channel is
   promoted to a primary button; that equality is the decision, not an oversight. This
   closes the 2026-09-10 note that a second join path would come.
+- **Theme and language are the visitor's choice** (team decision, 2026-10-13). One control
+  in every top bar opens a small panel: language (Türkçe / English) and theme (System / Dark /
+  Light). With no saved choice the theme follows the operating system
+  (`prefers-color-scheme`) and the language is Turkish. A theme change applies live; a
+  language change reloads the page. English covers the interface and the site's own copy, not
+  the digest: translating news items would need new contract fields, a panel change and a
+  Discord decision, and was left for a separate project.
 - **Discord is not on the site.** The same decision removed every Discord link and every
   sentence saying the digest is posted there. The GitHub Actions job still posts each
   issue to Discord exactly once — that is infrastructure, and site copy does not mention
@@ -110,8 +117,12 @@ binding):
   `haberler.json`.** The panel's preview takes the page as-is and wraps `window.fetch` to
   serve draft data. Switching to `XMLHttpRequest`, or capturing `fetch` into a local before
   the wrapper installs, silently breaks the panel preview.
-- **No `localStorage` on `haberler.html`.** The panel renders it in a `sandbox="allow-scripts"`
-  iframe with an opaque origin, where storage access throws.
+- **Storage is never required, and every access to it is guarded.** Since 2026-10-13 all
+  five pages read two keys — `atilimai.tema` and `atilimai.dil` — inside a `try` in `<head>`.
+  The panel renders `haberler.html` in a `sandbox="allow-scripts"` iframe with an opaque
+  origin, where merely touching `localStorage` throws. There the theme still switches for the
+  session and the language row of the appearance control is hidden, because a language change
+  reloads the page and a reload cannot carry the choice without storage.
 
 **Content limits** enforced by the panel (`LIMITS` in `news.ts`): 25 items per issue, title
 200 characters, summary 800, full text 20,000. Layouts must survive the upper bounds — no
@@ -127,8 +138,10 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 - The join path is `katil.html`: WhatsApp group, Instagram, LinkedIn and e-mail, at equal
   weight. Discord is not named on the site (see Operating Context).
 - Open-source work lives under the `atilimai` GitHub organisation.
-- Content is written in Turkish. The site's interface language is Turkish; internal
-  documentation (this file, `DESIGN.md`) is English.
+- Content is written in Turkish. The interface is Turkish by default and English when the
+  visitor chooses it (team decision, 2026-10-13); news items from the panel stay Turkish in
+  both, because the contract has no English fields, and the English interface says so where
+  the reader meets them. Internal documentation (this file, `DESIGN.md`) is English.
 - The society's own framing of itself is deliberately unglamorous — no department
   requirement, no prerequisite. Copy should not inflate it.
 
@@ -217,11 +230,12 @@ file held 15. A correction to issue 2 stays silent; issue 3 posts.
 ## Accessibility & Inclusion
 
 **Target: WCAG 2.1 AA.** Not an external mandate; a standard the team has adopted. Measured
-on the shipped pages, not asserted: **zero contrast failures** across all five pages at
-desktop and phone widths (re-measured 2026-10-12 at 320, 390 and 1440px), **zero horizontal
-overflow** from 320px to 1970px (all five re-checked 2026-10-12 at 320, 390, 1440 and 1970px), **zero interactive targets under 44px**, no heading-level
+on the shipped pages, not asserted: **zero contrast failures** across all five pages in both
+themes and both languages, **zero horizontal overflow** and **zero interactive targets under
+44px** (all re-measured 2026-10-13 at 320, 390, 768, 901, 1024, 1151, 1440 and 1970px, with the
+feed populated), every text role at least 4.5:1 against every surface in both themes, no heading-level
 skips, a skip link and full landmark set on every page with a top bar (`404.html` has no bar,
-so nothing precedes its `main`), a mobile menu that closes on Escape and returns focus, and a **Yeniden dene**
+so nothing precedes its `main`), a mobile menu and an appearance control that close on Escape and return focus, and a **Yeniden dene**
 that keeps focus through the retry and hands it to the result. The type floor is
 12px. `prefers-reduced-motion` cancels the spatial transitions by name and leaves colour and
 opacity feedback intact; the scroll-driven field draws one static frame and its bands
@@ -294,6 +308,9 @@ Five more closed on 2026-10-11, after an audit of all four pages:
 - The dark top bar on the reading pages used the paper's focus colour, 3.1:1 against `gece`.
   It now uses the night lamp, 9:1.
 
-Turkish is the interface language; `lang="tr"` is set on every page and must stay set for
-screen-reader pronunciation. Panel text is never uppercased by CSS: under `lang="tr"` the
+Turkish is the default interface language: `lang="tr"` is in the markup of every page and
+stays there unless the visitor has chosen English, in which case the `<head>` bootstrap sets
+`lang="en"` before the first paint. In English every element that prints panel text — title,
+summary, full text, figure, category, the item's own date, the source name — carries
+`lang="tr"`, so a screen reader still pronounces the digest as Turkish. Panel text is never uppercased by CSS: under `lang="tr"` the
 transform dots an English `i` ("VİSİON"), and the language of a category is unknown.

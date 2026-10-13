@@ -12,6 +12,7 @@ git, dosyayı baştan sona okuma:
 | haber akışı | `grep -n "haberler.json" index.html` |
 | 3B alan katmanı | `grep -n "5. Alan" index.html` |
 | betiğin bölümleri | `grep -n "^/\* ===" -A2 index.html` |
+| tema ve dil | `EKIP.md` → "Tema ve dil"; `grep -n "Görünüm" index.html` |
 
 Görsel bir karar vereceksen `DESIGN.md`, ürün bağlamı gerekiyorsa `PRODUCT.md`.
 

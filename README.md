@@ -1,8 +1,10 @@
 # Atılım AI — Topluluk Sitesi
 
 Atılım Üniversitesi Yapay Zeka Topluluğu'nun tanıtım sitesi ve haftalık rapor
-arşivi. Üç sayfa, sıfır bağımlılık, derleme adımı yok: dosyalar ne ise tarayıcı
-onu çalıştırıyor.
+arşivi. Beş sayfa (üçü haber verisini okur), sıfır bağımlılık, derleme adımı
+yok: dosyalar ne ise tarayıcı onu çalıştırıyor. Arayüz Türkçe ve İngilizce,
+tema koyu ve açık; seçim yapılmamışsa tema işletim sistemini izler
+(ayrıntı: `EKIP.md` → "Tema ve dil").
 
 - **Canlı:** <https://atilimai.github.io/Atilim_AI_Web/>
 - **Geliştirici rehberi:** [`EKIP.md`](EKIP.md) — yapı, veri akışı, tuzaklar
