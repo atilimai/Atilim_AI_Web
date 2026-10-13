@@ -41,9 +41,16 @@
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
   --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
   --ease:cubic-bezier(.16,1,.3,1);
+  /* Roller: sayfa yüzeyi bunları kullanır, palet adlarını değil. */
+  --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
+  --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
+  --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
+  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h);
+  --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
+  --ekran-iz:var(--ekran); --canli-iz:var(--canli);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--gece);color:var(--kagit);font-family:var(--body);
+body{background:var(--zemin);color:var(--metin);font-family:var(--body);
   font-size:16px;line-height:1.65;
   -webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
 /* Yalnızca ekran okuyucuya söylenen metin. letter-spacing:normal: DESIGN.md, .gizli notu. */
@@ -60,36 +67,36 @@ main{flex:1;display:flex;align-items:center;padding:var(--sp-xxl) 0}
 h1{font-family:var(--disp);font-weight:300;
   font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;
   max-width:17ch;text-wrap:balance}
-h1 em{font-style:italic;color:var(--lamba)}
-.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:56ch;margin-top:var(--sp-lg)}
+h1 em{font-style:italic;color:var(--lamba-iz)}
+.giris{color:var(--metin-m);font-size:18px;line-height:1.62;max-width:56ch;margin-top:var(--sp-lg)}
 /* Denenen adres kullanıcı girdisidir: textContent ile basılıyor, satır sonu
    verilmezse uzun bir yol telefonda yatay taşma yapıyor. */
-.adres{font-family:var(--mono);font-size:13px;color:var(--kagit-t);margin-top:var(--sp-lg);
-  padding-top:var(--sp-md);border-top:1px solid var(--hair);max-width:52ch;
+.adres{font-family:var(--mono);font-size:13px;color:var(--metin-t);margin-top:var(--sp-lg);
+  padding-top:var(--sp-md);border-top:1px solid var(--cizgi);max-width:52ch;
   overflow-wrap:anywhere;min-width:0}
-.adres b{color:var(--kagit-s);font-weight:400}
+.adres b{color:var(--metin-s);font-weight:400}
 .eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
 .btn{font-family:var(--body);font-size:15px;font-weight:500;padding:0 22px;min-height:48px;
   border-radius:var(--r-md);display:inline-flex;align-items:center;border:1px solid transparent;
   text-decoration:none;cursor:pointer;
   transition:background .3s var(--ease),border-color .3s var(--ease),color .3s var(--ease)}
-.btn.p{background:var(--lamba);color:var(--on-lamba)}
-.btn.p:hover{background:var(--lamba-h)}
-.btn.s{background:var(--tezgah);border-color:var(--hair-s);color:var(--kagit)}
-.btn.s:hover{background:var(--tezgah-2);border-color:var(--hair-t)}
-:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
+.btn.p{background:var(--lamba-dolgu);color:var(--lamba-ust)}
+.btn.p:hover{background:var(--lamba-dolgu-h)}
+.btn.s{background:var(--yuzey);border-color:var(--cizgi-s);color:var(--metin)}
+.btn.s:hover{background:var(--yuzey-2);border-color:var(--cizgi-t)}
+:focus-visible{outline:2px solid var(--lamba-iz);outline-offset:3px;border-radius:var(--r-xs)}
 /* Alt bilgi index.html'dekiyle aynı: Public Sans 15px, aynı renkler, aynı dokunma
    alanı. Eskiden mono 13px'ti ve üzerine gelince kehribara dönüyordu — alt bilgi
    bir eylem değil, lamba ona ait değil. */
-footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0}
+footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
-  font-size:15px;color:var(--kagit-t)}
-.foot-kimlik{color:var(--kagit-s);line-height:1.8}
+  font-size:15px;color:var(--metin-t)}
+.foot-kimlik{color:var(--metin-s);line-height:1.8}
 .foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
 @media(max-width:760px){.foot .sag{margin-left:0}}
 .foot-posta{overflow-wrap:anywhere}
-.foot a{color:var(--kagit-s);text-decoration:none;padding-block:var(--sp-sm)}
-.foot a:hover{color:var(--kagit)}
+.foot a{color:var(--metin-s);text-decoration:none;padding-block:var(--sp-sm)}
+.foot a:hover{color:var(--metin)}
 @media(prefers-reduced-motion:reduce){
   /* Toptan bir geçiş kapatması yerine yalnızca uzamsal hareket kaldırılır:
      renk ve opaklık geçişleri eylemin karşılığını gösterdiği için kalır.

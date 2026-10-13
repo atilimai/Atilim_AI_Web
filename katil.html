@@ -52,15 +52,22 @@
   --ease:cubic-bezier(.16,1,.3,1);
   /* Üst çubuğun ölçüsü ana sayfanınkiyle aynı (index.html --ray, --ray-ara). */
   --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
+  /* Roller: sayfa yüzeyi bunları kullanır, palet adlarını değil. */
+  --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
+  --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
+  --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
+  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h);
+  --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
+  --ekran-iz:var(--ekran); --canli-iz:var(--canli);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--gece);color:var(--kagit);font-family:var(--body);
+body{background:var(--zemin);color:var(--metin);font-family:var(--body);
   font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
   min-height:100vh;display:flex;flex-direction:column}
-a{color:var(--lamba);text-decoration:none}
+a{color:var(--lamba-iz);text-decoration:none}
 /* Halka bileşen kurallarından önce: satırlar kendi köşesini odakta da korur,
    index.html'deki düğmeler gibi. */
-:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
+:focus-visible{outline:2px solid var(--lamba-iz);outline-offset:3px;border-radius:var(--r-xs)}
 .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,56px);width:100%}
 
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--lamba);color:var(--on-lamba);
@@ -98,8 +105,8 @@ main{flex:1;display:flex;align-items:center;padding-block:var(--sp-xxl)}
 h1{font-family:var(--disp);font-weight:300;
   font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;
   max-width:17ch;text-wrap:balance}
-h1 em{font-style:italic;color:var(--lamba)}
-.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:56ch;margin-top:var(--sp-lg)}
+h1 em{font-style:italic;color:var(--lamba-iz)}
+.giris{color:var(--metin-m);font-size:18px;line-height:1.62;max-width:56ch;margin-top:var(--sp-lg)}
 
 /* Kapılar: dört eşit satır, ikincil düğmenin dili (tezgah, hair-s, md köşe).
    Birincil düğme bilerek yok — dört kanal eşit. Kehribar yalnızca sondaki
@@ -107,27 +114,27 @@ h1 em{font-style:italic;color:var(--lamba)}
    logosu ve marka rengi yok; hedefi mono satırdaki adres söylüyor. */
 .kapilar{list-style:none;display:flex;flex-direction:column;gap:var(--sp-sm)}
 .kapi{display:flex;align-items:center;gap:var(--sp-md);min-height:72px;padding:var(--sp-md) 22px;
-  background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-md);color:var(--kagit);
+  background:var(--yuzey);border:1px solid var(--cizgi-s);border-radius:var(--r-md);color:var(--metin);
   transition:background .3s var(--ease),border-color .3s var(--ease)}
-.kapi:hover,.kapi:focus-visible{background:var(--tezgah-2);border-color:var(--hair-t)}
+.kapi:hover,.kapi:focus-visible{background:var(--yuzey-2);border-color:var(--cizgi-t)}
 .kapi-metin{display:flex;flex-direction:column;flex:1 1 auto;min-width:0}
 .kapi-ad{font-weight:500;line-height:1.4}
 /* E-posta adresi bölünmez tek bir dizi: 320px'te satırı taşırmasın. */
-.kapi-yer{font-family:var(--mono);font-size:13px;line-height:1.5;color:var(--kagit-t);
+.kapi-yer{font-family:var(--mono);font-size:13px;line-height:1.5;color:var(--metin-t);
   overflow-wrap:anywhere}
-.kapi .ok{margin-left:0;color:var(--kagit-t);transition:color .3s,transform .3s var(--ease)}
-.kapi:hover .ok,.kapi:focus-visible .ok{color:var(--lamba);transform:translateX(3px)}
+.kapi .ok{margin-left:0;color:var(--metin-t);transition:color .3s,transform .3s var(--ease)}
+.kapi:hover .ok,.kapi:focus-visible .ok{color:var(--lamba-iz);transform:translateX(3px)}
 
 /* Alt bilgi index.html'dekiyle aynı. */
-footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0}
+footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
-  font-size:15px;color:var(--kagit-t)}
-.foot-kimlik{color:var(--kagit-s);line-height:1.8}
+  font-size:15px;color:var(--metin-t)}
+.foot-kimlik{color:var(--metin-s);line-height:1.8}
 .foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
 @media(max-width:760px){.foot .sag{margin-left:0}}
 .foot-posta{overflow-wrap:anywhere}
-.foot a{color:var(--kagit-s);padding-block:var(--sp-sm)}
-.foot a:hover{color:var(--kagit)}
+.foot a{color:var(--metin-s);padding-block:var(--sp-sm)}
+.foot a:hover{color:var(--metin)}
 
 @media(prefers-reduced-motion:reduce){
   /* Uzamsal hareket kalkar, renk geri bildirimi kalır. Seçici kaymayı kuran

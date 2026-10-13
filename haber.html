@@ -55,14 +55,18 @@
   --ease:cubic-bezier(.16,1,.3,1);
   /* Üst çubuğun ölçüsü ana sayfanınkiyle aynı (index.html --ray, --ray-ara). */
   --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
+  /* Roller: sayfa yüzeyi bunları kullanır, palet adlarını değil. */
+  --zemin:var(--gunduz); --yuzey:var(--kart);
+  --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s);
+  --lamba-iz:var(--lamba-d); --ekran-iz:var(--ekran-d);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--gunduz);color:var(--murekkep);font-family:var(--body);
+body{background:var(--zemin);color:var(--metin);font-family:var(--body);
   font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--disp);font-weight:300}
-a{color:var(--lamba-d);text-decoration:none}
-:focus-visible{outline:2px solid var(--lamba-d);outline-offset:3px;border-radius:var(--r-xs)}
+a{color:var(--lamba-iz);text-decoration:none}
+:focus-visible{outline:2px solid var(--lamba-iz);outline-offset:3px;border-radius:var(--r-xs)}
 .wrap{max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
 
 .atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--murekkep);color:var(--gunduz);
@@ -108,17 +112,17 @@ h1.uzun{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em}
    sayfa 1.767px'e açılıyordu. */
 h1,.kaynak,.yazi p,.sayac,.etiket,.kapak-ust .tarih,.yazi figcaption{overflow-wrap:anywhere}
 .kapak-ust>*{min-width:0}
-.giris{color:var(--murekkep-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:var(--sp-lg)}
-.sayac{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);margin-top:var(--sp-lg);
+.giris{color:var(--metin-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:var(--sp-lg)}
+.sayac{font-family:var(--mono);font-size:13px;color:var(--metin-s);margin-top:var(--sp-lg);
   padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
 
 /* Gövde .wrap taşıyor; alt boşluk kimlikle veriliyor ki .wrap'in padding'i ezmesin
    (DESIGN.md, Shorthand Rule). */
 #govde{padding-bottom:clamp(64px,10vw,112px)}
 
-.durum{color:var(--murekkep-s);font-family:var(--mono);font-size:13px;line-height:1.8;
+.durum{color:var(--metin-s);font-family:var(--mono);font-size:13px;line-height:1.8;
   margin-top:var(--sp-xl);padding:var(--sp-lg);border:1px solid var(--cizgi);border-radius:var(--r-lg);
-  background:var(--kart)}
+  background:var(--yuzey)}
 /* Her durum kartının altında bir çıkış satırı: hata da, betiksiz hal de
    bir yere gidebilmeli. Düğmeler zaten .oku — sisteme yeni bir şey girmiyor. */
 .durum-eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-lg)}
@@ -130,7 +134,7 @@ h1,.kaynak,.yazi p,.sayac,.etiket,.kapak-ust .tarih,.yazi figcaption{overflow-wr
 /* Veri gelene kadar tek satır: kapağın üst boşluğunda, gündüz dünyasının
    durum sesiyle (mono 13px, murekkep-s). Yazı gelince yerini kapak alıyor. */
 .yukleniyor{padding-block:clamp(48px,8vw,80px) 0;font-family:var(--mono);font-size:13px;
-  color:var(--murekkep-s)}
+  color:var(--metin-s)}
 /* İlk istek uçuştayken gövde ve alt bilgi yerleşimde yok; yükleme satırı
    gövdenin dışında, kapağın yerinde duruyor. Eskiden satır gövdenin içindeydi
    ve yazı gelince kapak gövdenin ÜSTÜNDE açılıyordu: masaüstünde gövde 448px
@@ -143,14 +147,14 @@ h1,.kaynak,.yazi p,.sayac,.etiket,.kapak-ust .tarih,.yazi figcaption{overflow-wr
 [tabindex="-1"]:focus{outline:none}
 footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
-  font-size:15px;color:var(--murekkep-s)}
+  font-size:15px;color:var(--metin-s)}
 .foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
 /* Telefonda margin-left:auto bağlantıları ekran kenarına sıkıştırıyor ve
    kompozisyondan çok kazara bir kümelenme gibi okunuyor (index.html ile aynı). */
 @media(max-width:760px){.foot .sag{margin-left:0}}
 /* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
-.foot a{color:var(--murekkep-s);padding-block:var(--sp-sm)}
-.foot a:hover{color:var(--murekkep)}
+.foot a{color:var(--metin-s);padding-block:var(--sp-sm)}
+.foot a:hover{color:var(--metin)}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -164,19 +168,19 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 /* Panelden gelen kategori olduğu gibi basılır: dili belli değil ve lang="tr"
    altında büyük harf dönüşümü "Vision"ı "VİSİON" yapıyordu (index.html .etiket). */
 .etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.02em;
-  color:var(--ekran-d)}
+  color:var(--ekran-iz)}
 /* Panelden gelen tarih serbest metin ("3 Ağustos 2026"); makine okunur bir
    karşılığı yok. datetime'sız <time>, içeriği geçerli bir tarih dizisi
    değilse geçersiz biçimlendirme — o yüzden <span>. Sayı tarihi (sayi.tarih)
    ISO ama o başka bir tarih, buraya konamaz. */
-.kapak-ust .tarih{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
+.kapak-ust .tarih{font-family:var(--mono);font-size:13px;color:var(--metin-s)}
 .yazi{margin-top:var(--sp-xl)}
 /* En-boy oranı yeri yüklenmeden ayırır; max-height ile yükseklik yükleme anına
    kadar 0 kalıyor ve görsel gelince altındaki metnin tamamı kayıyordu. */
 .yazi img.gorsel{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
   border:1px solid transparent;border-radius:var(--r-lg);margin-bottom:var(--sp-xl)}
 .yazi img.gorsel.yuklendi{border-color:var(--cizgi)}
-.yazi p{font-family:var(--disp);font-size:19px;line-height:1.85;color:var(--murekkep);
+.yazi p{font-family:var(--disp);font-size:19px;line-height:1.85;color:var(--metin);
   margin-top:var(--sp-lg);max-width:66ch}
 .yazi p:first-of-type{margin-top:0}
 /* Metin arası görsel doğal oranında durur: kapaktaki 16/9 kırpma bir ekran
@@ -185,16 +189,16 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 .yazi figure img{width:100%;height:auto;display:block;border-radius:var(--r-lg);
   border:1px solid transparent}
 .yazi figure img.yuklendi{border-color:var(--cizgi)}
-.yazi figcaption{font-family:var(--mono);font-size:13px;color:var(--murekkep-s);
+.yazi figcaption{font-family:var(--mono);font-size:13px;color:var(--metin-s);
   margin-top:var(--sp-sm);line-height:1.5}
 .yazi-alt{display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap;
   margin-top:var(--sp-xxl);padding-top:var(--sp-lg);border-top:1px solid var(--cizgi)}
-.kaynak{font-family:var(--mono);font-size:13px;color:var(--murekkep-s)}
-.oku{font-family:var(--body);font-size:15px;font-weight:500;color:var(--murekkep);
+.kaynak{font-family:var(--mono);font-size:13px;color:var(--metin-s)}
+.oku{font-family:var(--body);font-size:15px;font-weight:500;color:var(--metin);
   background:none;border:1px solid var(--cizgi-s);border-radius:var(--r-md);
   padding:0 var(--sp-md);min-height:44px;display:inline-flex;align-items:center;cursor:pointer;
   transition:background .3s var(--ease),border-color .3s var(--ease)}
-.oku:hover{background:var(--kart);border-color:var(--murekkep-s)}
+.oku:hover{background:var(--yuzey);border-color:var(--metin-s)}
 /* Yazı altındaki satırda geri bağlantısı sağa yaslanır. */
 .yazi-alt .sona{margin-left:auto}
 /* Baskı — bu blok stil sayfasının en sonunda durmak zorunda. Medya sorgusu

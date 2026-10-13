@@ -54,14 +54,21 @@
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
   --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px; --sp-sec:96px;
   --ease:cubic-bezier(.16,1,.3,1);
+  /* Roller: sayfa yüzeyi bunları kullanır, palet adlarını değil. */
+  --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
+  --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
+  --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
+  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h);
+  --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
+  --ekran-iz:var(--ekran); --canli-iz:var(--canli);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--gece);color:var(--kagit);font-family:var(--body);
+body{background:var(--zemin);color:var(--metin);font-family:var(--body);
   font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--disp);font-weight:300}
-a{color:var(--lamba);text-decoration:none}
-:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;border-radius:var(--r-xs)}
+a{color:var(--lamba-iz);text-decoration:none}
+:focus-visible{outline:2px solid var(--lamba-iz);outline-offset:3px;border-radius:var(--r-xs)}
 /* Yeniden denemeden sonra odak, akış boşsa durum satırına taşınıyor. O satır
    etkileşimli değil; halka bir denetim varmış gibi okunurdu. */
 [tabindex="-1"]:focus{outline:none}
@@ -136,14 +143,14 @@ section{padding:var(--sp-sec) 0;scroll-margin-top:64px}
    etiketini eylem rengiyle basmak İki Kaynak Kuralı'nı da kırıyordu. Başlıklar
    kendi ağırlığını taşıyor; bölüm adları gezinme çubuğunda zaten var. */
 h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.06;letter-spacing:-.02em;max-width:17ch;text-wrap:balance}
-h1 em{font-style:italic;color:var(--lamba)}
+h1 em{font-style:italic;color:var(--lamba-iz)}
 h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
   margin-top:var(--sp-md);text-wrap:balance;max-width:20ch}
-.giris{color:var(--kagit-m);font-size:18px;line-height:1.62;max-width:62ch;margin-top:var(--sp-lg);
+.giris{color:var(--metin-m);font-size:18px;line-height:1.62;max-width:62ch;margin-top:var(--sp-lg);
   text-wrap:pretty}
 /* Hakkımızda sütununun ilk paragrafı başlıkla aynı hizada başlar. */
 .iki .giris:first-child{margin-top:0}
-.meta{font-family:var(--mono);font-size:13px;color:var(--kagit-t)}
+.meta{font-family:var(--mono);font-size:13px;color:var(--metin-t)}
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- hero ---------- */
@@ -155,36 +162,36 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .btn{font-family:var(--body);font-size:15px;font-weight:500;padding:0 22px;min-height:48px;
   border-radius:var(--r-md);display:inline-flex;align-items:center;border:1px solid transparent;
   cursor:pointer;transition:background .3s,border-color .3s,color .3s}
-.btn.p{background:var(--lamba);color:var(--on-lamba)}
-.btn.p:hover{background:var(--lamba-h)}
-.btn.s{background:var(--tezgah);border-color:var(--hair-s);color:var(--kagit)}
-.btn.s:hover{background:var(--tezgah-2);border-color:var(--hair-t)}
+.btn.p{background:var(--lamba-dolgu);color:var(--lamba-ust)}
+.btn.p:hover{background:var(--lamba-dolgu-h)}
+.btn.s{background:var(--yuzey);border-color:var(--cizgi-s);color:var(--metin)}
+.btn.s:hover{background:var(--yuzey-2);border-color:var(--cizgi-t)}
 
 /* ---------- iki sütun / ölçüm ---------- */
 .iki{display:grid;grid-template-columns:1fr 1.3fr;gap:clamp(32px,6vw,80px)}
 @media(max-width:900px){.iki{grid-template-columns:1fr;gap:var(--sp-xl)}}
-.olcum{margin-top:var(--sp-xl);border-top:1px solid var(--hair)}
+.olcum{margin-top:var(--sp-xl);border-top:1px solid var(--cizgi)}
 .olcum div,.olcum a{display:flex;align-items:baseline;gap:var(--sp-md);padding:var(--sp-md) 0;
-  border-bottom:1px solid var(--hair)}
+  border-bottom:1px solid var(--cizgi)}
 /* Rakam satırın metin ölçüsünde: 28px'lik kehribar rakam, altındaki 15px
    etiketle "büyük sayı, küçük etiket" kalıbına dönüyor ve paragrafların
    altında başlıktan ağır duruyordu. Rakam etiketle aynı cümlenin parçası;
    satırlar yer tutucu dönemindeki 57px'lik ritminde kalıyor. */
-.olcum b{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--lamba);
+.olcum b{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--lamba-iz);
   line-height:1.5;min-width:32px;flex:0 0 auto}
-.olcum span{font-size:15px;color:var(--kagit-s)}
+.olcum span{font-size:15px;color:var(--metin-s)}
 /* Satırlardan biri bağlantı. Sondaki ok onun gidilebilir olduğunu durağan
    halde söyler; opasite değişimi yalnızca imleç üstündeyken vardı ve
    dokunmatikte hiç yoktu. */
 .olcum a span{flex:1 1 auto}
-.olcum .git{flex:none;font-size:15px;color:var(--kagit-t);
+.olcum .git{flex:none;font-size:15px;color:var(--metin-t);
   transition:color .3s,transform .3s var(--ease)}
 .olcum a:hover .git,.olcum a:focus-visible .git{
-  color:var(--lamba);transform:translateX(3px)}
+  color:var(--lamba-iz);transform:translateX(3px)}
 
 /* ---------- etkinlik ---------- */
-.tl{list-style:none;margin-top:var(--sp-xl);border-top:1px solid var(--hair);padding-top:var(--sp-xs)}
-.tl li{border-bottom:1px solid var(--hair)}
+.tl{list-style:none;margin-top:var(--sp-xl);border-top:1px solid var(--cizgi);padding-top:var(--sp-xs)}
+.tl li{border-bottom:1px solid var(--cizgi)}
 .tl button{width:100%;display:grid;grid-template-columns:80px 1fr auto auto;gap:var(--sp-lg);
   align-items:baseline;padding:22px 0;background:none;border:0;color:inherit;font:inherit;
   text-align:left;cursor:pointer;min-height:44px}
@@ -193,19 +200,19 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
    arkasında kalıyordu. İşaret üç durumu da söyler: kapalı, imleç üstünde,
    açık. Durum sınıfı <li>'de olduğu için :has() gerekmiyor. */
 .tl .isaret{width:12px;height:12px;align-self:center;
-  fill:none;stroke:var(--kagit-t);stroke-width:1.5;
+  fill:none;stroke:var(--metin-t);stroke-width:1.5;
   stroke-linecap:round;stroke-linejoin:round;
   transition:transform .45s var(--ease),stroke .3s}
-.tl button:hover .isaret,.tl button:focus-visible .isaret{stroke:var(--lamba)}
-.tl li.acik .isaret{transform:rotate(180deg);stroke:var(--lamba)}
+.tl button:hover .isaret,.tl button:focus-visible .isaret{stroke:var(--lamba-iz)}
+.tl li.acik .isaret{transform:rotate(180deg);stroke:var(--lamba-iz)}
 /* Tarih hücresi iki satır: özel etkinlikler hafta sonuna düşüyor, takvime
    bakan öğrenci günü tarihten hesaplamak zorunda kalmasın. Gün adı 12px
    --kagit-t (5.54:1), 80px sütuna sığar ("Cumartesi" mono 12px'te ~65px). */
-.tl time{font-family:var(--mono);font-size:13px;color:var(--lamba);display:block}
+.tl time{font-family:var(--mono);font-size:13px;color:var(--lamba-iz);display:block}
 .tl time span{display:block;margin-top:3px;font-size:12px;letter-spacing:.02em;
-  color:var(--kagit-t)}
+  color:var(--metin-t)}
 .tl .baslik{font-family:var(--disp);font-size:21px;font-weight:400;line-height:1.34}
-.tl .yer{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--kagit-t)}
+.tl .yer{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--metin-t)}
 /* Kapalı hal .js kapısının arkasında: betik yoksa satırlar hiç açılamıyordu
    ve dört açıklama kalıcı olarak erişilemez kalıyordu. Betik yokken hepsi
    açık gelir, işaret de gizlenir — yapılamayacak bir etkileşimi haber
@@ -224,7 +231,7 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .tl .detay>div{overflow:hidden}
 .js .tl .detay>div{visibility:hidden;transition:visibility 0s .45s}
 .js .tl li.acik .detay>div{visibility:visible;transition:visibility 0s 0s}
-.tl .detay p{color:var(--kagit-m);font-size:15px;line-height:1.7;max-width:60ch;padding-bottom:22px}
+.tl .detay p{color:var(--metin-m);font-size:15px;line-height:1.7;max-width:60ch;padding-bottom:22px}
 @media(max-width:760px){
   .tl button{grid-template-columns:1fr auto;gap:6px}
   .tl time,.tl .baslik,.tl .yer{grid-column:1}
@@ -236,17 +243,17 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
    karaktere kadar gelebiliyor, sarma kuralı olmadan satırı kırıyordu.
    min-width:0 grid çocuğunun içeriğinin altına inebilmesi için. */
 .haber{display:grid;grid-template-columns:88px 108px 1fr;gap:var(--sp-lg);padding:22px 0;
-  border-bottom:1px solid var(--hair);align-items:baseline}
+  border-bottom:1px solid var(--cizgi);align-items:baseline}
 .haber>*{min-width:0;overflow-wrap:anywhere}
-.haber:first-child{border-top:1px solid var(--hair)}
+.haber:first-child{border-top:1px solid var(--cizgi)}
 .haber h3{font-size:21px;font-weight:400;line-height:1.34;max-width:40ch;overflow-wrap:anywhere}
 /* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını kurala çıkarır —
    alt bilgi bağlantılarındaki kalıbın aynısı. Başlık bağlantısı 21px yüksek
    bir kutuydu; WCAG 2.5.8'in 24px tabanının da altında. Arşiv boşken hiç
    oluşturulmadığı için ölçümlere girmiyordu. */
-.haber h3 a{color:var(--kagit);transition:color .3s;padding-block:var(--sp-sm)}
-.haber h3 a:hover{color:var(--lamba)}
-.haber p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:var(--sp-xs);max-width:66ch;
+.haber h3 a{color:var(--metin);transition:color .3s;padding-block:var(--sp-sm)}
+.haber h3 a:hover{color:var(--lamba-iz)}
+.haber p{color:var(--metin-s);font-size:15px;line-height:1.6;margin-top:var(--sp-xs);max-width:66ch;
   overflow-wrap:anywhere}
 /* Kategori panelden geliyor ve dili belli değil: "Model", "Agents" de
    gelebiliyor, "Politika" da. lang="tr" altında text-transform:uppercase
@@ -254,12 +261,12 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
    büyütüyor ve hangisinin hangisi olduğunu bilmenin yolu yok. Panelin yazdığı
    biçim olduğu gibi basılır; küçük harfli mono için aralık .tl .yer ile aynı. */
 .etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.02em;
-  color:var(--ekran)}
-.feed-kalan,.tl-bos{font-family:var(--mono);font-size:13px;color:var(--kagit-t);padding:22px 0;
-  border-bottom:1px solid var(--hair)}
+  color:var(--ekran-iz)}
+.feed-kalan,.tl-bos{font-family:var(--mono);font-size:13px;color:var(--metin-t);padding:22px 0;
+  border-bottom:1px solid var(--cizgi)}
 /* Etkinlik listesi boşken yerini tutan dipnot. Listenin üst çizgisini ve
    boşluğunu devralıyor; liste geri gelince bölüm aynı yerde başlasın. */
-.tl-bos{margin-top:var(--sp-xl);border-top:1px solid var(--hair)}
+.tl-bos{margin-top:var(--sp-xl);border-top:1px solid var(--cizgi)}
 /* Sayı numarası yoksa boş bir <p> 32px üst boşlukla duruyordu. */
 #feedIssue{margin-top:var(--sp-xl)}
 #feedList{margin-top:var(--sp-md)}
@@ -269,13 +276,13 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
    yükleniyor→hata geçişinde sayfa 26px sıçrıyordu. Esnek satır + yarı dolgu
    düğmeyi aynı ritmin içine alıyor. */
 .feed-hata{display:flex;align-items:center;gap:var(--sp-xs);flex-wrap:wrap;
-  font-family:var(--mono);font-size:13px;color:var(--kagit-m);padding:11px 0;
-  border-bottom:1px solid var(--hair)}
+  font-family:var(--mono);font-size:13px;color:var(--metin-m);padding:11px 0;
+  border-bottom:1px solid var(--cizgi)}
 .feed-hata button{all:unset;display:inline-flex;align-items:center;
-  color:var(--lamba);cursor:pointer;min-height:44px;
+  color:var(--lamba-iz);cursor:pointer;min-height:44px;
   border-bottom:1px solid var(--lamba-alt)}
-.feed-hata button:hover{color:var(--lamba-h)}
-.feed-hata button:focus-visible{outline:2px solid var(--lamba);outline-offset:3px;
+.feed-hata button:hover{color:var(--lamba-iz-h)}
+.feed-hata button:focus-visible{outline:2px solid var(--lamba-iz);outline-offset:3px;
   border-radius:var(--r-xs)}
 /* Kardeşi .arsiv-bag 44px taşıyor, bu satır taşımıyordu: 109x25 px'lik bir
    dokunma hedefi kalıyordu. Arşiv boşken hiç oluşturulmadığı için ölçümlere de
@@ -284,9 +291,9 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
    padding ile değil. */
 .devam{display:inline-flex;align-items:center;min-height:44px;
   margin-top:var(--sp-xs);font-family:var(--mono);font-size:13px;
-  color:var(--lamba);border-bottom:1px solid var(--lamba-alt);padding-bottom:3px}
+  color:var(--lamba-iz);border-bottom:1px solid var(--lamba-alt);padding-bottom:3px}
 .arsiv-bag{display:inline-flex;align-items:center;margin-top:var(--sp-xl);
-  font-family:var(--mono);font-size:13px;color:var(--lamba);
+  font-family:var(--mono);font-size:13px;color:var(--lamba-iz);
   border-bottom:1px solid var(--lamba-alt);padding-bottom:4px;min-height:44px}
 @media(max-width:760px){.haber{grid-template-columns:1fr;gap:var(--sp-xs)}}
 
@@ -297,35 +304,35 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .projeler{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:var(--sp-md);margin-top:var(--sp-xl)}
 @media(max-width:760px){.projeler{grid-template-columns:1fr}}
-.kart{background:var(--tezgah);border:1px solid var(--hair);border-radius:var(--r-lg);
+.kart{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:var(--r-lg);
   padding:var(--sp-lg);transition:background .35s,border-color .35s}
-.kart:hover{background:var(--tezgah-2);border-color:var(--hair-s)}
+.kart:hover{background:var(--yuzey-2);border-color:var(--cizgi-s)}
 /* Kartın tamamı deponun bağlantısı: başlıktaki <a>'nın ::after'ı kartı
    kaplıyor. Kartlarda eskiden de hover vardı ama tıklanacak bir şey yoktu.
    Odak halkası ::after'a taşınıyor ki başlığı değil kartı çevrelesin. */
 .kart{position:relative}
-.kart h3 a{color:var(--kagit);transition:color .3s}
-.kart:hover h3 a{color:var(--lamba)}
+.kart h3 a{color:var(--metin);transition:color .3s}
+.kart:hover h3 a{color:var(--lamba-iz)}
 .kart h3 a::after{content:"";position:absolute;inset:0;border-radius:var(--r-lg)}
 .kart h3 a:focus-visible{outline:none}
-.kart h3 a:focus-visible::after{outline:2px solid var(--lamba);outline-offset:3px}
+.kart h3 a:focus-visible::after{outline:2px solid var(--lamba-iz);outline-offset:3px}
 .durum{display:inline-flex;align-items:center;gap:var(--sp-xs);font-family:var(--mono);
-  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--kagit-s)}
-.durum i{width:7px;height:7px;border-radius:50%;background:var(--kagit-t)}
-.durum.canli i{background:var(--canli)}
-.durum.canli{color:var(--kagit-m)}
+  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--metin-s)}
+.durum i{width:7px;height:7px;border-radius:50%;background:var(--metin-t)}
+.durum.canli i{background:var(--canli-iz)}
+.durum.canli{color:var(--metin-m)}
 .kart h3{font-size:21px;font-weight:400;margin-top:var(--sp-sm)}
-.kart p{color:var(--kagit-s);font-size:15px;line-height:1.6;margin-top:var(--sp-xs)}
+.kart p{color:var(--metin-s);font-size:15px;line-height:1.6;margin-top:var(--sp-xs)}
 .etiketler{display:flex;gap:var(--sp-xs);flex-wrap:wrap;margin-top:var(--sp-md);
-  padding-top:var(--sp-md);border-top:1px solid var(--hair)}
-.etiketler span{font-family:var(--mono);font-size:12px;color:var(--kagit-t);
-  border:1px solid var(--hair-s);border-radius:var(--r-sm);padding:4px 9px}
+  padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
+.etiketler span{font-family:var(--mono);font-size:12px;color:var(--metin-t);
+  border:1px solid var(--cizgi-s);border-radius:var(--r-sm);padding:4px 9px}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0}
-.foot-kimlik{color:var(--kagit-s);line-height:1.8}
+footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
+.foot-kimlik{color:var(--metin-s);line-height:1.8}
 .foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
-  font-size:15px;color:var(--kagit-t)}
+  font-size:15px;color:var(--metin-t)}
 .foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
 /* Telefonda margin-left:auto üç bağlantıyı ekran kenarına sıkıştırıyor ve
    kompozisyondan çok kazara bir kümelenme gibi okunuyordu. */
@@ -334,8 +341,8 @@ footer{border-top:1px solid var(--hair);padding:var(--sp-xxl) 0}
 /* Topluluk kanallarında olmayan biri (sponsor, başka topluluk, hoca) için
    doğrudan adres. Kimlik satırıyla aynı grupta duruyor: sağdaki üçlü gezinme kalıyor. */
 .foot-posta{overflow-wrap:anywhere}
-.foot a{color:var(--kagit-s);padding-block:var(--sp-sm)}
-.foot a:hover{color:var(--kagit)}
+.foot a{color:var(--metin-s);padding-block:var(--sp-sm)}
+.foot a:hover{color:var(--metin)}
 
 /* ---------- belirme ---------- */
 /* Gizleme yalnızca JS varken uygulanır: betik çalışmazsa ya da tarayıcı
