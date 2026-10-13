@@ -77,7 +77,7 @@
   --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h); --lamba-alt:rgba(232,163,61,.4);
   --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
   --ekran-iz:var(--ekran); --canli-iz:var(--canli);
-  --cubuk-zemin:transparent;
+  --cubuk-zemin:transparent; --cubuk-cam:var(--gece-cam);
   --disp:"Newsreader",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
@@ -93,7 +93,7 @@
   --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
   --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
   --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
-  --cubuk-zemin:var(--gece);
+  --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
 }}
 :root[data-tema="acik"]{
   color-scheme:light;
@@ -103,7 +103,7 @@
   --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
   --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
   --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
-  --cubuk-zemin:var(--gece);
+  --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -144,7 +144,7 @@ nav{position:sticky;top:0;z-index:40;border-bottom:1px solid transparent;backgro
   transition:border-color .4s,background .4s}
 /* Genel halka --lamba-iz; açık temada koyu kehribar gece çubukta 3.1:1 kalırdı. */
 nav :focus-visible{outline-color:var(--lamba)}
-nav.yapisik{border-bottom-color:var(--hair);background:var(--gece-cam);backdrop-filter:blur(12px)}
+nav.yapisik{border-bottom-color:var(--hair);background:var(--cubuk-cam);backdrop-filter:blur(12px)}
 .nav-in{display:flex;align-items:center;gap:var(--sp-lg);height:64px;position:relative}
 .marka{display:flex;align-items:center;gap:var(--sp-sm);color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
@@ -1238,14 +1238,18 @@ var VS =
 var FS =
 "precision mediump float;"+
 "varying float vIsik;varying float vSol;"+
-"uniform vec3 uSoguk;uniform vec3 uSicak;uniform float uKazanc;uniform float uVurgu;"+
+"uniform vec3 uSoguk;uniform vec3 uSicak;uniform float uKazanc;uniform float uVurgu;uniform float uKip;"+
 "void main(){"+
 "  vec2 d = gl_PointCoord-0.5; float r2 = dot(d,d);"+
 "  if (r2 > 0.25) discard;"+
 "  float a = 1.0-r2*4.0; a*=a;"+
 "  float h = vIsik*uVurgu;"+
 "  vec3 col = mix(uSoguk,uSicak,h);"+
-"  gl_FragColor = vec4(col*(0.62+0.55*h)*(a*vSol*uKazanc*0.50), 1.0);"+
+"  float isik = (0.62+0.55*h)*(a*vSol*uKazanc*0.50);"+
+/* Koyu temada ışık eklenir (ONE, ONE). Açık temada mürekkep: karışım
+   (ZERO, ONE_MINUS_SRC_COLOR) zemini 1-renk kadar koyultur; üst üste binen
+   noktalar karanlıkta parladığı gibi kağıtta koyulaşır. */
+"  gl_FragColor = vec4(mix(col, 1.0-col, uKip)*isik, 1.0);"+
 "}";
 
 function derle(tip, kod){
@@ -1342,15 +1346,40 @@ function kur(){
   bagla("aTohum", toh, 1);
 
   ["w0","w1","w2","w3","w4","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare","uKutu",
-   "uSoguk","uSicak","uKazanc","uVurgu"].forEach(function(ad){ konum[ad]=gl.getUniformLocation(prog, ad); });
+   "uSoguk","uSicak","uKazanc","uVurgu","uKip"].forEach(function(ad){ konum[ad]=gl.getUniformLocation(prog, ad); });
 
-  gl.uniform3f(konum.uSoguk, 0.561, 0.706, 0.839);  /* ekran  #8FB4D6 */
-  gl.uniform3f(konum.uSicak, 0.910, 0.639, 0.239);  /* lamba  #E8A33D */
   gl.disable(gl.DEPTH_TEST);
   gl.enable(gl.BLEND);
-  gl.blendFunc(gl.ONE, gl.ONE);
-  gl.clearColor(0.06275, 0.05098, 0.03922, 1.0);   /* gece #100D0A */
+  renkleriAl();
   return true;
+}
+
+/* ---------- renk ----------
+   Renkler JS'de sabit değil, temanın rollerinden okunur: zemin (temizleme),
+   ekran-iz (soğuk) ve lamba-iz (sıcak, tarama). Koyu temada --zemin gece,
+   renkler ekran ve lamba; açık temada kağıt, ekran-d ve lamba-d. Tuval
+   opak ve tam ekran, CSS zemininin önünde durur: temizleme rengi zemine
+   eşit olmazsa sayfa yanlış renkte görünür. Tema değişince (görünüm
+   denetimi "temadegisti" yayar) yalnızca uniform'lar ve karışım değişir,
+   tamponlar yeniden kurulmaz. */
+/* Mürekkep kazancı: aynı kazançla kağıttaki model ortalamada %65 kadar
+   soluk kalıyordu (lens içi zeminden ortalama sapma 13 / koyuda 20). */
+var kip = 0, MUREKKEP = 1.35;
+function belirtec(ad, yedek){
+  var v = getComputedStyle(document.documentElement).getPropertyValue(ad).trim();
+  var m = /^#([0-9a-f]{6})$/i.exec(v); if (!m) return yedek;
+  var n = parseInt(m[1], 16); return [(n >> 16 & 255)/255, (n >> 8 & 255)/255, (n & 255)/255];
+}
+function renkleriAl(){
+  var z = belirtec("--zemin", [0.06275, 0.05098, 0.03922]);
+  var e = belirtec("--ekran-iz", [0.561, 0.706, 0.839]);
+  var l = belirtec("--lamba-iz", [0.910, 0.639, 0.239]);
+  kip = (z[0] + z[1] + z[2] > 1.5) ? 1 : 0;
+  gl.uniform3f(konum.uSoguk, e[0], e[1], e[2]);
+  gl.uniform3f(konum.uSicak, l[0], l[1], l[2]);
+  gl.uniform1f(konum.uKip, kip);
+  if (kip) gl.blendFunc(gl.ZERO, gl.ONE_MINUS_SRC_COLOR); else gl.blendFunc(gl.ONE, gl.ONE);
+  gl.clearColor(z[0], z[1], z[2], 1.0);
 }
 
 /* ---------- ölçüler ---------- */
@@ -1524,7 +1553,7 @@ function cizim(zaman){
 
   /* Çizilen dikdörtgenin görünür bir kenarlığı yoktur; alanın sınırı yalnızca
      scissor'dır. Merceğin uyandığını kazanç ve parçacıkların açılması söyler. */
-  var kazanc = (0.58 + 0.42*o) * (1 + 0.32*ilgi);
+  var kazanc = (0.58 + 0.42*o) * (1 + 0.32*ilgi) * (kip ? MUREKKEP : 1);
 
   /* --- scissor ---
      Model dikdörtgene sığdırılır; scissor ondan yalnızca kırpar. Güvenlik
@@ -1689,6 +1718,11 @@ function kurulum(){
       if (fx >= kutu.x && fx <= kutu.x + kutu.w && fy >= kutu.y && fy <= kutu.y + kutu.h) uyandir();
     }, {passive:true});
   }
+  document.addEventListener("temadegisti", function(){
+    renkleriAl();
+    if (kisik && basladi && genis.matches) cizim(0);
+    else uyandir();
+  });
   img.src = "images/ai_mark.png";
 }
 
