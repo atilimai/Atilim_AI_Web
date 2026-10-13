@@ -3,6 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Görünüm başlangıcı (beş sayfada aynı). Kayıtlı tema ilk boyamadan önce
+   <html>'e yazılır; kayıt yoksa nitelik de yok ve CSS sistem tercihini izler.
+   Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
+   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor. */
+(function(){
+  var t = null;
+  try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
+  if (t === "koyu" || t === "acik") document.documentElement.setAttribute("data-tema", t);
+})();
+</script>
 <title>Topluluğa katıl — Atılım AI</title>
 <meta name="description" content="Atılım Üniversitesi Yapay Zeka Topluluğu'na katıl: WhatsApp grubu, Instagram, LinkedIn ve e-posta. Bölüm şartı da önkoşul da yok.">
 <meta name="theme-color" content="#100D0A">
@@ -36,14 +47,33 @@
   font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"IBM Plex Mono";src:url(fonts/plex-mono-500.woff2) format("woff2");
   font-weight:500;font-style:normal;font-display:swap}
-/* Gece dünyası — index.html ile aynı belirteçler, DESIGN.md. Token dışında
-   değer kullanılmaz; yeni sayfa sistemi yeniden türetmez, ondan alır. */
+/* Token dışında değer kullanılmaz; yeni sayfa sistemi yeniden türetmez,
+   ondan alır (DESIGN.md). */
+/* Renk: beş sayfada aynı blok (DESIGN.md → Colors). Palet ham değerdir;
+   sayfa yüzeyi yalnızca rolleri çağırır. Roller koyu temayla (oda) başlar,
+   açık tema (defter) hemen alttaki iki blokta: sistem açıksa ve ziyaretçi
+   koyuyu seçmediyse, ya da açığı seçtiyse. Üst çubuk ve menü paneli paleti
+   doğrudan kullanır, her temada gece kalır. color-scheme tarayıcının kendi
+   çizdiği kaydırma çubuğunu ve denetimleri temayla eşler. */
 :root{
   color-scheme:dark;
-  --gece:#100D0A; --tezgah:#191512; --tezgah-2:#211B16;
+  /* Palet — gece */
+  --gece:#100D0A; --gece-cam:rgba(16,13,10,.86); --tezgah:#191512; --tezgah-2:#211B16;
   --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
   --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
-  --lamba:#E8A33D; --lamba-h:#F5B65C; --on-lamba:#241703;
+  --lamba:#E8A33D; --lamba-h:#F5B65C; --on-lamba:#241703; --ekran:#8FB4D6; --canli:#7FB069;
+  /* Palet — gündüz */
+  --gunduz:#F2EDE3; --kart:#FBF8F1; --kart-2:#FFFDF9;
+  --murekkep:#1A1713; --murekkep-m:#4A443B; --murekkep-s:#6B6357; --murekkep-t:#70685C;
+  --lamba-d:#8A5510; --lamba-dh:#6E430B; --ekran-d:#3D6389; --canli-d:#4A7336;
+  /* Roller — koyu */
+  --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
+  --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
+  --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
+  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h); --lamba-alt:rgba(232,163,61,.4);
+  --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
+  --ekran-iz:var(--ekran); --canli-iz:var(--canli);
+  --cubuk-zemin:transparent;
   --disp:"Newsreader",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
@@ -52,13 +82,26 @@
   --ease:cubic-bezier(.16,1,.3,1);
   /* Üst çubuğun ölçüsü ana sayfanınkiyle aynı (index.html --ray, --ray-ara). */
   --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
-  /* Roller: sayfa yüzeyi bunları kullanır, palet adlarını değil. */
-  --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
-  --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
-  --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
-  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h);
-  --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
-  --ekran-iz:var(--ekran); --canli-iz:var(--canli);
+}
+@media(prefers-color-scheme:light){:root:not([data-tema="koyu"]){
+  color-scheme:light;
+  --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
+  --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
+  --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24); --cizgi-t:rgba(26,23,19,.34);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
+  --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
+  --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
+  --cubuk-zemin:var(--gece);
+}}
+:root[data-tema="acik"]{
+  color-scheme:light;
+  --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
+  --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
+  --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24); --cizgi-t:rgba(26,23,19,.34);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
+  --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
+  --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
+  --cubuk-zemin:var(--gece);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--zemin);color:var(--metin);font-family:var(--body);
@@ -85,13 +128,19 @@ a{color:var(--lamba-iz);text-decoration:none}
 /* Üst çubuk okuma sayfalarındakiyle aynı ölçüde: logo her sayfada aynı x'te.
    1152px üstünde ana sayfanın kabı mercek bölgesi kadar genişliyor; çubuk da
    onunla genişler, içerik 1180px'te kalır — krom içeriğin ölçüsünü taşımaz. */
-.ust{border-bottom:1px solid var(--hair)}
+.ust{background:var(--gece);border-bottom:1px solid var(--hair)}
+/* Çubuk her temada gece; genel halka --lamba-iz açık temada 3.1:1 kalırdı. */
+.ust :focus-visible{outline-color:var(--lamba)}
 @media(min-width:1152px){.ust .wrap{max-width:min(calc(1180px + var(--ray) + var(--ray-ara)), 100%)}}
 .ust-in{display:flex;align-items:center;gap:var(--sp-md);height:64px}
 .marka{display:flex;align-items:center;gap:var(--sp-sm);color:var(--kagit);min-height:44px;
   font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
-.marka i{width:20px;height:20px;flex:none;
-  background:url(images/ai_mark.png) center/contain no-repeat}
+/* İşaret maske: beyaz PNG'nin biçimi, rengi marka metninden (currentColor).
+   Böylece işaret her zaman yanındaki yazının renginde; ayrı bir koyu varlık
+   gerekmiyor. */
+.marka i{width:20px;height:20px;flex:none;background:currentColor;
+  -webkit-mask:url(images/ai_mark.png) center/contain no-repeat;
+  mask:url(images/ai_mark.png) center/contain no-repeat}
 .geri{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--kagit-s);
   padding:0 var(--sp-sm);min-height:44px;display:flex;align-items:center;border-radius:var(--r-sm)}
 .geri:hover{color:var(--kagit)}
