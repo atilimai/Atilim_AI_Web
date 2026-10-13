@@ -891,8 +891,10 @@ if ("IntersectionObserver" in window && !reduced){
    Bağımlılık yok, CDN yok: ham WebGL, sayfanın içinde.
 
    Okunabilirlik sözleşmesi: WebGL yalnızca scissor dikdörtgeninin içine
-   boyayabilir. O dikdörtgen ya sağdaki boş alet rayı ya da içinde hiç metin
-   olmayan bölüm arası bölgedir. Metnin üstüne düşmesi mümkün değildir.
+   boyayabilir. Dikdörtgen sağdaki boş alet rayından yalnızca bir bölüm arası
+   bandın içindeyken çıkar: önce ray boyunca dikey kayıp banda yerleşir, sola
+   ancak ondan sonra açılır. Eskiden mercekle levha arasında düz bir çizgide
+   kayıyordu; iki uç metinsizdi, ara konumlar metnin üstünden geçiyordu.
    ============================================================ */
 (function(){
 "use strict";
@@ -921,7 +923,10 @@ var SAYI = 18000;
 
 function ras(a,b){ return a + Math.random()*(b-a); }
 function cn(){ return (Math.random()+Math.random()+Math.random()-1.5)/1.5; }
-function daha(a,b,x){ var t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*t*(t*(t*6-15)+10); }
+function daha(a,b,x){
+  if (b <= a) return x < a ? 0 : 1;   /* komşu bant çok yakınsa bölge sıfıra iner */
+  var t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*t*(t*(t*6-15)+10);
+}
 
 /* ---------- 0. monogram ---------- */
 var harf = null;
@@ -1087,7 +1092,7 @@ var VS =
 "attribute float aBoy;attribute float aTohum;"+
 "uniform float w0,w1,w2,w3,w4;"+
 "uniform float uZaman,uEn,uDon,uSup,uSurukle,uSig,uNokta,uItme;"+
-"uniform vec2 uFare;"+
+"uniform vec2 uFare;uniform vec4 uKutu;"+
 "varying float vIsik;varying float vSol;"+
 "void main(){"+
 "  vec3 p = a0*w0+a1*w1+a2*w2+a3*w3+a4*w4;"+
@@ -1101,7 +1106,7 @@ var VS =
 "    vec2 fd = nd - uFare;"+
 "    nd += normalize(fd + vec2(1e-4)) * (uItme * exp(-dot(fd,fd)*8.5));"+
 "  }"+
-"  gl_Position = vec4(nd,0.0,1.0);"+
+"  gl_Position = vec4(uKutu.xy + nd*uKutu.zw,0.0,1.0);"+
 "  gl_PointSize = clamp(aBoy*(2.05/z)*uSig*uNokta, 1.55, 18.0);"+
 "  vIsik = exp(-pow((p.x-uSup)*1.55,2.0));"+
 "  vSol  = 1.0 - smoothstep(3.55,5.10,z);"+
@@ -1212,7 +1217,7 @@ function kur(){
   bagla("aBoy", boy, 1);
   bagla("aTohum", toh, 1);
 
-  ["w0","w1","w2","w3","w4","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare",
+  ["w0","w1","w2","w3","w4","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare","uKutu",
    "uSoguk","uSicak","uKazanc","uVurgu"].forEach(function(ad){ konum[ad]=gl.getUniformLocation(prog, ad); });
 
   gl.uniform3f(konum.uSoguk, 0.561, 0.706, 0.839);  /* ekran  #8FB4D6 */
@@ -1231,12 +1236,14 @@ function boyutla(){
   EN = window.innerWidth; BOY = window.innerHeight;
   tuval.width  = Math.round(EN*dpr);
   tuval.height = Math.round(BOY*dpr);
+  olc();
 }
 
-/* Merceğin yeri okuma sütununun dışındaki rayın dış ucudur ve her karede
-   gerçek .wrap dikdörtgeninden hesaplanır — resize olayına güvenilmez.
-   Temel dolgu clamp(20px,5vw,56px), .wrap ile birebir aynı. */
+/* Merceğin yeri okuma sütununun dışındaki rayın dış ucudur ve gerçek .wrap
+   dikdörtgeninden hesaplanır. Temel dolgu clamp(20px,5vw,56px), .wrap ile
+   birebir aynı. */
 var refWrap = document.querySelector("#s1 .wrap") || document.querySelector("main .wrap");
+var menu = document.getElementById("nav");
 var MERCEK_TAVAN = 560;
 function mercekKutusu(){
   if (EN < 1152 || !refWrap) return null;
@@ -1252,22 +1259,74 @@ function mercekKutusu(){
 
 var gecis  = Array.prototype.slice.call(document.querySelectorAll(".gecis"));
 
+/* Yerleşim önbelleği. Bantların belgedeki yeri, mercek ve menü yüksekliği
+   kaydırmayla değişmez; eskiden her karede altı getBoundingClientRect
+   okunuyordu. Şimdi yükte, yeniden boyutlandırmada ve main'in boyutu
+   değişince bir kez ölçülüyor, karede yalnızca scrollY okunuyor. Yerleşimi
+   değiştiren yeni bir kaynak eklersen olc()'yi çağır, yoksa alan eski
+   yerlere göre çizer. */
+var mercek = null, MENU = 0, BANT = [];
+/* Bandın içinde levhanın üstünde ve altında kalan boşluk; levha bundan kısa
+   bir banda hiç girmez (azaltılmış harekette bantlar 96 px'e kapanır). */
+var PAY = 28, LEVHA_EN = 800, LEVHA_BOY = 500, LEVHA_EN_AZ = 200;
+function olc(){
+  var sy = window.scrollY || window.pageYOffset || 0, i;
+  mercek = mercekKutusu();
+  MENU = menu ? menu.getBoundingClientRect().bottom : 0;
+  BANT = gecis.map(function(g){
+    var r = g.getBoundingClientRect();
+    return {ust: r.top + sy, boy: r.height, orta: r.top + sy + r.height*0.5};
+  });
+  /* Her bandın dört bölgesi, bant merkezinin mercek merkezine uzaklığı
+     (d) cinsinden: yakala > acik > tam. Her yönde komşu bantla aradaki
+     yarım mesafeyle sınırlanır, böylece aynı anda yalnızca bir bant merceği
+     tutar. Eskiden hedef "ekranda en çok görünen bant"tı ve iki bant aynı
+     ekrana girince (#s2 kısa) hedef birinden ötekine sıçrıyordu. */
+  /* oncesi: mercek bandın üstündeyken (d > 0), sınırı bir önceki bant.
+     sonrasi: mercek bandı geçmişken (d < 0), sınırı bir sonraki bant. */
+  for (i=0;i<BANT.length;i++){
+    var b = BANT[i];
+    var yariOnce = i > 0 ? (b.orta - BANT[i-1].orta)*0.5 : 1e9;
+    var yariSonra = i < BANT.length-1 ? (BANT[i+1].orta - b.orta)*0.5 : 1e9;
+    b.oncesi = bolge(yariOnce, b.boy);
+    b.sonrasi = bolge(yariSonra, b.boy);
+    b.levha = Math.min(LEVHA_BOY, b.boy - PAY*2);
+  }
+}
+/* Açılma acik'ten tam'a kadar sürer. Bu aralık 743 px yükseklikte ~230 px
+   kaydırma; daha dar bir aralıkta levha 418 px'lik genişlemesini birkaç
+   karede yapıyor ve hızlı kaydırmada savruluyordu. */
+function bolge(yari, boy){
+  var yakala = Math.min(BOY*0.30 + boy*0.5, yari);
+  var acik = Math.min(BOY*0.34, yakala*0.55);
+  return {yakala: yakala, acik: acik, tam: Math.min(BOY*0.03, acik*0.35)};
+}
+
 var kutu = {x:0,y:0,w:0,h:0};
 /* Etkileşim yalnızca çizilen dikdörtgenin içinde ve yalnızca imleç gerçekten
    hareket ederken çalışır. Park edilmiş bir imleç hiçbir şey yapmaz — main branch'teki
    sayfa geneline yayılan sürekli tepki tam olarak yorucu olan şeydi. */
 var fx=-9999, fy=-9999, fareVar=false, sonHareket=-99, ilgi=0, saat=0;
-/* Kaydırmadan gelen değerler doğrudan kullanılırsa dokunmatik kaydırmanın
-   kesikli ve ataletli adımları modele birebir yansır; telefonda geçiş
-   sıçrayarak olur. Hedefe zaman sabitiyle yaklaşıyoruz. */
-var pYum = 0, tYum = 0, sonZaman = -1;
+/* Kaydırma bir yayla izlenir. Dönüşüm, yakalama ve açılma bu yumuşak
+   değerden hesaplanır; konum ise ham kalır, bağlı levha içerikle birebir
+   kayar ve kural gecikmeden etkilenmez. Eskiden açıklık ve dönüşüm birinci
+   dereceden yumuşatılıyordu: hedef her değiştiğinde hız bir anda sıçradığı
+   için tekerleğin her adımı bir "tık" olarak görünüyordu. Kritik sönümlü yayda
+   hız da süreklidir. YAY ≈ 0,3 s'de oturur. */
+var sYum = 0, sHiz = 0, sonZaman = -1, YAY = 22;
+function yay(hedef, dt){
+  var y = sYum - hedef, e = Math.exp(-YAY*dt), a = (sHiz + YAY*y)*dt;
+  sYum = hedef + (y + a)*e;
+  sHiz = (sHiz - YAY*a)*e;
+  if (Math.abs(sYum - hedef) < 0.5 && Math.abs(sHiz) < 5){ sYum = hedef; sHiz = 0; }
+}
 var ince = window.matchMedia("(pointer:fine)").matches;
 /* Uyku. Döngü eskiden sekme görünür olduğu sürece hiç durmuyordu: okur
    kaydırmadan okurken bile her karede 18.000 nokta çiziliyor, tam ekran tuval
    temizleniyor, üstündeki backdrop-filter'lı menü de her karede yeniden
    bulanıklaşıyordu. Kendiliğinden beş saniyeden uzun süren hareket ayrıca
    WCAG 2.2.2'ye takılıyor. Şimdi kaydırma, imleç ve yeniden boyutlandırma
-   etkinlik sayılıyor; son etkinlikten UYKU saniye sonra, dönüşüm oturmuş ve
+   etkinlik sayılıyor; son etkinlikten UYKU saniye sonra, yay oturmuş ve
    imleç çekilmişse döngü durgun bir karede uyuyor. Kehribar tarama ondan önce
    SONUS saniyede söner: taramanın ortasında donmuş bir ışık takılmış gibi
    okunurdu. Uyanınca saat kaldığı yerden sürer, ışık yeniden yükselir. */
@@ -1275,137 +1334,124 @@ var UYKU = 4.6, SONUS = 0.6;
 var durgun = false, sonEtkinlik = 0, vurguYum = 1;
 
 function cizim(zaman){
-  /* --- okumalar ---
-     Dönüşüm bölüm merkezleri arasına yayılmıyor: geçiş bölgesinin ilk yarısında
-     tamamlanıp orada duruyor. Böylece çerçeve tam açıldığında ekranda iki
-     modelin ortalaması değil, saf bir model bulunuyor. */
-  var vm = BOY*0.5, i, p = 0;
-  /* Bant dikdörtgenleri. Eskiden bu da "dt" idi ve aynı işlev kapsamında
-     aşağıda dt bir sayı olarak yeniden bildiriliyordu; dizi o satırdan önce
-     tamamen tüketildiği için çalışıyordu, ama o satırdan sonra diziyi okuyan
-     her değişiklik sessizce kırılırdı. */
-  var ort = 0, zr = null, bantlar = [];
-  for (i=0;i<gecis.length;i++){
-    var g = gecis[i].getBoundingClientRect();
-    bantlar.push(g);
-    var gor = Math.min(g.bottom, BOY) - Math.max(g.top, 0);
-    var o = Math.max(0, gor)/BOY;
-    if (o > ort){ ort = o; zr = g; }
-  }
-  for (i=bantlar.length-1; i>=0; i--){
-    if (bantlar[i].top <= vm){
-      p = (vm <= bantlar[i].bottom)
-        ? i + daha(0.04, 0.46, (vm - bantlar[i].top)/Math.max(1, bantlar[i].height))
-        : i + 1;
-      break;
-    }
-  }
-
-  var rr = mercekKutusu();
-  var rayVar = !!rr;
-
-  /* --- hedef dikdörtgen ---
-     Genişleme, ekranın ne kadarının boş olduğuna göre: bölge ne kadar
-     kaplarsa çerçeve o kadar açılır. Eşik bölgenin erişebileceği en yüksek
-     kaplamaya göre ölçeklenir, böylece kısa ekranlarda da tam açılır. */
-  var maks = zr ? Math.min(1, zr.height/BOY) : 0;
-  var t = (zr && maks > 0.05) ? daha(0.14*maks, 0.90*maks, ort) : 0;
-
-  /* dt'ye bağlı yumuşatma: kare hızı düşse de aynı hızda yaklaşır. */
+  var sy = window.scrollY || window.pageYOffset || 0, i;
+  /* dt'ye bağlı: kare hızı düşse de aynı hızda yaklaşır. İlk karede ve
+     azaltılmış harekette yay atlanır, sayfanın ortasında açılan sayfa
+     baştan süpürülmez. */
   var dt = (sonZaman < 0) ? 1 : Math.min(0.1, Math.max(0.001, zaman - sonZaman));
   sonZaman = zaman;
+  if (kisik || dt >= 1){ sYum = sy; sHiz = 0; } else yay(sy, dt);
+  durgun = (sYum === sy);
   /* Uykuya SONUS saniye kala tarama söner, etkinlik gelince yeniden yükselir. */
   var vurguHedef = (zaman - sonEtkinlik) < UYKU - SONUS ? 1 : 0;
   vurguYum = (kisik || dt >= 1) ? vurguHedef : vurguYum + (vurguHedef - vurguYum) * (1 - Math.exp(-dt/0.15));
-  if (kisik || dt >= 1){ pYum = p; tYum = t; }
-  else {
-    pYum += (p - pYum) * (1 - Math.exp(-dt/0.17));
-    tYum += (t - tYum) * (1 - Math.exp(-dt/0.13));
-    if (Math.abs(p-pYum) < 0.0004) pYum = p;
-    if (Math.abs(t-tYum) < 0.0004) tYum = t;
-  }
-  /* Ekranda hiç bant yoksa geçilecek bir hedef de yok: açıklık anında sıfırlanır,
-     yoksa levha dikdörtgeni yokken t hala 1'e yakın kalıp kutuyu bozar. */
-  if (!zr) { tYum = 0; }
-  durgun = (pYum === p) && (tYum === t);
-  p = pYum; t = tYum;
-
-  var lx, ly, lw, lh, px, py, pw, ph;
-  if (zr){
-    var ust = Math.max(0, zr.top);
-    var alt = Math.min(BOY, zr.bottom);
-    /* Levha bir "tam ekran anı" değil: mercekle aynı cinsten, yalnızca daha
-       büyük ve ekranın ortasına gelmiş bir dikdörtgen. Görünür bir kenarlığı
-       yok; sınırı ekranın her kenarında kalan boşluk çiziyor. */
-    var kenar = Math.min(96, EN*0.08);
-    pw = Math.min(EN - kenar*2, 800); px = (EN-pw)*0.5;
-    var bosluk = Math.max(0, alt-ust);
-    ph = Math.min(bosluk, 500);
-    py = ust + (bosluk - ph)*0.5;
-  } else { px=0; py=0; pw=EN; ph=0; }
-
-  if (rayVar){ lx=rr.x; ly=rr.y; lw=rr.w; lh=rr.h; }
-  else {
-    lw = 132; lh = 150;
-    lx = EN*0.5 - lw*0.5;
-    ly = (zr ? (py + ph*0.5) : BOY*0.5) - lh*0.5;
-  }
-
-  kutu.x = lx + (px-lx)*t;
-  kutu.y = ly + (py-ly)*t;
-  kutu.w = lw + (pw-lw)*t;
-  kutu.h = lh + (ph-lh)*t;
-
-  /* İmleç çerçevenin içinde mi ve son 1,5 saniyede hareket etti mi? */
-  var ic = ince && !kisik && fareVar && kutu.w > 4 && kutu.h > 4 &&
-           fx >= kutu.x && fx <= kutu.x + kutu.w &&
-           fy >= kutu.y && fy <= kutu.y + kutu.h &&
-           (saat - sonHareket) < 1.5;
-  ilgi += ((ic ? 1 : 0) - ilgi) * (ic ? 0.10 : 0.045);
-  if (ilgi < 0.002) ilgi = 0;
-
-  /* Çizilen dikdörtgenin görünür bir kenarlığı yoktur; alanın sınırı yalnızca
-     scissor'dır. Merceğin uyandığını kazanç ve parçacıkların açılması söyler. */
-  var kazanc = (0.58 + 0.42*t) * (rayVar ? 1 : t) * (1 + 0.32*ilgi);
 
   gl.disable(gl.SCISSOR_TEST);
   gl.viewport(0,0,tuval.width,tuval.height);
   gl.clear(gl.COLOR_BUFFER_BIT);
-  if (kutu.h < 3 || kutu.w < 3 || kazanc < 0.012) return;
+  var L = mercek;
+  if (!L) return;
 
-  var gx = Math.round(kutu.x*dpr);
-  var gw = Math.round(kutu.w*dpr);
-  var gh = Math.round(kutu.h*dpr);
-  var gy = Math.round(tuval.height - (kutu.y+kutu.h)*dpr);
+  /* --- bantlar ---
+     d: bant merkezinin mercek merkezine uzaklığı, yumuşak kaydırmadan.
+     Dönüşüm bandın yakalama sınırında başlar ve levha tam açılmadan biter;
+     büyük halde iki modelin ortalaması değil, saf bir model bulunur. */
+  var Yl = L.y + L.h*0.5, p = 0, aktif = null, k = 0, o = 0;
+  for (i=0;i<BANT.length;i++){
+    var b = BANT[i], d = b.orta - sYum - Yl;
+    p += 1 - daha(b.oncesi.tam, b.oncesi.yakala, d);
+    if (b.levha < LEVHA_EN_AZ) continue;
+    var z = d > 0 ? b.oncesi : b.sonrasi, ad = Math.abs(d);
+    var kk = 1 - daha(z.acik, z.yakala, ad);
+    if (kk > 0){ aktif = b; k = kk; o = 1 - daha(z.tam, z.acik, ad); }
+  }
+
+  /* --- dikdörtgen ---
+     Yakalama: mercek yalnızca ray içinde, dikey olarak banda kayar.
+     Açılma: k = 1 olmadan o sıfırdan büyük olamaz; yani dikdörtgen sola
+     yalnızca bandın içine yerleştikten sonra açılır. Bağlıyken bandın ham
+     merkezini izler ama bandın izin verdiği ölçüde Yl'ye yakın kalır. */
+  var x = L.x, w = L.w, h = L.h, cy = Yl;
+  if (aktif){
+    var yb = aktif.orta - sy;
+    var kenar = Math.min(96, EN*0.08);
+    var pw = Math.min(EN - kenar*2, LEVHA_EN), px = (EN - pw)*0.5;
+    h = L.h + (Math.min(L.h, aktif.levha) - L.h)*k;
+    h = h + (aktif.levha - h)*o;
+    x = L.x + (px - L.x)*o;
+    w = L.w + (pw - L.w)*o;
+    /* Bandın bıraktığı pay (s) içinde Yl'ye yakın durur. Sert sınır
+       (min/max) bandın kenarına değince hızı bir anda sıfırdan kaydırma
+       hızına çıkarıyordu; tanh aynı sınırı aşmadan yumuşak doyuyor. */
+    var s = Math.max(0, (aktif.boy - h)*0.5 - PAY);
+    var bagli = s < 1 ? yb : yb + s*Math.tanh((Yl - yb)/s);
+    cy = Yl + (bagli - Yl)*k;
+  }
+  kutu.x = x; kutu.y = cy - h*0.5; kutu.w = w; kutu.h = h;
+
+  /* İmleç çerçevenin içinde mi ve son 1,5 saniyede hareket etti mi?
+     Zaman sabitiyle: 120 Hz ekranda iki kat hızlı yükselmesin. */
+  var ic = ince && !kisik && fareVar &&
+           fx >= kutu.x && fx <= kutu.x + kutu.w &&
+           fy >= kutu.y && fy <= kutu.y + kutu.h &&
+           (saat - sonHareket) < 1.5;
+  ilgi = (dt >= 1) ? (ic ? 1 : 0) : ilgi + ((ic ? 1 : 0) - ilgi) * (1 - Math.exp(-dt/(ic ? 0.16 : 0.36)));
+  if (ilgi < 0.002) ilgi = 0;
+
+  /* Çizilen dikdörtgenin görünür bir kenarlığı yoktur; alanın sınırı yalnızca
+     scissor'dır. Merceğin uyandığını kazanç ve parçacıkların açılması söyler. */
+  var kazanc = (0.58 + 0.42*o) * (1 + 0.32*ilgi);
+
+  /* --- scissor ---
+     Model dikdörtgene sığdırılır; scissor ondan yalnızca kırpar. Güvenlik
+     ağı: dikdörtgen raydan taşmışsa dikey sınırı bandın kendisidir — yol
+     doğruysa bu hiçbir pikseli kesmez. Menünün altına da boyanmaz: oradan
+     geçen model, içerik gibi çubuğun altına girer. Yuvarlama içeri doğru. */
+  var sx0 = Math.max(0, kutu.x), sx1 = Math.min(EN, kutu.x + kutu.w);
+  var sy0 = Math.max(MENU, kutu.y), sy1 = Math.min(BOY, kutu.y + kutu.h);
+  if (kutu.x < L.x - 0.5){
+    if (!aktif) return;
+    var bu = aktif.ust - sy;
+    sy0 = Math.max(sy0, bu); sy1 = Math.min(sy1, bu + aktif.boy);
+  }
+  var gx = Math.ceil(sx0*dpr), gx1 = Math.floor(sx1*dpr);
+  var gu = Math.ceil(sy0*dpr), ga = Math.floor(sy1*dpr);
+  if (gx1 - gx < 3 || ga - gu < 3 || kazanc < 0.012) return;
   gl.enable(gl.SCISSOR_TEST);
-  gl.scissor(gx, gy, gw, gh);
-  gl.viewport(gx, gy, gw, gh);
+  gl.scissor(gx, tuval.height - ga, gx1 - gx, ga - gu);
 
   var idx = Math.max(0, Math.min(3, Math.floor(p)));
   var f = daha(0, 1, p - idx);
-  var w = [0,0,0,0,0];
-  w[idx] = 1-f; w[idx+1] = f;
-  if (p >= 4){ w=[0,0,0,0,1]; }
-  for (i=0;i<5;i++) gl.uniform1f(konum["w"+i], w[i]);
+  var wt = [0,0,0,0,0];
+  wt[idx] = 1-f; wt[idx+1] = f;
+  if (p >= 4){ wt=[0,0,0,0,1]; }
+  for (i=0;i<5;i++) gl.uniform1f(konum["w"+i], wt[i]);
 
   gl.uniform1f(konum.uZaman, zaman);
-  var en = gw/Math.max(1,gh);
+  /* Yerleşim piksel altı: viewport bütün tuval, dikdörtgen gölgelendiriciye
+     kayan sayıyla gidiyor. Eskiden viewport ve en-boy oranı tam piksele
+     yuvarlanıyordu; hareket ederken model piksel piksel titriyordu. */
+  gl.uniform4f(konum.uKutu,
+    (kutu.x + kutu.w*0.5)/EN*2 - 1, 1 - (kutu.y + kutu.h*0.5)/BOY*2,
+    kutu.w/EN, kutu.h/BOY);
+  var en = kutu.w/Math.max(1, kutu.h);
   gl.uniform1f(konum.uEn, en);
   /* Model her dikdörtgeni doldursun: hangi eksen önce dolarsa o sınırlar. */
   /* İtme parçacıkları en çok uItme kadar dışarı taşır; model tam o kadar
      küçülünce taşan hiçbir nokta çerçevenin dışına çıkmaz. */
   var itme = 0.115*ilgi;
-  gl.uniform1f(konum.uSig, sigdir(w, en) * (1 - 0.07*t) * (1 - itme));
+  gl.uniform1f(konum.uSig, sigdir(wt, en) * (1 - 0.07*o) * (1 - itme));
   gl.uniform1f(konum.uItme, itme);
   /* Nokta boyutu dikdörtgenle doğrusal ölçeklenirse küçük durumda orantısız
      incelir ve çizgiler kaybolur; karekök her iki durumu da ~2,9 aygıt
      pikselinde buluşturur. */
+  var gh = kutu.h*dpr;
   gl.uniform1f(konum.uNokta, gh*0.0026*Math.sqrt(1100/Math.max(240,gh)));
   var fnx = ((fx-kutu.x)/kutu.w)*2 - 1, fny = 1 - ((fy-kutu.y)/kutu.h)*2;
   gl.uniform2f(konum.uFare, fnx, fny);
   gl.uniform1f(konum.uDon, kisik ? 0 : (Math.sin(zaman*0.06)*0.13 + fnx*0.16*ilgi));
   gl.uniform1f(konum.uSup, kisik ? 9 : (-2.4 + ((zaman*0.20)%1)*4.8));
-  gl.uniform1f(konum.uSurukle, kisik ? 0 : (0.55 + 0.45*t));
+  gl.uniform1f(konum.uSurukle, kisik ? 0 : (0.55 + 0.45*o));
   gl.uniform1f(konum.uKazanc, kazanc);
   gl.uniform1f(konum.uVurgu, 0.85*vurguYum);
   gl.drawArrays(gl.POINTS, 0, SAYI);
@@ -1500,12 +1546,16 @@ function kurulum(){
     else uyandir();
   }, {passive:true});
   window.addEventListener("scroll", uyandir, {passive:true});
-  /* Kaydırmadan gelen yerleşim değişikliği de uyandırır: rapor geç gelip
-     bölümleri iterse, yazı tipi yerleşince satırlar kayarsa bantların yeri
-     değişir ve uyuyan kare eski yerinde kalırdı. */
+  /* Kaydırmadan gelmeyen yerleşim değişikliği yeniden ölçer ve uyandırır:
+     rapor geç gelip bölümleri iterse, yazı tipi yerleşince satırlar kayarsa
+     bantların yeri değişir; önbellek ve uyuyan kare eski yerinde kalırdı. */
   if ("ResizeObserver" in window){
     var ana = document.querySelector("main");
-    if (ana) new ResizeObserver(function(){ uyandir(); }).observe(ana);
+    if (ana) new ResizeObserver(function(){
+      olc();
+      if (kisik && basladi && genis.matches) cizim(0);
+      else uyandir();
+    }).observe(ana);
   }
   if (ince && !kisik){
     /* İmleç yalnızca çizilen dikdörtgenin içindeyken uyandırır: metin
@@ -1526,7 +1576,9 @@ function calistir(){
   if (durum < 0 || !basladi) return;
   boyutla();
   if (kisik){ cizim(0); return; }
-  if (!calisiyor){ calisiyor = true; istek = requestAnimationFrame(kare); }
+  /* Daralıp genişleyince yay yeniden başlar: döngü dururken kaydırılan sayfa
+     eski konumdan süpürülmesin. */
+  if (!calisiyor){ sonZaman = -1; calisiyor = true; istek = requestAnimationFrame(kare); }
 }
 
 if (genis.addEventListener) genis.addEventListener("change", calistir);

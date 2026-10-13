@@ -548,9 +548,11 @@ the whole landing page was removed along with its 120 KB dependency; it had two 
 per-section camera offsets set to `0`, which put the particle mass directly across the
 weekly digest and the project cards and dropped the event row's room label to 4.24:1 on a
 phone. Its replacement solves the same problem the other way round: the field is drawn
-inside a `gl.scissor` rectangle, and that rectangle is either the empty lens region beside
-the reading column or the empty band between two sections. The driver cannot paint a pixel
-outside it, so no contrast anywhere on the page depends on how bright the field is.
+inside a `gl.scissor` rectangle that stays in the empty lens region beside the reading
+column and leaves it only inside the empty band between two sections — on every frame,
+including the ones between the two states (see The field → The path between them). The
+driver cannot paint a pixel outside it, so no contrast anywhere on the page depends on how
+bright the field is.
 
 The field is one full-viewport `canvas` at `z-index: 0`. It is opaque and clears to `gece`,
 so the additive blend (`ONE, ONE`) composites without a premultiply step.
@@ -620,8 +622,8 @@ opened panel.
 
 **The Reading Light Rule.** A background layer is separated from text by geometry, not by
 opacity. Turning a layer down is a setting somebody can raise; a scissor rectangle is a
-boundary the driver enforces. The shipped field never overlaps a text run at any width, so
-every contrast pair on the page still measures its documented value.
+boundary the driver enforces. The shipped field never overlaps a text run at any width or on
+any frame, so every contrast pair on the page still measures its documented value.
 
 *Audit test:* measure the distance between the right edge of the reading column and the
 left edge of the lens, and confirm `document.documentElement.scrollWidth` equals
@@ -645,11 +647,29 @@ Below 1152px there is no lens and the question does not arise. In the plate stat
 rectangle sits inside a section-transition band that holds nothing at all, so there is no
 text on screen to measure against.
 
-*Second audit test, for the rectangle's own edge:* render each model in each state, read
-the canvas back, and count lit pixels in the outermost 3px ring of the scissor rectangle.
-Any count above zero means the fit is wrong and the model is being cut off. Shipped result:
-**0 lit edge pixels across 220 checks** — five models × both states × nine cursor positions
-each, at 1440, 1575, 1970 and 390px.
+Those two facts held for years and were not enough. The frames *between* the states are
+where the field met the text (see The field → The path between them), and no test looked
+at them.
+
+*Second audit test, for every frame in between:* hook `gl.scissor` and record each call
+together with the `scrollY` at that moment. Drive `scrollTo` by a fixed step on every frame
+from top to bottom and back, and intersect each recorded rectangle with every text box in
+`main` (`Range.getClientRects`) and every border hairline. Skip `.gizli`: its text range
+overflows a 1px clipped box and paints nothing. Shipped result: **0 intersections** in six
+runs (5, 15 and 33px per frame, down and up, plus 100px wheel steps both ways) at each of
+1152 × 720, 1470 × 743, 1440 × 900 and 1970 × 1100. The code before the change scored 193,
+166 and 134 intersections in three of those runs at 1470 × 743.
+
+*Third audit test, for the rectangle's own edge:* render the field in each state, read
+the canvas back right after the draw, and count lit pixels in the outermost 3px ring of the
+scissor rectangle. An edge that touches the navigation bar or the viewport is skipped: a
+carried model is meant to pass under those. Any count above zero on the other edges means
+the fit is wrong and the model is being cut off. Shipped result: **0 lit edge pixels across
+116 checks** — at each of the four sizes above, the resting lens in the hero and in all four
+sections, the plate fully open in each band, the attached rectangle at both ends of each
+band's opening zone, and the open plate with the cursor at three positions. The previous
+run of this test, 220 checks at 1440, 1575, 1970 and 390px, predates both the new path and
+the removal of the field below 1152px.
 
 ## Shapes
 
@@ -985,10 +1005,51 @@ holds: the screen names the category, the lamp marks what is live.
 
 | | Mercek (reading) | Levha (between sections) |
 |---|---|---|
-| Where | centred in the lens region | centred in the viewport |
-| Size | region width, capped 560px; height ×1.18, capped 74vh | capped 800 × 500 px |
+| Where | centred in the lens region, fixed at 52% of the viewport height | inside a band, centred horizontally, carried with the band like page content |
+| Size | region width, capped 560px; height ×1.18, capped 74vh | capped 800 × 500 px, and 28px short of the band at top and bottom |
 | Gain | 0.58 | 1.00 |
 | Edge | none drawn | none drawn |
+
+**The path between them.** The rectangle leaves the rail only while it is inside a band.
+That is the whole contract, and it holds on every frame, not only at the two ends. Until
+2026-10-12 the rectangle travelled in a straight line from the lens to the plate. Both ends
+were empty ground, but the frames in between were not. Swept at 2px steps on 1470 × 743
+with the smoothing already settled, those intermediate rectangles covered text on 744
+scroll positions × elements: the About paragraph, the `.olcum` rows, the events hairline,
+news and card rules. The two audit tests then in The Reading Light Rule measured only the
+ends, so neither caught it; the sweep added there now checks every frame.
+
+Each band now carries the lens through four phases, measured as `d`, the distance from the
+band's centre to the lens's resting centre:
+
+| Phase | Where `d` is | The rectangle |
+|---|---|---|
+| Rest | beyond `yakala` | the lens, fixed in the rail |
+| Capture | `acik`–`yakala` | slides *vertically, inside the rail* towards the band; a lens taller than the plate shortens to it |
+| Opening | `tam`–`acik` | attached to the band; widens left towards the plate |
+| Open | inside `tam` | the plate, moving with the band |
+
+Capture `k` and opening `o` are both smootherstep in `|d|`, and `o` can only rise above zero
+where `k` has already reached 1, so the rectangle cannot widen into the text column before
+it sits inside the band. While attached it follows the band's raw position, but stays as
+close to the lens centre as the band's spare height `s` allows:
+`yb + s·tanh((Yl − yb)/s)`. It never leaves `[yb − s, yb + s]`, so it never leaves the
+band. A hard `min`/`max` held it still and then, the moment the band's edge reached it,
+started it at full scroll speed: on 1440 × 900, where the band leaves up to 48px of slack,
+that showed as a 4.9px second difference at 5px per frame, against 1.5px with `tanh`.
+
+The zones are `yakala = 0.30·vh + band/2`, `acik = 0.34·vh` and `tam = 0.03·vh`, and on
+each side they stop at half the distance to the neighbouring band. Only one band can
+hold the lens at a time. The old rule picked the band with the most area on screen, and it
+jumped between two bands whenever both were visible, which `#s2`, 360px tall, guarantees.
+In the middle of `#s2` both bands sit exactly at half distance, so the attention matrix
+rests in the rail.
+
+The scissor is a safety net, not the mechanism. If the rectangle has left the rail, its
+vertical extent is cut to the band; when the path is right this removes nothing. It is also
+cut below the navigation bar, so a model carried upwards slides under the bar the way
+content does. A band shorter than 256px (plate under 200px, as under reduced motion)
+never captures the lens.
 
 **The rectangle is never outlined.** The field carries no border in either state: it is
 light on a dark bench, and a lamp does not come in a frame. Its boundary is read from the
@@ -1002,8 +1063,8 @@ raise it.
 below 1152px, under reduced motion and without WebGL — and is completely empty: no caption,
 no content of any kind. Naming the model in
 type explained a picture that does not need explaining and put a text run inside the one
-region built to have none. The morph completes
-in the **first 46%** of the band, so by the time the rectangle has finished opening the model is
+region built to have none. The morph runs from the band's capture boundary to `tam` on the
+side the lens is coming from, so by the time the rectangle has finished opening the model is
 pure — the largest state never shows a half-way blend of two shapes.
 
 **Point size** is `aBoy · (2.05/z) · uSig · uNokta`, where
@@ -1012,12 +1073,45 @@ The square root matters: a linear scale thins the points in the small state unti
 disappear — measured at 1.25 CSS pixels in the lens — while this one lands every frame near
 2.9 device pixels.
 
-**Scroll values are smoothed in time, not read raw.** Both the morph position and the
-opening amount approach their scroll-derived target with a time constant (0.17s and 0.13s),
-frame-rate independent via `1 - exp(-dt/τ)`. Reading scroll directly is fine on a desktop
-trackpad and wrong on a phone: touch scrolling arrives in coarse, inertial steps, and the
-band is shorter there, so the morph snapped instead of moving. Under reduced motion the
-smoothing is bypassed and values snap, because there is one static frame to draw.
+**State follows a spring; position follows the page.** A critically damped spring
+(`ω = 22`, closed-form update, so it does not depend on frame rate) tracks `scrollY`.
+Capture, opening and the morph are computed from that smoothed value. The attached position
+is read raw, so a plate in its band moves exactly with the content around it, and the
+smoothing can never lag the rectangle onto text. The spring replaced first-order smoothing
+(time constants 0.17s and 0.13s on the morph and the opening). A first-order filter changes
+velocity instantly whenever its target moves, so each mouse-wheel step showed as a tick; a
+spring's velocity is continuous. On the first frame, and under reduced motion, the spring is
+skipped and the value snaps, so a page opened half-way down is not swept from the top.
+
+**Sub-pixel placement.** The viewport is the whole canvas and the rectangle reaches the
+vertex shader as floats (`uKutu`: centre and half-size in NDC), with `uEn` and `uNokta` taken
+from the unrounded size. Only the scissor is rounded, inwards. The viewport and its aspect
+ratio used to be rounded to whole device pixels, and a slowly moving model shimmered by a
+pixel.
+
+**Layout is measured once, not every frame.** Band offsets, the lens, the nav height and
+the zones live in a cache that `olc()` fills on load, on resize and when `main` changes size.
+Each frame reads only `scrollY`; it used to call `getBoundingClientRect` six times.
+
+*Smoothness test:* drive `scrollTo` by a fixed step per frame and take the second
+difference of the rectangle (read from `uKutu`, not the clipped scissor) between
+consecutive frames. A continuous path gives values that scale with the square of the
+speed; a jump does not. Shipped at 1470 × 743, largest second difference of centre,
+width or height:
+
+| Run | Before | After |
+|---|---:|---:|
+| 300 px/s | — | 1.5 px |
+| 900 px/s, down | 305 px | 14.1 px |
+| 900 px/s, up | 298 px | 13.6 px |
+| 2,000 px/s | — | 73 px |
+| 100px wheel steps, width and height | 99 px | 21 px |
+
+At 300 px/s the other sizes land at 1.7px (1152 × 720), 1.5px (1440 × 900) and 3.7px
+(1970 × 1100). The last is larger because a taller screen gives the capture a longer trip,
+not because anything jumps: it grows with speed the same way. With wheel steps the attached
+plate's vertical position moves with the page by a whole step, as the content does; that is
+the one value expected to jump.
 
 **Interaction.** With a fine pointer inside the rectangle *and* moved within the last 1.5s,
 particles part around the cursor (0.115 in NDC, Gaussian falloff) and gain rises 32%. The
@@ -1025,16 +1119,18 @@ model shrinks by exactly the push amount, so nothing is displaced past the sciss
 clipped. The parting *is* the affordance — with no outline to light up, the field's answer
 has to be the field itself. Outside the rectangle nothing happens, and a parked cursor stops
 mattering after 1.5s: the field answers intent, not position. Coarse pointers get none of
-it.
+it. Interest rises with a time constant of 0.16s and falls with 0.36s. Those match the old
+per-frame factors at 60Hz; per-frame factors ran twice as fast on a 120Hz display.
 
 **Sleep.** The loop stops when nothing is happening. Until 2026-10-11 it ran at 60fps for
 as long as the tab was visible at 1152px and up — 18,000 points and a full-viewport clear
 every frame, under a navigation bar whose `backdrop-filter` re-blurred each time — while a
 visitor sat reading. A self-starting animation that runs past five seconds beside content
 also fails WCAG 2.2.2. Now scroll, resize, a layout change in `main` (`ResizeObserver`: a
-late feed or a font swap moves the bands) and a pointer moving *inside the drawn rectangle*
-count as activity; a pointer in the text column does not. `UYKU` (4.6s) after the last
-activity, with the morph settled and the pointer's interest decayed to zero, the loop draws
+late feed or a font swap moves the bands, so it also re-measures the cache) and a pointer
+moving *inside the drawn rectangle* count as activity; a pointer in the text column does
+not. `UYKU` (4.6s) after the last activity, with the scroll spring settled and the pointer's
+interest decayed to zero, the loop draws
 its last frame and stops requesting frames. The lamp sweep is faded out over the final
 `SONUS` (0.6s) first, because a highlight frozen mid-pass reads as a hang. On waking, the
 clock resumes where it stopped (`t0` is shifted by the sleep), so drift and sweep do not

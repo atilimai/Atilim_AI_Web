@@ -160,13 +160,22 @@ bilerek kaldırıldı, yerine gölgelendirici ve model üreticileri elle yazıld
 
 Ne yapar: kaydırdıkça beş model arasında dönüşür — monogram, sinir ağı, dikkat
 matrisi, belirteç akışı, gradyan inişi. İki hali var: okuma sütununun sağındaki
-bölgede duran küçük **mercek**, bölümler arasında ekranın ortasına gelip büyüyen
-**levha**. Levha ekranı kaplamaz; en çok 800 × 500 px'dir.
+bölgede duran küçük **mercek**, bölümler arasındaki bandın içinde yatayda ortaya
+açılıp bantla birlikte kayan **levha**. Levha ekranı kaplamaz; en çok 800 × 500
+px'dir.
 
 Neden bu kadar dikkat isteyen bir şey: **hiçbir koşulda metnin üstüne
 düşmemesi** gerekiyor. Bu opasiteyle değil geometriyle sağlanıyor — sürücü
-yalnızca `gl.scissor` dikdörtgeninin içine boyayabiliyor, o dikdörtgen de ya boş
-alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
+yalnızca `gl.scissor` dikdörtgeninin içine boyayabiliyor. Dikdörtgen boş alet
+rayından **yalnızca bir bandın içindeyken** çıkar: bant yaklaşınca önce ray
+boyunca dikey kayıp banda yerleşir, sola ancak ondan sonra açılır, bantla
+birlikte sayfa gibi kayar, sonra raya kapanıp yerine döner.
+
+12 Ekim 2026'ya kadar dikdörtgen mercekle levha arasında düz bir çizgide
+kayıyordu. İki uç metinsizdi, aradaki kareler değildi: 1470 × 743'te hakkımızda
+paragrafının, ölçüm satırlarının ve etkinlik çizgisinin üstünden geçiyordu.
+Hedef bant da "ekranda en çok görünen" kuralıyla seçildiği için iki bant aynı
+ekrana girince model birinden ötekine sıçrıyordu; tek karede 305 px ölçüldü.
 
 **Kırmadan dokunmak için bilmen gerekenler:**
 
@@ -220,12 +229,29 @@ alet rayı ya da içinde metin olmayan bölüm arası bant oluyor.
   verilmeden önce o zamanki kapanış düğmesi 1920 px'de merceğin dikdörtgeninin içine
   düşüyordu, alt bilgi de gövde metninden ~600 px sağda hizasız duruyordu.
   Sayfaya tam genişlikte yeni bir içerik kabı eklersen aynı tuzağa düşersin.
-- **Değişiklik yaptıysan kırpılma testini koştur:** modeli her iki halde çizip
-  tuvali geri oku, scissor dikdörtgeninin dış 3 pikselinde yanan piksel say.
-  Sıfırdan büyük her sonuç, modelin kesildiği anlamına gelir.
+- **Yol kuralını bozma.** `cizim()`'de açılma (`o`) yalnızca yakalama (`k`)
+  1'e ulaştığı yerde sıfırdan büyük olabilir; bölgeler (`bolge()`) bu sırayla
+  iç içe kurulu. Açılmayı yakalamadan önce başlatan bir değişiklik dikdörtgeni
+  yine metnin üstünden geçirir. Scissor'ın banda kırpılması yalnızca güvenlik
+  ağı; yol doğruysa hiçbir piksel kesmez.
+- **Değişiklik yaptıysan iki testi koştur.** *Tarama:* `gl.scissor`'ı kancala,
+  her çağrıda scissor'ı o anki `scrollY` ile kaydet, sayfayı her karede sabit
+  adımla baştan sona (ve tersine) kaydır ve her kareyi `main` içindeki metin
+  kutularıyla ve kenar çizgileriyle karşılaştır. Sonuç 0 olmalı. Görünmez
+  `.gizli` etiketlerini sayma: 1 px kutuda kırpılıyorlar, ama metin aralıkları
+  taşmış görünür. Yalnızca iki ucu ölçmek yetmez: eski yol iki uçta temizdi,
+  aradaki karelerde metne biniyordu. *Kırpılma:* modeli dinlenme, banda bağlı
+  ve tam açık halde çizip tuvali geri oku, scissor'ın dış 3 pikselinde yanan
+  piksel say. Menünün altına ya da ekran kenarına değen kenarlar sayılmaz;
+  diğerlerinde sıfırdan büyük her sonuç modelin kesildiği anlamına gelir.
+- **Yerleşim önbelleği.** Bantların belgedeki yeri, mercek, menü yüksekliği ve
+  bölgeler `olc()`'de bir kez ölçülür. Karede yalnızca `scrollY` okunur. `olc()`
+  yükte, `resize`'da ve `main`'in boyutu değişince çağrılıyor; yerleşimi bunların
+  dışında değiştiren bir şey eklersen onu da çağır, yoksa alan eski yerlere
+  göre çizer.
 - **Döngü uyur.** Kaydırma, yeniden boyutlandırma, `main`'in boyut değişikliği
   ve *çizilen dikdörtgenin içinde* hareket eden imleç etkinlik sayılır. Son
-  etkinlikten `UYKU` (4,6 s) sonra, dönüşüm oturmuş ve imleç çekilmişse döngü
+  etkinlikten `UYKU` (4,6 s) sonra, kaydırma yayı oturmuş ve imleç çekilmişse döngü
   son kareyi çizip durur; kehribar tarama ondan önce `SONUS` (0,6 s) içinde
   söner. Uyanınca saat kaldığı yerden sürer. Eskiden döngü sekme görünür
   olduğu sürece saniyede 60 kare dönüyordu (pil, ısı) ve kendiliğinden beş
