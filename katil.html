@@ -8,18 +8,94 @@
    önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
    tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
-   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor. */
+   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor.
+
+   Dil: Türkçe metin biçimlendirmede durur (betik yoksa ve tarayıcılar için
+   tek kaynak). İngilizcede data-i18n="anahtar" taşıyan öğenin metni,
+   data-i18n-nitelik="nitelik:anahtar" taşıyanın niteliği değişir; cevir()
+   ilk ekranın hemen ardından ve gövdenin sonunda çağrılır, ilk boyamada
+   Türkçe görünmesin diye. Betiğin ürettiği metin t("anahtar") ile gelir.
+   Panelden gelen haberler çevrilmez, Türkçe kalır: tr(öğe) İngilizcede
+   öğeye lang="tr" yazar, ekran okuyucu doğru telaffuz etsin. Ortak metin
+   burada, sayfanın kendi metni hemen alttaki betikte (atilimai.ekle). */
 (function(){
-  var t = null;
+  var h = document.documentElement, t = null, d = null;
   try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
-  if (t === "koyu" || t === "acik") document.documentElement.setAttribute("data-tema", t);
-  var d = null;
+  if (t === "koyu" || t === "acik") h.setAttribute("data-tema", t);
   try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
-  if (d === "en") document.documentElement.lang = "en";
+  var dil = d === "en" ? "en" : "tr";
+  if (dil === "en") h.lang = "en";
+  var S = {tr: {}, en: {}};
+  function ekle(o){
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)){
+      if (o[k][0] !== null) S.tr[k] = o[k][0];
+      if (o[k][1] !== null) S.en[k] = o[k][1];
+    }
+  }
+  ekle({
+    "atla": ["İçeriğe atla", "Skip to content"],
+    "yeni-sekme": [" (yeni sekmede açılır)", " (opens in a new tab)"],
+    "ayar.ad": [" · Dil ve tema", " · Language and theme"],
+    "ayar.dil": ["Dil", "Language"],
+    "ayar.tema": ["Tema", "Theme"],
+    "ayar.sistem": ["Sistem", "System"],
+    "ayar.koyu": ["Koyu", "Dark"],
+    "ayar.acik": ["Açık", "Light"],
+    "ana-sayfa": ["Ana sayfa", "Home"],
+    "haberler": ["Haberler", "News"],
+    "katil": ["Topluluğa katıl", "Join the society"],
+    "sayi": ["{n}. sayı", "Issue {n}"],
+    "sayi-yok": ["Henüz yayımlanmış bir sayı yok.", "No issue has been published yet."],
+    "yeniden-dene": ["Yeniden dene", "Try again"],
+    "deneniyor": ["Deneniyor…", "Trying…"],
+    "devam": ["Devamını oku", "Read more"],
+    "kapat": ["Kapat", "Close"],
+    "kaynak": ["Kaynak: ", "Source: "],
+    "kaynaga-git": ["Kaynağa git", "Go to source"],
+    "butun-haberler": ["Bütün haberler", "All news"]
+  });
+  var AY = {tr: ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
+            en: ["January","February","March","April","May","June","July","August","September","October","November","December"]};
+  function metin(k, v){
+    var s = S[dil][k]; if (s === undefined) s = S.tr[k]; if (s === undefined) return k;
+    return v ? s.replace(/\{(\w+)\}/g, function(_, a){ return v[a] === undefined ? "" : v[a]; }) : s;
+  }
+  function cevir(kok){
+    if (dil !== "en") return;
+    kok = kok || document;
+    var el = kok.querySelectorAll("[data-i18n]"), i, j, v, p;
+    for (i = 0; i < el.length; i++){ v = S.en[el[i].getAttribute("data-i18n")]; if (v !== undefined) el[i].textContent = v; }
+    el = kok.querySelectorAll("[data-i18n-nitelik]");
+    for (i = 0; i < el.length; i++){
+      p = el[i].getAttribute("data-i18n-nitelik").split(";");
+      for (j = 0; j < p.length; j++){ var c = p[j].split(":"); v = S.en[c[1]]; if (v !== undefined) el[i].setAttribute(c[0], v); }
+    }
+  }
+  /* Sayı tarihi sözleşmede ISO; haberin kendi tarihi panelden serbest metin, o çevrilmez. */
+  function tarih(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    return m ? Number(m[3]) + " " + AY[dil][Number(m[2]) - 1] + " " + m[1] : (s || "");
+  }
+  function tr(el){ if (dil === "en") el.lang = "tr"; return el; }
+  window.atilimai = {dil: dil, t: metin, ekle: ekle, cevir: cevir, tarih: tarih, tr: tr, sozluk: S};
 })();
 </script>
-<title>Topluluğa katıl — Atılım AI</title>
-<meta name="description" content="Atılım Üniversitesi Yapay Zeka Topluluğu'na katıl: WhatsApp grubu, Instagram, LinkedIn ve e-posta. Bölüm şartı da önkoşul da yok.">
+<script>
+/* Bu sayfanın metni: [Türkçe, İngilizce]. Türkçesi null olanlar biçimlendirmede
+   duruyor; ikisi birden yazılanları betik üretiyor. */
+atilimai.ekle({
+  "baslik": [null, "Join the society — Atılım AI"],
+  "aciklama": [null, "Join the AI society of Atılım University: WhatsApp group, Instagram, LinkedIn and e-mail. No department requirement, no prerequisites."],
+  "h1a": [null, "Join "],
+  "h1b": [null, "the society."],
+  "giris": [null, "Whatever you study, you can join; there are no prerequisites. Reach us through whichever channel suits you."],
+  "kanallar": [null, "Society channels"],
+  "kapi.whatsapp": [null, "WhatsApp group"],
+  "kapi.eposta": [null, "E-mail"]
+});
+</script>
+<title data-i18n="baslik">Topluluğa katıl — Atılım AI</title>
+<meta name="description" data-i18n-nitelik="content:aciklama" content="Atılım Üniversitesi Yapay Zeka Topluluğu'na katıl: WhatsApp grubu, Instagram, LinkedIn ve e-posta. Bölüm şartı da önkoşul da yok.">
 <meta name="theme-color" content="#100D0A">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Atılım AI">
@@ -82,7 +158,7 @@
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
-  --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
+  --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
   --ease:cubic-bezier(.16,1,.3,1);
   /* Üst çubuğun ölçüsü ana sayfanınkiyle aynı (index.html --ray, --ray-ara). */
   --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
@@ -249,11 +325,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
   <symbol id="i-gunes" viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.1"/><path d="M6 1v1.3M6 9.7V11M1 6h1.3M9.7 6H11M2.5 2.5l.9.9M8.6 8.6l.9.9M2.5 9.5l.9-.9M8.6 3.4l.9-.9"/></symbol>
 </svg>
 
-<a class="atla" href="#icerik">İçeriğe atla</a>
+<a class="atla" href="#icerik" data-i18n="atla">İçeriğe atla</a>
 
 <nav class="ust"><div class="wrap ust-in">
   <a class="marka" href="index.html"><i aria-hidden="true"></i>ATILIM AI</a>
-  <a class="geri" href="index.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg><span class="geri-yazi">Ana sayfa</span></a>
+  <a class="geri" href="index.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg><span class="geri-yazi" data-i18n="ana-sayfa">Ana sayfa</span></a>
   <div class="ayar">
     <button class="ayar-btn" id="ayarBtn" type="button" aria-expanded="false" aria-controls="ayarPanel" hidden><span class="ayar-kod">TR</span><svg class="ayar-ikon" aria-hidden="true"><use href="#i-ay"/></svg><span class="gizli" data-i18n="ayar.ad"> · Dil ve tema</span></button>
     <div class="ayar-panel" id="ayarPanel" hidden>
@@ -279,21 +355,21 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
 <main id="icerik">
   <div class="wrap kat-in">
     <div>
-      <h1>Topluluğa <em>katıl.</em></h1>
-      <p class="giris">Hangi bölümde okursan oku, katılabilirsin; önkoşul yok. Sana uyan kanaldan bize ulaş.</p>
+      <h1><span data-i18n="h1a">Topluluğa </span><em data-i18n="h1b">katıl.</em></h1>
+      <p class="giris" data-i18n="giris">Hangi bölümde okursan oku, katılabilirsin; önkoşul yok. Sana uyan kanaldan bize ulaş.</p>
     </div>
-    <ul class="kapilar" aria-label="Topluluk kanalları">
+    <ul class="kapilar" aria-label="Topluluk kanalları" data-i18n-nitelik="aria-label:kanallar">
       <li><a class="kapi" href="https://chat.whatsapp.com/HFygsOKHMTLJdKtljsxZ29" target="_blank" rel="noopener">
-        <span class="kapi-metin"><span class="kapi-ad">WhatsApp grubu</span> <span class="kapi-yer">chat.whatsapp.com</span></span>
-        <svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a></li>
+        <span class="kapi-metin"><span class="kapi-ad" data-i18n="kapi.whatsapp">WhatsApp grubu</span> <span class="kapi-yer">chat.whatsapp.com</span></span>
+        <svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></li>
       <li><a class="kapi" href="https://instagram.com/atilimai" target="_blank" rel="noopener">
         <span class="kapi-metin"><span class="kapi-ad">Instagram</span> <span class="kapi-yer">@atilimai</span></span>
-        <svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a></li>
+        <svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></li>
       <li><a class="kapi" href="https://www.linkedin.com/company/at%C4%B1l%C4%B1m-yapay-zeka-toplulu%C4%9Fu/" target="_blank" rel="noopener">
-        <span class="kapi-metin"><span class="kapi-ad">LinkedIn</span> <span class="kapi-yer">Atılım Yapay Zeka Topluluğu</span></span>
-        <svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a></li>
+        <span class="kapi-metin"><span class="kapi-ad">LinkedIn</span> <span class="kapi-yer" lang="tr">Atılım Yapay Zeka Topluluğu</span></span>
+        <svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></li>
       <li><a class="kapi" href="mailto:atilimyapayzeka@gmail.com">
-        <span class="kapi-metin"><span class="kapi-ad">E-posta</span> <span class="kapi-yer">atilimyapayzeka@gmail.com</span></span>
+        <span class="kapi-metin"><span class="kapi-ad" data-i18n="kapi.eposta">E-posta</span> <span class="kapi-yer">atilimyapayzeka@gmail.com</span></span>
         <svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a></li>
     </ul>
   </div>
@@ -304,13 +380,14 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
     <span class="foot-kimlik">Atılım AI · Ankara</span>
     <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
     <span class="sag">
-      <a href="index.html">Ana sayfa</a>
-      <a href="haberler.html">Haberler</a>
-      <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+      <a href="index.html" data-i18n="ana-sayfa">Ana sayfa</a>
+      <a href="haberler.html" data-i18n="haberler">Haberler</a>
+      <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a>
     </span>
   </div>
 </footer>
 
+<script>atilimai.cevir();</script>
 <script>
 /* ============================================================
    Görünüm denetimi (dört sayfada aynı: index, haberler, haber, katil)

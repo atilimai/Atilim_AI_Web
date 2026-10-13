@@ -8,17 +8,92 @@
    önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
    tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
-   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor. */
+   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor.
+
+   Dil: Türkçe metin biçimlendirmede durur (betik yoksa ve tarayıcılar için
+   tek kaynak). İngilizcede data-i18n="anahtar" taşıyan öğenin metni,
+   data-i18n-nitelik="nitelik:anahtar" taşıyanın niteliği değişir; cevir()
+   ilk ekranın hemen ardından ve gövdenin sonunda çağrılır, ilk boyamada
+   Türkçe görünmesin diye. Betiğin ürettiği metin t("anahtar") ile gelir.
+   Panelden gelen haberler çevrilmez, Türkçe kalır: tr(öğe) İngilizcede
+   öğeye lang="tr" yazar, ekran okuyucu doğru telaffuz etsin. Ortak metin
+   burada, sayfanın kendi metni hemen alttaki betikte (atilimai.ekle). */
 (function(){
-  var t = null;
+  var h = document.documentElement, t = null, d = null;
   try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
-  if (t === "koyu" || t === "acik") document.documentElement.setAttribute("data-tema", t);
-  var d = null;
+  if (t === "koyu" || t === "acik") h.setAttribute("data-tema", t);
   try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
-  if (d === "en") document.documentElement.lang = "en";
+  var dil = d === "en" ? "en" : "tr";
+  if (dil === "en") h.lang = "en";
+  var S = {tr: {}, en: {}};
+  function ekle(o){
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)){
+      if (o[k][0] !== null) S.tr[k] = o[k][0];
+      if (o[k][1] !== null) S.en[k] = o[k][1];
+    }
+  }
+  ekle({
+    "atla": ["İçeriğe atla", "Skip to content"],
+    "yeni-sekme": [" (yeni sekmede açılır)", " (opens in a new tab)"],
+    "ayar.ad": [" · Dil ve tema", " · Language and theme"],
+    "ayar.dil": ["Dil", "Language"],
+    "ayar.tema": ["Tema", "Theme"],
+    "ayar.sistem": ["Sistem", "System"],
+    "ayar.koyu": ["Koyu", "Dark"],
+    "ayar.acik": ["Açık", "Light"],
+    "ana-sayfa": ["Ana sayfa", "Home"],
+    "haberler": ["Haberler", "News"],
+    "katil": ["Topluluğa katıl", "Join the society"],
+    "sayi": ["{n}. sayı", "Issue {n}"],
+    "sayi-yok": ["Henüz yayımlanmış bir sayı yok.", "No issue has been published yet."],
+    "yeniden-dene": ["Yeniden dene", "Try again"],
+    "deneniyor": ["Deneniyor…", "Trying…"],
+    "devam": ["Devamını oku", "Read more"],
+    "kapat": ["Kapat", "Close"],
+    "kaynak": ["Kaynak: ", "Source: "],
+    "kaynaga-git": ["Kaynağa git", "Go to source"],
+    "butun-haberler": ["Bütün haberler", "All news"]
+  });
+  var AY = {tr: ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
+            en: ["January","February","March","April","May","June","July","August","September","October","November","December"]};
+  function metin(k, v){
+    var s = S[dil][k]; if (s === undefined) s = S.tr[k]; if (s === undefined) return k;
+    return v ? s.replace(/\{(\w+)\}/g, function(_, a){ return v[a] === undefined ? "" : v[a]; }) : s;
+  }
+  function cevir(kok){
+    if (dil !== "en") return;
+    kok = kok || document;
+    var el = kok.querySelectorAll("[data-i18n]"), i, j, v, p;
+    for (i = 0; i < el.length; i++){ v = S.en[el[i].getAttribute("data-i18n")]; if (v !== undefined) el[i].textContent = v; }
+    el = kok.querySelectorAll("[data-i18n-nitelik]");
+    for (i = 0; i < el.length; i++){
+      p = el[i].getAttribute("data-i18n-nitelik").split(";");
+      for (j = 0; j < p.length; j++){ var c = p[j].split(":"); v = S.en[c[1]]; if (v !== undefined) el[i].setAttribute(c[0], v); }
+    }
+  }
+  /* Sayı tarihi sözleşmede ISO; haberin kendi tarihi panelden serbest metin, o çevrilmez. */
+  function tarih(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    return m ? Number(m[3]) + " " + AY[dil][Number(m[2]) - 1] + " " + m[1] : (s || "");
+  }
+  function tr(el){ if (dil === "en") el.lang = "tr"; return el; }
+  window.atilimai = {dil: dil, t: metin, ekle: ekle, cevir: cevir, tarih: tarih, tr: tr, sozluk: S};
 })();
 </script>
-<title>Sayfa bulunamadı — Atılım AI</title>
+<script>
+/* Bu sayfanın metni: [Türkçe, İngilizce]. Türkçesi null olanlar biçimlendirmede
+   duruyor; ikisi birden yazılanları betik üretiyor. */
+atilimai.ekle({
+  "baslik": [null, "Page not found — Atılım AI"],
+  "h1a": [null, "There is "],
+  "h1b": [null, "nothing at this address."],
+  "giris": [null, "The link may be out of date, the address may be mistyped, or the page may have moved. You can carry on from the home page or the news archive."],
+  "hata": [null, "Error 404"],
+  "denenen": [null, " · Address tried: "],
+  "arsiv": [null, "News archive"]
+});
+</script>
+<title data-i18n="baslik">Sayfa bulunamadı — Atılım AI</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#100D0A">
 <!-- GitHub Pages bu sayfayı eksik olan HER yol için sunuyor: /a/b/c adresinde
@@ -163,13 +238,13 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
     <!-- Başlığın üstündeki kehribar "404" etiketi kaldırıldı: DESIGN.md'nin
          adını koyarak yasakladığı üst etiket kalıbı, üstelik eylem rengiyle.
          Kod adres satırına indi; orada bir bilgi, başlık değil. -->
-    <h1>Bu adreste <em>bir şey yok.</em></h1>
-    <p class="giris">Bağlantı eskimiş, adres yanlış yazılmış ya da sayfa taşınmış olabilir.
+    <h1><span data-i18n="h1a">Bu adreste </span><em data-i18n="h1b">bir şey yok.</em></h1>
+    <p class="giris" data-i18n="giris">Bağlantı eskimiş, adres yanlış yazılmış ya da sayfa taşınmış olabilir.
       Ana sayfadan ya da haber arşivinden devam edebilirsin.</p>
-    <p class="adres">Hata 404<span id="adres" hidden> · Denenen adres: <b id="yol"></b></span></p>
+    <p class="adres"><span data-i18n="hata">Hata 404</span><span id="adres" hidden><span data-i18n="denenen"> · Denenen adres: </span><b id="yol"></b></span></p>
     <div class="eylem">
-      <a class="btn p" href="/Atilim_AI_Web/">Ana sayfa</a>
-      <a class="btn s" href="/Atilim_AI_Web/haberler.html">Haber arşivi</a>
+      <a class="btn p" href="/Atilim_AI_Web/" data-i18n="ana-sayfa">Ana sayfa</a>
+      <a class="btn s" href="/Atilim_AI_Web/haberler.html" data-i18n="arsiv">Haber arşivi</a>
     </div>
   </div>
 </main>
@@ -179,13 +254,14 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
     <span class="foot-kimlik">Atılım AI · Ankara</span>
     <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
     <span class="sag">
-      <a href="/Atilim_AI_Web/haberler.html">Haberler</a>
-      <a href="/Atilim_AI_Web/katil.html">Topluluğa katıl</a>
-      <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+      <a href="/Atilim_AI_Web/haberler.html" data-i18n="haberler">Haberler</a>
+      <a href="/Atilim_AI_Web/katil.html" data-i18n="katil">Topluluğa katıl</a>
+      <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a>
     </span>
   </div>
 </footer>
 
+<script>atilimai.cevir();</script>
 <script>
 /* Yanlış yazılmış bir adresi görmek, kullanıcının hatayı kendi bulmasını
    sağlıyor. Betik yoksa adres parçası gizli kalır, satırda yalnızca kod durur. */

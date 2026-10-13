@@ -8,18 +8,101 @@
    önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
    tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
-   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor. */
+   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor.
+
+   Dil: Türkçe metin biçimlendirmede durur (betik yoksa ve tarayıcılar için
+   tek kaynak). İngilizcede data-i18n="anahtar" taşıyan öğenin metni,
+   data-i18n-nitelik="nitelik:anahtar" taşıyanın niteliği değişir; cevir()
+   ilk ekranın hemen ardından ve gövdenin sonunda çağrılır, ilk boyamada
+   Türkçe görünmesin diye. Betiğin ürettiği metin t("anahtar") ile gelir.
+   Panelden gelen haberler çevrilmez, Türkçe kalır: tr(öğe) İngilizcede
+   öğeye lang="tr" yazar, ekran okuyucu doğru telaffuz etsin. Ortak metin
+   burada, sayfanın kendi metni hemen alttaki betikte (atilimai.ekle). */
 (function(){
-  var t = null;
+  var h = document.documentElement, t = null, d = null;
   try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
-  if (t === "koyu" || t === "acik") document.documentElement.setAttribute("data-tema", t);
-  var d = null;
+  if (t === "koyu" || t === "acik") h.setAttribute("data-tema", t);
   try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
-  if (d === "en") document.documentElement.lang = "en";
+  var dil = d === "en" ? "en" : "tr";
+  if (dil === "en") h.lang = "en";
+  var S = {tr: {}, en: {}};
+  function ekle(o){
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)){
+      if (o[k][0] !== null) S.tr[k] = o[k][0];
+      if (o[k][1] !== null) S.en[k] = o[k][1];
+    }
+  }
+  ekle({
+    "atla": ["İçeriğe atla", "Skip to content"],
+    "yeni-sekme": [" (yeni sekmede açılır)", " (opens in a new tab)"],
+    "ayar.ad": [" · Dil ve tema", " · Language and theme"],
+    "ayar.dil": ["Dil", "Language"],
+    "ayar.tema": ["Tema", "Theme"],
+    "ayar.sistem": ["Sistem", "System"],
+    "ayar.koyu": ["Koyu", "Dark"],
+    "ayar.acik": ["Açık", "Light"],
+    "ana-sayfa": ["Ana sayfa", "Home"],
+    "haberler": ["Haberler", "News"],
+    "katil": ["Topluluğa katıl", "Join the society"],
+    "sayi": ["{n}. sayı", "Issue {n}"],
+    "sayi-yok": ["Henüz yayımlanmış bir sayı yok.", "No issue has been published yet."],
+    "yeniden-dene": ["Yeniden dene", "Try again"],
+    "deneniyor": ["Deneniyor…", "Trying…"],
+    "devam": ["Devamını oku", "Read more"],
+    "kapat": ["Kapat", "Close"],
+    "kaynak": ["Kaynak: ", "Source: "],
+    "kaynaga-git": ["Kaynağa git", "Go to source"],
+    "butun-haberler": ["Bütün haberler", "All news"]
+  });
+  var AY = {tr: ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
+            en: ["January","February","March","April","May","June","July","August","September","October","November","December"]};
+  function metin(k, v){
+    var s = S[dil][k]; if (s === undefined) s = S.tr[k]; if (s === undefined) return k;
+    return v ? s.replace(/\{(\w+)\}/g, function(_, a){ return v[a] === undefined ? "" : v[a]; }) : s;
+  }
+  function cevir(kok){
+    if (dil !== "en") return;
+    kok = kok || document;
+    var el = kok.querySelectorAll("[data-i18n]"), i, j, v, p;
+    for (i = 0; i < el.length; i++){ v = S.en[el[i].getAttribute("data-i18n")]; if (v !== undefined) el[i].textContent = v; }
+    el = kok.querySelectorAll("[data-i18n-nitelik]");
+    for (i = 0; i < el.length; i++){
+      p = el[i].getAttribute("data-i18n-nitelik").split(";");
+      for (j = 0; j < p.length; j++){ var c = p[j].split(":"); v = S.en[c[1]]; if (v !== undefined) el[i].setAttribute(c[0], v); }
+    }
+  }
+  /* Sayı tarihi sözleşmede ISO; haberin kendi tarihi panelden serbest metin, o çevrilmez. */
+  function tarih(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    return m ? Number(m[3]) + " " + AY[dil][Number(m[2]) - 1] + " " + m[1] : (s || "");
+  }
+  function tr(el){ if (dil === "en") el.lang = "tr"; return el; }
+  window.atilimai = {dil: dil, t: metin, ekle: ekle, cevir: cevir, tarih: tarih, tr: tr, sozluk: S};
 })();
 </script>
-<title>Haber — Atılım AI</title>
-<meta name="description" content="Atılım AI haftalık raporundan bir haberin tam metni.">
+<script>
+/* Bu sayfanın metni: [Türkçe, İngilizce]. Türkçesi null olanlar biçimlendirmede
+   duruyor; ikisi birden yazılanları betik üretiyor. */
+atilimai.ekle({
+  "baslik": [null, "News item — Atılım AI"],
+  "aciklama": [null, "The full text of an item from the Atılım AI weekly report."],
+  "yukleniyor": ["Yazı yükleniyor…", "Loading the article…"],
+  "haber": ["Haber", "News item"],
+  "meta.dil": ["", " · In Turkish"],
+  "d.eksik": ["Adres eksik", "Incomplete address"],
+  "d.eksik.m": ["Bu adres hangi haberin açılacağını belirtmiyor. Haberi arşivden açabilirsin.", "This address does not say which item to open. You can open it from the archive."],
+  "d.bozuk": ["Adres bozuk", "Damaged address"],
+  "d.bozuk.m": ["Bu adresteki haber bilgisi okunamadı; adres yanlış kopyalanmış olabilir. Haberi arşivden açabilirsin.", "The item details in this address could not be read; it may have been copied incorrectly. You can open the item from the archive."],
+  "d.hata": ["Yazı şu an yüklenemedi", "The article could not be loaded right now"],
+  "d.hata.m": ["İnternet bağlantın kesilmiş ya da çok yavaş olabilir.", "Your connection may be down or very slow."],
+  "d.yok": ["Haber bulunamadı", "Item not found"],
+  "d.yok.m": ["Haber sonradan kaldırılmış ya da sayıdaki yeri değişmiş olabilir. Arşivden yeniden açmayı dene.", "It may have been removed, or its place in the issue may have changed. Try opening it again from the archive."],
+  "d.tam": ["Tam metin yok", "No full text"],
+  "d.tam.m": ["Bu haber yalnızca özetiyle yayımlandı. Özeti arşivde okuyabilirsin.", "This item was published with a summary only. You can read the summary in the archive."]
+});
+</script>
+<title data-i18n="baslik">Haber — Atılım AI</title>
+<meta name="description" data-i18n-nitelik="content:aciklama" content="Atılım AI haftalık raporundan bir haberin tam metni.">
 <meta name="theme-color" content="#100D0A">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Atılım AI">
@@ -333,11 +416,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   <symbol id="i-gunes" viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.1"/><path d="M6 1v1.3M6 9.7V11M1 6h1.3M9.7 6H11M2.5 2.5l.9.9M8.6 8.6l.9.9M2.5 9.5l.9-.9M8.6 3.4l.9-.9"/></symbol>
 </svg>
 
-<a class="atla" href="#icerik">İçeriğe atla</a>
+<a class="atla" href="#icerik" data-i18n="atla">İçeriğe atla</a>
 
 <nav class="ust"><div class="wrap ust-in">
   <a class="marka" href="index.html"><i aria-hidden="true"></i>ATILIM AI</a>
-  <a class="geri" href="haberler.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg><span class="geri-yazi">Haberler</span></a>
+  <a class="geri" href="haberler.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg><span class="geri-yazi" data-i18n="haberler">Haberler</span></a>
   <div class="ayar">
     <button class="ayar-btn" id="ayarBtn" type="button" aria-expanded="false" aria-controls="ayarPanel" hidden><span class="ayar-kod">TR</span><svg class="ayar-ikon" aria-hidden="true"><use href="#i-ay"/></svg><span class="gizli" data-i18n="ayar.ad"> · Dil ve tema</span></button>
     <div class="ayar-panel" id="ayarPanel" hidden>
@@ -359,6 +442,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     </div>
   </div>
 </div></nav>
+<!-- Çubuk ilk boyamadan önce çevrilsin; kapak betikle dolar. -->
+<script>atilimai.cevir();</script>
 
 <!-- Başlık <main>'in içinde: banner bölgesinde dururken "İçeriğe atla" da
      ekran okuyucunun "ana içerik" komutu da yazının başlığını atlıyordu. -->
@@ -390,12 +475,13 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 <footer><div class="wrap foot">
   <span>Atılım AI · Ankara</span>
   <span class="sag">
-    <a href="haberler.html">Haberler</a>
-    <a href="index.html">Ana sayfa</a>
-    <a href="katil.html">Topluluğa katıl</a>
+    <a href="haberler.html" data-i18n="haberler">Haberler</a>
+    <a href="index.html" data-i18n="ana-sayfa">Ana sayfa</a>
+    <a href="katil.html" data-i18n="katil">Topluluğa katıl</a>
   </span>
 </div></footer>
 
+<script>atilimai.cevir();</script>
 <script>
 /*
  * Bir haberin tam metni.
@@ -418,7 +504,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   function tarihYaz(s){
     var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
     if (!p) return s || "";
-    return Number(p[3]) + " " + AYLAR[Number(p[2]) - 1] + " " + p[1];
+    return window.atilimai.tarih(s);
   }
 
   /* Her durum bir sayfa: gerçek bir <h1>, eşleşen sekme başlığı, sade bir
@@ -446,7 +532,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   function yeniSekme(a){
     var g = document.createElement("span");
     g.className = "gizli";
-    g.textContent = " (yeni sekmede açılır)";
+    g.textContent = window.atilimai.t("yeni-sekme");
+    if (window.atilimai.dil === "en") g.lang = "en";
     a.appendChild(g);
   }
   function butunHaberler(sinif){
@@ -454,7 +541,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     a.className = sinif;
     a.href = "haberler.html";
     a.appendChild(ikon("i-geri", true));
-    a.appendChild(document.createTextNode("Bütün haberler"));
+    a.appendChild(document.createTextNode(window.atilimai.t("butun-haberler")));
     return a;
   }
 
@@ -514,6 +601,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     document.title = baslik + " — Atılım AI";
     var bas = document.getElementById("baslik");
     bas.textContent = baslik;
+    bas.removeAttribute("lang");   /* durum başlığı arayüz dilinde */
     bas.classList.remove("uzun");   /* durum başlıkları kısa */
     gizle(kapakUst);
     gizle(document.getElementById("ozet"));
@@ -535,13 +623,13 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       dugme = document.createElement("button");
       dugme.type = "button";
       dugme.className = "oku";
-      dugme.textContent = "Yeniden dene";
+      dugme.textContent = window.atilimai.t("yeniden-dene");
       /* disabled değil aria-disabled: devre dışı kalan düğme odağı bırakıyor.
          Deneme sürerken kart yerinde kalır, düğme ne olduğunu söyler. */
       dugme.addEventListener("click", function(){
         if (istekVar) return;
         dugme.setAttribute("aria-disabled", "true");
-        dugme.textContent = "Deneniyor…";
+        dugme.textContent = window.atilimai.t("deneniyor");
         odakIste = true;
         tekrar(true);
       });
@@ -557,8 +645,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   var qSira = q.get("sira");
 
   if (qSayi === null || qSayi === "" || qSira === null || qSira === ""){
-    durum("Adres eksik",
-          "Bu adres hangi haberin açılacağını belirtmiyor. Haberi arşivden açabilirsin.");
+    durum(window.atilimai.t("d.eksik"), window.atilimai.t("d.eksik.m"));
     return;
   }
 
@@ -566,9 +653,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   var sira   = Number(qSira);
 
   if (!Number.isInteger(sayiNo) || !Number.isInteger(sira) || sira < 0){
-    durum("Adres bozuk",
-          "Bu adresteki haber bilgisi okunamadı; adres yanlış kopyalanmış olabilir. " +
-          "Haberi arşivden açabilirsin.");
+    durum(window.atilimai.t("d.bozuk"), window.atilimai.t("d.bozuk.m"));
     return;
   }
 
@@ -595,6 +680,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       a.textContent = aciklama || src;
+      window.atilimai.tr(a);
       yeniSekme(a);
       p.appendChild(a);
       if (fig.parentNode) fig.parentNode.replaceChild(p, fig);
@@ -605,6 +691,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       yazi.textContent = aciklama;
       fig.appendChild(yazi);
     }
+    window.atilimai.tr(fig);
     return fig;
   }
 
@@ -612,7 +699,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     /* Panel başlığı 200 karaktere kadar gelebiliyor; sekme, yer imi ve
        geçmiş kaydı bunu olduğu gibi taşımasın. Sayfadaki <h1> tam metni
        göstermeye devam ediyor. */
-    var sekme = h.baslik || "Haber";
+    var sekme = h.baslik || window.atilimai.t("haber");
     if (sekme.length > 70) sekme = sekme.slice(0, 69).replace(/\s+$/, "") + "…";
     document.title = sekme + " — Atılım AI";
     bitti();
@@ -625,6 +712,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       var et = document.createElement("span");
       et.className = "etiket";
       et.textContent = h.etiket;
+      window.atilimai.tr(et);
       kapakUst.appendChild(et);
     }
     if (h.tarih){
@@ -632,11 +720,13 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       var tm = document.createElement("span");
       tm.className = "tarih";
       tm.textContent = h.tarih;
+      window.atilimai.tr(tm);
       kapakUst.appendChild(tm);
     }
 
     var bas = document.getElementById("baslik");
     bas.textContent = h.baslik || "";
+    window.atilimai.tr(bas);
     /* Karakter sayısı, ölçülen yükseklik değil: eşik deterministik kalsın ve
        yeniden boyutlandırmada ölçüm döngüsü gerekmesin. 70'in üstü her
        kırılma noktasında display-xl'de dört satırı aşıyor. */
@@ -644,10 +734,15 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 
     var ozet = document.getElementById("ozet");
     /* Kaldırılmaz, gizlenir: iskeleti silmek yeniden denemeyi kırıyordu. */
+    window.atilimai.tr(ozet);
     if (h.ozet){ ozet.textContent = h.ozet; ozet.hidden = false; } else gizle(ozet);
 
-    document.getElementById("kapakMeta").textContent =
-      sayi.sayi + ". sayı · " + tarihYaz(sayi.tarih) + (h.kaynak ? " · " + kaynakAdi(h.kaynak) : "");
+    /* Sayı ve tarih arayüz dilinde; kaynak adı panelden gelir. İngilizcede
+       satırın sonu haberlerin Türkçe olduğunu söyler. */
+    var meta = document.getElementById("kapakMeta");
+    meta.textContent = window.atilimai.t("sayi", {n: sayi.sayi}) + " · " + tarihYaz(sayi.tarih) + (h.kaynak ? " · " : "");
+    if (h.kaynak) meta.appendChild(window.atilimai.tr(document.createElement("span"))).textContent = kaynakAdi(h.kaynak);
+    meta.appendChild(document.createTextNode(window.atilimai.t("meta.dil")));
 
     kapak.hidden = false;
 
@@ -679,6 +774,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       }
       var p = document.createElement("p");
       p.textContent = metin;
+      window.atilimai.tr(p);
       yazi.appendChild(p);
     });
 
@@ -687,7 +783,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     if (h.kaynak){
       var k = document.createElement("span");
       k.className = "kaynak";
-      k.textContent = "Kaynak: " + kaynakAdi(h.kaynak);
+      k.textContent = window.atilimai.t("kaynak");
+      k.appendChild(window.atilimai.tr(document.createElement("span"))).textContent = kaynakAdi(h.kaynak);
       alt.appendChild(k);
     }
     if (h.link){
@@ -696,7 +793,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       oku.href = h.link;
       oku.target = "_blank";
       oku.rel = "noopener noreferrer";
-      oku.textContent = "Kaynağa git";
+      oku.textContent = window.atilimai.t("kaynaga-git");
       oku.appendChild(ikon("i-dis"));
       yeniSekme(oku);
       alt.appendChild(oku);
@@ -728,14 +825,13 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       govde.textContent = "";
       bekle = document.createElement("p");
       bekle.className = "yukleniyor wrap";
-      bekle.textContent = "Yazı yükleniyor…";
+      bekle.textContent = window.atilimai.t("yukleniyor");
       govde.parentNode.insertBefore(bekle, govde);
       document.body.classList.add("bekliyor");
     }
     function dusur(){
       istekVar = false;
-      durum("Yazı şu an yüklenemedi",
-            "İnternet bağlantın kesilmiş ya da çok yavaş olabilir.",
+      durum(window.atilimai.t("d.hata"), window.atilimai.t("d.hata.m"),
             getir);
     }
     var sure = setTimeout(function(){
@@ -755,14 +851,11 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       }
       var h = sayi && Array.isArray(sayi.haberler) ? temizHaber(sayi.haberler[sira]) : null;
       if (!h){
-        durum("Haber bulunamadı",
-              "Haber sonradan kaldırılmış ya da sayıdaki yeri değişmiş olabilir. " +
-              "Arşivden yeniden açmayı dene.");
+        durum(window.atilimai.t("d.yok"), window.atilimai.t("d.yok.m"));
         return;
       }
       if (!h.icerik){
-        durum("Tam metin yok",
-              "Bu haber yalnızca özetiyle yayımlandı. Özeti arşivde okuyabilirsin.");
+        durum(window.atilimai.t("d.tam"), window.atilimai.t("d.tam.m"));
         return;
       }
       ciz(sayi, h);

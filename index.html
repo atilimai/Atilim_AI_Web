@@ -8,18 +8,121 @@
    önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
    tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
-   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor. */
+   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor.
+
+   Dil: Türkçe metin biçimlendirmede durur (betik yoksa ve tarayıcılar için
+   tek kaynak). İngilizcede data-i18n="anahtar" taşıyan öğenin metni,
+   data-i18n-nitelik="nitelik:anahtar" taşıyanın niteliği değişir; cevir()
+   ilk ekranın hemen ardından ve gövdenin sonunda çağrılır, ilk boyamada
+   Türkçe görünmesin diye. Betiğin ürettiği metin t("anahtar") ile gelir.
+   Panelden gelen haberler çevrilmez, Türkçe kalır: tr(öğe) İngilizcede
+   öğeye lang="tr" yazar, ekran okuyucu doğru telaffuz etsin. Ortak metin
+   burada, sayfanın kendi metni hemen alttaki betikte (atilimai.ekle). */
 (function(){
-  var t = null;
+  var h = document.documentElement, t = null, d = null;
   try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
-  if (t === "koyu" || t === "acik") document.documentElement.setAttribute("data-tema", t);
-  var d = null;
+  if (t === "koyu" || t === "acik") h.setAttribute("data-tema", t);
   try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
-  if (d === "en") document.documentElement.lang = "en";
+  var dil = d === "en" ? "en" : "tr";
+  if (dil === "en") h.lang = "en";
+  var S = {tr: {}, en: {}};
+  function ekle(o){
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)){
+      if (o[k][0] !== null) S.tr[k] = o[k][0];
+      if (o[k][1] !== null) S.en[k] = o[k][1];
+    }
+  }
+  ekle({
+    "atla": ["İçeriğe atla", "Skip to content"],
+    "yeni-sekme": [" (yeni sekmede açılır)", " (opens in a new tab)"],
+    "ayar.ad": [" · Dil ve tema", " · Language and theme"],
+    "ayar.dil": ["Dil", "Language"],
+    "ayar.tema": ["Tema", "Theme"],
+    "ayar.sistem": ["Sistem", "System"],
+    "ayar.koyu": ["Koyu", "Dark"],
+    "ayar.acik": ["Açık", "Light"],
+    "ana-sayfa": ["Ana sayfa", "Home"],
+    "haberler": ["Haberler", "News"],
+    "katil": ["Topluluğa katıl", "Join the society"],
+    "sayi": ["{n}. sayı", "Issue {n}"],
+    "sayi-yok": ["Henüz yayımlanmış bir sayı yok.", "No issue has been published yet."],
+    "yeniden-dene": ["Yeniden dene", "Try again"],
+    "deneniyor": ["Deneniyor…", "Trying…"],
+    "devam": ["Devamını oku", "Read more"],
+    "kapat": ["Kapat", "Close"],
+    "kaynak": ["Kaynak: ", "Source: "],
+    "kaynaga-git": ["Kaynağa git", "Go to source"],
+    "butun-haberler": ["Bütün haberler", "All news"]
+  });
+  var AY = {tr: ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
+            en: ["January","February","March","April","May","June","July","August","September","October","November","December"]};
+  function metin(k, v){
+    var s = S[dil][k]; if (s === undefined) s = S.tr[k]; if (s === undefined) return k;
+    return v ? s.replace(/\{(\w+)\}/g, function(_, a){ return v[a] === undefined ? "" : v[a]; }) : s;
+  }
+  function cevir(kok){
+    if (dil !== "en") return;
+    kok = kok || document;
+    var el = kok.querySelectorAll("[data-i18n]"), i, j, v, p;
+    for (i = 0; i < el.length; i++){ v = S.en[el[i].getAttribute("data-i18n")]; if (v !== undefined) el[i].textContent = v; }
+    el = kok.querySelectorAll("[data-i18n-nitelik]");
+    for (i = 0; i < el.length; i++){
+      p = el[i].getAttribute("data-i18n-nitelik").split(";");
+      for (j = 0; j < p.length; j++){ var c = p[j].split(":"); v = S.en[c[1]]; if (v !== undefined) el[i].setAttribute(c[0], v); }
+    }
+  }
+  /* Sayı tarihi sözleşmede ISO; haberin kendi tarihi panelden serbest metin, o çevrilmez. */
+  function tarih(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    return m ? Number(m[3]) + " " + AY[dil][Number(m[2]) - 1] + " " + m[1] : (s || "");
+  }
+  function tr(el){ if (dil === "en") el.lang = "tr"; return el; }
+  window.atilimai = {dil: dil, t: metin, ekle: ekle, cevir: cevir, tarih: tarih, tr: tr, sozluk: S};
 })();
 </script>
-<title>Atılım AI — Yapay Zeka Topluluğu</title>
-<meta name="description" content="Atılım Üniversitesi Yapay Zeka Topluluğu. Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Bölüm şartı da önkoşul da yok.">
+<script>
+/* Bu sayfanın metni: [Türkçe, İngilizce]. Türkçesi null olanlar biçimlendirmede
+   duruyor; ikisi birden yazılanları betik üretiyor. */
+atilimai.ekle({
+  "baslik": [null, "Atılım AI — AI Society"],
+  "aciklama": [null, "The AI society of Atılım University. Workshops, open-source projects and a weekly AI report. No department requirement, no prerequisites."],
+  "menu": [null, "Menu"],
+  "nav.s1": [null, "About"],
+  "nav.s2": [null, "Events"],
+  "nav.s3": [null, "Weekly report"],
+  "nav.s4": [null, "Projects"],
+  "h1a": [null, "Learning AI together, "],
+  "h1b": [null, "building it together."],
+  "giris": [null, "Workshops, open-source projects and a weekly AI report. Whatever you study, you can join."],
+  "projelere": [null, "Browse the projects"],
+  "s1.baslik": [null, "From theory to a working model."],
+  "s1.p1": [null, "The society began in autumn 2023 on the engineering campus, with seven people who did not know each other. Classes covered the theory, but nobody was building a model from start to finish and getting it to run."],
+  "s1.p2": [null, "Any department is welcome; we have members from law and from psychology too."],
+  "olcum.proje": [null, "completed projects"],
+  "olcum.etkinlik": [null, "completed events"],
+  "olcum.yuruyen": [null, "ongoing projects"],
+  "s2.baslik": [null, "Upcoming events."],
+  "s2.bos": [null, "No events are scheduled right now."],
+  "s3.baslik": [null, "What happened in AI?"],
+  "s3.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
+  "butun-sayilar": [null, "All issues"],
+  "s4.baslik": [null, "Work our members have carried out."],
+  "tamamlandi": [null, "Completed"],
+  "p1.ad": [null, "Leaf disease classifier"],
+  "p1.metin": [null, "Models that look at a photo of a leaf and recognise disease across 14 plant species. The data was split at the leaf level, so photos of the same leaf never end up in both training and testing."],
+  "p2.ad": [null, "Pneumonia detection on X-rays"],
+  "p2.metin": [null, "A model that classifies a chest X-ray as pneumonia or normal. Built for research and learning; not for medical diagnosis."],
+  "p3.metin": [null, "A repository opened to showcase AI projects developed by Atılım AI members and to share knowledge."],
+  "p4.ad": [null, "Emotion recognition from EEG"],
+  "p4.metin": [null, "Models that recognise emotional state from brainwave (EEG) recordings. They examine five frequency bands one by one and can add heart (ECG) data to the EEG; for now they work only with the DREAMER dataset."],
+  "akis.yukleniyor": ["Haftalık rapor yükleniyor…", "Loading the weekly report…"],
+  "akis.hata": ["Haftalık rapor şu an yüklenemedi.", "The weekly report could not be loaded right now."],
+  "akis.kalan": ["Bu sayının kalan {n} haberi arşivde.", "The other {n} items in this issue are in the archive."],
+  "akis.kalan1": ["Bu sayının kalan {n} haberi arşivde.", "The other item in this issue is in the archive."]
+});
+</script>
+<title data-i18n="baslik">Atılım AI — Yapay Zeka Topluluğu</title>
+<meta name="description" data-i18n-nitelik="content:aciklama" content="Atılım Üniversitesi Yapay Zeka Topluluğu. Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Bölüm şartı da önkoşul da yok.">
 <meta name="theme-color" content="#100D0A">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Atılım AI">
@@ -538,17 +641,17 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <div id="ray" aria-hidden="true"></div>
 
 
-<a class="atla" href="#icerik">İçeriğe atla</a>
+<a class="atla" href="#icerik" data-i18n="atla">İçeriğe atla</a>
 
 <nav id="nav"><div class="wrap nav-in">
   <a class="marka" href="#s0"><i aria-hidden="true"></i>ATILIM AI</a>
-  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="baglar">Menü</button>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="baglar" data-i18n="menu">Menü</button>
   <div class="baglar" id="baglar">
-    <a href="#s1" data-b="s1">Hakkımızda</a>
-    <a href="#s2" data-b="s2">Etkinlikler</a>
-    <a href="#s3" data-b="s3">Haftalık rapor</a>
-    <a href="#s4" data-b="s4">Projeler</a>
-    <a class="kat" href="katil.html">Topluluğa katıl<svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+    <a href="#s1" data-b="s1" data-i18n="nav.s1">Hakkımızda</a>
+    <a href="#s2" data-b="s2" data-i18n="nav.s2">Etkinlikler</a>
+    <a href="#s3" data-b="s3" data-i18n="nav.s3">Haftalık rapor</a>
+    <a href="#s4" data-b="s4" data-i18n="nav.s4">Projeler</a>
+    <a class="kat" href="katil.html"><span data-i18n="katil">Topluluğa katıl</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
   </div>
   <div class="ayar">
     <button class="ayar-btn" id="ayarBtn" type="button" aria-expanded="false" aria-controls="ayarPanel" hidden><span class="ayar-kod">TR</span><svg class="ayar-ikon" aria-hidden="true"><use href="#i-ay"/></svg><span class="gizli" data-i18n="ayar.ad"> · Dil ve tema</span></button>
@@ -575,30 +678,32 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <main id="icerik">
 
 <section id="s0"><div class="wrap">
-  <h1>Yapay zekayı birlikte öğreniyor, <em>birlikte üretiyoruz.</em></h1>
-  <p class="giris">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.</p>
+  <h1><span data-i18n="h1a">Yapay zekayı birlikte öğreniyor, </span><em data-i18n="h1b">birlikte üretiyoruz.</em></h1>
+  <p class="giris" data-i18n="giris">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.</p>
   <div class="eylem">
-    <a class="btn p" href="katil.html">Topluluğa katıl<svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
-    <a class="btn s" href="#s4">Projelere göz at</a>
+    <a class="btn p" href="katil.html"><span data-i18n="katil">Topluluğa katıl</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+    <a class="btn s" href="#s4" data-i18n="projelere">Projelere göz at</a>
   </div>
 </div></section>
+<!-- İlk ekran (nav ve kahraman) ilk boyamadan önce çevrilsin. -->
+<script>atilimai.cevir();</script>
 
 <div class="gecis" aria-hidden="true"></div>
 
 <section id="s1"><div class="wrap iki">
   <div>
-      <h2 class="reveal">Teoriden çalışan modele.</h2>
+      <h2 class="reveal" data-i18n="s1.baslik">Teoriden çalışan modele.</h2>
   </div>
   <div>
-    <p class="giris reveal">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
-    <p class="giris reveal">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
+    <p class="giris reveal" data-i18n="s1.p1">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
+    <p class="giris reveal" data-i18n="s1.p2">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
     <!-- Rakamlar ekipten, 28 Eylül 2026. Değişince yalnızca .num içeriğini
          güncelle. Yürüyen proje sıfırken o satır bir yere götürmüyor; proje
          başlayınca o da bir bağlantı olup #s4'e gidebilir. -->
     <div class="olcum reveal">
-      <a href="#s4"><b class="num">4</b><span>tamamlanan proje</span><svg class="ok git" aria-hidden="true"><use href="#i-ileri"/></svg></a>
-      <div><b class="num">10</b><span>tamamlanan etkinlik</span></div>
-      <div><b class="num">0</b><span>yürüyen proje</span></div>
+      <a href="#s4"><b class="num">4</b><span data-i18n="olcum.proje">tamamlanan proje</span><svg class="ok git" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+      <div><b class="num">10</b><span data-i18n="olcum.etkinlik">tamamlanan etkinlik</span></div>
+      <div><b class="num">0</b><span data-i18n="olcum.yuruyen">yürüyen proje</span></div>
     </div>
   </div>
 </div></section>
@@ -606,7 +711,7 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <div class="gecis" aria-hidden="true"></div>
 
 <section id="s2"><div class="wrap">
-  <h2 class="reveal">Yaklaşan etkinlikler.</h2>
+  <h2 class="reveal" data-i18n="s2.baslik">Yaklaşan etkinlikler.</h2>
   <!-- Liste 28 Eylül 2026'da boşaltıldı; stili ve akordeon betiği (5. bölüm)
        yerinde duruyor. Yeni etkinlik eklerken .tl-bos dipnotunu kaldır,
        yerine aşağıdaki listeyi koy.
@@ -617,53 +722,53 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
            <div class="detay" id="etkinlik-1"><div><p>Açıklama.</p></div></div>
          </li>
        </ul> -->
-  <p class="tl-bos reveal">Şu an planlanmış bir etkinlik yok.</p>
+  <p class="tl-bos reveal" data-i18n="s2.bos">Şu an planlanmış bir etkinlik yok.</p>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
 
 <section id="s3"><div class="wrap">
-  <h2 class="reveal">Yapay zekada neler oldu?</h2>
-  <p class="giris reveal">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler.</p>
+  <h2 class="reveal" data-i18n="s3.baslik">Yapay zekada neler oldu?</h2>
+  <p class="giris reveal" data-i18n="s3.giris">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler.</p>
   <p class="meta reveal" id="feedIssue"></p>
   <!-- Statik içerik, betiğin boş durumuyla aynı cümleyi söyler. Burada bir
        zamanlar üç örnek haber satırı duruyordu; veri dosyası boşaltılınca
        uydurma haber yayında kalmasın diye kaldırıldı (PRODUCT.md, İlke 4).
        Betik veriyi okuyunca bu bloğu gerçek satırlarla değiştirir. -->
   <div class="reveal" id="feedList">
-    <p class="feed-kalan">Henüz yayımlanmış bir sayı yok.</p>
+    <p class="feed-kalan" data-i18n="sayi-yok">Henüz yayımlanmış bir sayı yok.</p>
   </div>
-  <a class="arsiv-bag reveal" href="haberler.html">Bütün sayılar<svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+  <a class="arsiv-bag reveal" href="haberler.html"><span data-i18n="butun-sayilar">Bütün sayılar</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
 
 <section id="s4"><div class="wrap">
-  <h2 class="reveal">Üyelerimizin yürüttüğü işler.</h2>
+  <h2 class="reveal" data-i18n="s4.baslik">Üyelerimizin yürüttüğü işler.</h2>
   <!-- Kart metinleri depoların README dosyalarından alındı. Açıklama
        değişirse README'yi kaynak al, buraya bilgi uydurma. -->
   <div class="projeler">
     <div class="kart reveal">
-      <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/plant-ai-project" target="_blank" rel="noopener">Yaprak hastalığı sınıflandırıcı<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
-      <p>Yaprak fotoğrafına bakıp 14 bitki türünde hastalığı tanıyan modeller. Aynı yaprağın fotoğrafları hem eğitime hem teste girmesin diye veri yaprak düzeyinde bölündü.</p>
+      <p class="durum"><i aria-hidden="true"></i><span data-i18n="tamamlandi">Tamamlandı</span></p>
+      <h3><a href="https://github.com/atilimai/plant-ai-project" target="_blank" rel="noopener"><span data-i18n="p1.ad">Yaprak hastalığı sınıflandırıcı</span><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></h3>
+      <p data-i18n="p1.metin">Yaprak fotoğrafına bakıp 14 bitki türünde hastalığı tanıyan modeller. Aynı yaprağın fotoğrafları hem eğitime hem teste girmesin diye veri yaprak düzeyinde bölündü.</p>
       <div class="etiketler"><span>PyTorch</span><span>EfficientNet</span><span>MobileNetV2</span></div>
     </div>
     <div class="kart reveal">
-      <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/pneumonia-xray-ai" target="_blank" rel="noopener">Röntgende zatürre tespiti<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
-      <p>Göğüs röntgenini zatürre ya da normal diye sınıflandıran bir model. Araştırma ve öğrenme amaçlı; tıbbi teşhis için kullanılmaz.</p>
+      <p class="durum"><i aria-hidden="true"></i><span data-i18n="tamamlandi">Tamamlandı</span></p>
+      <h3><a href="https://github.com/atilimai/pneumonia-xray-ai" target="_blank" rel="noopener"><span data-i18n="p2.ad">Röntgende zatürre tespiti</span><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></h3>
+      <p data-i18n="p2.metin">Göğüs röntgenini zatürre ya da normal diye sınıflandıran bir model. Araştırma ve öğrenme amaçlı; tıbbi teşhis için kullanılmaz.</p>
       <div class="etiketler"><span>PyTorch</span><span>timm</span><span>ResNet-50</span></div>
     </div>
     <div class="kart reveal">
-      <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/Project1-browsertracker" target="_blank" rel="noopener">Project1-browsertracker<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
-      <p>Atılım AI üyelerinin geliştirdiği yapay zeka projelerini sergilemek ve bilgi paylaşmak için açılan depo.</p>
+      <p class="durum"><i aria-hidden="true"></i><span data-i18n="tamamlandi">Tamamlandı</span></p>
+      <h3><a href="https://github.com/atilimai/Project1-browsertracker" target="_blank" rel="noopener">Project1-browsertracker<span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></h3>
+      <p data-i18n="p3.metin">Atılım AI üyelerinin geliştirdiği yapay zeka projelerini sergilemek ve bilgi paylaşmak için açılan depo.</p>
     </div>
     <div class="kart reveal">
-      <p class="durum"><i aria-hidden="true"></i>Tamamlandı</p>
-      <h3><a href="https://github.com/atilimai/EEG-Emotion-Models" target="_blank" rel="noopener">EEG'den duygu tanıma<span class="gizli"> (yeni sekmede açılır)</span></a></h3>
-      <p>Beyin dalgası (EEG) kayıtlarından duygu durumunu tanıyan modeller. Beş frekans bandını tek tek inceliyor, EEG'ye kalp (EKG) verisini de ekleyebiliyor; şimdilik yalnızca DREAMER veri setiyle çalışıyor.</p>
+      <p class="durum"><i aria-hidden="true"></i><span data-i18n="tamamlandi">Tamamlandı</span></p>
+      <h3><a href="https://github.com/atilimai/EEG-Emotion-Models" target="_blank" rel="noopener"><span data-i18n="p4.ad">EEG'den duygu tanıma</span><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></h3>
+      <p data-i18n="p4.metin">Beyin dalgası (EEG) kayıtlarından duygu durumunu tanıyan modeller. Beş frekans bandını tek tek inceliyor, EEG'ye kalp (EKG) verisini de ekleyebiliyor; şimdilik yalnızca DREAMER veri setiyle çalışıyor.</p>
       <div class="etiketler"><span>scikit-learn</span><span>TensorFlow</span><span>PyTorch</span></div>
     </div>
   </div>
@@ -676,14 +781,18 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
   <span class="foot-kimlik">Atılım AI · Ankara</span>
   <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
   <span class="sag">
-    <a href="haberler.html">Haberler</a>
-    <a href="katil.html">Topluluğa katıl</a>
-    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli"> (yeni sekmede açılır)</span></a>
+    <a href="haberler.html" data-i18n="haberler">Haberler</a>
+    <a href="katil.html" data-i18n="katil">Topluluğa katıl</a>
+    <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a>
   </span>
 </div></footer>
 <script>
 (function(){
 "use strict";
+
+/* İlk ekranın altındaki metin; ilk ekran kahramandan hemen sonra çevrildi. */
+var T = window.atilimai;
+T.cevir();
 
 document.documentElement.classList.add("js");
 
@@ -835,7 +944,8 @@ if ("IntersectionObserver" in window && !reduced){
   function yeniSekme(a){
     var g = document.createElement("span");
     g.className = "gizli";
-    g.textContent = " (yeni sekmede açılır)";
+    g.textContent = window.atilimai.t("yeni-sekme");
+    if (window.atilimai.dil === "en") g.lang = "en";
     a.appendChild(g);
   }
 
@@ -847,10 +957,12 @@ if ("IntersectionObserver" in window && !reduced){
     var tarih = document.createElement("span");
     tarih.className = "meta";
     tarih.textContent = h.tarih || "";
+    T.tr(tarih);
 
     var etiket = document.createElement("span");
     etiket.className = "etiket";
     etiket.textContent = h.etiket || "";
+    T.tr(etiket);
 
     var govde = document.createElement("div");
 
@@ -859,16 +971,19 @@ if ("IntersectionObserver" in window && !reduced){
       var a = document.createElement("a");
       a.href = ayrinti || h.link;
       a.textContent = h.baslik || "";
+      T.tr(a);
       if (!ayrinti){ a.target = "_blank"; a.rel = "noopener noreferrer"; yeniSekme(a); }
       h3.appendChild(a);
     } else {
       h3.textContent = h.baslik || "";
+      T.tr(h3);
     }
     govde.appendChild(h3);
 
     if (h.ozet){
       var p = document.createElement("p");
       p.textContent = h.ozet;
+      T.tr(p);
       govde.appendChild(p);
     }
 
@@ -876,7 +991,7 @@ if ("IntersectionObserver" in window && !reduced){
       var devam = document.createElement("a");
       devam.className = "devam";
       devam.href = ayrinti;
-      devam.textContent = "Devamını oku";
+      devam.textContent = T.t("devam");
       devam.appendChild(ikon("i-ileri"));
       govde.appendChild(devam);
     }
@@ -902,16 +1017,16 @@ if ("IntersectionObserver" in window && !reduced){
 
   function hataGoster(){
     if (feedIssue) feedIssue.textContent = "";
-    var el = tekSatir("feed-hata", "Haftalık rapor şu an yüklenemedi.");
+    var el = tekSatir("feed-hata", T.t("akis.hata"));
     var tekrar = document.createElement("button");
     tekrar.type = "button";
-    tekrar.textContent = "Yeniden dene";
+    tekrar.textContent = window.atilimai.t("yeniden-dene");
     /* disabled değil aria-disabled: devre dışı kalan düğme odağı bırakıyor.
        Deneme sürerken satır yerinde kalır, düğme ne olduğunu söyler. */
     tekrar.addEventListener("click", function(){
       if (istekVar) return;
       tekrar.setAttribute("aria-disabled", "true");
-      tekrar.textContent = "Deneniyor…";
+      tekrar.textContent = window.atilimai.t("deneniyor");
       odakIste = true;
       getir(true);
     });
@@ -931,7 +1046,7 @@ if ("IntersectionObserver" in window && !reduced){
     var no = ++sonIstek, dustu = false;
     /* Yükleniyor satırı boş durumla aynı yüksekliği tutar; iki durum arasında
        geçiş yaparken düzen kaymıyor. */
-    if (!yeniden) tekSatir("feed-kalan", "Haftalık rapor yükleniyor…");
+    if (!yeniden) tekSatir("feed-kalan", T.t("akis.yukleniyor"));
     var sure = setTimeout(function(){
       if (no !== sonIstek) return;
       dustu = true; istekVar = false; hataGoster();
@@ -954,11 +1069,11 @@ if ("IntersectionObserver" in window && !reduced){
         }
         /* Veri okundu, içinde sayı yok. Ağ hatasından ayrı bir durum. */
         if (!hepsi.length){
-          odakla(tekSatir("feed-kalan", "Henüz yayımlanmış bir sayı yok."));
+          odakla(tekSatir("feed-kalan", T.t("sayi-yok")));
           if (feedIssue) feedIssue.textContent = "";
           return;
         }
-        if (feedIssue && issue.sayi) feedIssue.textContent = issue.sayi + ". sayı";
+        if (feedIssue && issue.sayi) feedIssue.textContent = T.t("sayi", {n: issue.sayi});
         feedList.textContent = "";
 
         hepsi.slice(0, GOSTER).forEach(function(k){
@@ -968,7 +1083,8 @@ if ("IntersectionObserver" in window && !reduced){
         if (hepsi.length > GOSTER){
           var kalan = document.createElement("p");
           kalan.className = "feed-kalan";
-          kalan.textContent = "Bu sayının kalan " + (hepsi.length - GOSTER) + " haberi arşivde.";
+          var kalanSay = hepsi.length - GOSTER;
+          kalan.textContent = T.t(kalanSay === 1 ? "akis.kalan1" : "akis.kalan", {n: kalanSay});
           feedList.appendChild(kalan);
         }
         odakla(feedList.querySelector("a[href]") || feedList.firstElementChild);
