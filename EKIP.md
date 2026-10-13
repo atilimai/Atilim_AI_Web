@@ -123,8 +123,9 @@ Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklend
 
 ### `404.html`
 
-Pages'in eksik adresler için sunduğu sayfa. Gece dünyasında, `index.html`'in
-belirteçleriyle; kendi kopyasını taşır, ortak stil dosyası yok.
+Pages'in eksik adresler için sunduğu sayfa. Gece dünyasında tasarlandı, 13
+Ekim 2026'dan beri her sayfa gibi temayı izliyor; renk bloğu ötekilerle aynı,
+kendi kopyasını taşır, ortak stil dosyası yok.
 
 **İçindeki her yol kökten mutlaktır** (`/Atilim_AI_Web/...`) ve bu bilinçli:
 Pages bu dosyayı eksik olan *her* yol için sunuyor, `/a/b/c` adresinde göreli
@@ -282,9 +283,13 @@ Components → Görünüm denetimi.
   `tarih`, `tr`, `ekle`) tanımlıyor. Hemen altındaki ikinci betik sayfanın
   kendi metni: `atilimai.ekle({...})`.
 - **Depo anahtarları:** `atilimai.tema` (`koyu` | `acik`; yoksa sistem) ve
-  `atilimai.dil` (`en`; yoksa Türkçe). Dil değişince `sessionStorage`'a
-  `atilimai.odak` yazılıyor: yeniden yüklemeden sonra odak denetim düğmesine
-  dönsün diye.
+  `atilimai.dil` (`en`; yoksa Türkçe). Denetim her yüklemede depoyu
+  `atilimai.deneme` yazıp silerek yokluyor (yazılamıyorsa dil satırı gizli).
+  Dil değişince `sessionStorage`'a `atilimai.odak` yazılıyor: yeniden
+  yüklemeden sonra odak denetim düğmesine dönsün diye.
+- **Geri/ileri önbelleği.** Önbellekten dönen sayfa bırakıldığı temayla gelir;
+  başlangıç bloğu `pageshow`'da kaydı yeniden okuyor: tema farklıysa canlı
+  düzeltiyor, dil farklıysa sayfayı yeniden yüklüyor.
 - **Tema** belirteçle çalışıyor, betikle değil. Her sayfanın renk bloğu aynı:
   palet (gece ve gündüz) ve temaya göre değer alan roller (`--zemin`,
   `--yuzey`, `--metin`, `--lamba-iz`…). Kayıt yoksa `prefers-color-scheme`

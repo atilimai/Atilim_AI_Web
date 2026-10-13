@@ -118,7 +118,9 @@ binding):
   serve draft data. Switching to `XMLHttpRequest`, or capturing `fetch` into a local before
   the wrapper installs, silently breaks the panel preview.
 - **Storage is never required, and every access to it is guarded.** Since 2026-10-13 all
-  five pages read two keys — `atilimai.tema` and `atilimai.dil` — inside a `try` in `<head>`.
+  five pages read two keys — `atilimai.tema` and `atilimai.dil` — inside a `try` in `<head>`;
+  the appearance control writes them, probes storage with a throwaway `atilimai.deneme`, and
+  keeps one `sessionStorage` flag (`atilimai.odak`) across a language reload.
   The panel renders `haberler.html` in a `sandbox="allow-scripts"` iframe with an opaque
   origin, where merely touching `localStorage` throws. There the theme still switches for the
   session and the language row of the appearance control is hidden, because a language change

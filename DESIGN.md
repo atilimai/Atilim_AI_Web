@@ -242,7 +242,8 @@ keeping its ground, links and lamp through every state is what keeps a theme swi
 as the same site. That long reading belongs on paper is now a default the visitor can
 override, not a constraint; the dark reading surface is measured to the same AA floor.
 
-`404.html` is the fourth page and belongs to the night world: same ground, same tokens, the
+`404.html` is the fourth page and was built in the night world (since 2026-10-13 it follows the
+theme like every page): same ground, same tokens, the
 same `display-xl` `h1` with an italic amber clause, and the two doors as `btn.p` / `btn.s`. It
 is the newest file and the one that drifted furthest — it shipped without `--ease` and
 `--r-xs`, and it reintroduced the blanket `*{transition:none!important}` that this document
@@ -317,13 +318,14 @@ to be that is not on top of a sentence.
 - **Gunduz / Kart** (#F2EDE3 / #FBF8F1): Ground and raised card.
 - **Murekkep** (#1A1713, 15.31:1), **Murekkep-m** (#4A443B, 8.25:1),
   **Murekkep-s** (#6B6357, 5.07:1).
-- **Hairlines** (`--cizgi` .14 / `--cizgi-s` .24, `rgba(26,23,19,α)`).
-- **Lamp underline** (`--lamba-alt`, `rgba(138,85,16,.4)`): the same token *name* as the night
-  world, carrying the day lamp's value. This is the one token in the system whose name is
-  shared across the two worlds while its value is world-local — the rule that consumes it is
-  identical in both, so splitting the name would say a difference that isn't there. Its one
-  consumer is the archive's permalink line. Solid colours live in the frontmatter; alpha lines
-  like this and the hairlines are named here.
+- **Hairlines** — the light values of the `--cizgi` role: `--murekkep-cizgi` .14 /
+  `--murekkep-cizgi-s` .24 / `--murekkep-cizgi-t` .34, all `rgba(26,23,19,α)`, palette tokens
+  like every other alpha line since 2026-10-13.
+- **Lamp underline** (`--lamba-alt` → `--lamba-d-cizgi`, `rgba(138,85,16,.4)`): the deep lamp
+  as a line. It used to be the one token whose name was shared across the two worlds while its
+  value was world-local; since the roles (2026-10-13, see "Roles and themes") every role works
+  that way, and `--lamba-alt` is simply one of them. Solid colours live in the frontmatter;
+  alpha lines like this and the hairlines are named here.
 
 ### Roles and themes (since 2026-10-13)
 
@@ -339,12 +341,17 @@ choice to `<html data-tema>` before the first paint.
 |---|---|---|
 | `--zemin` / `--yuzey` / `--yuzey-2` | gece / tezgah / tezgah-2 | gunduz / kart / **kart-2** |
 | `--metin` / `-m` / `-s` / `-t` | kagit / kagit-m / kagit-s / kagit-t | murekkep / murekkep-m / murekkep-s / **murekkep-t** |
-| `--cizgi` / `-s` / `-t` | hair .13 / .22 / .34 | ink `rgba(26,23,19,α)` .14 / .24 / .34 |
+| `--cizgi` / `-s` / `-t` | hair / hair-s / hair-t | murekkep-cizgi / -s / -t |
 | `--lamba-iz` (text, line, focus) / `--lamba-iz-h` | lamba / lamba-h | lamba-d / **lamba-dh** |
 | `--lamba-dolgu` / `-h` / `--lamba-ust` | lamba / lamba-h / on-lamba | lamba-d / lamba-dh / kart |
-| `--lamba-alt` | `rgba(232,163,61,.4)` | `rgba(138,85,16,.4)` |
+| `--lamba-alt` | lamba-cizgi | lamba-d-cizgi |
 | `--ekran-iz` / `--canli-iz` | ekran / canli | ekran-d / **canli-d** |
 | `--cubuk-zemin` / `--cubuk-cam` | transparent / gece-cam | gece / gece |
+
+Role blocks carry no literal colour: the alpha lines are palette tokens too (`--lamba-cizgi`
+`rgba(232,163,61,.4)`, `--lamba-d-cizgi` `rgba(138,85,16,.4)`, `--murekkep-cizgi` / `-s` / `-t`
+`rgba(26,23,19,α)` at .14 / .24 / .34), so a value lives in one line of the palette and the two
+light blocks and the print blocks only point at it.
 
 Four palette values are new, each measured against the hardest surface it can land on:
 
@@ -823,9 +830,10 @@ because a transparent mark disappears against light browser chrome.
 
 **Since 2026-10-13 the mark is a mask, not a background image.** `.marka i` is `currentColor`
 shaped by `images/ai_mark.png` through `mask`, so the mark is always the colour of the wordmark
-beside it and no dark variant of the file is needed. It renders exactly as the white PNG did on
-the night bar (compared pixel for pixel), and the bar is night in both themes anyway; the mask
-is what keeps it from ever being a white shape on paper.
+beside it and no dark variant of the file is needed. The PNG is pure white and the mask paints
+`kagit` (#F0EADD), so the mark is a few levels warmer than before — invisible at 20px on the
+night bar, which stays night in both themes anyway; the mask is what keeps it from ever being a
+white shape on paper.
 
 Both files are derived, and the source they are derived from is in the repository:
 `images/ai_s.png`, the society's original full lockup at 1796x1796. Keep it — regenerating
@@ -858,11 +866,19 @@ operating system: without it, a choice once made could never be undone.
   untranslated `[data-i18n]` element is `visibility:hidden` until `cevir()` reaches it (it keeps
   its box; the class lifts at `DOMContentLoaded` in any case). Measured after: 0 Turkish frames,
   CLS at most 0.059.
+- **Back and forward.** A page restored from the back/forward cache comes back with the theme
+  and language it was left in. The bootstrap re-reads storage on `pageshow`: a different theme
+  is applied live (the field and the control listen to `temadegisti`), a different language
+  reloads the page.
 - **No script, no control.** The button ships `hidden` and its own script reveals it. Without
   storage — the panel's preview — the language group is hidden, since a reload cannot carry the
   choice; the theme still switches for the session.
-- **Narrow bars.** Below 420px the reading pages' back link drops to its arrow; its text stays in
-  the accessible name through the `.gizli` recipe. Between 901 and 1100px the landing page's bar
+- **Narrow bars.** Below 420px the reading pages' back link drops to its arrow inside the
+  control's own box (44×44, tezgah, hair-s, md), so the bar reads as two sibling controls the way
+  MENÜ and the language button do on the landing page; its text stays in the accessible name
+  through the `.gizli` recipe. The sun icon is an open disc (r 2.5) with eight dot rays: the first
+  version, a 2.1 disc with eight stroked rays, closed up at 12px and read as an asterisk next to
+  the language code. Between 901 and 1100px the landing page's bar
   gap drops to `--sp-sm` and its links are `nowrap`: the control pushed them into two lines at
   901px, which a width check cannot see because nothing overflows.
 - **One frame without transitions.** The switch adds `.tema-degisiyor` to `<html>` for two
@@ -1260,7 +1276,10 @@ uploaded again. The geometry does not depend on the theme, and the edge-ring tes
 that differ from `--zemin` rather than lit ones. Shipped result, in both themes at 1152 × 720,
 1440 × 900 and 1970 × 1100: **0 text intersections** in all six sweep runs, **0 edge pixels** in
 the ring tour, **0 buffer uploads** on a theme change, and the painted ground equal to
-`--zemin`.
+`--zemin` — including before the first frame. A resized canvas buffer is black (`alpha:false`)
+and the first frame waits for the monogram image, so on a first desktop visit in the light theme
+the whole page went black for 0.2–0.5 s on a throttled connection; `boyutla()` and the theme
+listener now clear the buffer to `--zemin` immediately (tested with the image request held).
 
 **Fallbacks.** No WebGL context: `body.no-alan` hides the canvas, collapses the bands to
 `--sp-sec`, and the page is exactly what it was before the field existed. The context is
@@ -1436,9 +1455,8 @@ reading pages. They never meet in one document, but do not assume one rule serve
 
 ### Documented exceptions
 
-Two values sit outside the palette deliberately. Both are recorded so a reviewer does not
-"fix" them. (A third, the GitHub language-colour map, left with the repository dialog on
-2026-10-06.)
+These entries look like violations and are not; each is recorded so a reviewer does not
+"fix" it. (The GitHub language-colour map left with the repository dialog on 2026-10-06.)
 
 - **The day world's cream ground** (#F2EDE3) is flagged by generic anti-pattern detectors as
   a saturated trope. It is a reasoned choice: article text runs to 20,000 characters. Keep it.

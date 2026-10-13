@@ -89,6 +89,20 @@
     return m ? Number(m[3]) + " " + AY[dil][Number(m[2]) - 1] + " " + m[1] : (s || "");
   }
   function tr(el){ if (dil === "en") el.lang = "tr"; return el; }
+  /* Geri/ileri önbelleğinden dönen sayfa bırakıldığı temayla ve dille gelir;
+     başka sayfada yapılan seçim kayıtta. Dil farklıysa yeniden yükle, tema
+     farklıysa niteliği düzelt ve haber ver (alan ve denetim dinliyor). */
+  window.addEventListener("pageshow", function(e){
+    if (!e.persisted) return;
+    var t2 = null, d2 = null;
+    try { t2 = window.localStorage.getItem("atilimai.tema"); d2 = window.localStorage.getItem("atilimai.dil"); } catch (x) { return; }
+    if ((d2 === "en" ? "en" : "tr") !== dil){ window.location.reload(); return; }
+    var yeni = t2 === "koyu" || t2 === "acik" ? t2 : null;
+    if (yeni === h.getAttribute("data-tema")) return;
+    if (yeni) h.setAttribute("data-tema", yeni); else h.removeAttribute("data-tema");
+    var ev; try { ev = new CustomEvent("temadegisti"); } catch (x) { ev = document.createEvent("Event"); ev.initEvent("temadegisti", false, false); }
+    document.dispatchEvent(ev);
+  });
   window.atilimai = {dil: dil, t: metin, ekle: ekle, cevir: cevir, tarih: tarih, tr: tr, sozluk: S};
 })();
 </script>
@@ -118,7 +132,7 @@ atilimai.ekle({
   "s3.baslik": [null, "What happened in AI?"],
   "s3.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
   "butun-sayilar": [null, "All issues"],
-  "s4.baslik": [null, "Work our members have carried out."],
+  "s4.baslik": [null, "Work by our members."],
   "tamamlandi": [null, "Completed"],
   "p1.ad": [null, "Leaf disease classifier"],
   "p1.metin": [null, "Models that look at a photo of a leaf and recognise disease across 14 plant species. The data was split at the leaf level, so photos of the same leaf never end up in both training and testing."],
@@ -181,15 +195,18 @@ atilimai.ekle({
   --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
   --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
   --lamba:#E8A33D; --lamba-h:#F5B65C; --on-lamba:#241703; --ekran:#8FB4D6; --canli:#7FB069;
+  --lamba-cizgi:rgba(232,163,61,.4);
   /* Palet — gündüz */
   --gunduz:#F2EDE3; --kart:#FBF8F1; --kart-2:#FFFDF9;
   --murekkep:#1A1713; --murekkep-m:#4A443B; --murekkep-s:#6B6357; --murekkep-t:#70685C;
   --lamba-d:#8A5510; --lamba-dh:#6E430B; --ekran-d:#3D6389; --canli-d:#4A7336;
+  --murekkep-cizgi:rgba(26,23,19,.14); --murekkep-cizgi-s:rgba(26,23,19,.24); --murekkep-cizgi-t:rgba(26,23,19,.34);
+  --lamba-d-cizgi:rgba(138,85,16,.4);
   /* Roller — koyu */
   --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
   --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
   --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
-  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h); --lamba-alt:rgba(232,163,61,.4);
+  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h); --lamba-alt:var(--lamba-cizgi);
   --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
   --ekran-iz:var(--ekran); --canli-iz:var(--canli);
   --cubuk-zemin:transparent; --cubuk-cam:var(--gece-cam);
@@ -204,8 +221,8 @@ atilimai.ekle({
   color-scheme:light;
   --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
   --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
-  --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24); --cizgi-t:rgba(26,23,19,.34);
-  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
+  --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:var(--lamba-d-cizgi);
   --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
   --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
   --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
@@ -214,8 +231,8 @@ atilimai.ekle({
   color-scheme:light;
   --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
   --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
-  --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24); --cizgi-t:rgba(26,23,19,.34);
-  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
+  --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:var(--lamba-d-cizgi);
   --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
   --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
   --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
@@ -647,7 +664,7 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
   <symbol id="i-dis" viewBox="0 0 12 12"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></symbol>
   <symbol id="i-ileri" viewBox="0 0 12 12"><path d="M2 6h8M6.5 2.5 10 6 6.5 9.5"/></symbol>
   <symbol id="i-ay" viewBox="0 0 12 12"><path d="M10 7.6A4.3 4.3 0 1 1 4.4 2a3.5 3.5 0 0 0 5.6 5.6Z"/></symbol>
-  <symbol id="i-gunes" viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.1"/><path d="M6 1v1.3M6 9.7V11M1 6h1.3M9.7 6H11M2.5 2.5l.9.9M8.6 8.6l.9.9M2.5 9.5l.9-.9M8.6 3.4l.9-.9"/></symbol>
+  <symbol id="i-gunes" viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.5"/><path d="M6 1.25h0M6 10.75h0M1.25 6h0M10.75 6h0M2.64 2.64h0M9.36 9.36h0M2.64 9.36h0M9.36 2.64h0"/></symbol>
 </svg>
 <canvas id="alan" aria-hidden="true"></canvas>
 <div id="ray" aria-hidden="true"></div>
@@ -832,7 +849,8 @@ window.addEventListener("scroll", function(){
     btn.setAttribute("aria-expanded", acik ? "true" : "false");
   });
   kutu.addEventListener("click", function(e){
-    if (e.target.tagName !== "A") return;
+    /* Bağlantının içindeki <span>a (çeviri anahtarı) dokunulunca da kapanır. */
+    if (!e.target.closest || !e.target.closest("a")) return;
     kutu.classList.remove("gorunur");
     btn.setAttribute("aria-expanded", "false");
   });
@@ -1518,7 +1536,16 @@ function boyutla(){
   EN = window.innerWidth; BOY = window.innerHeight;
   tuval.width  = Math.round(EN*dpr);
   tuval.height = Math.round(BOY*dpr);
+  temizle();
   olc();
+}
+/* Boyutlanan tuvalin tamponu siyahtır (alpha:false) ve ilk kare monogram
+   görselini bekler. Açık temada o arada bütün sayfa siyah görünüyordu
+   (kısılmış ağda 0,2–0,5 sn): tampon hemen zemin rengine temizlenir. */
+function temizle(){
+  gl.disable(gl.SCISSOR_TEST);
+  gl.viewport(0, 0, tuval.width, tuval.height);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
 /* Merceğin yeri okuma sütununun dışındaki rayın dış ucudur ve gerçek .wrap
@@ -1849,6 +1876,7 @@ function kurulum(){
   }
   document.addEventListener("temadegisti", function(){
     renkleriAl();
+    temizle();
     if (kisik && basladi && genis.matches) cizim(0);
     else uyandir();
   });
@@ -1954,6 +1982,7 @@ calistir();
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !panel.hidden) kapat(true); });
   kutu.addEventListener("focusout", function(e){ if (e.relatedTarget && !kutu.contains(e.relatedTarget)) kapat(false); });
   var dinle = function(){ guncelle(); if (secim() === "sistem") haberVer(); };
+  document.addEventListener("temadegisti", guncelle);
   if (acikSistem.addEventListener) acikSistem.addEventListener("change", dinle); else acikSistem.addListener(dinle);
 
   if (!depoVar) document.getElementById("ayarDil").hidden = true;

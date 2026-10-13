@@ -89,6 +89,20 @@
     return m ? Number(m[3]) + " " + AY[dil][Number(m[2]) - 1] + " " + m[1] : (s || "");
   }
   function tr(el){ if (dil === "en") el.lang = "tr"; return el; }
+  /* Geri/ileri önbelleğinden dönen sayfa bırakıldığı temayla ve dille gelir;
+     başka sayfada yapılan seçim kayıtta. Dil farklıysa yeniden yükle, tema
+     farklıysa niteliği düzelt ve haber ver (alan ve denetim dinliyor). */
+  window.addEventListener("pageshow", function(e){
+    if (!e.persisted) return;
+    var t2 = null, d2 = null;
+    try { t2 = window.localStorage.getItem("atilimai.tema"); d2 = window.localStorage.getItem("atilimai.dil"); } catch (x) { return; }
+    if ((d2 === "en" ? "en" : "tr") !== dil){ window.location.reload(); return; }
+    var yeni = t2 === "koyu" || t2 === "acik" ? t2 : null;
+    if (yeni === h.getAttribute("data-tema")) return;
+    if (yeni) h.setAttribute("data-tema", yeni); else h.removeAttribute("data-tema");
+    var ev; try { ev = new CustomEvent("temadegisti"); } catch (x) { ev = document.createEvent("Event"); ev.initEvent("temadegisti", false, false); }
+    document.dispatchEvent(ev);
+  });
   window.atilimai = {dil: dil, t: metin, ekle: ekle, cevir: cevir, tarih: tarih, tr: tr, sozluk: S};
 })();
 </script>
@@ -144,15 +158,18 @@ atilimai.ekle({
   --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
   --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
   --lamba:#E8A33D; --lamba-h:#F5B65C; --on-lamba:#241703; --ekran:#8FB4D6; --canli:#7FB069;
+  --lamba-cizgi:rgba(232,163,61,.4);
   /* Palet — gündüz */
   --gunduz:#F2EDE3; --kart:#FBF8F1; --kart-2:#FFFDF9;
   --murekkep:#1A1713; --murekkep-m:#4A443B; --murekkep-s:#6B6357; --murekkep-t:#70685C;
   --lamba-d:#8A5510; --lamba-dh:#6E430B; --ekran-d:#3D6389; --canli-d:#4A7336;
+  --murekkep-cizgi:rgba(26,23,19,.14); --murekkep-cizgi-s:rgba(26,23,19,.24); --murekkep-cizgi-t:rgba(26,23,19,.34);
+  --lamba-d-cizgi:rgba(138,85,16,.4);
   /* Roller — koyu */
   --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
   --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
   --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
-  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h); --lamba-alt:rgba(232,163,61,.4);
+  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h); --lamba-alt:var(--lamba-cizgi);
   --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
   --ekran-iz:var(--ekran); --canli-iz:var(--canli);
   --cubuk-zemin:transparent; --cubuk-cam:var(--gece-cam);
@@ -167,8 +184,8 @@ atilimai.ekle({
   color-scheme:light;
   --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
   --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
-  --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24); --cizgi-t:rgba(26,23,19,.34);
-  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
+  --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:var(--lamba-d-cizgi);
   --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
   --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
   --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
@@ -177,8 +194,8 @@ atilimai.ekle({
   color-scheme:light;
   --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
   --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
-  --cizgi:rgba(26,23,19,.14); --cizgi-s:rgba(26,23,19,.24); --cizgi-t:rgba(26,23,19,.34);
-  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:rgba(138,85,16,.4);
+  --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:var(--lamba-d-cizgi);
   --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
   --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
   --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
