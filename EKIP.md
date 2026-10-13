@@ -315,11 +315,15 @@ Components → Görünüm denetimi.
 
 **Tuzaklar:**
 
-- `cevir()` iki kez çağrılıyor: ilk ekranın hemen ardından (ana sayfada
-  kahramandan sonra, okuma sayfalarında kapaktan ya da çubuktan sonra) ve
-  gövdenin sonunda. İlk çağrı, İngilizce seçen ziyaretçinin ilk boyamada
-  Türkçe görmemesi için; gövdeyi gizlemiyor, LCP beklemiyor. İlk ekrana yeni
-  metin eklersen ilk çağrıdan önce kalsın.
+- `cevir()` birkaç kez çağrılıyor: çubuğun hemen ardından, ilk ekranın
+  ardından (ana sayfada kahramandan, arşivde kapaktan sonra) ve gövdenin
+  sonunda. Yavaş ağda tarayıcı ayrıştırmanın ortasında boyuyor: kısılmış
+  ağda çubuk 4–15 kare Türkçe göründü (13 Ekim 2026'da ölçüldü). Bu yüzden
+  İngilizcede, çevrilmemiş `[data-i18n]` öğesi çevrilene kadar
+  `visibility:hidden` (başlangıç bloğundaki `dil-bekle`, yer tutar, kaydırmaz);
+  sınıf `DOMContentLoaded`'da kalkar, bir anahtar unutulsa bile metin
+  sonsuza kadar gizli kalmaz. Gövde gizlenmiyor. Ölçülen CLS kısılmış ağda
+  en çok 0,059 (ana sayfa, 390px, İngilizce).
 - Panelin önizlemesinde depo yok: tema oturum boyunca değişiyor, dil satırı
   gizli. `haberler.html`'e depoya dokunan yeni bir kod eklersen `try` içine al.
 - Denetimin CSS'i, betiği ve biçimlendirmesi dört sayfada, başlangıç ve renk

@@ -12,9 +12,11 @@
 
    Dil: Türkçe metin biçimlendirmede durur (betik yoksa ve tarayıcılar için
    tek kaynak). İngilizcede data-i18n="anahtar" taşıyan öğenin metni,
-   data-i18n-nitelik="nitelik:anahtar" taşıyanın niteliği değişir; cevir()
-   ilk ekranın hemen ardından ve gövdenin sonunda çağrılır, ilk boyamada
-   Türkçe görünmesin diye. Betiğin ürettiği metin t("anahtar") ile gelir.
+   data-i18n-nitelik="nitelik:anahtar" taşıyanın niteliği değişir. cevir()
+   çubuğun, ilk ekranın ve gövdenin hemen ardından çağrılır; yavaş ağda
+   tarayıcı arada boyayabildiği için o ana kadar çevrilmemiş öğe görünmez
+   (visibility, yer tutar): İngilizce seçen ziyaretçi Türkçe bir kare görmez,
+   gövdenin geri kalanı beklemez. Sınıf DOMContentLoaded'da kalkar. Betiğin ürettiği metin t("anahtar") ile gelir.
    Panelden gelen haberler çevrilmez, Türkçe kalır: tr(öğe) İngilizcede
    öğeye lang="tr" yazar, ekran okuyucu doğru telaffuz etsin. Ortak metin
    burada, sayfanın kendi metni hemen alttaki betikte (atilimai.ekle). */
@@ -24,7 +26,14 @@
   if (t === "koyu" || t === "acik") h.setAttribute("data-tema", t);
   try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
   var dil = d === "en" ? "en" : "tr";
-  if (dil === "en") h.lang = "en";
+  if (dil === "en"){
+    h.lang = "en";
+    h.classList.add("dil-bekle");
+    var st = document.createElement("style");
+    st.textContent = ".dil-bekle [data-i18n]:not([data-i18n-tamam]){visibility:hidden}";
+    document.head.appendChild(st);
+    document.addEventListener("DOMContentLoaded", function(){ h.classList.remove("dil-bekle"); });
+  }
   var S = {tr: {}, en: {}};
   function ekle(o){
     for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)){
@@ -64,7 +73,10 @@
     if (dil !== "en") return;
     kok = kok || document;
     var el = kok.querySelectorAll("[data-i18n]"), i, j, v, p;
-    for (i = 0; i < el.length; i++){ v = S.en[el[i].getAttribute("data-i18n")]; if (v !== undefined) el[i].textContent = v; }
+    for (i = 0; i < el.length; i++){
+      v = S.en[el[i].getAttribute("data-i18n")]; if (v !== undefined) el[i].textContent = v;
+      el[i].setAttribute("data-i18n-tamam", "");
+    }
     el = kok.querySelectorAll("[data-i18n-nitelik]");
     for (i = 0; i < el.length; i++){
       p = el[i].getAttribute("data-i18n-nitelik").split(";");
@@ -458,6 +470,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     </div>
   </div>
 </div></nav>
+<script>atilimai.cevir();</script>
 
 <!-- Başlık <main>'in içinde. Eskiden <header> gövde düzeyinde, yani banner
      bölgesiydi: "ana içeriğe git" diyen ekran okuyucu kullanıcısı da "İçeriğe

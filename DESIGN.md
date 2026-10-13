@@ -853,6 +853,11 @@ operating system: without it, a choice once made could never be undone.
   move focus on a button click. On the landing page the mobile menu and this panel close each
   other through the same outside-tap rule. The theme applies live; the language reloads the page
   and focus returns to the button after the reload.
+- **No Turkish frame in English.** On a throttled connection the browser paints mid-parse,
+  and the bar showed in Turkish for 4–15 frames before its translation ran. In English an
+  untranslated `[data-i18n]` element is `visibility:hidden` until `cevir()` reaches it (it keeps
+  its box; the class lifts at `DOMContentLoaded` in any case). Measured after: 0 Turkish frames,
+  CLS at most 0.059.
 - **No script, no control.** The button ships `hidden` and its own script reveals it. Without
   storage — the panel's preview — the language group is hidden, since a reload cannot carry the
   choice; the theme still switches for the session.
