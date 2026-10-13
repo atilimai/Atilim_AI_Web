@@ -4,14 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-/* Görünüm başlangıcı (beş sayfada aynı). Kayıtlı tema ilk boyamadan önce
-   <html>'e yazılır; kayıt yoksa nitelik de yok ve CSS sistem tercihini izler.
+/* Görünüm başlangıcı (beş sayfada aynı). Kayıtlı tema ve dil ilk boyamadan
+   önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
+   tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
    bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor. */
 (function(){
   var t = null;
   try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
   if (t === "koyu" || t === "acik") document.documentElement.setAttribute("data-tema", t);
+  var d = null;
+  try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
+  if (d === "en") document.documentElement.lang = "en";
 })();
 </script>
 <title>Sayfa bulunamadı — Atılım AI</title>

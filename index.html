@@ -4,14 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-/* Görünüm başlangıcı (beş sayfada aynı). Kayıtlı tema ilk boyamadan önce
-   <html>'e yazılır; kayıt yoksa nitelik de yok ve CSS sistem tercihini izler.
+/* Görünüm başlangıcı (beş sayfada aynı). Kayıtlı tema ve dil ilk boyamadan
+   önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
+   tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
    bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor. */
 (function(){
   var t = null;
   try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
   if (t === "koyu" || t === "acik") document.documentElement.setAttribute("data-tema", t);
+  var d = null;
+  try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
+  if (d === "en") document.documentElement.lang = "en";
 })();
 </script>
 <title>Atılım AI — Yapay Zeka Topluluğu</title>
@@ -180,6 +184,50 @@ nav.yapisik{border-bottom-color:var(--hair);background:var(--gece-cam);backdrop-
   .baglar .kat:hover{color:var(--lamba-h);background:var(--tezgah-2)}
   .menu-btn{display:block}
 }
+
+/* ---------- görünüm denetimi (dört sayfada aynı) ----------
+   Dil ve tema tek düğmenin arkasında: 320px'te iki ayrı 44px düğme okuma
+   sayfalarının çubuğuna sığmıyordu. Çubuğun içinde olduğu için her temada
+   gece paletiyle çizilir; .menu-btn'in ve mobil menü panelinin dili.
+   Betik yoksa düğme gizli kalır: yapılamayacak bir etkileşimi haber vermez. */
+.ayar{position:relative;flex:none}
+.ayar-btn{display:inline-flex;align-items:center;gap:var(--sp-xs);height:44px;min-width:44px;
+  padding:0 var(--sp-sm);background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-md);
+  color:var(--kagit);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;cursor:pointer;
+  transition:background .3s,border-color .3s}
+.ayar-btn[hidden]{display:none}
+.ayar-btn:hover,.ayar-btn[aria-expanded="true"]{background:var(--tezgah-2);border-color:var(--hair-t)}
+.ayar-ikon{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+.ayar :focus-visible{outline-color:var(--lamba)}
+/* Panel çubuğun alt kenarında açılır: düğme 44px, çubuk 64px, aradaki pay 10px. */
+.ayar-panel{position:absolute;top:calc(100% + 10px);right:0;z-index:50;min-width:236px;
+  background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-lg);padding:var(--sp-sm);
+  display:flex;flex-direction:column;gap:var(--sp-sm)}
+.ayar-panel[hidden],.ayar-grup[hidden]{display:none}
+.ayar-ad{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--kagit-t);padding:0 var(--sp-sm);margin-bottom:var(--r-xs)}
+.ayar-secenek{display:flex;gap:var(--r-xs)}
+/* Seçili seçenek nav'daki etkin bağlantının dilinde: bir yüzey yukarı ve 2px
+   lamba alt çizgisi. Durum yalnızca renge dayanmıyor. */
+.ayar-secenek button{position:relative;flex:1 1 0;min-height:44px;min-width:44px;padding:0 var(--sp-sm);
+  background:transparent;border:0;border-radius:var(--r-sm);color:var(--kagit-s);
+  font-family:var(--body);font-size:15px;cursor:pointer;transition:color .3s,background .3s}
+.ayar-secenek button:hover{color:var(--kagit);background:var(--tezgah-2)}
+.ayar-secenek button[aria-pressed="true"]{color:var(--kagit);background:var(--tezgah-2)}
+.ayar-secenek button[aria-pressed="true"]::after{content:"";position:absolute;left:var(--sp-sm);
+  right:var(--sp-sm);bottom:8px;height:2px;background:var(--lamba)}
+/* Tema değişirken öğeler kendi geçişleriyle farklı hızlarda renk değiştirip
+   sayfayı parça parça boyamasın: tek karelik bir sınıf geçişleri bastırır.
+   Hareket iptali değil; azaltılmış hareket bloğuyla ilgisi yok. */
+.tema-degisiyor *,.tema-degisiyor *::before,.tema-degisiyor *::after{transition:none!important}
+/* Görünüm düğmesi çubuğa 86px ekledi. 901–1100px'te dört bağlantı, katıl
+   bağlantısı ve düğme 24px aralıkla sığmıyor, bağlantılar iki satıra
+   kırılıyordu: aralık daralır, bağlantı metni kırılmaz. 900px altında menü
+   düğmesiyle görünüm düğmesi yan yana: 320px'te logo + iki düğme 280px'e sığsın. */
+.baglar a{white-space:nowrap}
+@media(max-width:1100px){.nav-in{gap:var(--sp-sm)}}
+@media(max-width:900px){.nav-in{gap:var(--sp-xs)}}
 
 /* ---------- bölüm ---------- */
 /* Çapa atlamaları bölüm başlığını 64px yapışkan menünün altına gönderiyordu. */
@@ -483,6 +531,8 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <svg class="tanimlar" aria-hidden="true" focusable="false">
   <symbol id="i-dis" viewBox="0 0 12 12"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></symbol>
   <symbol id="i-ileri" viewBox="0 0 12 12"><path d="M2 6h8M6.5 2.5 10 6 6.5 9.5"/></symbol>
+  <symbol id="i-ay" viewBox="0 0 12 12"><path d="M10 7.6A4.3 4.3 0 1 1 4.4 2a3.5 3.5 0 0 0 5.6 5.6Z"/></symbol>
+  <symbol id="i-gunes" viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.1"/><path d="M6 1v1.3M6 9.7V11M1 6h1.3M9.7 6H11M2.5 2.5l.9.9M8.6 8.6l.9.9M2.5 9.5l.9-.9M8.6 3.4l.9-.9"/></symbol>
 </svg>
 <canvas id="alan" aria-hidden="true"></canvas>
 <div id="ray" aria-hidden="true"></div>
@@ -499,6 +549,26 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
     <a href="#s3" data-b="s3">Haftalık rapor</a>
     <a href="#s4" data-b="s4">Projeler</a>
     <a class="kat" href="katil.html">Topluluğa katıl<svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+  </div>
+  <div class="ayar">
+    <button class="ayar-btn" id="ayarBtn" type="button" aria-expanded="false" aria-controls="ayarPanel" hidden><span class="ayar-kod">TR</span><svg class="ayar-ikon" aria-hidden="true"><use href="#i-ay"/></svg><span class="gizli" data-i18n="ayar.ad"> · Dil ve tema</span></button>
+    <div class="ayar-panel" id="ayarPanel" hidden>
+      <div class="ayar-grup" id="ayarDil" role="group" aria-labelledby="ayarDilAd">
+        <p class="ayar-ad" id="ayarDilAd" data-i18n="ayar.dil">Dil</p>
+        <div class="ayar-secenek">
+          <button type="button" data-dil-sec="tr" lang="tr" aria-pressed="false">Türkçe</button>
+          <button type="button" data-dil-sec="en" lang="en" aria-pressed="false">English</button>
+        </div>
+      </div>
+      <div class="ayar-grup" role="group" aria-labelledby="ayarTemaAd">
+        <p class="ayar-ad" id="ayarTemaAd" data-i18n="ayar.tema">Tema</p>
+        <div class="ayar-secenek">
+          <button type="button" data-tema-sec="sistem" aria-pressed="false" data-i18n="ayar.sistem">Sistem</button>
+          <button type="button" data-tema-sec="koyu" aria-pressed="false" data-i18n="ayar.koyu">Koyu</button>
+          <button type="button" data-tema-sec="acik" aria-pressed="false" data-i18n="ayar.acik">Açık</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div></nav>
 
@@ -1642,5 +1712,92 @@ calistir();
 })();
 </script>
 
+<script>
+/* ============================================================
+   Görünüm denetimi (dört sayfada aynı: index, haberler, haber, katil)
+
+   Tema canlı değişir: <html data-tema> ve kayıt. "Sistem" niteliği ve
+   kaydı kaldırır; CSS o zaman prefers-color-scheme'i izler. Dil değişince
+   sayfa yeniden yüklenir: her sayfanın betiği metnini tek dilde üretiyor,
+   açık kart ve odak gibi durumları canlı yeniden çizmek yerine yükleme
+   temiz bir sayfa veriyor. Odak yüklemeden sonra düğmeye döner, kaydırma
+   konumunu tarayıcı korur. Depo kullanılamıyorsa (panelin önizlemesi)
+   tema oturum boyunca çalışır, dil satırı gizlenir: yükleme seçimi
+   taşıyamaz.
+   ============================================================ */
+(function(){
+  "use strict";
+  var h = document.documentElement;
+  var btn = document.getElementById("ayarBtn");
+  var panel = document.getElementById("ayarPanel");
+  if (!btn || !panel) return;
+  var kutu = btn.parentNode;
+  var TEMA = "atilimai.tema", DIL = "atilimai.dil", ODAK = "atilimai.odak";
+  var acikSistem = window.matchMedia("(prefers-color-scheme: light)");
+
+  function al(k){ try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function yaz(k, v){ try { if (v === null) window.localStorage.removeItem(k); else window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  var depoVar = yaz("atilimai.deneme", "1") && yaz("atilimai.deneme", null);
+
+  function secim(){ var t = h.getAttribute("data-tema"); return t === "koyu" || t === "acik" ? t : "sistem"; }
+  function etkin(){ var t = secim(); return t === "sistem" ? (acikSistem.matches ? "acik" : "koyu") : t; }
+  var dil = h.lang === "en" ? "en" : "tr";
+
+  function guncelle(){
+    btn.querySelector(".ayar-kod").textContent = dil.toUpperCase();
+    btn.querySelector("use").setAttribute("href", etkin() === "acik" ? "#i-gunes" : "#i-ay");
+    var t = secim();
+    [].forEach.call(panel.querySelectorAll("[data-tema-sec]"), function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-tema-sec") === t ? "true" : "false"); });
+    [].forEach.call(panel.querySelectorAll("[data-dil-sec]"), function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-dil-sec") === dil ? "true" : "false"); });
+  }
+  function haberVer(){
+    var e; try { e = new CustomEvent("temadegisti"); } catch (x) { e = document.createEvent("Event"); e.initEvent("temadegisti", false, false); }
+    document.dispatchEvent(e);
+  }
+  function temaUygula(t){
+    h.classList.add("tema-degisiyor");
+    if (t === "sistem") h.removeAttribute("data-tema"); else h.setAttribute("data-tema", t);
+    yaz(TEMA, t === "sistem" ? null : t);
+    guncelle();
+    void getComputedStyle(document.body).backgroundColor;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ h.classList.remove("tema-degisiyor"); }); });
+    haberVer();
+  }
+  function ac(){ panel.hidden = false; btn.setAttribute("aria-expanded", "true"); }
+  function kapat(odakla){
+    if (panel.hidden) return;
+    panel.hidden = true; btn.setAttribute("aria-expanded", "false");
+    if (odakla) btn.focus();
+  }
+
+  btn.addEventListener("click", function(){ if (panel.hidden) ac(); else kapat(false); });
+  panel.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if (!b) return;
+    var t = b.getAttribute("data-tema-sec"), d = b.getAttribute("data-dil-sec");
+    if (t) temaUygula(t);
+    if (d && d !== dil && yaz(DIL, d === "en" ? "en" : null)) {
+      try { window.sessionStorage.setItem(ODAK, "ayar"); } catch (x) {}
+      window.location.reload();
+    }
+  });
+  /* Dışarı dokunmak kapatır (ana sayfada mobil menü de aynı kuralla kapanıyor,
+     ikisi birbirini kendiliğinden kapatır). Escape kapatıp odağı düğmeye verir.
+     Odak denetimden çıkınca kapanır; relatedTarget yoksa (Safari düğmeye
+     tıklayınca odağı taşımıyor) karar dışarı dokunmaya kalır. */
+  document.addEventListener("click", function(e){ if (!kutu.contains(e.target)) kapat(false); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !panel.hidden) kapat(true); });
+  kutu.addEventListener("focusout", function(e){ if (e.relatedTarget && !kutu.contains(e.relatedTarget)) kapat(false); });
+  var dinle = function(){ guncelle(); if (secim() === "sistem") haberVer(); };
+  if (acikSistem.addEventListener) acikSistem.addEventListener("change", dinle); else acikSistem.addListener(dinle);
+
+  if (!depoVar) document.getElementById("ayarDil").hidden = true;
+  guncelle();
+  btn.hidden = false;
+  try { if (window.sessionStorage.getItem(ODAK) === "ayar") { window.sessionStorage.removeItem(ODAK); btn.focus(); } } catch (x) {}
+})();
+</script>
 </body>
 </html>
