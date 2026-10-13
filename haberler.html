@@ -149,6 +149,17 @@ atilimai.ekle({
      access-control-allow-origin:* gönderdiği için opak kökenden de iner. -->
 <link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Newsreader gelene kadar başlık Georgia'yla diziliyordu ve yazı tipi
+   inince satırlar yeniden kırılıyordu (kısılmış ağda CLS 0,059). Yedek yüz
+   Georgia'yı Newsreader'ın ölçülerine getirir: genişlik (size-adjust) ve
+   yükseklik (ascent/descent) tarayıcıda ölçüldü, 13 Ekim 2026. Ağırlık 300
+   başlıklar, 400 okuma metni, eğik 300 başlığın vurgusu. */
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:300;font-style:normal;
+  size-adjust:95.96%;ascent-override:77.12%;descent-override:27.09%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:400;font-style:normal;
+  size-adjust:99.98%;ascent-override:74.01%;descent-override:26.01%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia Italic"),local("Georgia-Italic");font-weight:300;font-style:italic;
+  size-adjust:86.19%;ascent-override:85.86%;descent-override:30.17%;line-gap-override:0%}
 @font-face{font-family:"Newsreader";font-weight:300 400;font-style:normal;font-display:swap;
   src:url(fonts/newsreader.woff2) format("woff2"),
       url(https://atilimai.github.io/Atilim_AI_Web/fonts/newsreader.woff2) format("woff2")}
@@ -190,7 +201,7 @@ atilimai.ekle({
   --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
   --ekran-iz:var(--ekran); --canli-iz:var(--canli);
   --cubuk-zemin:transparent; --cubuk-cam:var(--gece-cam);
-  --disp:"Newsreader",Georgia,serif;
+  --disp:"Newsreader","Newsreader Yedek",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
@@ -452,6 +463,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
     --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
     --lamba-iz:var(--lamba-d); --lamba-alt:var(--lamba-d-cizgi); --ekran-iz:var(--ekran-d)}
+  /* Çubuk (ve içindeki görünüm denetimi) kâğıtta işe yaramaz; haber.html gibi. */
+  .ust{display:none}
 }
 </style>
 </head>
@@ -547,15 +560,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   var liste = document.getElementById("liste");
   var sayac = document.getElementById("sayac");
 
-  var AYLAR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran",
-               "Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-
   /* "2026-08-03" → "3 Ağustos 2026"; tanınmayan biçim olduğu gibi döner */
-  function tarihYaz(s){
-    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
-    if (!p) return s || "";
-    return window.atilimai.tarih(s);
-  }
+  function tarihYaz(s){ return window.atilimai.tarih(s); }
 
   /* Panel doğruluyor ama dosya elle de düzenlenebiliyor. Tek bir bozuk kayıt
      (null, sayı olarak tam metin) çizimi yarıda kesiyordu; hata .catch'e
@@ -1010,7 +1016,6 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   var TEMA = "atilimai.tema", DIL = "atilimai.dil", ODAK = "atilimai.odak";
   var acikSistem = window.matchMedia("(prefers-color-scheme: light)");
 
-  function al(k){ try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function yaz(k, v){ try { if (v === null) window.localStorage.removeItem(k); else window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
   var depoVar = yaz("atilimai.deneme", "1") && yaz("atilimai.deneme", null);
 

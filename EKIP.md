@@ -327,8 +327,12 @@ Components → Görünüm denetimi.
   İngilizcede, çevrilmemiş `[data-i18n]` öğesi çevrilene kadar
   `visibility:hidden` (başlangıç bloğundaki `dil-bekle`, yer tutar, kaydırmaz);
   sınıf `DOMContentLoaded`'da kalkar, bir anahtar unutulsa bile metin
-  sonsuza kadar gizli kalmaz. Gövde gizlenmiyor. Ölçülen CLS kısılmış ağda
-  en çok 0,059 (ana sayfa, 390px, İngilizce).
+  sonsuza kadar gizli kalmaz. Gövde gizlenmiyor.
+- **Başlık yazı tipi geç inince satırlar kırılmasın.** `--disp`'in ikinci adı
+  "Newsreader Yedek": Georgia'yı Newsreader'ın ölçülerine getiren üç `local()`
+  yüzü (`size-adjust`, `ascent/descent-override`, tarayıcıda ölçüldü). Kısılmış
+  ağda ana sayfanın CLS'i Türkçede 0,018'den 0,0013'e, İngilizcede 0,059'dan
+  0,0026'ya indi. Newsreader'ı değiştirirsen bu yüzdeleri yeniden ölç.
 - Panelin önizlemesinde depo yok: tema oturum boyunca değişiyor, dil satırı
   gizli. `haberler.html`'e depoya dokunan yeni bir kod eklersen `try` içine al.
 - Denetimin CSS'i, betiği ve biçimlendirmesi dört sayfada, başlangıç ve renk

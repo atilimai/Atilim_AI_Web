@@ -29,29 +29,29 @@ colors:
 
 typography:
   display-xl:
-    fontFamily: "Newsreader, Georgia, serif"
+    fontFamily: "Newsreader, Newsreader Yedek, Georgia, serif"
     fontSize: "clamp(2.75rem, 6.4vw, 4.6rem)"
     fontWeight: 300
     lineHeight: 1.06
     letterSpacing: "-0.02em"
   display-lg:
-    fontFamily: "Newsreader, Georgia, serif"
+    fontFamily: "Newsreader, Newsreader Yedek, Georgia, serif"
     fontSize: "clamp(2rem, 4vw, 3rem)"
     fontWeight: 300
     lineHeight: 1.1
     letterSpacing: "-0.015em"
   headline:
-    fontFamily: "Newsreader, Georgia, serif"
+    fontFamily: "Newsreader, Newsreader Yedek, Georgia, serif"
     fontSize: "28px"
     fontWeight: 400
     lineHeight: 1.28
   title:
-    fontFamily: "Newsreader, Georgia, serif"
+    fontFamily: "Newsreader, Newsreader Yedek, Georgia, serif"
     fontSize: "21px"
     fontWeight: 400
     lineHeight: 1.34
   reading:
-    fontFamily: "Newsreader, Georgia, serif"
+    fontFamily: "Newsreader, Newsreader Yedek, Georgia, serif"
     fontSize: "19px"
     fontWeight: 400
     lineHeight: 1.85
@@ -421,7 +421,7 @@ they had with placeholders.
 
 ## Typography
 
-**Display and long-form:** Newsreader (Georgia fallback), weight 300 for display, 400 for
+**Display and long-form:** Newsreader (metric-matched Georgia fallback, "Newsreader Yedek"), weight 300 for display, 400 for
 reading. Italic is the emphasis mechanism — the hero's second clause is italic and amber.
 **Interface:** Public Sans (system-ui fallback).
 **Labels and figures:** IBM Plex Mono.
@@ -440,7 +440,16 @@ pages preload the roman. `haberler.html` gives every `src` a second, absolute Pa
 the panel's preview renders that page in a sandboxed iframe on its own origin, where the
 relative path resolves to the panel and fails; Pages answers with
 `access-control-allow-origin: *`, so the fallback loads from an opaque origin. A glyph outside
-the set falls back for that glyph only. **The arrows were never in the set** — `→ ↗ ←` are
+the set falls back for that glyph only.
+
+**The display fallback is metric-matched** (since 2026-10-13). `--disp` is
+`"Newsreader", "Newsreader Yedek", Georgia, serif`, and "Newsreader Yedek" is three `local()`
+faces over Georgia with `size-adjust` and ascent/descent overrides measured in the browser
+against Newsreader: weight 300 (headings) 95.96%, weight 400 (reading) 99.98%, italic 300 (the
+`h1` clause) 86.19%; ascent and descent 0.74 / 0.26 em divided by the size adjustment. Until the
+face lands, the heading takes Newsreader's line breaks closely enough that the swap barely moves
+it. Where Georgia is absent (Android) the `local()` faces fail and the stack falls through to
+`serif` as before. **The arrows were never in the set** — `→ ↗ ←` are
 not in Public Sans or Newsreader at all, which is why they are icons now (see Components →
 Icons).
 
@@ -864,8 +873,9 @@ operating system: without it, a choice once made could never be undone.
 - **No Turkish frame in English.** On a throttled connection the browser paints mid-parse,
   and the bar showed in Turkish for 4–15 frames before its translation ran. In English an
   untranslated `[data-i18n]` element is `visibility:hidden` until `cevir()` reaches it (it keeps
-  its box; the class lifts at `DOMContentLoaded` in any case). Measured after: 0 Turkish frames,
-  CLS at most 0.059.
+  its box; the class lifts at `DOMContentLoaded` in any case). Measured after: 0 Turkish frames;
+  the CLS that remained came from the display font swap, closed by the metric-matched fallback
+  (see Typography).
 - **Back and forward.** A page restored from the back/forward cache comes back with the theme
   and language it was left in. The bootstrap re-reads storage on `pageshow`: a different theme
   is applied live (the field and the control listen to `temadegisti`), a different language
@@ -1075,8 +1085,11 @@ cover's place. Every exit (content, empty, failed, timed out) removes the class.
 out of layout cannot shift, and it comes back as a new element. Measured after: **0.026**
 and **0.012**. The remainder is a 29px one-line reflow that appears and reverts within about
 40ms, consistent with the two Google Fonts subsets landing at different times; not chased.
-(The faces have been self-hosted, one file each, since 2026-10-11; the remainder was not
-re-measured.)
+(The faces have been self-hosted, one file each, since 2026-10-11.) **Closed 2026-10-13:** the
+remainder was the display face swapping in — the heading set in Georgia until Newsreader
+landed, then re-broke its lines. A metric-matched fallback face (see Typography) took the
+landing page on a throttled connection from 0.018 to 0.0013 in Turkish and from 0.059 to 0.0026
+in English, where the longer reflow showed.
 With no script the class never arrives, so the footer is always there; a retry does not set
 it, because the error card is already on screen and stays until the result.
 
@@ -1272,7 +1285,10 @@ overlaps deepen the way they brighten on the dark bench. Ink gain is ×1.35 (`MU
 gain the model on paper measured about 65% of its dark-theme weight (mean deviation from the
 ground inside the lens 13 against 20). A theme change (`temadegisti`, sent by the appearance
 control, also on a system change in "Sistem") rewrites uniforms and the blend only; no buffer is
-uploaded again. The geometry does not depend on the theme, and the edge-ring test counts pixels
+uploaded again. The ink mode follows the same rule as the CSS — the saved theme, else the system —
+and if a role ever fails to parse, the fallback colours come from that theme too, so a light page
+can never get a night canvas. The monogram image is requested in CORS mode, the same request the
+bar's CSS mask makes, so the file is fetched once. The geometry does not depend on the theme, and the edge-ring test counts pixels
 that differ from `--zemin` rather than lit ones. Shipped result, in both themes at 1152 × 720,
 1440 × 900 and 1970 × 1100: **0 text intersections** in all six sweep runs, **0 edge pixels** in
 the ring tour, **0 buffer uploads** on a theme change, and the painted ground equal to
@@ -1393,7 +1409,7 @@ uses) so no dead space is left. The script's first action is to fill it.
 `.betiksiz` carries only the cover's top rhythm (`padding-block: clamp(48px,8vw,80px) 0`), and
 because `<noscript>` is never constructed when scripting is on, the rule never applies there.
 
-### Print (`haber.html`, and the archive's roles)
+### Print (`haber.html`, and the archive)
 
 The one page anyone would put on paper — an article runs to 20,000 characters. The block hides
 the chrome (`.ust`, `footer`, `.durum-eylem`, `.oku`), keeps `.kaynak` so the source is named,
@@ -1407,7 +1423,8 @@ media context, so it counted them as screen values, added two `design-system-col
 *does* need a colour rule: the browser drops the night ground and prints `kagit` text, light grey
 on white. The block therefore points the text and line roles at the day palette
 (`--metin: var(--murekkep)` and so on) — token assignments, no literals. `haberler.html` carries
-the same role block and nothing else in its own print block.
+the same role block, and hides `.ust` — the bar and the appearance control inside it would print as
+a pale band with a "TR" box.
 
 **It has to be last in the stylesheet.** A media query adds no specificity; source order decides.
 Placed mid-file the block lost every contest against equal-specificity screen rules (`.oku`

@@ -154,6 +154,17 @@ atilimai.ekle({
 <!-- Yazı tipleri depodan geliyor (fonts/README.md). Yazının gövdesi Newsreader. -->
 <link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Newsreader gelene kadar başlık Georgia'yla diziliyordu ve yazı tipi
+   inince satırlar yeniden kırılıyordu (kısılmış ağda CLS 0,059). Yedek yüz
+   Georgia'yı Newsreader'ın ölçülerine getirir: genişlik (size-adjust) ve
+   yükseklik (ascent/descent) tarayıcıda ölçüldü, 13 Ekim 2026. Ağırlık 300
+   başlıklar, 400 okuma metni, eğik 300 başlığın vurgusu. */
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:300;font-style:normal;
+  size-adjust:95.96%;ascent-override:77.12%;descent-override:27.09%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:400;font-style:normal;
+  size-adjust:99.98%;ascent-override:74.01%;descent-override:26.01%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia Italic"),local("Georgia-Italic");font-weight:300;font-style:italic;
+  size-adjust:86.19%;ascent-override:85.86%;descent-override:30.17%;line-gap-override:0%}
 @font-face{font-family:"Newsreader";src:url(fonts/newsreader.woff2) format("woff2");
   font-weight:300 400;font-style:normal;font-display:swap}
 @font-face{font-family:"Public Sans";src:url(fonts/public-sans.woff2) format("woff2");
@@ -191,7 +202,7 @@ atilimai.ekle({
   --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
   --ekran-iz:var(--ekran); --canli-iz:var(--canli);
   --cubuk-zemin:transparent; --cubuk-cam:var(--gece-cam);
-  --disp:"Newsreader",Georgia,serif;
+  --disp:"Newsreader","Newsreader Yedek",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
@@ -532,14 +543,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   var kapakUst = document.getElementById("kapakUst");
   var govde    = document.getElementById("govde");
 
-  var AYLAR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran",
-               "Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-
-  function tarihYaz(s){
-    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
-    if (!p) return s || "";
-    return window.atilimai.tarih(s);
-  }
+  function tarihYaz(s){ return window.atilimai.tarih(s); }
 
   /* Her durum bir sayfa: gerçek bir <h1>, eşleşen sekme başlığı, sade bir
      cümle ve en az bir çıkış. tekrar verilirse çıkış satırının başına bir de
@@ -931,7 +935,6 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   var TEMA = "atilimai.tema", DIL = "atilimai.dil", ODAK = "atilimai.odak";
   var acikSistem = window.matchMedia("(prefers-color-scheme: light)");
 
-  function al(k){ try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function yaz(k, v){ try { if (v === null) window.localStorage.removeItem(k); else window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
   var depoVar = yaz("atilimai.deneme", "1") && yaz("atilimai.deneme", null);
 

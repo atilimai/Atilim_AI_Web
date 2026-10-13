@@ -171,6 +171,17 @@ atilimai.ekle({
 <link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/newsreader-italik.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Newsreader gelene kadar başlık Georgia'yla diziliyordu ve yazı tipi
+   inince satırlar yeniden kırılıyordu (kısılmış ağda CLS 0,059). Yedek yüz
+   Georgia'yı Newsreader'ın ölçülerine getirir: genişlik (size-adjust) ve
+   yükseklik (ascent/descent) tarayıcıda ölçüldü, 13 Ekim 2026. Ağırlık 300
+   başlıklar, 400 okuma metni, eğik 300 başlığın vurgusu. */
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:300;font-style:normal;
+  size-adjust:95.96%;ascent-override:77.12%;descent-override:27.09%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:400;font-style:normal;
+  size-adjust:99.98%;ascent-override:74.01%;descent-override:26.01%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia Italic"),local("Georgia-Italic");font-weight:300;font-style:italic;
+  size-adjust:86.19%;ascent-override:85.86%;descent-override:30.17%;line-gap-override:0%}
 @font-face{font-family:"Newsreader";src:url(fonts/newsreader.woff2) format("woff2");
   font-weight:300 400;font-style:normal;font-display:swap}
 @font-face{font-family:"Newsreader";src:url(fonts/newsreader-italik.woff2) format("woff2");
@@ -210,7 +221,7 @@ atilimai.ekle({
   --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
   --ekran-iz:var(--ekran); --canli-iz:var(--canli);
   --cubuk-zemin:transparent; --cubuk-cam:var(--gece-cam);
-  --disp:"Newsreader",Georgia,serif;
+  --disp:"Newsreader","Newsreader Yedek",Georgia,serif;
   --body:"Public Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
   --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
@@ -1518,10 +1529,13 @@ function belirtec(ad, yedek){
   var n = parseInt(m[1], 16); return [(n >> 16 & 255)/255, (n >> 8 & 255)/255, (n & 255)/255];
 }
 function renkleriAl(){
-  var z = belirtec("--zemin", [0.06275, 0.05098, 0.03922]);
-  var e = belirtec("--ekran-iz", [0.561, 0.706, 0.839]);
-  var l = belirtec("--lamba-iz", [0.910, 0.639, 0.239]);
-  kip = (z[0] + z[1] + z[2] > 1.5) ? 1 : 0;
+  /* Kip CSS'in kullandığı kuraldan: kayıtlı tema, yoksa sistem. Belirteç
+     okunamazsa yedek renkler de o temadan (gündüz: gunduz, ekran-d, lamba-d). */
+  var t = document.documentElement.getAttribute("data-tema");
+  kip = (t ? t === "acik" : window.matchMedia("(prefers-color-scheme: light)").matches) ? 1 : 0;
+  var z = belirtec("--zemin", kip ? [0.9490, 0.9294, 0.8902] : [0.06275, 0.05098, 0.03922]);
+  var e = belirtec("--ekran-iz", kip ? [0.2392, 0.3882, 0.5373] : [0.561, 0.706, 0.839]);
+  var l = belirtec("--lamba-iz", kip ? [0.5412, 0.3333, 0.0627] : [0.910, 0.639, 0.239]);
   gl.uniform3f(konum.uSoguk, e[0], e[1], e[2]);
   gl.uniform3f(konum.uSicak, l[0], l[1], l[2]);
   gl.uniform1f(konum.uKip, kip);
@@ -1880,6 +1894,9 @@ function kurulum(){
     if (kisik && basladi && genis.matches) cizim(0);
     else uyandir();
   });
+  /* CSS maskesi aynı dosyayı CORS kipinde istiyor; bu istek de öyle olsun ki
+     ikisi tek isteği paylaşsın (aynı köken, başka bir şey değişmez). */
+  img.crossOrigin = "anonymous";
   img.src = "images/ai_mark.png";
 }
 
@@ -1926,7 +1943,6 @@ calistir();
   var TEMA = "atilimai.tema", DIL = "atilimai.dil", ODAK = "atilimai.odak";
   var acikSistem = window.matchMedia("(prefers-color-scheme: light)");
 
-  function al(k){ try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function yaz(k, v){ try { if (v === null) window.localStorage.removeItem(k); else window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
   var depoVar = yaz("atilimai.deneme", "1") && yaz("atilimai.deneme", null);
 
