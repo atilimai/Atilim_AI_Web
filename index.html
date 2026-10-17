@@ -139,8 +139,8 @@ atilimai.ekle({
   "p2.ad": [null, "Pneumonia detection on X-rays"],
   "p2.metin": [null, "A model that classifies a chest X-ray as pneumonia or normal. Built for research and learning; not for medical diagnosis."],
   "p3.metin": [null, "A repository opened to showcase AI projects developed by Atılım AI members and to share knowledge."],
-  "p4.ad": [null, "Emotion recognition from EEG"],
-  "p4.metin": [null, "Models that recognise emotional state from brainwave (EEG) recordings. They examine five frequency bands one by one and can add heart (ECG) data to the EEG; for now they work only with the DREAMER dataset."],
+  "p4.ad": [null, "Hand gesture recognition from EMG"],
+  "p4.metin": [null, "Models that recognise hand gestures from muscle signals (EMG), with prosthetic hand control as the goal. Trained on the NinaPro DB1 dataset with 1D CNN, CNN-BiLSTM and Random Forest models."],
   "akis.yukleniyor": ["Haftalık rapor yükleniyor…", "Loading the weekly report…"],
   "akis.hata": ["Haftalık rapor şu an yüklenemedi.", "The weekly report could not be loaded right now."],
   "akis.kalan": ["Bu sayının kalan {n} haberi arşivde.", "The other {n} items in this issue are in the archive."],
@@ -811,9 +811,9 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
     </div>
     <div class="kart reveal">
       <p class="durum"><i aria-hidden="true"></i><span data-i18n="tamamlandi">Tamamlandı</span></p>
-      <h3><a href="https://github.com/atilimai/EEG-Emotion-Models" target="_blank" rel="noopener"><span data-i18n="p4.ad">EEG'den duygu tanıma</span><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></h3>
-      <p data-i18n="p4.metin">Beyin dalgası (EEG) kayıtlarından duygu durumunu tanıyan modeller. Beş frekans bandını tek tek inceliyor, EEG'ye kalp (EKG) verisini de ekleyebiliyor; şimdilik yalnızca DREAMER veri setiyle çalışıyor.</p>
-      <div class="etiketler"><span>scikit-learn</span><span>TensorFlow</span><span>PyTorch</span></div>
+      <h3><a href="https://github.com/atilimai/emg-ninapro-gesture-recognition" target="_blank" rel="noopener"><span data-i18n="p4.ad">EMG ile el hareketi tanıma</span><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a></h3>
+      <p data-i18n="p4.metin">Kas sinyallerinden (EMG) el hareketini tanıyan modeller; hedef, protez eli bu sinyallerle kontrol etmek. NinaPro DB1 veri setiyle 1B CNN, CNN-BiLSTM ve Random Forest modelleri eğitildi.</p>
+      <div class="etiketler"><span>TensorFlow</span><span>scikit-learn</span><span>CNN-BiLSTM</span></div>
     </div>
   </div>
 </div></section>
