@@ -154,8 +154,9 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
 - The publishing pipeline itself (`scripts/discord-gonder.js`,
   `.github/workflows/haftalik-rapor.yml`).
 - The three `.olcum` figures, supplied by the team on 2026-09-28: 4 completed projects,
-  10 completed events, 0 ongoing projects.
-- The four project cards in `#s4`, one per completed project, each linking to its public
+  10 completed events, 0 ongoing projects. On 2026-10-17 the team dropped
+  `Project1-browsertracker` and the project figure became 3.
+- The three project cards in `#s4`, one per completed project, each linking to its public
   repository. Each takes its copy from the repository's README. Until
   2026-10-05 the fourth card was the publishing pipeline in this repository ("Bülten",
   marked live); the team replaced it with `EEG-Emotion-Models`, and on 2026-10-17 with
@@ -183,10 +184,11 @@ Two consequences of those figures, both decided by the team on 2026-09-28:
   repository (Kampüs Asistanı, Görü), one of them marked "in development", which the zero
   contradicted. They were replaced by the completed work, and the "0 yürüyen proje" row no
   longer scrolls to `#s4`, since there is nothing ongoing to show there.
-- **Four completed projects, four public repositories.** Each `#s4` card links to one of
+- **Three completed projects, three public repositories** (four until 2026-10-17, when the
+  team dropped `Project1-browsertracker`). Each `#s4` card links to one of
   them. Until 2026-10-05 this file said the fourth had no public repository; the team then
   named it — `atilimai/EEG-Emotion-Models`, corrected on 2026-10-17 to
-  `atilimai/emg-ninapro-gesture-recognition`. A repository dialog, opened by the "4 tamamlanan
+  `atilimai/emg-ninapro-gesture-recognition`. A repository dialog, opened by the then "4 tamamlanan
   proje" row, listed the same four a second time with star and fork counts from the GitHub
   API. It was removed on 2026-10-06 as a duplicate of the cards, and the row now links to
   `#s4`.

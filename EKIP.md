@@ -585,8 +585,9 @@ HTML'i önbellekte tutabiliyor.
   etkinlik yok: liste kaldırıldı, yerinde `.tl-bos` dipnotu duruyor, satır
   kalıbı da `#s2`'nin içinde yorum olarak saklanıyor. Yeni etkinlik eklerken
   dipnotu kaldırıp listeyi geri koy.
-- **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (4 tamamlanan
-  proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi.
+- **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (3 tamamlanan
+  proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi;
+  proje sayısı 17 Ekim 2026'da `Project1-browsertracker` çıkınca 4'ten 3'e indi.
   Tahminle güncelleme; doğrulanmamış bir rakam gösterilecekse görünür bir yer
   tutucuyla gösterilir. Proje kartlarının metni depoların README'lerinden;
   README'de olmayan bir iddia ekleme.
@@ -597,8 +598,8 @@ HTML'i önbellekte tutabiliyor.
   taşıyor, bölüm adları menüde zaten var.
 - **API'den gelen sayıyı biçimlendirmeye gömme.** Ana sayfada artık dış API
   çağrısı yok: GitHub'dan dil, yıldız ve çatal sayısı çeken depo penceresi
-  6 Ekim 2026'da kaldırıldı, çünkü Projeler kartlarının zaten bağladığı dört
-  depoyu ikinci kez listeliyordu. "4 tamamlanan proje" satırı artık `#s4`'e
+  6 Ekim 2026'da kaldırıldı, çünkü Projeler kartlarının zaten bağladığı
+  depoları ikinci kez listeliyordu. "3 tamamlanan proje" satırı artık `#s4`'e
   giden bir bağlantı. Böyle bir veri geri gelirse kural aynı: değer `hidden`
   gelir ve yalnızca yanıt ulaşınca açılır. Kimliksiz GitHub çağrısı saatte 60
   ile sınırlı ve kampüs ağı tek IP paylaşıyor; istek sessizce düşünce HTML'e
