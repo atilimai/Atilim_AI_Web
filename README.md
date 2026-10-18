@@ -6,7 +6,7 @@ yok: dosyalar ne ise tarayıcı onu çalıştırıyor. Arayüz Türkçe ve İngi
 tema koyu ve açık; seçim yapılmamışsa tema işletim sistemini izler
 (ayrıntı: `EKIP.md` → "Tema ve dil").
 
-- **Canlı:** <https://atilimai.github.io/Atilim_AI_Web/>
+- **Canlı:** <https://www.atilimai.org/>
 - **Geliştirici rehberi:** [`EKIP.md`](EKIP.md) — yapı, veri akışı, tuzaklar
 - **İçerik nereden geliyor:** haberleri [yönetim paneli](https://github.com/atilimai/Atilim_AI_Panel) yazıyor
 

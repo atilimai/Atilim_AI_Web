@@ -545,10 +545,13 @@ HTML'i önbellekte tutabiliyor.
   Fonts `latin-ext` alt kümesini yalnızca ihtiyaç duyulunca indiriyor, boş
   çağrıda `ğ`/`ı`/`ş` inmiyor ve canvas o harflerde yedek yazı tipine düşüyor.
 
-- **Paylaşım kartı yalnızca yayımlandıktan sonra görünür.** `og:image`
-  `https://atilimai.github.io/...` adresini gösteriyor; kazıyıcılar oradan
-  çekiyor, yereldeki dosyadan değil. Discord daha önce paylaşılmış bir
-  bağlantının önizlemesini birkaç gün önbellekte tutabilir.
+- **Paylaşım kartı yalnızca yayımlandıktan sonra görünür.** `og:url`,
+  `canonical`, `og:image` ve `sitemap.xml` 18 Ekim 2026'dan beri
+  `https://www.atilimai.org/` adresini gösteriyor (Vercel çıplak
+  `atilimai.org`'u 308 ile `www`'ye yönlendiriyor); kazıyıcılar oradan çekiyor,
+  yereldeki dosyadan değil. WhatsApp ve Discord daha önce paylaşılmış bir
+  bağlantının önizlemesini günlerce önbellekte tutabilir; görseli değiştirince
+  `og.jpg?v=N` sayısını artır ki yeni adres gibi çekilsin.
 - **Araç klasörleri.** `.serena/`, `.playwright-mcp/` ve `.impeccable/` üçü de
   `.gitignore`'da. `.impeccable/` tasarım sistemi sidecar'ını ve kritik arşivini
   tutar; yerel araç durumudur, depoya girmemeli.

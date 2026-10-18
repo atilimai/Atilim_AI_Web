@@ -8,7 +8,7 @@
      altında yayınlanıyor — oraya konan dosya hiçbir zaman okunmaz. Bu
      haritayı kullanmak için Search Console'a doğrudan gönderin. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://atilimai.github.io/Atilim_AI_Web/</loc></url>
-  <url><loc>https://atilimai.github.io/Atilim_AI_Web/haberler.html</loc></url>
-  <url><loc>https://atilimai.github.io/Atilim_AI_Web/katil.html</loc></url>
+  <url><loc>https://www.atilimai.org/</loc></url>
+  <url><loc>https://www.atilimai.org/haberler.html</loc></url>
+  <url><loc>https://www.atilimai.org/katil.html</loc></url>
 </urlset>
