@@ -547,8 +547,9 @@ HTML'i önbellekte tutabiliyor.
 
 - **Paylaşım kartı yalnızca yayımlandıktan sonra görünür.** `og:url`,
   `canonical`, `og:image` ve `sitemap.xml` 18 Ekim 2026'dan beri
-  `https://www.atilimai.org/` adresini gösteriyor (Vercel çıplak
-  `atilimai.org`'u 308 ile `www`'ye yönlendiriyor); kazıyıcılar oradan çekiyor,
+  `https://atilimai.org/` adresini gösteriyor. Vercel'de birincil alan adı
+  çıplak `atilimai.org`, `www` oraya yönlendirir: insanlar adresi `https`'siz
+  yazıyor ve WhatsApp iki yönlendirmeli zincirde önizlemeden vazgeçiyordu; kazıyıcılar oradan çekiyor,
   yereldeki dosyadan değil. WhatsApp ve Discord daha önce paylaşılmış bir
   bağlantının önizlemesini günlerce önbellekte tutabilir; görseli değiştirince
   `og.jpg?v=N` sayısını artır ki yeni adres gibi çekilsin.
