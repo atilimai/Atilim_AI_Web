@@ -54,9 +54,16 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 | 1 · Kabuk | Nav durumu, mobil menü, aktif bölüm işareti |
 | 2 · Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
 | **3 · Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
-| 4 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti. Liste şu an boş; `#tl` yoksa betik hiçbir şey yapmaz |
+| 4 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti. Tarihi geçen satırı kaldırır, liste boşalırsa dipnotu açar; `#tl` yoksa betik hiçbir şey yapmaz |
 | **5 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
 | Görünüm denetimi | Dil ve tema paneli — ayrı `<script>`, dört sayfada aynı (bkz. "Tema ve dil") |
+
+**Bölüm sırası kimlik sırasıyla aynı değil:** kahraman `#s0`, Hakkımızda `#s1`,
+Haftalık rapor `#s3`, Etkinlikler `#s2`, Projeler `#s4`. Rapor 19 Ekim 2026'da
+etkinliklerin üstüne alındı (ekip kararı); paylaşılmış `#s2`/`#s3`
+bağlantıları kırılmasın diye kimlikler ve çeviri anahtarları yerinde kaldı.
+Menü de aynı sırada. Aktif bölüm işareti ve alan katmanı sıraya değil
+kimliğe ve bantlara bakıyor, o yüzden sırayı değiştirmek onları bozmaz.
 
 Haberle ilgili her iş "Haftalık rapor" bölümünde. **Akışın üç durumu var ve
 üçü ayrı cümle söyler:** yükleniyor, veri okundu ama sayı yok, istek düştü.
@@ -585,10 +592,21 @@ HTML'i önbellekte tutabiliyor.
   kural ondan sonrası için geçerli — eski sayının tarihini "düzeltme". Gün
   değişirse iki cümleyi de, bu maddeyi de, `PRODUCT.md`'deki karşılığını da
   güncelle.
-- **Etkinlikler tarihli, tek seferlik.** 28 Eylül 2026'dan beri planlanmış
-  etkinlik yok: liste kaldırıldı, yerinde `.tl-bos` dipnotu duruyor, satır
-  kalıbı da `#s2`'nin içinde yorum olarak saklanıyor. Yeni etkinlik eklerken
-  dipnotu kaldırıp listeyi geri koy.
+- **Etkinlikler tarihli, tek seferlik.** Liste 28 Eylül–19 Ekim 2026 arası
+  boştu; 19 Ekim'de 20 Ekim'deki Öğrenci Toplulukları Tanıtım Günü eklendi
+  (Atılım Meydan, 10.00–16.00; bilgiler üniversitenin afişinden). Satır kalıbı
+  `#s2`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
+  fotoğraf şeridi konabiliyor (`figure.tl-foto`, üç kare): dosyalar
+  `images/etkinlikler/` altında 640 px kare WebP, her birinin kendi `alt`
+  metni ve İngilizcesi var (`data-i18n-nitelik="alt:…"`). Satır kalkınca
+  şerit de sayfadan kalkar, dosyalar depoda kalır; etkinliği listeden
+  sildiğinde görsellerini de sil. **Geçen etkinlik
+  kendiliğinden kalkar:** betik, bitiş günü (`<li data-bitis="YYYY-AA-GG">`,
+  yoksa `<time datetime>`) ziyaretçinin bugününden önce olan satırı siliyor,
+  liste boşalınca `hidden` duran `.tl-bos` dipnotunu açıyor. Betik yoksa satır
+  kalır; geçen etkinliği yine de listeden sil. Tarih ile gün adı ayrı
+  `<span>`'lerde (gün adı `.gun`): çeviri öğenin bütün metnini değiştiriyor,
+  gün adı tarihin içinde dursaydı İngilizcede silinirdi.
 - **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (3 tamamlanan
   proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi;
   proje sayısı 17 Ekim 2026'da `Project1-browsertracker` çıkınca 4'ten 3'e indi.

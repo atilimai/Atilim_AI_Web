@@ -129,6 +129,15 @@ atilimai.ekle({
   "olcum.yuruyen": [null, "ongoing projects"],
   "s2.baslik": [null, "Upcoming events."],
   "s2.bos": [null, "No events are scheduled right now."],
+  "e1.tarih": [null, "20 Oct"],
+  "e1.gun": [null, "Tuesday"],
+  "e1.baslik": [null, "Student Societies Showcase Day"],
+  "e1.yer": [null, "Atılım Meydan · 10:00–16:00"],
+  "e1.metin": [null, "The university's student societies introduce themselves at Atılım Meydan, and Atılım AI is there with a stand. Drop by and say hello: we'll tell you what we do and answer your questions. Whatever you study, you can join. The event is part of the ATU100/111 Introduction to University Life course."],
+  "e1.foto": [null, "Our stand at last year's showcase day."],
+  "e1.foto1": [null, "The Atılım AI stand: a “Yapay Zeka Topluluğu – AI Community” banner on the table, with students around it."],
+  "e1.foto2": [null, "Students gathered in front of the stand, looking at the table."],
+  "e1.foto3": [null, "Students leaning over the table to look at something."],
   "s3.baslik": [null, "What happened in AI?"],
   "s3.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
   "butun-sayilar": [null, "All issues"],
@@ -446,7 +455,7 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
    bakan öğrenci günü tarihten hesaplamak zorunda kalmasın. Gün adı 12px
    --kagit-t (5.54:1), 80px sütuna sığar ("Cumartesi" mono 12px'te ~65px). */
 .tl time{font-family:var(--mono);font-size:13px;color:var(--lamba-iz);display:block}
-.tl time span{display:block;margin-top:3px;font-size:12px;letter-spacing:.02em;
+.tl time .gun{display:block;margin-top:3px;font-size:12px;letter-spacing:.02em;
   color:var(--metin-t)}
 .tl .baslik{font-family:var(--disp);font-size:21px;font-weight:400;line-height:1.34}
 .tl .yer{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--metin-t)}
@@ -469,6 +478,15 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .js .tl .detay>div{visibility:hidden;transition:visibility 0s .45s}
 .js .tl li.acik .detay>div{visibility:visible;transition:visibility 0s 0s}
 .tl .detay p{color:var(--metin-m);font-size:15px;line-height:1.7;max-width:60ch;padding-bottom:22px}
+/* Açıklamanın altındaki fotoğraflar. Kareler width/height ve aspect-ratio
+   ile yer tutar; geç gelen görsel satırı itmez. loading="lazy": sayfa
+   açılışında inmezler, bölüm ekrana yaklaşınca iner (satır kapalı olsa da,
+   kırpılmış kutu tembel yüklemeyi durdurmuyor; ölçüldü). */
+.tl-foto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-xs);
+  max-width:60ch;padding-bottom:22px}
+.tl-foto img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;
+  border-radius:var(--r-md);background:var(--yuzey)}
+.tl-foto figcaption{grid-column:1/-1;font-family:var(--mono);font-size:13px;color:var(--metin-t)}
 @media(max-width:760px){
   .tl button{grid-template-columns:1fr auto;gap:6px}
   .tl time,.tl .baslik,.tl .yer{grid-column:1}
@@ -690,8 +708,8 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
   <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="baglar" data-i18n="menu">Menü</button>
   <div class="baglar" id="baglar">
     <a href="#s1" data-b="s1" data-i18n="nav.s1">Hakkımızda</a>
-    <a href="#s2" data-b="s2" data-i18n="nav.s2">Etkinlikler</a>
     <a href="#s3" data-b="s3" data-i18n="nav.s3">Haftalık rapor</a>
+    <a href="#s2" data-b="s2" data-i18n="nav.s2">Etkinlikler</a>
     <a href="#s4" data-b="s4" data-i18n="nav.s4">Projeler</a>
     <a class="kat" href="katil.html"><span data-i18n="katil">Topluluğa katıl</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
   </div>
@@ -753,23 +771,6 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s2"><div class="wrap">
-  <h2 class="reveal" data-i18n="s2.baslik">Yaklaşan etkinlikler.</h2>
-  <!-- Liste 28 Eylül 2026'da boşaltıldı; stili ve akordeon betiği (5. bölüm)
-       yerinde duruyor. Yeni etkinlik eklerken .tl-bos dipnotunu kaldır,
-       yerine aşağıdaki listeyi koy.
-
-       <ul class="tl reveal" id="tl">
-         <li>
-           <button type="button" aria-expanded="false" aria-controls="etkinlik-1"><time datetime="YYYY-AA-GG">12 Eyl <span>Cumartesi</span></time><span class="baslik">Başlık</span><span class="yer">Yer</span><svg class="isaret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
-           <div class="detay" id="etkinlik-1"><div><p>Açıklama.</p></div></div>
-         </li>
-       </ul> -->
-  <p class="tl-bos reveal" data-i18n="s2.bos">Şu an planlanmış bir etkinlik yok.</p>
-</div></section>
-
-<div class="gecis" aria-hidden="true"></div>
-
 <section id="s3"><div class="wrap">
   <h2 class="reveal" data-i18n="s3.baslik">Yapay zekada neler oldu?</h2>
   <p class="giris reveal" data-i18n="s3.giris">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler.</p>
@@ -782,6 +783,37 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
     <p class="feed-kalan" data-i18n="sayi-yok">Henüz yayımlanmış bir sayı yok.</p>
   </div>
   <a class="arsiv-bag reveal" href="haberler.html"><span data-i18n="butun-sayilar">Bütün sayılar</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+</div></section>
+
+<div class="gecis" aria-hidden="true"></div>
+
+<section id="s2"><div class="wrap">
+  <h2 class="reveal" data-i18n="s2.baslik">Yaklaşan etkinlikler.</h2>
+  <!-- Her etkinlik bir <li>. Bitiş günü (<li data-bitis="YYYY-AA-GG">, yoksa
+       <time datetime>) geçince akordeon betiği satırı kaldırır; liste
+       boşalırsa .tl-bos dipnotu açılır. Betik yoksa satırlar kalır, o yüzden
+       geçen etkinliği yine de listeden sil. Metinler data-i18n ile çevrilir;
+       İngilizceleri sayfanın atilimai.ekle bloğunda (e1.*). Satır kalıbı:
+
+       <li>
+         <button type="button" aria-expanded="false" aria-controls="etkinlik-N"><time datetime="YYYY-AA-GG"><span data-i18n="eN.tarih">12 Eyl</span> <span class="gun" data-i18n="eN.gun">Cumartesi</span></time><span class="baslik" data-i18n="eN.baslik">Başlık</span><span class="yer" data-i18n="eN.yer">Yer</span><svg class="isaret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+         <div class="detay" id="etkinlik-N"><div><p data-i18n="eN.metin">Açıklama.</p></div></div>
+       </li> -->
+  <ul class="tl reveal" id="tl">
+    <li>
+      <button type="button" aria-expanded="false" aria-controls="etkinlik-1"><time datetime="2026-10-20"><span data-i18n="e1.tarih">20 Eki</span> <span class="gun" data-i18n="e1.gun">Salı</span></time><span class="baslik" data-i18n="e1.baslik">Öğrenci Toplulukları Tanıtım Günü</span><span class="yer" data-i18n="e1.yer">Atılım Meydan · 10.00–16.00</span><svg class="isaret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+      <div class="detay" id="etkinlik-1"><div>
+        <p data-i18n="e1.metin">Üniversitenin öğrenci toplulukları Atılım Meydan'da kendini tanıtıyor; Atılım AI da standıyla orada. Uğra, tanışalım: neler yaptığımızı anlatalım, sorularını yanıtlayalım. Hangi bölümde okursan oku, katılabilirsin. Etkinlik ATU100/111 Üniversite Hayatına Giriş dersi kapsamında.</p>
+        <figure class="tl-foto">
+          <img src="images/etkinlikler/tanitim-2025-1.webp" width="640" height="640" loading="lazy" alt="Atılım AI standı: masaya asılı “Yapay Zeka Topluluğu – AI Community” pankartı ve çevresindeki öğrenciler." data-i18n-nitelik="alt:e1.foto1">
+          <img src="images/etkinlikler/tanitim-2025-2.webp" width="640" height="640" loading="lazy" alt="Standın önünde toplanmış, masaya bakan öğrenciler." data-i18n-nitelik="alt:e1.foto2">
+          <img src="images/etkinlikler/tanitim-2025-3.webp" width="640" height="640" loading="lazy" alt="Masanın çevresinde eğilip bir şeye bakan öğrenciler." data-i18n-nitelik="alt:e1.foto3">
+          <figcaption data-i18n="e1.foto">Geçen yılki tanıtım gününde standımız.</figcaption>
+        </figure>
+      </div></div>
+    </li>
+  </ul>
+  <p class="tl-bos reveal" id="tlBos" data-i18n="s2.bos" hidden>Şu an planlanmış bir etkinlik yok.</p>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
@@ -1148,6 +1180,23 @@ if ("IntersectionObserver" in window && !reduced){
 (function(){
   var tl = document.getElementById("tl");
   if (!tl) return;
+  /* Geçen etkinlik "yaklaşan" diye kalmasın: bitiş günü bugünden önceyse
+     satır kalkar, liste boşalırsa dipnot açılır. Gün ziyaretçinin yerel
+     günü; ISO tarihler metin olarak sıralanabiliyor. */
+  var d = new Date();
+  function iki(n){ return (n < 10 ? "0" : "") + n; }
+  var bugun = d.getFullYear() + "-" + iki(d.getMonth() + 1) + "-" + iki(d.getDate());
+  [].slice.call(tl.children).forEach(function(li){
+    var t = li.querySelector("time");
+    var son = li.getAttribute("data-bitis") || (t ? t.getAttribute("datetime") : "");
+    if (son && son < bugun) tl.removeChild(li);
+  });
+  if (!tl.children.length){
+    var bos = document.getElementById("tlBos");
+    if (bos) bos.hidden = false;
+    tl.parentNode.removeChild(tl);
+    return;
+  }
   tl.addEventListener("click", function(e){
     var btn = e.target.closest("button");
     if (!btn) return;

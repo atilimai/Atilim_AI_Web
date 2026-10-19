@@ -58,10 +58,12 @@ published, but must not imply a longer history than the archive shows.
   documents the same day. Do not reintroduce a recurring schedule, a meeting room or an
   invitation to a weekly gathering without a new team decision.
 - **Events are dated, one-off occasions** — workshops, guest talks, project matchmaking, a
-  campus hackathon — and they have fallen on weekends. **As of 2026-09-28 none are
-  scheduled.** The list was removed from the page and a one-line footnote under the section
-  heading says so; the row markup is kept as a comment in `index.html` for when the next
-  event is announced.
+  campus hackathon — and they have fallen on weekends. None were scheduled from 2026-09-28
+  to 2026-10-19; on 2026-10-19 the university's student-society showcase day (20 October, Atılım Meydan,
+  10:00–16:00, from the university's poster) was added, with three photos of the society's
+  stand at last year's showcase. A past event removes itself (the row's last day is compared with the visitor's
+  date) and the one-line "nothing scheduled" footnote returns when the list is empty. Since
+  2026-10-19 the weekly report sits above the events on the landing page (team decision).
 - **The digest publishes on Tuesdays and covers Tuesday to Tuesday** — each issue gathers
   the AI news from the previous Tuesday up to its own publication day. This is a team
   decision, written onto the site on 2026-10-11 (the `#s3` intro on the landing page and

@@ -993,11 +993,25 @@ words** — a `.gizli` "(yeni sekmede açılır)" after the icon — since the i
 from assistive technology. That includes the project cards, which never had a visible icon.
 
 ### Events list
-**Empty since 2026-09-28.** No special events are scheduled, so the list is out of the page
-and a `.tl-bos` footnote stands in its place: the feed's empty-row voice (mono 13px,
+**Below the weekly report since 2026-10-19** (team decision; the ids `#s2`/`#s3` kept their
+names so shared links still land). The list was empty from 2026-09-28 to 2026-10-19. When it
+empties, a `.tl-bos` footnote stands in its place: the feed's empty-row voice (mono 13px,
 `kagit-t`) plus the list's own top hairline and `xl` margin, so the section starts in the same
-place when the list returns. The row markup is kept as a comment inside `#s2`; the styles and
-the accordion script below stay in place.
+place either way. The footnote now sits in the markup with `hidden`, and the accordion script
+removes every row whose last day (`data-bitis`, else `<time datetime>`) is before the
+visitor's today and reveals the footnote once none are left, so a past event never reads as
+upcoming. The row markup is kept as a comment inside `#s2`. The weekday sits in its own
+`.gun` span next to the date span, so both can be translated: `cevir()` replaces an element's
+whole text, and a weekday nested inside the date would be wiped in English.
+
+A row's description may end in a photo strip, `figure.tl-foto` (since 2026-10-19): three
+squares on the description's 60ch measure, `sp-xs` apart, `aspect-ratio:1` with
+`object-fit:cover` and the `md` radius. No border, since a photo is its own edge, and
+`yuzey` fills the box until the file arrives. The caption under the strip names the occasion
+in mono 13px `metin-t`. The photos are content, so each carries its own alt text with an
+English key. Files are 640px square WebP (45–70 KB) in `images/etkinlikler/`, loaded
+lazily: they stay off the first screen's bill and arrive when the section nears the viewport,
+whether or not the row is open.
 
 Each row is a real `<button>` inside its `<li>`, so keyboard operation needs no extra code.
 `aria-expanded` lives on that button — the `<li>` is not operable, and state parked there is
