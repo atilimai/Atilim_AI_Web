@@ -122,14 +122,19 @@ atilimai.ekle({
 <title data-i18n="baslik">Sayfa bulunamadı — Atılım AI</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#100D0A">
-<!-- GitHub Pages bu sayfayı eksik olan HER yol için sunuyor: /a/b/c adresinde
+<!-- Sunucu bu sayfayı eksik olan HER yol için sunuyor: /a/b/c adresinde
      göreli bir href, /a/b/haberler.html'e çözülüp kırılır. Bu dosyadaki bütün
-     yollar bu yüzden kökten mutlak. Depo adı değişirse hepsi güncellenmeli. -->
-<link rel="icon" href="/Atilim_AI_Web/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/Atilim_AI_Web/favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="/Atilim_AI_Web/apple-touch-icon.png">
-<!-- Yazı tipleri depodan, kökten mutlak yolla (fonts/README.md). -->
-<link rel="preload" href="/Atilim_AI_Web/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+     yollar bu yüzden sitenin asıl adresiyle tam yazılı (https://atilimai.org/).
+     Kökten mutlak yol (/haberler.html) yetmiyor: aynı dosya eski GitHub Pages
+     adresinde /Atilim_AI_Web/ altında da sunuluyor, orada köke çözülüp
+     kırılıyordu; 19 Ekim 2026'ya kadar yollar oraya göreydi ve atilimai.org'da
+     kırıktı. Tam adres iki yerde de çalışır, yazı tipleri de iner (Vercel
+     Access-Control-Allow-Origin: * veriyor). Alan adı değişirse hepsini güncelle. -->
+<link rel="icon" href="https://atilimai.org/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="https://atilimai.org/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="https://atilimai.org/apple-touch-icon.png">
+<!-- Yazı tipleri depodan, tam adresle (fonts/README.md). -->
+<link rel="preload" href="https://atilimai.org/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* Newsreader gelene kadar başlık Georgia'yla diziliyordu ve yazı tipi
    inince satırlar yeniden kırılıyordu (kısılmış ağda CLS 0,059). Yedek yüz
@@ -142,13 +147,13 @@ atilimai.ekle({
   size-adjust:99.98%;ascent-override:74.01%;descent-override:26.01%;line-gap-override:0%}
 @font-face{font-family:"Newsreader Yedek";src:local("Georgia Italic"),local("Georgia-Italic");font-weight:300;font-style:italic;
   size-adjust:86.19%;ascent-override:85.86%;descent-override:30.17%;line-gap-override:0%}
-@font-face{font-family:"Newsreader";src:url(/Atilim_AI_Web/fonts/newsreader.woff2) format("woff2");
+@font-face{font-family:"Newsreader";src:url(https://atilimai.org/fonts/newsreader.woff2) format("woff2");
   font-weight:300 400;font-style:normal;font-display:swap}
-@font-face{font-family:"Newsreader";src:url(/Atilim_AI_Web/fonts/newsreader-italik.woff2) format("woff2");
+@font-face{font-family:"Newsreader";src:url(https://atilimai.org/fonts/newsreader-italik.woff2) format("woff2");
   font-weight:300;font-style:italic;font-display:swap}
-@font-face{font-family:"Public Sans";src:url(/Atilim_AI_Web/fonts/public-sans.woff2) format("woff2");
+@font-face{font-family:"Public Sans";src:url(https://atilimai.org/fonts/public-sans.woff2) format("woff2");
   font-weight:400 500;font-style:normal;font-display:swap}
-@font-face{font-family:"IBM Plex Mono";src:url(/Atilim_AI_Web/fonts/plex-mono-400.woff2) format("woff2");
+@font-face{font-family:"IBM Plex Mono";src:url(https://atilimai.org/fonts/plex-mono-400.woff2) format("woff2");
   font-weight:400;font-style:normal;font-display:swap}
 /* Belirteçler index.html ile aynı, DESIGN.md.
 
@@ -286,8 +291,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
       Ana sayfadan ya da haber arşivinden devam edebilirsin.</p>
     <p class="adres"><span data-i18n="hata">Hata 404</span><span id="adres" hidden><span data-i18n="denenen"> · Denenen adres: </span><b id="yol"></b></span></p>
     <div class="eylem">
-      <a class="btn p" href="/Atilim_AI_Web/" data-i18n="ana-sayfa">Ana sayfa</a>
-      <a class="btn s" href="/Atilim_AI_Web/haberler.html" data-i18n="arsiv">Haber arşivi</a>
+      <a class="btn p" href="https://atilimai.org/" data-i18n="ana-sayfa">Ana sayfa</a>
+      <a class="btn s" href="https://atilimai.org/haberler.html" data-i18n="arsiv">Haber arşivi</a>
     </div>
   </div>
 </main>
@@ -297,8 +302,8 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
     <span class="foot-kimlik">Atılım AI · Ankara</span>
     <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
     <span class="sag">
-      <a href="/Atilim_AI_Web/haberler.html" data-i18n="haberler">Haberler</a>
-      <a href="/Atilim_AI_Web/katil.html" data-i18n="katil">Topluluğa katıl</a>
+      <a href="https://atilimai.org/haberler.html" data-i18n="haberler">Haberler</a>
+      <a href="https://atilimai.org/katil.html" data-i18n="katil">Topluluğa katıl</a>
       <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a>
     </span>
   </div>

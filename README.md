@@ -49,7 +49,7 @@ Haberler elle düzenlenmez; yönetim panelindeki **Haftalık Rapor** penceresind
 yayımlanır. Akış şöyle işler:
 
 ```
-Panel → content/haberler.json'a commit → GitHub Pages siteyi günceller
+Panel → content/haberler.json'a commit → Vercel siteyi günceller
                                        → Actions işi Discord'a mesaj atar
 ```
 
@@ -63,8 +63,8 @@ kaynağa gider.
 
 ## Yayınlama
 
-`main` dalına giden her push GitHub Pages tarafından otomatik yayınlanır;
-yapılacak bir şey yok. Derleme adımı olmadığı için değişiklik genelde bir
+`main` dalına giden her push Vercel tarafından `atilimai.org`'a otomatik
+yayınlanır (eski GitHub Pages adresi de güncellenir); yapılacak bir şey yok. Derleme adımı olmadığı için değişiklik genelde bir
 dakika içinde canlıda olur.
 
 ## Katkı

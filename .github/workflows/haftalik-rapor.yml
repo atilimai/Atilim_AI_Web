@@ -26,7 +26,7 @@ jobs:
       - name: Discord'a gönder
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          SITE_URL: https://atilimai.github.io/Atilim_AI_Web/
+          SITE_URL: https://atilimai.org/
         run: node scripts/discord-gonder.js
 
       - name: Gönderim durumunu kaydet

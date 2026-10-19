@@ -32,9 +32,12 @@ numara ekleme.
 ## Site 60 saniyede
 
 Statik bir tanıtım sitesi ve haber arşivi. Derleme adımı, paket yöneticisi ve
-bağımlılık **yok**; dosyalar doğrudan GitHub Pages'ten sunuluyor. Üç içerik
+bağımlılık **yok**; dosyalar olduğu gibi sunuluyor. Asıl adres
+`https://atilimai.org/` (Vercel, `main`'den); eski GitHub Pages adresi
+(`atilimai.github.io/Atilim_AI_Web/`) de yayında ve panelin yüklediği haber
+görselleri hâlâ oradan çekiliyor, o yüzden kapatma. Üç içerik
 sayfası var ve üçü de aynı veri dosyasını okuyor: `content/haberler.json`.
-Dördüncü dosya `404.html` veri okumaz; Pages onu yalnızca eksik adreslerde sunar.
+Dördüncü dosya `404.html` veri okumaz; sunucu onu yalnızca eksik adreslerde sunar.
 Beşinci dosya `katil.html` da veri okumaz: her "Topluluğa katıl" bağlantısı
 oraya gider.
 
@@ -130,16 +133,18 @@ Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklend
 
 ### `404.html`
 
-Pages'in eksik adresler için sunduğu sayfa. Gece dünyasında tasarlandı, 13
+Sunucunun (Vercel ve Pages) eksik adresler için sunduğu sayfa. Gece dünyasında tasarlandı, 13
 Ekim 2026'dan beri her sayfa gibi temayı izliyor; renk bloğu ötekilerle aynı,
 kendi kopyasını taşır, ortak stil dosyası yok.
 
-**İçindeki her yol kökten mutlaktır** (`/Atilim_AI_Web/...`) ve bu bilinçli:
-Pages bu dosyayı eksik olan *her* yol için sunuyor, `/a/b/c` adresinde göreli
-bir `haberler.html` `/a/b/haberler.html`'e çözülüp kırılıyordu. **Depo adı
-değişirse bu dosyadaki bütün yolları güncelle** — yazı tipleri dahil, hiçbiri
-göreli değil. Yerelde (`python3 -m http.server`) bu yüzden yazı tipleri ve
-sekme simgesi bu sayfada yüklenmez; yayında yüklenir.
+**İçindeki her yol tam adrestir** (`https://atilimai.org/...`) ve bu bilinçli:
+sunucu bu dosyayı eksik olan *her* yol için sunuyor, `/a/b/c` adresinde göreli
+bir `haberler.html` `/a/b/haberler.html`'e çözülüp kırılıyordu. Kökten mutlak
+yol da yetmiyor, çünkü aynı dosya Pages'te `/Atilim_AI_Web/` altında sunuluyor.
+19 Ekim 2026'ya kadar yollar `/Atilim_AI_Web/...` idi: `atilimai.org`'da "Ana
+sayfa" düğmesi yine 404'e gidiyor, yazı tipleri ve sekme simgesi inmiyordu.
+**Alan adı değişirse bu dosyadaki bütün yolları güncelle** — yazı tipleri
+dahil. Yerelde de yazı tipleri yayındaki siteden iner.
 
 Denenen adresi `location.pathname`'den okuyup `textContent` ile basar; betik
 yoksa o satır `hidden` kalır, boş bir etiket göstermez.
@@ -468,7 +473,10 @@ DISCORD_WEBHOOK="https://discord.com/api/webhooks/…" \
 
 ## Yayınlama
 
-`main`'e push → GitHub Pages otomatik yayınlar. Derleme yok, genelde bir dakika.
+`main`'e push → Vercel `atilimai.org`'u, GitHub Pages eski adresi otomatik
+yayınlar. Derleme yok, genelde bir dakika. Discord botunun "Devamını oku"
+bağlantıları da `atilimai.org`'a gidiyor (iş akışındaki `SITE_URL`, 19 Ekim
+2026'dan beri).
 Yayının bittiğini görmek için sayfayı sert yenile (Ctrl+Shift+R); tarayıcı eski
 HTML'i önbellekte tutabiliyor.
 
