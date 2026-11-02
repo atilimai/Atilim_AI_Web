@@ -2,6 +2,22 @@
   "_aciklama": "Sayılar en yeniden eskiye doğru sıralanır. Site sayilar[0] gösterir, Discord botu da onu gönderir. Yeni sayı eklerken dizinin BAŞINA ekleyin.",
   "sayilar": [
     {
+      "sayi": 4,
+      "tarih": "2026-11-03",
+      "haberler": [
+        {
+          "etiket": "Test",
+          "tarih": "1 Kas",
+          "baslik": "Panel deneme haberi",
+          "ozet": "Bu bir deneme kaydıdır, yayımlanmayacak.",
+          "icerik": "Birinci deneme paragrafı.\n\nSiz bu deneme hakkında ne düşünüyorsunuz?",
+          "link": "https://example.com",
+          "gorsel": "",
+          "kaynak": "Deneme"
+        }
+      ]
+    },
+    {
       "sayi": 3,
       "tarih": "2026-10-27",
       "haberler": [
