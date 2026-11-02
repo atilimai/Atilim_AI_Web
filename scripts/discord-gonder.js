@@ -93,9 +93,12 @@ if (!Array.isArray(sayi.haberler) || sayi.haberler.length === 0) {
 
 /* ---------- daha önce gönderildi mi ---------- */
 
+/* Esitlik yetmiyor: en yeni sayi silinince bir onceki sayi basa gecer ve
+ * yeniden gonderilirdi. Bu yuzden son gonderilenden buyuk olmayan sayi atlanir. */
 const kimlik = String(sayi.sayi);
-if (fs.existsSync(STATE) && fs.readFileSync(STATE, "utf8").trim() === kimlik) {
-  cik(0, `${kimlik}. sayı zaten gönderilmiş, atlanıyor.`);
+const son = fs.existsSync(STATE) ? Number(fs.readFileSync(STATE, "utf8").trim()) : NaN;
+if (Number(sayi.sayi) <= son) {
+  cik(0, `${kimlik}. sayı zaten gönderilmiş ya da son gönderilenden (${son}) eski, atlanıyor.`);
 }
 
 /* ---------- embed'leri kur: haber basina bir embed ---------- */
