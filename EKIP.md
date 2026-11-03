@@ -602,8 +602,11 @@ HTML'i önbellekte tutabiliyor.
   güncelle.
 - **Etkinlikler tarihli, tek seferlik.** Liste 28 Eylül–19 Ekim 2026 arası
   boştu; 19 Ekim'de 20 Ekim'deki Öğrenci Toplulukları Tanıtım Günü eklendi
-  (Atılım Meydan, 10.00–16.00; bilgiler üniversitenin afişinden). Satır kalıbı
-  `#s2`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
+  (Atılım Meydan, 10.00–16.00; bilgiler üniversitenin afişinden). 3 Kasım'da o
+  satır ve üç fotoğrafı kaldırıldı, yerine 6 Kasım Cuma'daki Tanışma Toplantısı
+  geldi (V!be İncek, 18.30; açıklama topluluğun Instagram hikâyesindeki
+  afişten, yer ekipten — afişte yer henüz yoktu; bitiş saati verilmedi).
+  Satır kalıbı `#s2`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
   fotoğraf şeridi konabiliyor (`figure.tl-foto`, üç kare): dosyalar
   `images/etkinlikler/` altında 640 px kare WebP, her birinin kendi `alt`
   metni ve İngilizcesi var (`data-i18n-nitelik="alt:…"`). Satır kalkınca
@@ -617,8 +620,9 @@ HTML'i önbellekte tutabiliyor.
   gün adı tarihin içinde dursaydı İngilizcede silinirdi.
 - **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (3 tamamlanan
   proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi;
-  proje sayısı 17 Ekim 2026'da `Project1-browsertracker` çıkınca 4'ten 3'e indi.
-  Tahminle güncelleme; doğrulanmamış bir rakam gösterilecekse görünür bir yer
+  proje sayısı 17 Ekim 2026'da `Project1-browsertracker` çıkınca 4'ten 3'e indi,
+  etkinlik sayısı 3 Kasım 2026'da 20 Ekim Tanıtım Günü sayılınca 10'dan 11'e
+  çıktı (ekip onayıyla). Tahminle güncelleme; doğrulanmamış bir rakam gösterilecekse görünür bir yer
   tutucuyla gösterilir. Proje kartlarının metni depoların README'lerinden;
   README'de olmayan bir iddia ekleme.
 - **Bölüm başlıklarının üstüne etiket koyma.** Dört tanesi vardı (mono 12 px,

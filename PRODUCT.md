@@ -61,7 +61,10 @@ published, but must not imply a longer history than the archive shows.
   campus hackathon — and they have fallen on weekends. None were scheduled from 2026-09-28
   to 2026-10-19; on 2026-10-19 the university's student-society showcase day (20 October, Atılım Meydan,
   10:00–16:00, from the university's poster) was added, with three photos of the society's
-  stand at last year's showcase. A past event removes itself (the row's last day is compared with the visitor's
+  stand at last year's showcase. On 2026-11-03 that row and its photos were removed and the
+  society's own meet and greet ("Tanışma Toplantısı", Friday 6 November, 18:30, V!be İncek)
+  took its place; the copy comes from the society's Instagram story poster, the venue from the
+  team, and no end time was given. A past event removes itself (the row's last day is compared with the visitor's
   date) and the one-line "nothing scheduled" footnote returns when the list is empty. Since
   2026-10-19 the weekly report sits above the events on the landing page (team decision).
 - **The digest publishes on Tuesdays and covers Tuesday to Tuesday** — each issue gathers
@@ -157,7 +160,8 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
   `.github/workflows/haftalik-rapor.yml`).
 - The three `.olcum` figures, supplied by the team on 2026-09-28: 4 completed projects,
   10 completed events, 0 ongoing projects. On 2026-10-17 the team dropped
-  `Project1-browsertracker` and the project figure became 3.
+  `Project1-browsertracker` and the project figure became 3. On 2026-11-03 the team counted
+  the 20 October showcase day and the event figure became 11.
 - The three project cards in `#s4`, one per completed project, each linking to its public
   repository. Each takes its copy from the repository's README. Until
   2026-10-05 the fourth card was the publishing pipeline in this repository ("Bülten",
