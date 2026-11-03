@@ -63,8 +63,10 @@ published, but must not imply a longer history than the archive shows.
   10:00–16:00, from the university's poster) was added, with three photos of the society's
   stand at last year's showcase. On 2026-11-03 that row and its photos were removed and the
   society's own meet and greet ("Tanışma Toplantısı", Friday 6 November, 18:30, V!be İncek)
-  took its place; the copy comes from the society's Instagram story poster, the venue from the
-  team, and no end time was given. A past event removes itself (the row's last day is compared with the visitor's
+  took its place; the copy builds on the invitation in the society's Instagram story poster,
+  the mention of this term's projects and hackathon teams, the venue's games area (board
+  games, billiards, darts) and the venue itself come from the team,
+  and the end time is left out on purpose (none was set). A past event removes itself (the row's last day is compared with the visitor's
   date) and the one-line "nothing scheduled" footnote returns when the list is empty. Since
   2026-10-19 the weekly report sits above the events on the landing page (team decision).
 - **The digest publishes on Tuesdays and covers Tuesday to Tuesday** — each issue gathers

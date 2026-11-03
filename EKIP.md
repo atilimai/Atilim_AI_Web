@@ -605,7 +605,10 @@ HTML'i önbellekte tutabiliyor.
   (Atılım Meydan, 10.00–16.00; bilgiler üniversitenin afişinden). 3 Kasım'da o
   satır ve üç fotoğrafı kaldırıldı, yerine 6 Kasım Cuma'daki Tanışma Toplantısı
   geldi (V!be İncek, 18.30; açıklama topluluğun Instagram hikâyesindeki
-  afişten, yer ekipten — afişte yer henüz yoktu; bitiş saati verilmedi).
+  afişin davetinden yola çıkılarak yazıldı; dönem projeleri ve hackathon
+  takımları kısmı, mekândaki oyun alanı (kutu oyunları, bilardo, dart) ve yer
+  ekipten — afişte yer henüz
+  yoktu; bitiş saati verilmedi, bilerek yazılmadı).
   Satır kalıbı `#s2`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
   fotoğraf şeridi konabiliyor (`figure.tl-foto`, üç kare): dosyalar
   `images/etkinlikler/` altında 640 px kare WebP, her birinin kendi `alt`
