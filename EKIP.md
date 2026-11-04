@@ -568,6 +568,9 @@ HTML'i önbellekte tutabiliyor.
   yereldeki dosyadan değil. WhatsApp ve Discord daha önce paylaşılmış bir
   bağlantının önizlemesini günlerce önbellekte tutabilir; görseli değiştirince
   `og.jpg?v=N` sayısını artır ki yeni adres gibi çekilsin.
+- **`atilim-ai-web.vercel.app` yedek değil.** Vercel Domains'te 308 ile
+  `atilimai.org`'a yönlenir. Bazı mobil operatörler `*.vercel.app`'in yeni edge
+  IP'lerine ulaşamıyor; bağlantı paylaşırken hep `atilimai.org` kullan.
 - **Araç klasörleri.** `.serena/`, `.playwright-mcp/` ve `.impeccable/` üçü de
   `.gitignore`'da. `.impeccable/` tasarım sistemi sidecar'ını ve kritik arşivini
   tutar; yerel araç durumudur, depoya girmemeli.
