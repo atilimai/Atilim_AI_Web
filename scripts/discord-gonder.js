@@ -235,6 +235,9 @@ const mesajlar = gruplar.map((embedGrubu, i) => ({
   username: "Atılım AI Rapor",
   content: govdeler[i],
   embeds: embedGrubu,
+  /* Haber metni panelden gelir; içinde @everyone ya da rol etiketi olsa bile
+   * kimseye bildirim gitmesin. */
+  allowed_mentions: { parse: [] },
 }));
 
 /* ---------- gönder ---------- */
