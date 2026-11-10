@@ -359,7 +359,7 @@ h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
    min-width:0 + anywhere: bottan gelen 500 harflik tek kelime satırı kırmasın. */
 .duyuru{display:grid;grid-template-columns:88px 1fr;gap:var(--sp-lg);padding:22px 0;
   border-bottom:1px solid var(--cizgi);align-items:start;
-  scroll-margin-top:calc(var(--sp-xxl) + var(--sp-md));transition:background .3s}
+  scroll-margin-top:var(--sp-md);transition:background .3s}
 .duyuru>*{min-width:0;overflow-wrap:anywhere}
 .duyuru:first-child{border-top:1px solid var(--cizgi)}
 /* Çapaya inilen satır bir yüzey basamağı yukarı (One Level Rule), animasyon yok.
@@ -700,7 +700,10 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     var el = document.getElementById(id);
     if (!el) return false;
     el.tabIndex = -1;
-    el.scrollIntoView();
+    /* behavior:"instant": html{scroll-behavior:smooth} animasyonu odak ve
+       düzen değişikliğiyle kesiliyordu, kart sayfa başına inmiyordu. Üst çubuk
+       yapışkan değil (kaydırınca gider), o yüzden kenar payı yalnızca 16px. */
+    el.scrollIntoView({block: "start", behavior: "instant"});
     el.focus({preventScroll: true});
     return true;
   }
