@@ -23,10 +23,11 @@ understanding the site.
 
 ## Product Purpose
 
-The site is the society's public face and the permanent home of its weekly AI news digest.
-It exists so that a student who has never heard of the society can understand what it is
-and how to join, and so that the digest the society publishes every week has somewhere to
-live that is not a chat channel.
+The site is the society's public face and the permanent home of its weekly AI news digest
+and of the announcements it sends its members. It exists so that a student who has never
+heard of the society can understand what it is and how to join, and so that the digest the
+society publishes every week, and what it announces between issues, has somewhere to live
+that is not a chat channel.
 
 Success is a student who found the society through this site joining it.
 
@@ -51,6 +52,19 @@ this paragraph still said one issue, days after the second had shipped. The coun
 to move when the archive does. The archive is two issues deep: copy may say the report is
 published, but must not imply a longer history than the archive shows.
 
+**Announcements are a second, separate feed.** Since 2026-11-10 the landing page carries a
+Duyurular section (between About and the weekly report) and there is an archive page,
+`duyurular.html`. The society's president forwards an announcement from WhatsApp to a
+bot; the admin panel commits it to `content/duyurular.json` and `images/duyurular/`, text
+and photos or video as sent. It is the society's own channel shown in the open, not
+editorial content: a card is a date, a time, the text and the media. **There is no
+signature on it** — no author name and no number appear on the site, in the data or in the
+commits. The source is WhatsApp and the page may say so. The archive is empty on the day
+this was written (no announcement has been imported or forwarded yet), so copy must not
+imply a history of announcements; the empty state says so plainly. Which announcements the
+landing page shows is a decision the admin panel exposes (pin up to three), not something
+visitors configure.
+
 ## Operating Context
 
 - **There is no standing weekly meeting.** The team discontinued it on 2026-10-01, and
@@ -71,12 +85,12 @@ published, but must not imply a longer history than the archive shows.
   2026-10-19 the weekly report sits above the events on the landing page (team decision).
 - **The digest publishes on Tuesdays and covers Tuesday to Tuesday** — each issue gathers
   the AI news from the previous Tuesday up to its own publication day. This is a team
-  decision, written onto the site on 2026-10-11 (the `#s3` intro on the landing page and
+  decision, written onto the site on 2026-10-11 (the `#rapor` intro on the landing page and
   the archive's intro). Issue 1 went out on a Wednesday (2026-09-23); the rule applies from
   issue 2 on. It is the one recurring schedule the site states; it does not license a
   recurring meeting.
 - **The join path is `katil.html`** (team decision, 2026-10-12). Every "Topluluğa katıl"
-  link — the landing page's nav link and hero button, and the footer on all four other
+  link — the landing page's nav link and hero button, and the footer on all five other
   pages — goes there. It lists four channels at **equal weight**: the WhatsApp group,
   Instagram (`@atilimai`), LinkedIn and the society's e-mail address. No channel is
   promoted to a primary button; that equality is the decision, not an oversight. This
@@ -88,6 +102,8 @@ published, but must not imply a longer history than the archive shows.
   language change reloads the page. English covers the interface and the site's own copy, not
   the digest: translating news items would need new contract fields, a panel change and a
   Discord decision, and was left for a separate project.
+- **Announcements never go to Discord.** The Actions job runs only when
+  `content/haberler.json` changes; `content/duyurular.json` does not trigger it.
 - **Discord is not on the site.** The same decision removed every Discord link and every
   sentence saying the digest is posted there. The GitHub Actions job still posts each
   issue to Discord exactly once — that is infrastructure, and site copy does not mention
@@ -95,8 +111,8 @@ published, but must not imply a longer history than the archive shows.
   comments in the HTML that explain the bot and the permanent `?sira=` scheme stay: they
   render nowhere and they are still true.
 - Content is **not authored in this repository**. A separate private admin panel
-  (`atilimai/Atilim_AI_Panel`) validates and commits `content/haberler.json`. Editing that
-  file by hand is a last resort.
+  (`atilimai/Atilim_AI_Panel`) validates and commits `content/haberler.json`; its WhatsApp
+  bot commits `content/duyurular.json`. Editing either file by hand is a last resort.
 - The society was founded in autumn 2023 by seven people who did not know each other.
 
 ## Capabilities and Constraints
@@ -116,6 +132,9 @@ binding):
 - **Four places share one data contract.** `content/haberler.json` field names are read by
   `index.html`, `haberler.html`, `haber.html`, and `scripts/discord-gonder.js`, and mirrored
   in the panel's `src/lib/site/news.ts`. Renaming a field means changing five files.
+  `content/duyurular.json` is a second contract with two readers, `index.html` and
+  `duyurular.html` (mirrored in the panel's `src/lib/site/duyuru.ts`); the two copies of its
+  renderer must stay identical.
 - **The `haber.html?sayi=N&sira=I` URL scheme is permanent.** The Discord bot generates the
   same scheme, so past Discord messages depend on it. Article identity is positional, which
   means reordering an issue's items breaks old links — a known weakness with no id field
@@ -125,7 +144,7 @@ binding):
   serve draft data. Switching to `XMLHttpRequest`, or capturing `fetch` into a local before
   the wrapper installs, silently breaks the panel preview.
 - **Storage is never required, and every access to it is guarded.** Since 2026-10-13 all
-  five pages read two keys — `atilimai.tema` and `atilimai.dil` — inside a `try` in `<head>`;
+  six pages read two keys — `atilimai.tema` and `atilimai.dil` — inside a `try` in `<head>`;
   the appearance control writes them, probes storage with a throwaway `atilimai.deneme`, and
   keeps one `sessionStorage` flag (`atilimai.odak`) across a language reload.
   The panel renders `haberler.html` in a `sandbox="allow-scripts"` iframe with an opaque
@@ -164,7 +183,7 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
   10 completed events, 0 ongoing projects. On 2026-10-17 the team dropped
   `Project1-browsertracker` and the project figure became 3. On 2026-11-03 the team counted
   the 20 October showcase day and the event figure became 11.
-- The three project cards in `#s4`, one per completed project, each linking to its public
+- The three project cards in `#projeler`, one per completed project, each linking to its public
   repository. Each takes its copy from the repository's README. Until
   2026-10-05 the fourth card was the publishing pipeline in this repository ("Bülten",
   marked live); the team replaced it with `EEG-Emotion-Models`, and on 2026-10-17 with
@@ -188,18 +207,18 @@ before it is confirmed, it goes back to a visible placeholder, never to a guess.
 
 Two consequences of those figures, both decided by the team on 2026-09-28:
 
-- **Zero ongoing projects.** The `#s4` cards used to describe two projects with no public
+- **Zero ongoing projects.** The `#projeler` cards used to describe two projects with no public
   repository (Kampüs Asistanı, Görü), one of them marked "in development", which the zero
   contradicted. They were replaced by the completed work, and the "0 yürüyen proje" row no
-  longer scrolls to `#s4`, since there is nothing ongoing to show there.
+  longer scrolls to `#projeler`, since there is nothing ongoing to show there.
 - **Three completed projects, three public repositories** (four until 2026-10-17, when the
-  team dropped `Project1-browsertracker`). Each `#s4` card links to one of
+  team dropped `Project1-browsertracker`). Each `#projeler` card links to one of
   them. Until 2026-10-05 this file said the fourth had no public repository; the team then
   named it — `atilimai/EEG-Emotion-Models`, corrected on 2026-10-17 to
   `atilimai/emg-ninapro-gesture-recognition`. A repository dialog, opened by the then "4 tamamlanan
   proje" row, listed the same four a second time with star and fork counts from the GitHub
   API. It was removed on 2026-10-06 as a duplicate of the cards, and the row now links to
-  `#s4`.
+  `#projeler`.
 
 The 2026-09-10 design review's open question still stands: whether a *count* is the
 evidence a student actually wants, or whether three sentences about what happened at the
@@ -244,7 +263,7 @@ file held 15. A correction to issue 2 stays silent; issue 3 posts.
 ## Accessibility & Inclusion
 
 **Target: WCAG 2.1 AA.** Not an external mandate; a standard the team has adopted. Measured
-on the shipped pages, not asserted: **zero contrast failures** across all five pages in both
+on the shipped pages, not asserted: **zero contrast failures** across the five pages that existed on 2026-10-13 in both
 themes and both languages, **zero horizontal overflow** and **zero interactive targets under
 44px** (all re-measured 2026-10-13 at 320, 390, 768, 901, 1024, 1151, 1440 and 1970px, with the
 feed populated), every text role at least 4.5:1 against every surface in both themes, no heading-level
@@ -253,7 +272,8 @@ so nothing precedes its `main`), a mobile menu and an appearance control that cl
 that keeps focus through the retry and hands it to the result. The type floor is
 12px. `prefers-reduced-motion` cancels the spatial transitions by name and leaves colour and
 opacity feedback intact; the scroll-driven field draws one static frame and its bands
-collapse.
+collapse. The Duyurular section and `duyurular.html` (2026-11-10) are not in that
+measurement yet; measure them before claiming the numbers still hold.
 
 **Closed 2026-10-11 — news images no longer publish with an empty `alt`** (WCAG 1.1.1,
 level A; commit `8015e39`). This file used to list it as the one remaining failure and

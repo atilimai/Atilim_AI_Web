@@ -1,7 +1,7 @@
 # Atılım AI — Topluluk Sitesi
 
 Atılım Üniversitesi Yapay Zeka Topluluğu'nun tanıtım sitesi ve haftalık rapor
-arşivi. Beş sayfa (üçü haber verisini okur), sıfır bağımlılık, derleme adımı
+arşivi. Altı sayfa (üçü haber, biri duyuru verisini okur), sıfır bağımlılık, derleme adımı
 yok: dosyalar ne ise tarayıcı onu çalıştırıyor. Arayüz Türkçe ve İngilizce,
 tema koyu ve açık; seçim yapılmamışsa tema işletim sistemini izler
 (ayrıntı: `EKIP.md` → "Tema ve dil").
@@ -37,9 +37,11 @@ python -m http.server 8000
 | `index.html` | Ana sayfa: tanıtım, etkinlikler, projeler, haftalık rapor özeti + 3B alan katmanı |
 | `haberler.html` | Haber arşivi; tam metni olan kartlar yerinde açılır |
 | `haber.html` | Tek bir haberin ayrıntı sayfası (`?sayi=13&sira=0`) |
+| `duyurular.html` | Duyuru arşivi: kulübün WhatsApp duyuruları, görselleri ve videolarıyla; ana sayfadaki `#duyurular` bölümü de aynı veriyi okur |
 | `katil.html` | Katılım sayfası: WhatsApp, Instagram, LinkedIn ve e-posta bağlantıları; her "Topluluğa katıl" buraya gelir |
 | `discord.md` | Siteden kaldırılan Discord parçalarının kaydı ve geri ekleme adımları |
-| `content/haberler.json` | **Tek veri kaynağı.** Site de Discord botu da bunu okur |
+| `content/haberler.json` | Haber verisi. Site de Discord botu da bunu okur |
+| `content/duyurular.json`, `images/duyurular/` | Duyuru verisi ve medyası. Panelin WhatsApp botu yazar, Discord'a gitmez |
 | `scripts/discord-gonder.js` | Yeni sayıyı Discord'a gönderen iş |
 | `.github/workflows/haftalik-rapor.yml` | Yukarıdaki işi tetikleyen Actions akışı |
 

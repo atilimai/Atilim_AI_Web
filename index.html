@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-/* Görünüm başlangıcı (beş sayfada aynı). Kayıtlı tema ve dil ilk boyamadan
+/* Görünüm başlangıcı (altı sayfada aynı). Kayıtlı tema ve dil ilk boyamadan
    önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
    tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
@@ -52,6 +52,7 @@
     "ayar.acik": ["Açık", "Light"],
     "ana-sayfa": ["Ana sayfa", "Home"],
     "haberler": ["Haberler", "News"],
+    "duyurular": ["Duyurular", "Announcements"],
     "katil": ["Topluluğa katıl", "Join the society"],
     "sayi": ["{n}. sayı", "Issue {n}"],
     "sayi-yok": ["Henüz yayımlanmış bir sayı yok.", "No issue has been published yet."],
@@ -113,31 +114,35 @@ atilimai.ekle({
   "baslik": [null, "Atılım AI — AI Society"],
   "aciklama": [null, "The AI society of Atılım University. Workshops, open-source projects and a weekly AI report. No department requirement, no prerequisites."],
   "menu": [null, "Menu"],
-  "nav.s1": [null, "About"],
-  "nav.s2": [null, "Events"],
-  "nav.s3": [null, "Weekly report"],
-  "nav.s4": [null, "Projects"],
+  "nav.hakkimizda": [null, "About"],
+  "nav.etkinlikler": [null, "Events"],
+  "nav.duyurular": [null, "Announcements"],
+  "nav.rapor": [null, "Weekly report"],
+  "nav.projeler": [null, "Projects"],
   "h1a": [null, "Learning AI together, "],
   "h1b": [null, "building it together."],
   "giris": [null, "Workshops, open-source projects and a weekly AI report. Whatever you study, you can join."],
   "projelere": [null, "Browse the projects"],
-  "s1.baslik": [null, "From theory to a working model."],
-  "s1.p1": [null, "The society began in autumn 2023 on the engineering campus, with seven people who did not know each other. Classes covered the theory, but nobody was building a model from start to finish and getting it to run."],
-  "s1.p2": [null, "Any department is welcome; we have members from law and from psychology too."],
+  "hakkimizda.baslik": [null, "From theory to a working model."],
+  "hakkimizda.p1": [null, "The society began in autumn 2023 on the engineering campus, with seven people who did not know each other. Classes covered the theory, but nobody was building a model from start to finish and getting it to run."],
+  "hakkimizda.p2": [null, "Any department is welcome; we have members from law and from psychology too."],
   "olcum.proje": [null, "completed projects"],
   "olcum.etkinlik": [null, "completed events"],
   "olcum.yuruyen": [null, "ongoing projects"],
-  "s2.baslik": [null, "Upcoming events."],
-  "s2.bos": [null, "No events are scheduled right now."],
+  "etkinlikler.baslik": [null, "Upcoming events."],
+  "etkinlikler.bos": [null, "No events are scheduled right now."],
   "e1.tarih": [null, "6 Nov"],
   "e1.gun": [null, "Friday"],
   "e1.baslik": [null, "Meet and Greet"],
   "e1.yer": [null, "V!be İncek · 18:30"],
   "e1.metin": [null, "We're meeting up at V!be İncek on Friday evening. We'll be talking about this term's projects and our hackathon teams. If you want to hear about them, or maybe get involved, we'd love to have you there. After the meeting, let's spend a fun evening together over billiards, darts and board games. Even if you've never touched AI before, come along and say hi."],
-  "s3.baslik": [null, "What happened in AI?"],
-  "s3.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
+  "duyurular.baslik": [null, "Latest from the society."],
+  "duyurular.giris": [null, "What the society posts in its WhatsApp announcement channel is published here too."],
+  "butun-duyurular": [null, "All announcements"],
+  "rapor.baslik": [null, "What happened in AI?"],
+  "rapor.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
   "butun-sayilar": [null, "All issues"],
-  "s4.baslik": [null, "Work by our members."],
+  "projeler.baslik": [null, "Work by our members."],
   "tamamlandi": [null, "Completed"],
   "p1.ad": [null, "Leaf disease classifier"],
   "p1.metin": [null, "Models that look at a photo of a leaf and recognise disease across 14 plant species. The data was split at the leaf level, so photos of the same leaf never end up in both training and testing."],
@@ -148,7 +153,17 @@ atilimai.ekle({
   "akis.yukleniyor": ["Haftalık rapor yükleniyor…", "Loading the weekly report…"],
   "akis.hata": ["Haftalık rapor şu an yüklenemedi.", "The weekly report could not be loaded right now."],
   "akis.kalan": ["Bu sayının kalan {n} haberi arşivde.", "The other {n} items in this issue are in the archive."],
-  "akis.kalan1": ["Bu sayının kalan {n} haberi arşivde.", "The other item in this issue is in the archive."]
+  "akis.kalan1": ["Bu sayının kalan {n} haberi arşivde.", "The other item in this issue is in the archive."],
+  "duyuru.yukleniyor": ["Duyurular yükleniyor…", "Loading announcements…"],
+  "duyuru.yok": ["Henüz duyuru yok.", "No announcements yet."],
+  "duyuru.hata": ["Duyurular şu an yüklenemedi.", "Announcements could not be loaded right now."],
+  "duyuru.kalan": ["Arşivde {n} duyuru daha.", "{n} more announcements in the archive."],
+  "duyuru.kalan1": ["Arşivde {n} duyuru daha.", "1 more announcement in the archive."],
+  "duyuru.sabit": ["Sabit", "Pinned"],
+  "duyuru.devam": ["Devamı arşivde", "Read on in the archive"],
+  "duyuru.gorsel": ["Görsel arşivde", "Image in the archive"],
+  "duyuru.video": ["Video arşivde", "Video in the archive"],
+  "duyuru.medya": ["Görseller arşivde", "Media in the archive"]
 });
 </script>
 <title data-i18n="baslik">Atılım AI — Yapay Zeka Topluluğu</title>
@@ -197,7 +212,7 @@ atilimai.ekle({
 @font-face{font-family:"IBM Plex Mono";src:url(fonts/plex-mono-500.woff2) format("woff2");
   font-weight:500;font-style:normal;font-display:swap}
 /* Tasarım sistemi: DESIGN.md. Token dışında değer kullanılmaz. */
-/* Renk: beş sayfada aynı blok (DESIGN.md → Colors). Palet ham değerdir;
+/* Renk: altı sayfada aynı blok (DESIGN.md → Colors). Palet ham değerdir;
    sayfa yüzeyi yalnızca rolleri çağırır. Roller koyu temayla (oda) başlar,
    açık tema (defter) hemen alttaki iki blokta: sistem açıksa ve ziyaretçi
    koyuyu seçmediyse, ya da açığı seçtiyse. Üst çubuk ve menü paneli paleti
@@ -332,7 +347,7 @@ nav.yapisik{border-bottom-color:var(--hair);background:var(--cubuk-cam);backdrop
   .menu-btn{display:block}
 }
 
-/* ---------- görünüm denetimi (dört sayfada aynı) ----------
+/* ---------- görünüm denetimi (beş sayfada aynı) ----------
    Dil ve tema tek düğmenin arkasında: 320px'te iki ayrı 44px düğme okuma
    sayfalarının çubuğuna sığmıyordu. Çubuğun içinde olduğu için her temada
    gece paletiyle çizilir; .menu-btn'in ve mobil menü panelinin dili.
@@ -396,8 +411,8 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- hero ---------- */
-#s0{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
-#s0>.wrap{width:100%}
+#giris{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
+#giris>.wrap{width:100%}
 .eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
 
 /* ---------- düğme ---------- */
@@ -548,6 +563,42 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
   border-bottom:1px solid var(--lamba-alt);padding-bottom:4px;min-height:44px}
 @media(max-width:760px){.haber{grid-template-columns:1fr;gap:var(--sp-xs)}}
 
+/* ---------- duyuru ---------- */
+/* Haber satırının akrabası, ayrı bir iş: başlık yok (WhatsApp mesajının
+   başlığı yok, ilk satırı başlık yapmak uydurma hiyerarşi olurdu), sol sütun
+   tarih + saat, metin birincil renkte. Kart değil satır: DESIGN.md "A grid,
+   not a card". min-width:0 ve anywhere, bottan gelen 500 harflik tek kelime
+   satırı kırmasın diye. */
+.duyuru{display:grid;grid-template-columns:88px 1fr;gap:var(--sp-lg);padding:22px 0;
+  border-bottom:1px solid var(--cizgi);align-items:start}
+.duyuru>*{min-width:0;overflow-wrap:anywhere}
+.duyuru:first-child{border-top:1px solid var(--cizgi)}
+#duyuruList{margin-top:var(--sp-xl)}
+.duyuru-yan{display:flex;flex-direction:column;gap:var(--sp-xs)}
+.duyuru time span{display:block}
+.duyuru time span+span{margin-top:3px}
+.duyuru-metin{color:var(--metin);font-size:15px;line-height:1.6;max-width:66ch}
+/* Public Sans yalnızca 400–500 yüklü; 600 isteyen tarayıcı kalınlığı sahte
+   üretirdi. Kalın = 500. */
+.duyuru-metin strong{font-weight:500}
+.duyuru-metin code{font-family:var(--mono);font-size:13px}
+.duyuru-metin a{border-bottom:1px solid var(--lamba-alt);transition:color .3s}
+.duyuru-metin a:hover{color:var(--lamba-iz-h)}
+/* Medya metnin altında, sütun genişliğinde. width/height öznitelikleri yer
+   tutar (kayma yok); çerçeve yalnız load sonrası (DESIGN.md Images). */
+.duyuru-medya{display:grid;gap:var(--sp-sm);margin-top:var(--sp-md);max-width:640px}
+.duyuru-medya img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;
+  border:1px solid transparent;border-radius:var(--r-md)}
+.duyuru-medya img.yuklendi{border-color:var(--cizgi)}
+.duyuru-medya video{display:block;width:100%;aspect-ratio:16/9;background:var(--yuzey-2);
+  border-radius:var(--r-md)}
+@media(max-width:760px){
+  .duyuru{grid-template-columns:1fr;gap:var(--sp-xs)}
+  .duyuru-yan{flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:var(--sp-sm)}
+  .duyuru time span{display:inline}
+  .duyuru time span+span{margin:0 0 0 var(--sp-sm)}
+}
+
 /* ---------- proje ---------- */
 /* Dört kart: auto-fit 1440px'te 3+1 diziyordu, dördüncü kart tek başına alt
    satırda kalıyordu. İki sütun dördü de eşit taşıyor ve 21px başlıklara yer
@@ -598,7 +649,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
 /* ---------- belirme ---------- */
 /* Gizleme yalnızca JS varken uygulanır: betik çalışmazsa ya da tarayıcı
    sekmeyi kısarsa içerik görünür kalır, boş sayfa görünmez.
-   Kahraman (#s0) bilerek .reveal taşımıyor. Başlık, giriş ve "Topluluğa
+   Kahraman (#giris) bilerek .reveal taşımıyor. Başlık, giriş ve "Topluluğa
    katıl" her ziyarette opacity:0'dan başlayıp gözlemci geri çağrısı + 0,8 s
    bekliyordu: sayfanın LCP öğesi ve tek katılım yolu bir animasyonun
    arkasındaydı. İlk ekran dinlenik çizilir; belirme aşağıdaki bölümlerde. */
@@ -700,13 +751,14 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <a class="atla" href="#icerik" data-i18n="atla">İçeriğe atla</a>
 
 <nav id="nav"><div class="wrap nav-in">
-  <a class="marka" href="#s0"><i aria-hidden="true"></i>ATILIM AI</a>
+  <a class="marka" href="#giris"><i aria-hidden="true"></i>ATILIM AI</a>
   <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="baglar" data-i18n="menu">Menü</button>
   <div class="baglar" id="baglar">
-    <a href="#s1" data-b="s1" data-i18n="nav.s1">Hakkımızda</a>
-    <a href="#s3" data-b="s3" data-i18n="nav.s3">Haftalık rapor</a>
-    <a href="#s2" data-b="s2" data-i18n="nav.s2">Etkinlikler</a>
-    <a href="#s4" data-b="s4" data-i18n="nav.s4">Projeler</a>
+    <a href="#hakkimizda" data-b="hakkimizda" data-i18n="nav.hakkimizda">Hakkımızda</a>
+    <a href="#duyurular" data-b="duyurular" data-i18n="nav.duyurular">Duyurular</a>
+    <a href="#rapor" data-b="rapor" data-i18n="nav.rapor">Haftalık rapor</a>
+    <a href="#etkinlikler" data-b="etkinlikler" data-i18n="nav.etkinlikler">Etkinlikler</a>
+    <a href="#projeler" data-b="projeler" data-i18n="nav.projeler">Projeler</a>
     <a class="kat" href="katil.html"><span data-i18n="katil">Topluluğa katıl</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
   </div>
   <div class="ayar">
@@ -734,12 +786,12 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <main id="icerik">
 
-<section id="s0"><div class="wrap">
+<section id="giris"><div class="wrap">
   <h1><span data-i18n="h1a">Yapay zekayı birlikte öğreniyor, </span><em data-i18n="h1b">birlikte üretiyoruz.</em></h1>
   <p class="giris" data-i18n="giris">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.</p>
   <div class="eylem">
     <a class="btn p" href="katil.html"><span data-i18n="katil">Topluluğa katıl</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
-    <a class="btn s" href="#s4" data-i18n="projelere">Projelere göz at</a>
+    <a class="btn s" href="#projeler" data-i18n="projelere">Projelere göz at</a>
   </div>
 </div></section>
 <!-- İlk ekran (nav ve kahraman) ilk boyamadan önce çevrilsin. -->
@@ -747,18 +799,18 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s1"><div class="wrap iki">
+<section id="hakkimizda"><div class="wrap iki">
   <div>
-      <h2 class="reveal" data-i18n="s1.baslik">Teoriden çalışan modele.</h2>
+      <h2 class="reveal" data-i18n="hakkimizda.baslik">Teoriden çalışan modele.</h2>
   </div>
   <div>
-    <p class="giris reveal" data-i18n="s1.p1">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
-    <p class="giris reveal" data-i18n="s1.p2">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
+    <p class="giris reveal" data-i18n="hakkimizda.p1">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
+    <p class="giris reveal" data-i18n="hakkimizda.p2">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
     <!-- Rakamlar ekipten, 28 Eylül 2026. Değişince yalnızca .num içeriğini
          güncelle. Yürüyen proje sıfırken o satır bir yere götürmüyor; proje
-         başlayınca o da bir bağlantı olup #s4'e gidebilir. -->
+         başlayınca o da bir bağlantı olup #projeler'e gidebilir. -->
     <div class="olcum reveal">
-      <a href="#s4"><b class="num">3</b><span data-i18n="olcum.proje">tamamlanan proje</span><svg class="ok git" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+      <a href="#projeler"><b class="num">3</b><span data-i18n="olcum.proje">tamamlanan proje</span><svg class="ok git" aria-hidden="true"><use href="#i-ileri"/></svg></a>
       <div><b class="num">11</b><span data-i18n="olcum.etkinlik">tamamlanan etkinlik</span></div>
       <div><b class="num">0</b><span data-i18n="olcum.yuruyen">yürüyen proje</span></div>
     </div>
@@ -767,9 +819,22 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s3"><div class="wrap">
-  <h2 class="reveal" data-i18n="s3.baslik">Yapay zekada neler oldu?</h2>
-  <p class="giris reveal" data-i18n="s3.giris">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler.</p>
+<section id="duyurular"><div class="wrap">
+  <h2 class="reveal" data-i18n="duyurular.baslik">Topluluktan son duyurular.</h2>
+  <p class="giris reveal" data-i18n="duyurular.giris">Topluluğun WhatsApp duyuru kanalında paylaşılanlar burada da yayımlanır.</p>
+  <!-- Statik cümle betiğin boş durumuyla aynı; betik yoksa tek doğru cümle o
+       (uydurma duyuru yayında kalmasın, PRODUCT.md İlke 4). -->
+  <div class="reveal" id="duyuruList">
+    <p class="feed-kalan" data-i18n="duyuru.yok">Henüz duyuru yok.</p>
+  </div>
+  <a class="arsiv-bag reveal" href="duyurular.html"><span data-i18n="butun-duyurular">Bütün duyurular</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+</div></section>
+
+<div class="gecis" aria-hidden="true"></div>
+
+<section id="rapor"><div class="wrap">
+  <h2 class="reveal" data-i18n="rapor.baslik">Yapay zekada neler oldu?</h2>
+  <p class="giris reveal" data-i18n="rapor.giris">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler.</p>
   <p class="meta reveal" id="feedIssue"></p>
   <!-- Statik içerik, betiğin boş durumuyla aynı cümleyi söyler. Burada bir
        zamanlar üç örnek haber satırı duruyordu; veri dosyası boşaltılınca
@@ -783,8 +848,8 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s2"><div class="wrap">
-  <h2 class="reveal" data-i18n="s2.baslik">Yaklaşan etkinlikler.</h2>
+<section id="etkinlikler"><div class="wrap">
+  <h2 class="reveal" data-i18n="etkinlikler.baslik">Yaklaşan etkinlikler.</h2>
   <!-- Her etkinlik bir <li>. Bitiş günü (<li data-bitis="YYYY-AA-GG">, yoksa
        <time datetime>) geçince akordeon betiği satırı kaldırır; liste
        boşalırsa .tl-bos dipnotu açılır. Betik yoksa satırlar kalır, o yüzden
@@ -801,13 +866,13 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
       <div class="detay" id="etkinlik-1"><div><p data-i18n="e1.metin">Cuma akşamı V!be İncek'te buluşuyoruz. Bu dönemki projelerimizi ve hackathon takımlarımızı orada konuşacağız. Bunlardan haberdar olmak, belki bir ucundan tutmak istiyorsan seni de aramızda görmek isteriz. Toplantımızdan sonra da bilardo, dart ve kutu oyunlarıyla birlikte güzel bir akşam geçirelim. Yapay zekayla daha önce hiç uğraşmadıysan da gel, tanışalım.</p></div></div>
     </li>
   </ul>
-  <p class="tl-bos reveal" id="tlBos" data-i18n="s2.bos" hidden>Şu an planlanmış bir etkinlik yok.</p>
+  <p class="tl-bos reveal" id="tlBos" data-i18n="etkinlikler.bos" hidden>Şu an planlanmış bir etkinlik yok.</p>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s4"><div class="wrap">
-  <h2 class="reveal" data-i18n="s4.baslik">Üyelerimizin yürüttüğü işler.</h2>
+<section id="projeler"><div class="wrap">
+  <h2 class="reveal" data-i18n="projeler.baslik">Üyelerimizin yürüttüğü işler.</h2>
   <!-- Kart metinleri depoların README dosyalarından alındı. Açıklama
        değişirse README'yi kaynak al, buraya bilgi uydurma. -->
   <div class="projeler">
@@ -840,6 +905,7 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
   <a class="foot-posta" href="mailto:atilimyapayzeka@gmail.com">atilimyapayzeka@gmail.com</a>
   <span class="sag">
     <a href="haberler.html" data-i18n="haberler">Haberler</a>
+    <a href="duyurular.html" data-i18n="duyurular">Duyurular</a>
     <a href="katil.html" data-i18n="katil">Topluluğa katıl</a>
     <a href="https://github.com/atilimai" target="_blank" rel="noopener">GitHub<svg class="ok" aria-hidden="true"><use href="#i-dis"/></svg><span class="gizli" data-i18n="yeni-sekme"> (yeni sekmede açılır)</span></a>
   </span>
@@ -1159,6 +1225,300 @@ if ("IntersectionObserver" in window && !reduced){
 })();
 
 /* ============================================================
+   3a. Duyurular
+
+   content/duyurular.json'dan çizilir; dosyayı WhatsApp botu yazar.
+   Üç durum, zaman aşımı ve yeniden dene odağı 3. bölümle aynı kalıp.
+
+   Metin bottan, yani bir telefondan geliyor: hiçbiri HTML olarak
+   yorumlanmaz. WhatsApp biçimi (*kalın*, _italik_ ...) küçük bir
+   ayrıştırıcıyla createElement/createTextNode'a çevrilir; bağlantı
+   yalnızca http(s) ise bağlantı olur.
+   ============================================================ */
+(function(){
+  var ZAMAN_ASIMI = 10000;
+  var KISALT = 420;   /* ana sayfada metin bu kadar karakterde kesilir; gerisi arşivde */
+  var duyuruList = document.getElementById("duyuruList");
+  if (!duyuruList || !window.fetch) return;
+
+  var CAPA = /^d-[0-9a-f]{8}$/;
+  var ZAMAN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+03:00$/;
+  var MEDYA_SRC = /^(images\/duyurular\/[0-9a-f]{16}\.(webp|mp4)|https?:\/\/)/i;
+
+  /* kopya: index.html ↔ duyurular.html */
+  /* Dosya elle de düzenlenebilir ve bottan her şey gelebilir; sözleşmeye
+     uymayan kayıt atlanır, bozuk medya yalnızca medyası atlanır. "javascript:"
+     bir src/href'e hiç girmez: medya src'si yalnızca yerel yol ya da http(s). */
+  function temizDuyuru(d){
+    if (!d || typeof d !== "object") return null;
+    if (typeof d.capa !== "string" || !CAPA.test(d.capa)) return null;
+    if (typeof d.zaman !== "string" || !ZAMAN.test(d.zaman)) return null;
+    var metin = typeof d.metin === "string" ? d.metin.trim() : "";
+    var medya = [];
+    if (Array.isArray(d.medya)) d.medya.forEach(function(m){
+      if (!m || typeof m !== "object" || typeof m.src !== "string" || !MEDYA_SRC.test(m.src)) return;
+      if (m.tur !== "gorsel" && m.tur !== "video") return;
+      var en = Number(m.en), boy = Number(m.boy);
+      medya.push({ tur: m.tur, src: m.src,
+                   en: en > 0 && en < 20000 ? Math.round(en) : 0,
+                   boy: boy > 0 && boy < 20000 ? Math.round(boy) : 0 });
+    });
+    if (!metin && !medya.length) return null;
+    return { capa: d.capa, zaman: d.zaman, metin: metin, sabit: d.sabit === true, medya: medya };
+  }
+
+  /* kopya: index.html ↔ duyurular.html */
+  function zamanYaz(zaman){
+    return window.atilimai.tarih(zaman.slice(0, 10)) + ", " + zaman.slice(11, 16);
+  }
+
+  function ikon(ad){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "ok");
+    svg.setAttribute("aria-hidden", "true");
+    var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#" + ad);
+    svg.appendChild(use);
+    return svg;
+  }
+
+  /* Satır sonu <br>: WhatsApp mesajında satır sonu anlam taşır. */
+  function duz(ata, s){
+    s.split("\n").forEach(function(parca, i){
+      if (i) ata.appendChild(document.createElement("br"));
+      if (parca) ata.appendChild(document.createTextNode(parca));
+    });
+  }
+
+  /* kopya: index.html ↔ duyurular.html */
+  /* Biçimler iç içe geçmez (yeterli): bir işaret çifti bulununca içi düz metin
+     olur. URL seçeneği en başta: adresin içindeki "_" ya da "*" italik/kalın
+     başlatmasın diye soldan sağa tarayışta adres önce yakalanır. */
+  var BICIM = /(https?:\/\/\S+)|```([\s\S]+?)```|\*([^*\n]+)\*|_([^_\n]+)_|~([^~\n]+)~/g;
+  function waBicim(metin){
+    var frag = document.createDocumentFragment(), son = 0, m;
+    BICIM.lastIndex = 0;
+    while ((m = BICIM.exec(metin))){
+      var url = m[1];
+      if (url){
+        /* Cümle sonundaki noktalama adrese ait değil. */
+        var kes = /[.,;:!?)\]'"]+$/.exec(url);
+        if (kes){ url = url.slice(0, url.length - kes[0].length); BICIM.lastIndex = m.index + url.length; }
+        if (!/^https?:\/\/./i.test(url)){ BICIM.lastIndex = m.index + m[0].length; continue; }
+      }
+      if (m.index > son) duz(frag, metin.slice(son, m.index));
+      var el;
+      if (url){
+        el = document.createElement("a");
+        el.href = url; el.target = "_blank"; el.rel = "noopener noreferrer";
+        el.appendChild(document.createTextNode(url));
+        var g = document.createElement("span");
+        g.className = "gizli";
+        g.textContent = window.atilimai.t("yeni-sekme");
+        if (window.atilimai.dil === "en") g.lang = "en";
+        el.appendChild(g);
+      } else {
+        el = document.createElement(m[2] !== undefined ? "code" : m[3] !== undefined ? "strong" : m[4] !== undefined ? "em" : "s");
+        duz(el, m[2] !== undefined ? m[2] : m[3] !== undefined ? m[3] : m[4] !== undefined ? m[4] : m[5]);
+      }
+      frag.appendChild(el);
+      son = BICIM.lastIndex;
+    }
+    if (son < metin.length) duz(frag, metin.slice(son));
+    return frag;
+  }
+
+  /* Son kelime sınırında keser; sınır yoksa (500 harflik tek kelime) sert keser.
+     Bir sonraki karakter boşluksa kesilen yer zaten sınırdır. */
+  function kisalt(metin){
+    if (metin.length <= KISALT) return { metin: metin, kesildi: false };
+    var s = metin.slice(0, KISALT);
+    if (!/\s/.test(metin.charAt(KISALT))){
+      var i = s.search(/\s\S*$/);
+      if (i > 0) s = s.slice(0, i);
+    }
+    /* Vekil çiftin yarısı kalmasın. */
+    if (/[\uD800-\uDBFF]$/.test(s)) s = s.slice(0, -1);
+    return { metin: s.replace(/\s+$/, "") + "…", kesildi: true };
+  }
+
+  /* kopya: index.html ↔ duyurular.html */
+  /* 1 sabit: o duyuru, medyalı. 2–3: sabitler, metin. 0: ilk üç, metin.
+     Dördüncü sabit sunucuda reddediliyor; dosya elle bozulursa da üçte kesilir. */
+  function secilenler(hepsi){
+    var sabit = hepsi.filter(function(d){ return d.sabit; })
+      .sort(function(a, b){ return a.zaman < b.zaman ? 1 : a.zaman > b.zaman ? -1 : 0; })
+      .slice(0, 3);
+    if (sabit.length === 1) return { liste: sabit, medyali: true };
+    if (sabit.length) return { liste: sabit, medyali: false };
+    return { liste: hepsi.slice(0, 3), medyali: false };
+  }
+
+  function medyaYaz(medya){
+    var kap = document.createElement("div");
+    kap.className = "duyuru-medya";
+    medya.forEach(function(m){
+      var el;
+      if (m.tur === "video"){
+        el = document.createElement("video");
+        el.controls = true; el.preload = "none"; el.setAttribute("playsinline", "");
+        el.src = m.src;
+      } else {
+        el = document.createElement("img");
+        el.alt = "";   /* anlamı metin taşıyor; WhatsApp görsele açıklama vermez */
+        el.loading = "lazy";
+        if (m.en && m.boy){ el.width = m.en; el.height = m.boy; }
+        el.onload = function(){ this.classList.add("yuklendi"); };
+        el.onerror = function(){ if (this.parentNode) this.parentNode.removeChild(this); };
+        el.src = m.src;
+      }
+      kap.appendChild(el);
+    });
+    return kap;
+  }
+
+  /* Metin kipinde medyası olan duyuru ya da kısaltılmış metin tek bağlantıya
+     iner: arşiv ikisini de gösteriyor. */
+  function arsivBag(d, anahtar){
+    var a = document.createElement("a");
+    a.className = "devam";
+    a.href = "duyurular.html#" + d.capa;
+    a.textContent = window.atilimai.t(anahtar);
+    a.appendChild(ikon("i-ileri"));
+    return a;
+  }
+
+  /* kopya: index.html ↔ duyurular.html (arşivde medyali her zaman true, kısaltma yok) */
+  function duyuruYaz(d, medyali){
+    var kap = document.createElement("article");
+    kap.className = "duyuru";
+    kap.id = d.capa;
+
+    var yan = document.createElement("div");
+    yan.className = "duyuru-yan";
+    var t = document.createElement("time");
+    t.className = "meta";
+    t.dateTime = d.zaman;
+    t.title = zamanYaz(d.zaman);
+    var gun = document.createElement("span");
+    gun.textContent = window.atilimai.tarih(d.zaman.slice(0, 10));
+    var saat = document.createElement("span");
+    saat.textContent = d.zaman.slice(11, 16);
+    t.appendChild(gun); t.appendChild(saat);
+    yan.appendChild(t);
+    if (d.sabit){
+      var e = document.createElement("span");
+      e.className = "etiket";
+      e.textContent = window.atilimai.t("duyuru.sabit");
+      yan.appendChild(e);
+    }
+
+    var govde = document.createElement("div");
+    var kes = false;
+    if (d.metin){
+      var k = medyali ? { metin: d.metin, kesildi: false } : kisalt(d.metin);
+      kes = k.kesildi;
+      var p = document.createElement("p");
+      p.className = "duyuru-metin";
+      p.appendChild(waBicim(k.metin));
+      window.atilimai.tr(p);
+      govde.appendChild(p);
+    }
+    if (medyali && d.medya.length) govde.appendChild(medyaYaz(d.medya));
+    if (!medyali){
+      if (kes) govde.appendChild(arsivBag(d, "duyuru.devam"));
+      else if (d.medya.length){
+        var gor = d.medya.some(function(m){ return m.tur === "gorsel"; });
+        var vid = d.medya.some(function(m){ return m.tur === "video"; });
+        govde.appendChild(arsivBag(d, gor && vid ? "duyuru.medya" : vid ? "duyuru.video" : "duyuru.gorsel"));
+      }
+    }
+
+    kap.appendChild(yan); kap.appendChild(govde);
+    return kap;
+  }
+
+  var odakIste = false;
+  function odakla(el){
+    if (!odakIste || !el) return;
+    odakIste = false;
+    if (!el.matches("a[href],button")) el.tabIndex = -1;
+    el.focus();
+  }
+
+  function tekSatir(sinif, metin){
+    duyuruList.textContent = "";
+    var el = document.createElement("p");
+    el.className = sinif;
+    el.textContent = metin;
+    duyuruList.appendChild(el);
+    return el;
+  }
+
+  function hataGoster(){
+    var el = tekSatir("feed-hata", T.t("duyuru.hata"));
+    var tekrar = document.createElement("button");
+    tekrar.type = "button";
+    tekrar.textContent = window.atilimai.t("yeniden-dene");
+    tekrar.addEventListener("click", function(){
+      if (istekVar) return;
+      tekrar.setAttribute("aria-disabled", "true");
+      tekrar.textContent = window.atilimai.t("deneniyor");
+      odakIste = true;
+      getir(true);
+    });
+    el.appendChild(tekrar);
+    odakla(tekrar);
+  }
+
+  var istekVar = false, sonIstek = 0;
+  function getir(yeniden){
+    if (istekVar) return;
+    istekVar = true;
+    var no = ++sonIstek, dustu = false;
+    if (!yeniden) tekSatir("feed-kalan", T.t("duyuru.yukleniyor"));
+    var sure = setTimeout(function(){
+      if (no !== sonIstek) return;
+      dustu = true; istekVar = false; hataGoster();
+    }, ZAMAN_ASIMI);
+
+    fetch("content/duyurular.json", { cache: "no-cache" })
+      .then(function(r){ clearTimeout(sure); if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(d){
+        if (no !== sonIstek) return;
+        istekVar = false;
+        var hepsi = [];
+        if (d && Array.isArray(d.duyurular)) d.duyurular.forEach(function(ham){
+          var k = temizDuyuru(ham);
+          if (k) hepsi.push(k);
+        });
+        if (!hepsi.length){
+          odakla(tekSatir("feed-kalan", T.t("duyuru.yok")));
+          return;
+        }
+        var sec = secilenler(hepsi);
+        duyuruList.textContent = "";
+        sec.liste.forEach(function(k){ duyuruList.appendChild(duyuruYaz(k, sec.medyali)); });
+        var kalanSay = hepsi.length - sec.liste.length;
+        if (kalanSay > 0){
+          var kalan = document.createElement("p");
+          kalan.className = "feed-kalan";
+          kalan.textContent = T.t(kalanSay === 1 ? "duyuru.kalan1" : "duyuru.kalan", {n: kalanSay});
+          duyuruList.appendChild(kalan);
+        }
+        odakla(duyuruList.querySelector("a[href]") || duyuruList.firstElementChild);
+      })
+      .catch(function(){
+        clearTimeout(sure);
+        if (no !== sonIstek || dustu) return;
+        istekVar = false; hataGoster();
+      });
+  }
+
+  getir();
+})();
+
+/* ============================================================
    4. Etkinlik akordeonu
 
    Satırlar gerçek <button> olduğu için klavye desteği kendiliğinden
@@ -1292,7 +1652,31 @@ function agYap(i,out){
   }
 }
 
-/* ---------- 2. dikkat matrisi ---------- */
+/* ---------- 2. difüzyon ---------- */
+/* Difüzyon makalelerinin bilinen şeridi: aynı şeklin beş karesi soldan sağa,
+   saf gürültüden temiz şekle. Şekil bilerek nötr: bir halka ve ortasında nokta.
+   Kare f için ab, kalan sinyal oranı: nokta = sqrt(ab)*şekil + sqrt(1-ab)*gürültü
+   (ileri süreç tersten okunur). Gürültü kareyi aşmasın diye ±0.23'te kırpılır,
+   yoksa komşu kareye taşıp şerit okunmaz. Karelerin altındaki ince çizgi
+   zaman ekseni; etiket değil, yalnızca yönü söyler. */
+var AB = [0.0, 0.5, 0.8, 0.95, 1.0], KARE_ARA = 0.62, KARE_YAR = 0.23, HALKA_R = 0.17;
+function difuzyonYap(i,out){
+  if (Math.random() < 0.20){
+    out[0]=ras(-1.45,1.45); out[1]=-0.42+cn()*0.004; out[2]=cn()*0.02; return;
+  }
+  var f=(Math.random()*5)|0, ab=AB[f], sx, sy;
+  if (Math.random() < 0.80){
+    var a=Math.random()*6.2831853;
+    sx=Math.cos(a)*(HALKA_R+cn()*0.004); sy=Math.sin(a)*(HALKA_R+cn()*0.004);
+  } else { sx=cn()*0.03; sy=cn()*0.03; }
+  var g=Math.sqrt(1-ab), nx=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.24)),
+      ny=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.24));
+  out[0]=(f-2)*KARE_ARA + Math.sqrt(ab)*sx + g*nx;
+  out[1]=Math.sqrt(ab)*sy + g*ny;
+  out[2]=cn()*0.02;
+}
+
+/* ---------- 3. dikkat matrisi ---------- */
 /* Nedensel maske: bir belirteç yalnızca kendinden öncekilere bakabilir, bu
    yüzden üst üçgen boştur ve matris keskin bir köşegen kenarla okunur.
    Hücreler gaussian leke değil dolu kare yamalar; parlaklık ağırlıktan gelir. */
@@ -1322,7 +1706,7 @@ function matrisYap(i,out){
   out[2]=(Math.min(w,2.4)-0.7)*0.26 + cn()*0.012;
 }
 
-/* ---------- 3. belirteç akışı ---------- */
+/* ---------- 4. belirteç akışı ---------- */
 var TOK=34, tokY=new Float32Array(TOK), tokB=new Float32Array(TOK);
 (function(){
   for (var k=0;k<TOK;k++){
@@ -1346,7 +1730,7 @@ function akisYap(i,out){
   }
 }
 
-/* ---------- 4. gradyan inişi ---------- */
+/* ---------- 5. gradyan inişi ---------- */
 /* Hata yüzeyi tel kafes olarak çizilir, iniş yolu gerçek gradyan adımlarıyla
    üretilir: adımlar eğim azaldıkça kendiliğinden kısalır. Yol, adım sayısına
    göre değil yay uzunluğuna göre örneklenir — yoksa bütün parçacıklar
@@ -1400,18 +1784,20 @@ function inisYap(i,out){
   }
 }
 
-var yapici = [monogramYap, agYap, matrisYap, akisYap, inisYap];
+/* Sıra sayfadakiyle aynı: giriş, hakkımızda, duyurular, rapor, etkinlikler,
+   projeler. Bant i, p = i+1'de model i+1'e oturur. */
+var yapici = [monogramYap, agYap, difuzyonYap, matrisYap, akisYap, inisYap];
 
 /* ---------- shader ---------- */
 var VS =
-"attribute vec3 a0;attribute vec3 a1;attribute vec3 a2;attribute vec3 a3;attribute vec3 a4;"+
+"attribute vec3 a0;attribute vec3 a1;attribute vec3 a2;attribute vec3 a3;attribute vec3 a4;attribute vec3 a5;"+
 "attribute float aBoy;attribute float aTohum;"+
-"uniform float w0,w1,w2,w3,w4;"+
+"uniform float w0,w1,w2,w3,w4,w5;"+
 "uniform float uZaman,uEn,uDon,uSup,uSurukle,uSig,uNokta,uItme;"+
 "uniform vec2 uFare;uniform vec4 uKutu;"+
 "varying float vIsik;varying float vSol;"+
 "void main(){"+
-"  vec3 p = a0*w0+a1*w1+a2*w2+a3*w3+a4*w4;"+
+"  vec3 p = a0*w0+a1*w1+a2*w2+a3*w3+a4*w4+a5*w5;"+
 "  float f = aTohum*6.2831853;"+
 "  p += vec3(sin(uZaman*0.34+f),cos(uZaman*0.27+f*1.7),sin(uZaman*0.21+f*2.3))*(0.020*uSurukle);"+
 "  float c=cos(uDon), s=sin(uDon);"+
@@ -1453,13 +1839,13 @@ function derle(tip, kod){
 
 var prog = null, konum = {}, tampon = [];
 /* Her modelin gerçek yarı-genişliği: sığdırma bunlardan hesaplanır. */
-var sinirX = [1,1,1,1,1], sinirY = [1,1,1,1,1];
+var sinirX = [1,1,1,1,1,1], sinirY = [1,1,1,1,1,1];
 /* Çerçevenin ne kadarını dolduracağı modele göre: işaret kendinden emin
    durmalı, diyagramların ise nefes alacak kenar boşluğu olmalı. */
 /* Doluluk, sürüklenme payı ve nokta yarıçapı için kenarda boşluk bırakır;
    itme sırasında ayrıca küçülür (aşağıya bak), böylece parçacıklar çerçeveyi
    hiçbir durumda aşıp kırpılmaz. */
-var DOLGU = [0.925, 0.885, 0.900, 0.905, 0.890];
+var DOLGU = [0.925, 0.885, 0.900, 0.900, 0.905, 0.890];
 /* Modeli kendi sınırlayıcı kutusunun merkezine oturtur ve yarı-genişliklerini
    kaydeder. Sınırın mutlak değerden okunması, gradyan inişi gibi simetrik
    olmayan modelleri çerçevenin bir yarısına itiyordu. */
@@ -1499,7 +1885,7 @@ function ortala(dizi, k){
 /* sinirX/sinirY zaten izdüşüm birimindedir; burada ikinci bir 0.62 uygulanmaz. */
 function sigdir(w, en){
   var ex=0, ey=0, d=0;
-  for (var i=0;i<5;i++){ ex+=w[i]*sinirX[i]; ey+=w[i]*sinirY[i]; d+=w[i]*DOLGU[i]; }
+  for (var i=0;i<yapici.length;i++){ ex+=w[i]*sinirX[i]; ey+=w[i]*sinirY[i]; d+=w[i]*DOLGU[i]; }
   ex=Math.max(0.05,ex); ey=Math.max(0.05,ey); d=Math.max(0.2,d);
   return Math.min(d*en/ex, d/ey);
 }
@@ -1513,9 +1899,9 @@ function kur(){
   gl.useProgram(prog);
 
   var poz = [], boy = new Float32Array(SAYI), toh = new Float32Array(SAYI), t3=[0,0,0];
-  for (var b=0;b<5;b++) poz.push(new Float32Array(SAYI*3));
+  for (var b=0;b<yapici.length;b++) poz.push(new Float32Array(SAYI*3));
   for (var i=0;i<SAYI;i++){
-    for (var k=0;k<5;k++){
+    for (var k=0;k<yapici.length;k++){
       yapici[k](i,t3); poz[k][i*3]=t3[0]; poz[k][i*3+1]=t3[1]; poz[k][i*3+2]=t3[2];
     }
     /* i%4===0 her modelde yapısal öğedir: ağda düğüm, inişte yol.
@@ -1523,7 +1909,7 @@ function kur(){
     boy[i]=(i%4===0) ? ras(1.60,2.75) : ras(0.95,1.75);
     toh[i]=Math.random();
   }
-  for (b=0;b<5;b++) ortala(poz[b], b);
+  for (b=0;b<yapici.length;b++) ortala(poz[b], b);
 
   function bagla(ad, veri, boyut){
     var buf = gl.createBuffer();
@@ -1533,11 +1919,11 @@ function kur(){
     if (loc >= 0){ gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, boyut, gl.FLOAT, false, 0, 0); }
     tampon.push(buf);
   }
-  for (var q=0;q<5;q++) bagla("a"+q, poz[q], 3);
+  for (var q=0;q<yapici.length;q++) bagla("a"+q, poz[q], 3);
   bagla("aBoy", boy, 1);
   bagla("aTohum", toh, 1);
 
-  ["w0","w1","w2","w3","w4","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare","uKutu",
+  ["w0","w1","w2","w3","w4","w5","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare","uKutu",
    "uSoguk","uSicak","uKazanc","uVurgu","uKip"].forEach(function(ad){ konum[ad]=gl.getUniformLocation(prog, ad); });
 
   gl.disable(gl.DEPTH_TEST);
@@ -1599,7 +1985,7 @@ function temizle(){
 /* Merceğin yeri okuma sütununun dışındaki rayın dış ucudur ve gerçek .wrap
    dikdörtgeninden hesaplanır. Temel dolgu clamp(20px,5vw,56px), .wrap ile
    birebir aynı. */
-var refWrap = document.querySelector("#s1 .wrap") || document.querySelector("main .wrap");
+var refWrap = document.querySelector("#hakkimizda .wrap") || document.querySelector("main .wrap");
 var menu = document.getElementById("nav");
 var MERCEK_TAVAN = 560;
 function mercekKutusu(){
@@ -1638,7 +2024,7 @@ function olc(){
      (d) cinsinden: yakala > acik > tam. Her yönde komşu bantla aradaki
      yarım mesafeyle sınırlanır, böylece aynı anda yalnızca bir bant merceği
      tutar. Eskiden hedef "ekranda en çok görünen bant"tı ve iki bant aynı
-     ekrana girince (#s2 kısa) hedef birinden ötekine sıçrıyordu. */
+     ekrana girince (#etkinlikler kısa) hedef birinden ötekine sıçrıyordu. */
   /* oncesi: mercek bandın üstündeyken (d > 0), sınırı bir önceki bant.
      sonrasi: mercek bandı geçmişken (d < 0), sınırı bir sonraki bant. */
   for (i=0;i<BANT.length;i++){
@@ -1777,12 +2163,15 @@ function cizim(zaman){
   gl.enable(gl.SCISSOR_TEST);
   gl.scissor(gx, tuval.height - ga, gx1 - gx, ga - gu);
 
-  var idx = Math.max(0, Math.min(3, Math.floor(p)));
+  /* Model sayısı yapici'den: p bantlarla 0..bant sayısı arasında gezer, son
+     modelde kalır. Bant i, p = i+1'de model i+1'dir. */
+  var M = yapici.length;
+  var idx = Math.max(0, Math.min(M-2, Math.floor(p)));
   var f = daha(0, 1, p - idx);
-  var wt = [0,0,0,0,0];
+  var wt = []; for (i=0;i<M;i++) wt.push(0);
   wt[idx] = 1-f; wt[idx+1] = f;
-  if (p >= 4){ wt=[0,0,0,0,1]; }
-  for (i=0;i<5;i++) gl.uniform1f(konum["w"+i], wt[i]);
+  if (p >= M-1){ wt[idx] = 0; wt[idx+1] = 0; wt[M-1] = 1; }
+  for (i=0;i<M;i++) gl.uniform1f(konum["w"+i], wt[i]);
 
   gl.uniform1f(konum.uZaman, zaman);
   /* Yerleşim piksel altı: viewport bütün tuval, dikdörtgen gölgelendiriciye
@@ -1893,6 +2282,8 @@ function kurulum(){
                powerPreference:"high-performance"};
     gl = tuval.getContext("webgl2", sec) || tuval.getContext("webgl", sec);
   } catch(e){ gl = null; }
+  /* 6 model + boy + tohum = 8 öznitelik: WebGL1'in alt sınırı tam bu. */
+  if (gl && gl.getParameter(gl.MAX_VERTEX_ATTRIBS) < 8) gl = null;
   if (!gl || !kur()){ durum = -1; kapat(); return; }
   durum = 1;
   boyutla();
@@ -1956,7 +2347,7 @@ calistir();
 
 <script>
 /* ============================================================
-   Görünüm denetimi (dört sayfada aynı: index, haberler, haber, katil)
+   Görünüm denetimi (beş sayfada aynı: index, haberler, haber, katil, duyurular)
 
    Tema canlı değişir: <html data-tema> ve kayıt. "Sistem" niteliği ve
    kaydı kaldırır; CSS o zaman prefers-color-scheme'i izler. Dil değişince

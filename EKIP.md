@@ -39,11 +39,13 @@ görselleri hâlâ oradan çekiliyor, o yüzden kapatma. Üç içerik
 sayfası var ve üçü de aynı veri dosyasını okuyor: `content/haberler.json`.
 Dördüncü dosya `404.html` veri okumaz; sunucu onu yalnızca eksik adreslerde sunar.
 Beşinci dosya `katil.html` da veri okumaz: her "Topluluğa katıl" bağlantısı
-oraya gider.
+oraya gider. Altıncı dosya `duyurular.html` ikinci bir veri dosyasını okur,
+`content/duyurular.json`; ana sayfanın `#duyurular` bölümü de onu okur
+("Duyurular" başlığına bak).
 
 İçerik elle düzenlenmiyor — haberleri kulübün [yönetim
 paneli](https://github.com/atilimai/Atilim_AI_Panel) bu depoya commit atarak
-yayımlıyor.
+yayımlıyor; duyuruları panelin WhatsApp botu aynı yoldan yazıyor.
 
 ## Sayfa haritası
 
@@ -57,14 +59,15 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 | 1 · Kabuk | Nav durumu, mobil menü, aktif bölüm işareti |
 | 2 · Belirme | Görünürlüğe göre beliren animasyonlar (`.reveal`) |
 | **3 · Haftalık rapor** | **`content/haberler.json` buradan okunuyor** |
+| **3a · Duyurular** | **`content/duyurular.json` buradan okunuyor** (Haftalık raporun altında, ayrı IIFE) |
 | 4 · Etkinlik akordeonu | Etkinlik satırlarının açılıp kapanması ve gösterge işareti. Tarihi geçen satırı kaldırır, liste boşalırsa dipnotu açar; `#tl` yoksa betik hiçbir şey yapmaz |
 | **5 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
-| Görünüm denetimi | Dil ve tema paneli — ayrı `<script>`, dört sayfada aynı (bkz. "Tema ve dil") |
+| Görünüm denetimi | Dil ve tema paneli — ayrı `<script>`, beş sayfada aynı (bkz. "Tema ve dil") |
 
-**Bölüm sırası kimlik sırasıyla aynı değil:** kahraman `#s0`, Hakkımızda `#s1`,
-Haftalık rapor `#s3`, Etkinlikler `#s2`, Projeler `#s4`. Rapor 19 Ekim 2026'da
-etkinliklerin üstüne alındı (ekip kararı); paylaşılmış `#s2`/`#s3`
-bağlantıları kırılmasın diye kimlikler ve çeviri anahtarları yerinde kaldı.
+**Bölüm kimlikleri isimli:** kahraman `#giris`, Hakkımızda `#hakkimizda`,
+Duyurular `#duyurular`, Haftalık rapor `#rapor`, Etkinlikler `#etkinlikler`, Projeler `#projeler`; çeviri
+anahtarları da aynı adları taşır (`nav.rapor`, `rapor.baslik`…). 10 Kasım 2026'ya
+kadar kimlikler `#s0`–`#s4` idi; eski `#sN` bağlantıları bilerek yönlendirilmedi.
 Menü de aynı sırada. Aktif bölüm işareti ve alan katmanı sıraya değil
 kimliğe ve bantlara bakıyor, o yüzden sırayı değiştirmek onları bozmaz.
 
@@ -131,6 +134,13 @@ düzenlenmiş olabilir" deniyordu. Parametrenin varlığı artık sayısal testt
 
 Stil `haberler.html`'den devralındı; yazı gövdesi için birkaç kural eklendi.
 
+### `duyurular.html`
+
+Bütün duyuruların arşivi; `haberler.html`'in iskeleti, ama kart yok, satır var:
+başlıksız, sol sütunda tarih + saat, yanında düz metin ve medya. Her duyuru her
+zaman tam ve medyalı basılır (kısaltma yok). En yeni başta; sıra `zaman`'a göre
+sitede kuruluyor, dosyanın sırasına güvenilmiyor. Ayrıntı "Duyurular" başlığında.
+
 ### `404.html`
 
 Sunucunun (Vercel ve Pages) eksik adresler için sunduğu sayfa. Gece dünyasında tasarlandı, 13
@@ -173,8 +183,16 @@ Discord bu sayfada yok, sitenin başka hiçbir yerinde de yok; ayrıntı aşağ�
 `grep -n "5. Alan" index.html` seni oraya götürür. **Kütüphane yok** — three.js
 bilerek kaldırıldı, yerine gölgelendirici ve model üreticileri elle yazıldı.
 
-Ne yapar: kaydırdıkça beş model arasında dönüşür — monogram, sinir ağı, dikkat
-matrisi, belirteç akışı, gradyan inişi. İki hali var: okuma sütununun sağındaki
+Ne yapar: kaydırdıkça altı model arasında dönüşür — monogram, sinir ağı, difüzyon
+(gürültüden şekle beş kare), dikkat matrisi, belirteç akışı, gradyan inişi.
+Bant i, `yapici[i+1]`'i gösterir; yani beş bant, beş model, sayfadaki sırayla:
+giriş|hakkımızda → sinir ağı, hakkımızda|duyurular → difüzyon,
+duyurular|rapor → dikkat matrisi, rapor|etkinlikler → belirteç akışı,
+etkinlikler|projeler → gradyan inişi. Monogram bantsız, giriş ekranındaki
+dinlenme modelidir. Bölüm eklersen ya da çıkarırsan bant sayısı değişir; model
+sayısıyla eşleştirmeyi yeniden kur (`p`, bantlarla 0..bant sayısı). Model sayısı her yerde
+`yapici.length`'ten gelir; 6 model + boy + tohum = 8 öznitelik, WebGL1 alt
+sınırı, bu yüzden kurulumda `MAX_VERTEX_ATTRIBS` ölçülür. İki hali var: okuma sütununun sağındaki
 bölgede duran küçük **mercek**, bölümler arasındaki bandın içinde yatayda ortaya
 açılıp bantla birlikte kayan **levha**. Levha ekranı kaplamaz; en çok 800 × 500
 px'dir.
@@ -220,7 +238,7 @@ ekrana girince model birinden ötekine sıçrıyordu; tek karede 305 px ölçül
 
   1 Ekim 2026'ya kadar döngü yalnızca *çizmeyi* atlıyordu (`EN < 1152`
   guard'ı) ve geri dönebilmek için kare istemeye devam ediyordu. Telefon yine
-  de bağlamı açıp beş model için 7.500 parçacık üretiyor, sonra saniyede 60
+  de bağlamı açıp beş model için (o gün) 7.500 parçacık üretiyor, sonra saniyede 60
   kez uyanıp hiçbir şey çizmiyordu. 390 px'de, işlemci 4× yavaşlatılarak
   ölçüldü: alan kurulumu ~38 ms + logo görseli gelince ~15 ms (sayfanın kalan
   kurulum betiği ~3 ms), boştayken saniyede 4,4 ms ana iş parçacığı yükü.
@@ -278,7 +296,7 @@ Ayrıntılı gerekçeler ve ölçülmüş kanıtlar `DESIGN.md` → Components �
 ## Tema ve dil
 
 13 Ekim 2026'dan beri ziyaretçi temayı ve arayüz dilini kendisi seçiyor (ekip
-kararı). Dört çubuklu sayfada (`index`, `haberler`, `haber`, `katil`) çubuğun
+kararı). Beş çubuklu sayfada (`index`, `haberler`, `haber`, `katil`, `duyurular`) çubuğun
 sonunda tek bir düğme var: o anki dilin kodu ("TR" / "EN") ve temanın simgesi
 (ay / güneş). Düğme küçük bir panel açıyor: **Dil** (Türkçe / English) ve
 **Tema** (Sistem / Koyu / Açık). `404.html`'de çubuk olmadığı için denetim de
@@ -288,7 +306,7 @@ Components → Görünüm denetimi.
 **Nasıl çalışıyor:**
 
 - **Başlangıç bloğu**, her sayfanın `<head>`'inde, `/* Görünüm başlangıcı`
-  yorumuyla başlıyor ve **beş sayfada birebir aynı**. Kayıtlı temayı
+  yorumuyla başlıyor ve **altı sayfada birebir aynı**. Kayıtlı temayı
   `<html data-tema>`'ya, kayıtlı dili `<html lang>`'a ilk boyamadan önce
   yazıyor; ortak metinleri (atlama bağlantısı, denetim, gezinme, durum
   cümleleri, ay adları) ve `window.atilimai` yardımcılarını (`t`, `cevir`,
@@ -347,8 +365,8 @@ Components → Görünüm denetimi.
   0,0026'ya indi. Newsreader'ı değiştirirsen bu yüzdeleri yeniden ölç.
 - Panelin önizlemesinde depo yok: tema oturum boyunca değişiyor, dil satırı
   gizli. `haberler.html`'e depoya dokunan yeni bir kod eklersen `try` içine al.
-- Denetimin CSS'i, betiği ve biçimlendirmesi dört sayfada, başlangıç ve renk
-  bloğu beş sayfada birebir aynı. Birini değiştirirsen hepsini değiştir.
+- Denetimin CSS'i, betiği ve biçimlendirmesi beş sayfada, başlangıç ve renk
+  bloğu altı sayfada birebir aynı. Birini değiştirirsen hepsini değiştir.
 
 ## Veri sözleşmesi
 
@@ -436,6 +454,87 @@ Bu dosyayı elle düzenlemek yerine panelden yayımla: panel doğrulama yapıyor
 (boş sayı, tekrarlı numara, bozuk tarih, `http(s)` olmayan bağlantı reddedilir)
 ve alan sırasını koruyarak yazıyor.
 
+## Duyurular
+
+Kulübün WhatsApp duyuruları sitede iki yerde görünür: ana sayfada
+`#duyurular` (Hakkımızda ile Haftalık rapor arasında) ve hepsinin arşivi
+`duyurular.html`. Kaynak `content/duyurular.json`.
+
+**Nereden geliyor.** Başkan duyuruyu WhatsApp'ta kulübün Cloud API botuna iletir;
+panelin webhook'u (`/api/whatsapp`) bunu bu depoya commit eder: `content/duyurular.json`
++ `images/duyurular/`. İletinin metni *olduğu gibi*, yazım düzeltmesiz yayımlanır.
+Sitede gönderen adı ya da numarası **hiçbir yerde yok**: depoda, JSON'da, commit
+mesajında da yok, kartta imza yok. Panelde 📢 Duyurular penceresi listeler,
+raptiyeler ve siler. Bot ve panel akışının ayrıntısı panel deposunda
+(`AGENTS.md` → "Duyurular hattı"). Bu dosyayı elle düzenlemek son çare; panel ve bot
+sıralamayı, tekrar kontrolünü ve 3 raptiye sınırını sizin yerinize yapıyor.
+
+**Veri sözleşmesi** (en yeni başta, bilinmeyen alanlar panelde serileştirmede atılır):
+
+```json
+{ "_aciklama": "Bot ve panel yazar; elle düzenleme gerekmez",
+  "duyurular": [ { "id": "wamid.HBgM…", "capa": "d-9f2c1a7e", "mesajlar": ["wamid…"],
+    "kaynak": "whatsapp", "zaman": "2026-10-18T14:32:00+03:00", "metin": "*Toplantı* yarın…",
+    "sabit": false,
+    "medya": [ { "tur": "gorsel", "src": "images/duyurular/9f2c1a7e44b0d3a1.webp", "en": 1600, "boy": 1067 },
+               { "tur": "video", "src": "images/duyurular/ab12cd34ef567890.mp4" } ] } ] }
+```
+
+- `id` iletinin WhatsApp kimliği (içe aktarılanda `imp-` + özet), tekrar kontrolünün
+  anahtarı. `capa` = `d-` + `sha256(id)`'nin ilk 8 hanesi; sitedeki `#d-…` çapası bu.
+  `mesajlar` bu duyuruya birleşmiş bütün ileti kimlikleri.
+- `kaynak` `whatsapp` | `aktarim` (bir kerelik geçmiş içe aktarımı).
+- `zaman` `YYYY-MM-DDTHH:MM:SS+03:00`: Türkiye 2016'dan beri sabit UTC+3, yani
+  gün ve saat dilimsiz okunabilir. Kartta tarih `atilimai.tarih(zaman.slice(0,10))`
+  (ay adı ortak sözlükten, dile göre), saat `zaman.slice(11,16)`.
+- `sabit` yoksa `false`. `medya[].src` göreli ve `images/duyurular/<16 hane>.(webp|mp4)`;
+  sayfa başka bir kalıbı ya da `http(s)` dışını reddeder.
+- Metin en çok 4096 karakter (WhatsApp'ın sınırı; panel kesmez, reddeder). Biçim
+  WhatsApp'ınki: `*kalın*`, `_italik_`, `~üstü çizili~`, `` `kod` ``, düz `http(s)` bağlantılar.
+  Çizici yalnızca bunları üretir; HTML, `javascript:` bağlantı ve başka her şey düz metin kalır.
+
+**Ana sayfada ne görünür (raptiye kuralı).** Sunucu en çok 3 `sabit: true` kabul eder;
+sayfa da dosya elle bozulursa diye üçte keser (zamana göre en yeniler).
+
+| Raptiyeli | Ana sayfada |
+|---|---|
+| 1 | yalnız o duyuru, **medyalı** ve kısaltmasız |
+| 2–3 | raptiyeliler, yalnız metin (kısaltmalı) |
+| 0 | en yeni üç duyuru, yalnız metin |
+
+Metin ana sayfada 420 karakterde kısalır (sözcük sınırında, sonuna `…`, vekil çift
+bölünmez); kısalan duyuruda "Devamı arşivde", kısalmayan ama medyası olanda
+"Görsel/Video/Görseller arşivde" bağlantısı çıkar (medya ana sayfada yalnız tek raptiyelide basılır). Satırın altında "Arşivde N duyuru daha." ve "Bütün duyurular"
+bağlantısı var. Bağlantı `duyurular.html#d-<capa>`: arşivde duyuruya iner.
+
+**Çapa.** Arşiv çizildikten sonra `location.hash` `d-` + 8 onaltılık hane ise o satıra
+`scrollIntoView({behavior:"instant"})` ile gider (`html{scroll-behavior:smooth}` animasyonlu
+kaydırmayı kesiyordu), `focus({preventScroll:true})` ile odaklar ve `:target` ile
+bir yüzey basamağı yukarı alır. Bilinmeyen çapa sessizce yok sayılır.
+
+**Üç durum, üç ayrı cümle** (Haftalık rapordaki ders; bir daha birleştirme): yükleniyor
+("Duyurular yükleniyor…"), okundu ama duyuru yok ("Henüz duyuru yok."), istek düştü
+("Duyurular şu an yüklenemedi." + **Yeniden dene**; 10 sn'de ilk bayt gelmezse de).
+Statik biçimlendirme boş-durum cümlesini söylediği için ağ hatası asla "duyuru yok" gibi
+görünmemeli. Arşiv bugün boş: **geçmiş bir yayın varmış gibi yazma**. Duyuru metni
+çevrilmez; İngilizcede satırlara `atilimai.tr(el)` ile `lang="tr"` konur.
+
+**İki kopya çizici, birbirinden ayrı tutulmalı.** `temizDuyuru`, `waBicim` (+ `BICIM`),
+`zamanYaz`, `duz`, `medyaYaz` ve `duyuruYaz` hem `index.html`'in "3a" bölümünde hem
+`duyurular.html`'in betiğinde var; ortak dosya yok (derleme yok, sayfalar kendi kendine
+yeter). Her kopyanın üstünde `/* kopya: index.html ↔ duyurular.html */` yazıyor. Birini
+değiştirirsen ötekini de değiştir ve `grep -n "kopya: index.html" *.html` ile ikisini
+karşılaştır. Fark bilerek: ana sayfa `kisalt`, `secilenler` ve `arsivBag`'ı da taşır;
+arşivde `duyuruYaz` her zaman medyalı, kısaltmasız.
+
+**Discord'a gitmez.** İş akışı yalnızca `content/haberler.json` değişince çalışır;
+`content/duyurular.json` ve `images/duyurular/` onu tetiklemez. Duyuruyu Discord'a
+yollamak istersen yeni bir karar ve ayrı bir iş akışı gerekir.
+
+**`innerHTML` yok.** Bot metni de panelden gelen metin kadar güvensiz girdi:
+`textContent`/`createTextNode` ile basılır, `href` ve `src` yalnızca denetlenmiş
+kalıplarla girer.
+
 ## Discord yayını
 
 **Site Discord'u anmıyor.** 12 Ekim 2026'dan beri sitede Discord bağlantısı yok
@@ -508,14 +607,14 @@ HTML'i önbellekte tutabiliyor.
   `fetch("content/haberler.json")` çağrısını taslak veriye yönlendirerek
   çiziyor. Yani o çağrının biçimini değiştirirsen panelin önizlemesi bozulur;
   buna dokunacaksan panel tarafında `src/lib/site/preview.ts` dosyasına da bak.
-- **Beş sayfa belirteçlerini kendisi taşır, bilerek.** 13 Ekim 2026'dan beri
-  renk bloğu (palet, koyu roller, iki açık tema bloğu) beş sayfada birebir
+- **Altı sayfa belirteçlerini kendisi taşır, bilerek.** 13 Ekim 2026'dan beri
+  renk bloğu (palet, koyu roller, iki açık tema bloğu) altı sayfada birebir
   aynı; boşluk, yarıçap ve ray belirteçleri sayfaya göre değişiyor, her sayfa
   yalnızca kullandığını tanımlıyor. Ortak bir stil dosyası panelin
   önizlemesini bozmazdı — önizleme şablona yayımlanmış sitenin `<base href>`'ini
   ekliyor, göreli bir `<link>` oraya çözülür — ama her sayfanın ilk çizimine
   engelleyici bir istek ekler, karşılığında giderilecek bir sapma yok. Bir
-  belirtecin değerini değiştirirsen beş dosyada da ara:
+  belirtecin değerini değiştirirsen altı dosyada da ara:
   `grep -n -- "--lamba-d:" *.html`.
 - **Dış kaynak yok.** Site hiçbir CDN'den kod çekmiyor; 11 Ekim 2026'dan beri
   yazı tiplerini de Google Fonts'tan değil `fonts/` klasöründen sunuyor (nasıl
@@ -612,7 +711,7 @@ HTML'i önbellekte tutabiliyor.
   takımları kısmı, mekândaki oyun alanı (kutu oyunları, bilardo, dart) ve yer
   ekipten — afişte yer henüz
   yoktu; bitiş saati verilmedi, bilerek yazılmadı).
-  Satır kalıbı `#s2`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
+  Satır kalıbı `#etkinlikler`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
   fotoğraf şeridi konabiliyor (`figure.tl-foto`, üç kare): dosyalar
   `images/etkinlikler/` altında 640 px kare WebP, her birinin kendi `alt`
   metni ve İngilizcesi var (`data-i18n-nitelik="alt:…"`). Satır kalkınca
@@ -624,7 +723,7 @@ HTML'i önbellekte tutabiliyor.
   kalır; geçen etkinliği yine de listeden sil. Tarih ile gün adı ayrı
   `<span>`'lerde (gün adı `.gun`): çeviri öğenin bütün metnini değiştiriyor,
   gün adı tarihin içinde dursaydı İngilizcede silinirdi.
-- **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (3 tamamlanan
+- **Ölçüm rakamları ekipten geliyor.** `#hakkimizda`'deki üç rakam (3 tamamlanan
   proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi;
   proje sayısı 17 Ekim 2026'da `Project1-browsertracker` çıkınca 4'ten 3'e indi,
   etkinlik sayısı 3 Kasım 2026'da 20 Ekim Tanıtım Günü sayılınca 10'dan 11'e
@@ -639,7 +738,7 @@ HTML'i önbellekte tutabiliyor.
 - **API'den gelen sayıyı biçimlendirmeye gömme.** Ana sayfada artık dış API
   çağrısı yok: GitHub'dan dil, yıldız ve çatal sayısı çeken depo penceresi
   6 Ekim 2026'da kaldırıldı, çünkü Projeler kartlarının zaten bağladığı
-  depoları ikinci kez listeliyordu. "3 tamamlanan proje" satırı artık `#s4`'e
+  depoları ikinci kez listeliyordu. "3 tamamlanan proje" satırı artık `#projeler`'e
   giden bir bağlantı. Böyle bir veri geri gelirse kural aynı: değer `hidden`
   gelir ve yalnızca yanıt ulaşınca açılır. Kimliksiz GitHub çağrısı saatte 60
   ile sınırlı ve kampüs ağı tek IP paylaşıyor; istek sessizce düşünce HTML'e

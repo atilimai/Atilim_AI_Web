@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-/* Görünüm başlangıcı (beş sayfada aynı). Kayıtlı tema ve dil ilk boyamadan
+/* Görünüm başlangıcı (altı sayfada aynı). Kayıtlı tema ve dil ilk boyamadan
    önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
    tercihini izler; dil kaydı yoksa sayfa Türkçe.
    Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
@@ -52,6 +52,7 @@
     "ayar.acik": ["Açık", "Light"],
     "ana-sayfa": ["Ana sayfa", "Home"],
     "haberler": ["Haberler", "News"],
+    "duyurular": ["Duyurular", "Announcements"],
     "katil": ["Topluluğa katıl", "Join the society"],
     "sayi": ["{n}. sayı", "Issue {n}"],
     "sayi-yok": ["Henüz yayımlanmış bir sayı yok.", "No issue has been published yet."],
@@ -174,7 +175,7 @@ atilimai.ekle({
 @font-face{font-family:"IBM Plex Mono";src:url(fonts/plex-mono-500.woff2) format("woff2");
   font-weight:500;font-style:normal;font-display:swap}
 /* Token dışında değer kullanılmaz (DESIGN.md). */
-/* Renk: beş sayfada aynı blok (DESIGN.md → Colors). Palet ham değerdir;
+/* Renk: altı sayfada aynı blok (DESIGN.md → Colors). Palet ham değerdir;
    sayfa yüzeyi yalnızca rolleri çağırır. Roller koyu temayla (oda) başlar,
    açık tema (defter) hemen alttaki iki blokta: sistem açıksa ve ziyaretçi
    koyuyu seçmediyse, ya da açığı seçtiyse. Üst çubuk ve menü paneli paleti
@@ -284,7 +285,7 @@ a{color:var(--lamba-iz);text-decoration:none}
   .geri-yazi{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
     white-space:nowrap;letter-spacing:normal}
 }
-/* ---------- görünüm denetimi (dört sayfada aynı) ----------
+/* ---------- görünüm denetimi (beş sayfada aynı) ----------
    Dil ve tema tek düğmenin arkasında: 320px'te iki ayrı 44px düğme okuma
    sayfalarının çubuğuna sığmıyordu. Çubuğun içinde olduğu için her temada
    gece paletiyle çizilir; .menu-btn'in ve mobil menü panelinin dili.
@@ -524,6 +525,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
   <span>Atılım AI · Ankara</span>
   <span class="sag">
     <a href="haberler.html" data-i18n="haberler">Haberler</a>
+    <a href="duyurular.html" data-i18n="duyurular">Duyurular</a>
     <a href="index.html" data-i18n="ana-sayfa">Ana sayfa</a>
     <a href="katil.html" data-i18n="katil">Topluluğa katıl</a>
   </span>
@@ -917,7 +919,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
 </script>
 <script>
 /* ============================================================
-   Görünüm denetimi (dört sayfada aynı: index, haberler, haber, katil)
+   Görünüm denetimi (beş sayfada aynı: index, haberler, haber, katil, duyurular)
 
    Tema canlı değişir: <html data-tema> ve kayıt. "Sistem" niteliği ve
    kaydı kaldırır; CSS o zaman prefers-color-scheme'i izler. Dil değişince

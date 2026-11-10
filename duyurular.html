@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Görünüm başlangıcı (altı sayfada aynı). Kayıtlı tema ve dil ilk boyamadan
+   önce <html>'e yazılır. Tema kaydı yoksa nitelik de yok, CSS sistem
+   tercihini izler; dil kaydı yoksa sayfa Türkçe.
+   Depoya her erişim try içinde: panelin önizlemesi bu sayfaları opak kökenli
+   bir iframe'de açıyor, orada localStorage'a dokunmak bile hata fırlatıyor.
+
+   Dil: Türkçe metin biçimlendirmede durur (betik yoksa ve tarayıcılar için
+   tek kaynak). İngilizcede data-i18n="anahtar" taşıyan öğenin metni,
+   data-i18n-nitelik="nitelik:anahtar" taşıyanın niteliği değişir. cevir()
+   çubuğun, ilk ekranın ve gövdenin hemen ardından çağrılır; yavaş ağda
+   tarayıcı arada boyayabildiği için o ana kadar çevrilmemiş öğe görünmez
+   (visibility, yer tutar): İngilizce seçen ziyaretçi Türkçe bir kare görmez,
+   gövdenin geri kalanı beklemez. Sınıf DOMContentLoaded'da kalkar. Betiğin ürettiği metin t("anahtar") ile gelir.
+   Panelden gelen haberler çevrilmez, Türkçe kalır: tr(öğe) İngilizcede
+   öğeye lang="tr" yazar, ekran okuyucu doğru telaffuz etsin. Ortak metin
+   burada, sayfanın kendi metni hemen alttaki betikte (atilimai.ekle). */
+(function(){
+  var h = document.documentElement, t = null, d = null;
+  try { t = window.localStorage.getItem("atilimai.tema"); } catch (e) {}
+  if (t === "koyu" || t === "acik") h.setAttribute("data-tema", t);
+  try { d = window.localStorage.getItem("atilimai.dil"); } catch (e) {}
+  var dil = d === "en" ? "en" : "tr";
+  if (dil === "en"){
+    h.lang = "en";
+    h.classList.add("dil-bekle");
+    var st = document.createElement("style");
+    st.textContent = ".dil-bekle [data-i18n]:not([data-i18n-tamam]){visibility:hidden}";
+    document.head.appendChild(st);
+    document.addEventListener("DOMContentLoaded", function(){ h.classList.remove("dil-bekle"); });
+  }
+  var S = {tr: {}, en: {}};
+  function ekle(o){
+    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)){
+      if (o[k][0] !== null) S.tr[k] = o[k][0];
+      if (o[k][1] !== null) S.en[k] = o[k][1];
+    }
+  }
+  ekle({
+    "atla": ["İçeriğe atla", "Skip to content"],
+    "yeni-sekme": [" (yeni sekmede açılır)", " (opens in a new tab)"],
+    "ayar.ad": [" · Dil ve tema", " · Language and theme"],
+    "ayar.dil": ["Dil", "Language"],
+    "ayar.tema": ["Tema", "Theme"],
+    "ayar.sistem": ["Sistem", "System"],
+    "ayar.koyu": ["Koyu", "Dark"],
+    "ayar.acik": ["Açık", "Light"],
+    "ana-sayfa": ["Ana sayfa", "Home"],
+    "haberler": ["Haberler", "News"],
+    "duyurular": ["Duyurular", "Announcements"],
+    "katil": ["Topluluğa katıl", "Join the society"],
+    "sayi": ["{n}. sayı", "Issue {n}"],
+    "sayi-yok": ["Henüz yayımlanmış bir sayı yok.", "No issue has been published yet."],
+    "yeniden-dene": ["Yeniden dene", "Try again"],
+    "deneniyor": ["Deneniyor…", "Trying…"],
+    "devam": ["Devamını oku", "Read more"],
+    "kapat": ["Kapat", "Close"],
+    "kaynak": ["Kaynak: ", "Source: "],
+    "kaynaga-git": ["Kaynağa git", "Go to source"],
+    "butun-haberler": ["Bütün haberler", "All news"]
+  });
+  var AY = {tr: ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
+            en: ["January","February","March","April","May","June","July","August","September","October","November","December"]};
+  function metin(k, v){
+    var s = S[dil][k]; if (s === undefined) s = S.tr[k]; if (s === undefined) return k;
+    return v ? s.replace(/\{(\w+)\}/g, function(_, a){ return v[a] === undefined ? "" : v[a]; }) : s;
+  }
+  function cevir(kok){
+    if (dil !== "en") return;
+    kok = kok || document;
+    var el = kok.querySelectorAll("[data-i18n]"), i, j, v, p;
+    for (i = 0; i < el.length; i++){
+      v = S.en[el[i].getAttribute("data-i18n")]; if (v !== undefined) el[i].textContent = v;
+      el[i].setAttribute("data-i18n-tamam", "");
+    }
+    el = kok.querySelectorAll("[data-i18n-nitelik]");
+    for (i = 0; i < el.length; i++){
+      p = el[i].getAttribute("data-i18n-nitelik").split(";");
+      for (j = 0; j < p.length; j++){ var c = p[j].split(":"); v = S.en[c[1]]; if (v !== undefined) el[i].setAttribute(c[0], v); }
+    }
+  }
+  /* Sayı tarihi sözleşmede ISO; haberin kendi tarihi panelden serbest metin, o çevrilmez. */
+  function tarih(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    return m ? Number(m[3]) + " " + AY[dil][Number(m[2]) - 1] + " " + m[1] : (s || "");
+  }
+  function tr(el){ if (dil === "en") el.lang = "tr"; return el; }
+  /* Geri/ileri önbelleğinden dönen sayfa bırakıldığı temayla ve dille gelir;
+     başka sayfada yapılan seçim kayıtta. Dil farklıysa yeniden yükle, tema
+     farklıysa niteliği düzelt ve haber ver (alan ve denetim dinliyor). */
+  window.addEventListener("pageshow", function(e){
+    if (!e.persisted) return;
+    var t2 = null, d2 = null;
+    try { t2 = window.localStorage.getItem("atilimai.tema"); d2 = window.localStorage.getItem("atilimai.dil"); } catch (x) { return; }
+    if ((d2 === "en" ? "en" : "tr") !== dil){ window.location.reload(); return; }
+    var yeni = t2 === "koyu" || t2 === "acik" ? t2 : null;
+    if (yeni === h.getAttribute("data-tema")) return;
+    if (yeni) h.setAttribute("data-tema", yeni); else h.removeAttribute("data-tema");
+    var ev; try { ev = new CustomEvent("temadegisti"); } catch (x) { ev = document.createEvent("Event"); ev.initEvent("temadegisti", false, false); }
+    document.dispatchEvent(ev);
+  });
+  window.atilimai = {dil: dil, t: metin, ekle: ekle, cevir: cevir, tarih: tarih, tr: tr, sozluk: S};
+})();
+</script>
+<script>
+/* Bu sayfanın metni: [Türkçe, İngilizce]. Türkçesi null olanlar biçimlendirmede
+   duruyor; ikisi birden yazılanları betik üretiyor. */
+atilimai.ekle({
+  "baslik": [null, "Announcements — Atılım AI"],
+  "aciklama": [null, "Everything the Atılım AI society posts in its WhatsApp announcement channel: every announcement, with its images and videos."],
+  "giris": [null, "What the society posts in its WhatsApp announcement channel is published here too."],
+  "arsiv.yukleniyor": ["Duyurular yükleniyor…", "Loading announcements…"],
+  "arsiv.say": ["{n} duyuru", "{n} announcements"],
+  "arsiv.say1": ["{n} duyuru", "{n} announcement"],
+  "arsiv.yok": ["Henüz duyuru yok.", "No announcements yet."],
+  "arsiv.desteklemiyor": ["Tarayıcın bu sayfayı desteklemiyor. Güncel bir tarayıcıyla açmayı dene.", "Your browser does not support this page. Try opening it in an up-to-date browser."],
+  "arsiv.hata": ["Duyurular şu an yüklenemedi. İnternet bağlantın kesilmiş ya da çok yavaş olabilir.", "Announcements could not be loaded right now. Your connection may be down or very slow."],
+  "duyuru.sabit": ["Sabit", "Pinned"]
+});
+</script>
+<title data-i18n="baslik">Duyurular — Atılım AI</title>
+<meta name="description" data-i18n-nitelik="content:aciklama" content="Atılım AI Yapay Zeka Topluluğu'nun WhatsApp duyuru kanalında paylaştıkları: bütün duyurular, görselleri ve videolarıyla.">
+<meta name="theme-color" content="#100D0A">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Atılım AI">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Duyurular — Atılım AI">
+<meta property="og:description" content="Atılım AI topluluğunun WhatsApp duyuru kanalındaki bütün duyurular.">
+<meta property="og:url" content="https://atilimai.org/duyurular.html">
+<link rel="canonical" href="https://atilimai.org/duyurular.html">
+<meta property="og:image" content="https://atilimai.org/images/og.jpg?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Atılım AI — Yapay zekayı birlikte öğreniyor, birlikte üretiyoruz.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- Yazı tipleri depodan geliyor (fonts/README.md). Her src'nin ikinci adresi
+     panelin önizlemesi için: önizleme bu sayfayı kendi adresinde, sandbox'lı bir
+     iframe'de çiziyor ve göreli yol orada panelin sunucusuna çözülüp 404 veriyor.
+     Tarayıcı ilk adresi yükleyemezse ikinciyi dener; Pages
+     access-control-allow-origin:* gönderdiği için opak kökenden de iner. -->
+<link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Newsreader gelene kadar başlık Georgia'yla diziliyordu ve yazı tipi
+   inince satırlar yeniden kırılıyordu (kısılmış ağda CLS 0,059). Yedek yüz
+   Georgia'yı Newsreader'ın ölçülerine getirir: genişlik (size-adjust) ve
+   yükseklik (ascent/descent) tarayıcıda ölçüldü, 13 Ekim 2026. Ağırlık 300
+   başlıklar, 400 okuma metni, eğik 300 başlığın vurgusu. */
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:300;font-style:normal;
+  size-adjust:95.96%;ascent-override:77.12%;descent-override:27.09%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia");font-weight:400;font-style:normal;
+  size-adjust:99.98%;ascent-override:74.01%;descent-override:26.01%;line-gap-override:0%}
+@font-face{font-family:"Newsreader Yedek";src:local("Georgia Italic"),local("Georgia-Italic");font-weight:300;font-style:italic;
+  size-adjust:86.19%;ascent-override:85.86%;descent-override:30.17%;line-gap-override:0%}
+@font-face{font-family:"Newsreader";font-weight:300 400;font-style:normal;font-display:swap;
+  src:url(fonts/newsreader.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/newsreader.woff2) format("woff2")}
+@font-face{font-family:"Public Sans";font-weight:400 500;font-style:normal;font-display:swap;
+  src:url(fonts/public-sans.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/public-sans.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;font-display:swap;
+  src:url(fonts/plex-mono-400.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/plex-mono-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-style:normal;font-display:swap;
+  src:url(fonts/plex-mono-500.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/plex-mono-500.woff2) format("woff2")}
+/* Token dışında değer kullanılmaz (DESIGN.md). */
+/* Renk: altı sayfada aynı blok (DESIGN.md → Colors). Palet ham değerdir;
+   sayfa yüzeyi yalnızca rolleri çağırır. Roller koyu temayla (oda) başlar,
+   açık tema (defter) hemen alttaki iki blokta: sistem açıksa ve ziyaretçi
+   koyuyu seçmediyse, ya da açığı seçtiyse. Üst çubuk ve menü paneli paleti
+   doğrudan kullanır, her temada gece kalır. color-scheme tarayıcının kendi
+   çizdiği kaydırma çubuğunu ve denetimleri temayla eşler. */
+:root{
+  color-scheme:dark;
+  /* Palet — gece */
+  --gece:#100D0A; --gece-cam:rgba(16,13,10,.86); --tezgah:#191512; --tezgah-2:#211B16;
+  --hair:rgba(240,234,221,.13); --hair-s:rgba(240,234,221,.22); --hair-t:rgba(240,234,221,.34);
+  --kagit:#F0EADD; --kagit-m:#C4BBAA; --kagit-s:#A69C8C; --kagit-t:#918879;
+  --lamba:#E8A33D; --lamba-h:#F5B65C; --on-lamba:#241703; --ekran:#8FB4D6; --canli:#7FB069;
+  --lamba-cizgi:rgba(232,163,61,.4);
+  /* Palet — gündüz */
+  --gunduz:#F2EDE3; --kart:#FBF8F1; --kart-2:#FFFDF9;
+  --murekkep:#1A1713; --murekkep-m:#4A443B; --murekkep-s:#6B6357; --murekkep-t:#70685C;
+  --lamba-d:#8A5510; --lamba-dh:#6E430B; --ekran-d:#3D6389; --canli-d:#4A7336;
+  --murekkep-cizgi:rgba(26,23,19,.14); --murekkep-cizgi-s:rgba(26,23,19,.24); --murekkep-cizgi-t:rgba(26,23,19,.34);
+  --lamba-d-cizgi:rgba(138,85,16,.4);
+  /* Roller — koyu */
+  --zemin:var(--gece); --yuzey:var(--tezgah); --yuzey-2:var(--tezgah-2);
+  --metin:var(--kagit); --metin-m:var(--kagit-m); --metin-s:var(--kagit-s); --metin-t:var(--kagit-t);
+  --cizgi:var(--hair); --cizgi-s:var(--hair-s); --cizgi-t:var(--hair-t);
+  --lamba-iz:var(--lamba); --lamba-iz-h:var(--lamba-h); --lamba-alt:var(--lamba-cizgi);
+  --lamba-dolgu:var(--lamba); --lamba-dolgu-h:var(--lamba-h); --lamba-ust:var(--on-lamba);
+  --ekran-iz:var(--ekran); --canli-iz:var(--canli);
+  --cubuk-zemin:transparent; --cubuk-cam:var(--gece-cam);
+  --disp:"Newsreader","Newsreader Yedek",Georgia,serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:12px;
+  --sp-xs:8px; --sp-sm:12px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-xxl:48px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  /* Üst çubuğun ölçüsü ana sayfanınkiyle aynı (index.html --ray, --ray-ara). */
+  --ray:clamp(220px,24vw,420px); --ray-ara:clamp(28px,3.4vw,56px);
+}
+@media(prefers-color-scheme:light){:root:not([data-tema="koyu"]){
+  color-scheme:light;
+  --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
+  --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
+  --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:var(--lamba-d-cizgi);
+  --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
+  --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
+  --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
+}}
+:root[data-tema="acik"]{
+  color-scheme:light;
+  --zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
+  --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
+  --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
+  --lamba-iz:var(--lamba-d); --lamba-iz-h:var(--lamba-dh); --lamba-alt:var(--lamba-d-cizgi);
+  --lamba-dolgu:var(--lamba-d); --lamba-dolgu-h:var(--lamba-dh); --lamba-ust:var(--kart);
+  --ekran-iz:var(--ekran-d); --canli-iz:var(--canli-d);
+  --cubuk-zemin:var(--gece); --cubuk-cam:var(--gece);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--zemin);color:var(--metin);font-family:var(--body);
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--disp);font-weight:300}
+a{color:var(--lamba-iz);text-decoration:none}
+:focus-visible{outline:2px solid var(--lamba-iz);outline-offset:3px;border-radius:var(--r-xs)}
+.wrap{max-width:840px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+.mono{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+
+.atla{position:absolute;left:-9999px;top:0;z-index:100;background:var(--lamba);color:var(--on-lamba);
+  font-weight:500;padding:14px 20px;border-radius:var(--r-md)}
+.atla:focus{left:20px;top:14px}
+/* Yalnızca ekran okuyucuya söylenen metin. letter-spacing:normal: DESIGN.md, .gizli notu. */
+.gizli{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;letter-spacing:normal}
+/* Simgeler: index.html'deki çizgi dili (1.5, yuvarlak uç). Oklar eskiden metin
+   karakteriydi ve yazı tiplerinde yoktular; sistem yazı tipinden çiziliyorlardı. */
+.tanimlar{position:absolute;width:0;height:0;overflow:hidden}
+.ok{width:.75em;height:.75em;flex:none;margin-left:.4em;vertical-align:-.06em;
+  fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ok.bas{margin-left:0;margin-right:.4em}
+
+/* Üst bar karanlık kalır: odadan çıkıp defteri açma anı. Ölçüsü de odanınki:
+   ana sayfanın menüsüyle aynı yükseklik, aynı kap, aynı kenar boşluğu. Eskiden
+   840px'lik okuma kabındaydı ve 1440px'te sayfa değişince logo 56px'ten 338px'e
+   kayıyor, çubuk 4px kısalıyordu — iki ayrı site gibi. Okuma ölçüsü içeriğin,
+   krom onu taşımaz. */
+.ust{background:var(--gece);border-bottom:1px solid var(--hair)}
+.ust .wrap{max-width:1180px;padding-inline:clamp(20px,5vw,56px)}
+@media(min-width:1152px){.ust .wrap{max-width:min(calc(1180px + var(--ray) + var(--ray-ara)), 100%)}}
+.ust-in{display:flex;align-items:center;gap:var(--sp-md);height:64px}
+/* Koyu çubukta odak halkası gecenin lambası: kâğıdın --lamba-d'si burada 3,1:1. */
+.ust :focus-visible{outline-color:var(--lamba)}
+.marka{display:flex;align-items:center;gap:var(--sp-sm);color:var(--kagit);min-height:44px;
+  font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.18em}
+/* İşaret maske: beyaz PNG'nin biçimi, rengi marka metninden (currentColor).
+   Böylece işaret her zaman yanındaki yazının renginde; ayrı bir koyu varlık
+   gerekmiyor. */
+.marka i{width:20px;height:20px;flex:none;background:currentColor;
+  -webkit-mask:url(images/ai_mark.png) center/contain no-repeat;
+  mask:url(images/ai_mark.png) center/contain no-repeat}
+.geri{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--kagit-s);
+  padding:0 var(--sp-sm);min-height:44px;display:flex;align-items:center;border-radius:var(--r-sm)}
+.geri:hover{color:var(--kagit)}
+/* 420px altında geri bağlantısı yalnızca oka iner; metni erişilebilir adda
+   kalır. 320px'te logo, metinli bağlantı ve görünüm düğmesi 280px'e sığmıyordu.
+   Ok tek başına çubukta yüzüyordu: görünüm düğmesinin kutusunu alır, çubuk iki
+   kardeş denetim gibi okunur (ana sayfadaki MENÜ + TR gibi). */
+@media(max-width:420px){
+  .geri{width:44px;height:44px;justify-content:center;padding:0;color:var(--kagit);
+    background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-md);
+    transition:background .3s,border-color .3s}
+  .geri:hover{background:var(--tezgah-2);border-color:var(--hair-t)}
+  .geri .ok.bas{margin-right:0;width:12px;height:12px}
+  .geri-yazi{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
+    white-space:nowrap;letter-spacing:normal}
+}
+/* ---------- görünüm denetimi (beş sayfada aynı) ----------
+   Dil ve tema tek düğmenin arkasında: 320px'te iki ayrı 44px düğme okuma
+   sayfalarının çubuğuna sığmıyordu. Çubuğun içinde olduğu için her temada
+   gece paletiyle çizilir; .menu-btn'in ve mobil menü panelinin dili.
+   Betik yoksa düğme gizli kalır: yapılamayacak bir etkileşimi haber vermez. */
+.ayar{position:relative;flex:none}
+.ayar-btn{display:inline-flex;align-items:center;gap:var(--sp-xs);height:44px;min-width:44px;
+  padding:0 var(--sp-sm);background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-md);
+  color:var(--kagit);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;cursor:pointer;
+  transition:background .3s,border-color .3s}
+.ayar-btn[hidden]{display:none}
+.ayar-btn:hover,.ayar-btn[aria-expanded="true"]{background:var(--tezgah-2);border-color:var(--hair-t)}
+.ayar-ikon{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+.ayar :focus-visible{outline-color:var(--lamba)}
+/* Panel çubuğun alt kenarında açılır: düğme 44px, çubuk 64px, aradaki pay 10px. */
+.ayar-panel{position:absolute;top:calc(100% + 10px);right:0;z-index:50;min-width:236px;
+  background:var(--tezgah);border:1px solid var(--hair-s);border-radius:var(--r-lg);padding:var(--sp-sm);
+  display:flex;flex-direction:column;gap:var(--sp-sm)}
+.ayar-panel[hidden],.ayar-grup[hidden]{display:none}
+.ayar-ad{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--kagit-t);padding:0 var(--sp-sm);margin-bottom:var(--r-xs)}
+.ayar-secenek{display:flex;gap:var(--r-xs)}
+/* Seçili seçenek nav'daki etkin bağlantının dilinde: bir yüzey yukarı ve 2px
+   lamba alt çizgisi. Durum yalnızca renge dayanmıyor. */
+.ayar-secenek button{position:relative;flex:1 1 0;min-height:44px;min-width:44px;padding:0 var(--sp-sm);
+  background:transparent;border:0;border-radius:var(--r-sm);color:var(--kagit-s);
+  font-family:var(--body);font-size:15px;cursor:pointer;transition:color .3s,background .3s}
+.ayar-secenek button:hover{color:var(--kagit);background:var(--tezgah-2)}
+.ayar-secenek button[aria-pressed="true"]{color:var(--kagit);background:var(--tezgah-2)}
+.ayar-secenek button[aria-pressed="true"]::after{content:"";position:absolute;left:var(--sp-sm);
+  right:var(--sp-sm);bottom:8px;height:2px;background:var(--lamba)}
+/* Tema değişirken öğeler kendi geçişleriyle farklı hızlarda renk değiştirip
+   sayfayı parça parça boyamasın: tek karelik bir sınıf geçişleri bastırır.
+   Hareket iptali değil; azaltılmış hareket bloğuyla ilgisi yok. */
+.tema-degisiyor *,.tema-degisiyor *::before,.tema-degisiyor *::after{transition:none!important}
+
+.kapak{padding-block:clamp(48px,8vw,80px) var(--sp-xl)}
+h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
+.giris{color:var(--metin-m);font-size:18px;line-height:1.62;max-width:58ch;margin-top:var(--sp-lg)}
+.sayac{font-family:var(--mono);font-size:13px;color:var(--metin-s);margin-top:var(--sp-lg);
+  padding-top:var(--sp-md);border-top:1px solid var(--cizgi)}
+.sayac:empty{display:none}
+/* İlk istek uçuştayken alt bilgi yerleşimde yok: boş listenin altında ilk
+   ekranın ortasında durup arşiv gelince itilmesin (haberler.html'deki CLS
+   ölçümü, aynı kalıp). Sınıfı betik koyar; betik yoksa alt bilgi görünür. */
+.bekliyor footer{display:none}
+.durum-eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-lg)}
+/* Odak sayaca ya da durum kartına taşınıyor; etkileşimli değiller, halka çıkmasın. */
+[tabindex="-1"]:focus{outline:none}
+/* ...ama bir duyurunun çapasına inen odak, klavye kullanıcısı için görünür kalır. */
+.duyuru[tabindex="-1"]:focus-visible{outline:2px solid var(--lamba-iz);outline-offset:3px}
+.oku{font-family:var(--body);font-size:15px;font-weight:500;color:var(--metin);
+  background:none;border:1px solid var(--cizgi-s);border-radius:var(--r-md);
+  padding:0 var(--sp-md);min-height:44px;display:inline-flex;align-items:center;cursor:pointer;
+  transition:background .3s,border-color .3s}
+.oku:hover{background:var(--yuzey);border-color:var(--metin-s)}
+.durum{color:var(--metin-s);font-family:var(--mono);font-size:13px;line-height:1.8;
+  margin-top:var(--sp-xl);padding:var(--sp-lg);border:1px solid var(--cizgi);border-radius:var(--r-lg);
+  background:var(--yuzey)}
+
+/* Liste .wrap taşıyor; alt boşluk kimlikle veriliyor ki .wrap'in padding'i ezmesin
+   (DESIGN.md, Shorthand Rule). */
+#liste{padding-bottom:clamp(64px,10vw,112px)}
+
+/* Duyuru: haberler.html'in arşiv satırının akrabası, başlıksız (WhatsApp
+   mesajının başlığı yok; ilk satırı başlık yapmak uydurma hiyerarşi olurdu).
+   Kart değil satır (DESIGN.md "A grid, not a card"). Sol sütun 88px: ana
+   sayfadaki duyuru satırıyla aynı ve "September" 13px mono'da 64px'e sığmıyor.
+   min-width:0 + anywhere: bottan gelen 500 harflik tek kelime satırı kırmasın. */
+.duyuru{display:grid;grid-template-columns:88px 1fr;gap:var(--sp-lg);padding:22px 0;
+  border-bottom:1px solid var(--cizgi);align-items:start;
+  scroll-margin-top:var(--sp-md);transition:background .3s}
+.duyuru>*{min-width:0;overflow-wrap:anywhere}
+.duyuru:first-child{border-top:1px solid var(--cizgi)}
+/* Çapaya inilen satır bir yüzey basamağı yukarı (One Level Rule), animasyon yok.
+   Negatif kenar boşluğu + eşit dolgu: içerik yerinden oynamaz. */
+.duyuru:target{background:var(--yuzey);margin-inline:calc(var(--sp-md) * -1);padding-inline:var(--sp-md)}
+.duyuru-yan{display:flex;flex-direction:column;gap:var(--sp-xs);text-align:right}
+.meta{font-family:var(--mono);font-size:13px;color:var(--metin-s);line-height:1.7}
+.duyuru time span{display:block}
+.duyuru time span+span{margin-top:3px}
+/* Panelden gelen kategori etiketiyle aynı rol: ekran ışığı (haberler.html .etiket). */
+.etiket{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.02em;color:var(--ekran-iz)}
+.duyuru-metin{color:var(--metin);font-size:15px;line-height:1.6;max-width:66ch}
+/* Public Sans yalnızca 400–500 yüklü; 600 isteyen tarayıcı kalınlığı sahte
+   üretirdi. Kalın = 500. */
+.duyuru-metin strong{font-weight:500}
+.duyuru-metin code{font-family:var(--mono);font-size:13px}
+.duyuru-metin a{border-bottom:1px solid var(--lamba-alt);transition:color .3s}
+.duyuru-metin a:hover{color:var(--lamba-iz-h)}
+/* Medya metnin altında, sütun genişliğinde. width/height öznitelikleri ve
+   video aspect-ratio'su yer tutar (kayma yok); çerçeve yalnız load sonrası
+   (DESIGN.md Images). */
+.duyuru-medya{display:grid;gap:var(--sp-sm);margin-top:var(--sp-md);max-width:640px}
+.duyuru-medya img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;
+  border:1px solid transparent;border-radius:var(--r-md)}
+.duyuru-medya img.yuklendi{border-color:var(--cizgi)}
+.duyuru-medya video{display:block;width:100%;aspect-ratio:16/9;background:var(--yuzey-2);
+  border-radius:var(--r-md)}
+@media(max-width:760px){
+  .duyuru{grid-template-columns:1fr;gap:var(--sp-xs)}
+  .duyuru-yan{flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:var(--sp-sm);text-align:left}
+  .duyuru time span{display:inline}
+  .duyuru time span+span{margin:0 0 0 var(--sp-sm)}
+}
+footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
+.foot{display:flex;gap:var(--sp-lg);flex-wrap:wrap;align-items:baseline;
+  font-size:15px;color:var(--metin-s)}
+.foot .sag{margin-left:auto;display:flex;gap:var(--sp-lg);flex-wrap:wrap}
+/* Telefonda margin-left:auto bağlantıları ekran kenarına sıkıştırıyor ve
+   kompozisyondan çok kazara bir kümelenme gibi okunuyor (index.html ile aynı). */
+@media(max-width:760px){.foot .sag{margin-left:0}}
+/* Satır içi dolgu yerleşimi büyütmez ama dokunma alanını 44 px kuralına çıkarır. */
+.foot a{color:var(--metin-s);padding-block:var(--sp-sm)}
+.foot a:hover{color:var(--metin)}
+
+@media (prefers-reduced-motion:reduce){
+  /* Çapaya kaydırma anında olsun; başka hareket yok (renk geçişleri kalır). */
+  html{scroll-behavior:auto}
+}
+@media print{
+  /* Sabit renk YOK (alfa çizgiler dahil, hepsi palet belirteci): #fff/#000 gibi değerler dedektöre ekran değeri gibi
+     görünüp belgeli cream-palette istisnasını maskeliyordu. Ama rol
+     belirteçleri gündüz paletine yeniden bağlanıyor: tarayıcı zemini
+     basmıyor, metni basıyor; koyu temada yazdırılan sayfa kağıda açık gri
+     metinle çıkardı. Blok stil dosyasının sonunda kalmalı (DESIGN.md → Print). */
+  :root{--zemin:var(--gunduz); --yuzey:var(--kart); --yuzey-2:var(--kart-2);
+    --metin:var(--murekkep); --metin-m:var(--murekkep-m); --metin-s:var(--murekkep-s); --metin-t:var(--murekkep-t);
+    --cizgi:var(--murekkep-cizgi); --cizgi-s:var(--murekkep-cizgi-s); --cizgi-t:var(--murekkep-cizgi-t);
+    --lamba-iz:var(--lamba-d); --lamba-alt:var(--lamba-d-cizgi); --ekran-iz:var(--ekran-d)}
+  /* Çubuk (ve içindeki görünüm denetimi) kâğıtta işe yaramaz; haber.html gibi. */
+  .ust{display:none}
+}
+</style>
+<!-- Vercel Web Analytics -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<!-- Simgeler: bir kez tanımlanır, <use> ile çağrılır; betik de aynı kimlikleri kullanıyor. -->
+<svg class="tanimlar" aria-hidden="true" focusable="false">
+  <symbol id="i-dis" viewBox="0 0 12 12"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></symbol>
+  <symbol id="i-ileri" viewBox="0 0 12 12"><path d="M2 6h8M6.5 2.5 10 6 6.5 9.5"/></symbol>
+  <symbol id="i-geri" viewBox="0 0 12 12"><path d="M10 6H2M5.5 2.5 2 6l3.5 3.5"/></symbol>
+  <symbol id="i-asagi" viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5"/></symbol>
+  <symbol id="i-ay" viewBox="0 0 12 12"><path d="M10 7.6A4.3 4.3 0 1 1 4.4 2a3.5 3.5 0 0 0 5.6 5.6Z"/></symbol>
+  <symbol id="i-gunes" viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.5"/><path d="M6 1.25h0M6 10.75h0M1.25 6h0M10.75 6h0M2.64 2.64h0M9.36 9.36h0M2.64 9.36h0M9.36 2.64h0"/></symbol>
+</svg>
+
+<a class="atla" href="#icerik" data-i18n="atla">İçeriğe atla</a>
+
+<nav class="ust"><div class="wrap ust-in">
+  <a class="marka" href="index.html"><i aria-hidden="true"></i>ATILIM AI</a>
+  <a class="geri" href="index.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg><span class="geri-yazi" data-i18n="ana-sayfa">Ana sayfa</span></a>
+  <div class="ayar">
+    <button class="ayar-btn" id="ayarBtn" type="button" aria-expanded="false" aria-controls="ayarPanel" hidden><span class="ayar-kod">TR</span><svg class="ayar-ikon" aria-hidden="true"><use href="#i-ay"/></svg><span class="gizli" data-i18n="ayar.ad"> · Dil ve tema</span></button>
+    <div class="ayar-panel" id="ayarPanel" hidden>
+      <div class="ayar-grup" id="ayarDil" role="group" aria-labelledby="ayarDilAd">
+        <p class="ayar-ad" id="ayarDilAd" data-i18n="ayar.dil">Dil</p>
+        <div class="ayar-secenek">
+          <button type="button" data-dil-sec="tr" lang="tr" aria-pressed="false">Türkçe</button>
+          <button type="button" data-dil-sec="en" lang="en" aria-pressed="false">English</button>
+        </div>
+      </div>
+      <div class="ayar-grup" role="group" aria-labelledby="ayarTemaAd">
+        <p class="ayar-ad" id="ayarTemaAd" data-i18n="ayar.tema">Tema</p>
+        <div class="ayar-secenek">
+          <button type="button" data-tema-sec="sistem" aria-pressed="false" data-i18n="ayar.sistem">Sistem</button>
+          <button type="button" data-tema-sec="koyu" aria-pressed="false" data-i18n="ayar.koyu">Koyu</button>
+          <button type="button" data-tema-sec="acik" aria-pressed="false" data-i18n="ayar.acik">Açık</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></nav>
+<script>atilimai.cevir();</script>
+
+<!-- Başlık <main>'in içinde (haberler.html'deki gerekçe: "ana içeriğe git"
+     başlığı ve giriş cümlesini atlamasın). -->
+<main id="icerik">
+<header class="kapak wrap">
+  <h1 data-i18n="duyurular">Duyurular</h1>
+  <p class="giris" data-i18n="giris">Topluluğun WhatsApp duyuru kanalında paylaşılanlar burada da yayımlanır.</p>
+  <!-- Boş geliyor, betik ilk iş olarak dolduruyor: betik yoksa hiç gelmeyecek
+       bir isteği bekliyormuş gibi "yükleniyor" yazısı kalmasın. -->
+  <p class="sayac" id="sayac"></p>
+  <noscript>
+    <p class="durum">Bu sayfa duyuruları tarayıcıda hazırlıyor ve bunun için
+      JavaScript gerekiyor. JavaScript'i tarayıcı ayarlarından açabilirsin.</p>
+    <p class="durum-eylem">
+      <a class="oku" href="index.html"><svg class="ok bas" aria-hidden="true"><use href="#i-geri"/></svg>Ana sayfa</a>
+    </p>
+  </noscript>
+</header>
+<!-- İlk ekran ilk boyamadan önce çevrilsin. -->
+<script>atilimai.cevir();</script>
+
+<div class="wrap" id="liste"></div>
+</main>
+
+<footer><div class="wrap foot">
+  <span>Atılım AI · Ankara</span>
+  <span class="sag">
+    <a href="index.html" data-i18n="ana-sayfa">Ana sayfa</a>
+    <a href="haberler.html" data-i18n="haberler">Haberler</a>
+    <a href="katil.html" data-i18n="katil">Topluluğa katıl</a>
+  </span>
+</div></footer>
+
+<script>atilimai.cevir();</script>
+<script>
+/*
+ * Duyuru arşivi.
+ *
+ * Veri content/duyurular.json'dan gelir; dosyayı WhatsApp botu yazar,
+ * ana sayfadaki bölüm de aynı dosyayı okur. Panelin önizlemesi window.fetch'i
+ * sarmalıyor (haberler.html'deki not): çağrı window.fetch üzerinden kalmalı.
+ *
+ * Metin bottan, yani bir telefondan geliyor: hiçbiri HTML olarak
+ * yorumlanmaz. WhatsApp biçimi (*kalın*, _italik_ ...) küçük bir
+ * ayrıştırıcıyla createElement/createTextNode'a çevrilir; bağlantı
+ * yalnızca http(s) ise bağlantı olur. Aşağıdaki "kopya" işaretli işlevler
+ * index.html'in "3a. Duyurular" bölümüyle aynı tutulur.
+ */
+(function(){
+  var liste = document.getElementById("liste");
+  var sayac = document.getElementById("sayac");
+
+  var CAPA = /^d-[0-9a-f]{8}$/;
+  var ZAMAN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+03:00$/;
+  var MEDYA_SRC = /^(images\/duyurular\/[0-9a-f]{16}\.(webp|mp4)|https?:\/\/)/i;
+
+  /* kopya: index.html ↔ duyurular.html */
+  /* Dosya elle de düzenlenebilir ve bottan her şey gelebilir; sözleşmeye
+     uymayan kayıt atlanır, bozuk medya yalnızca medyası atlanır. "javascript:"
+     bir src/href'e hiç girmez: medya src'si yalnızca yerel yol ya da http(s). */
+  function temizDuyuru(d){
+    if (!d || typeof d !== "object") return null;
+    if (typeof d.capa !== "string" || !CAPA.test(d.capa)) return null;
+    if (typeof d.zaman !== "string" || !ZAMAN.test(d.zaman)) return null;
+    var metin = typeof d.metin === "string" ? d.metin.trim() : "";
+    var medya = [];
+    if (Array.isArray(d.medya)) d.medya.forEach(function(m){
+      if (!m || typeof m !== "object" || typeof m.src !== "string" || !MEDYA_SRC.test(m.src)) return;
+      if (m.tur !== "gorsel" && m.tur !== "video") return;
+      var en = Number(m.en), boy = Number(m.boy);
+      medya.push({ tur: m.tur, src: m.src,
+                   en: en > 0 && en < 20000 ? Math.round(en) : 0,
+                   boy: boy > 0 && boy < 20000 ? Math.round(boy) : 0 });
+    });
+    if (!metin && !medya.length) return null;
+    return { capa: d.capa, zaman: d.zaman, metin: metin, sabit: d.sabit === true, medya: medya };
+  }
+
+  /* kopya: index.html ↔ duyurular.html */
+  function zamanYaz(zaman){
+    return window.atilimai.tarih(zaman.slice(0, 10)) + ", " + zaman.slice(11, 16);
+  }
+
+  /* Satır sonu <br>: WhatsApp mesajında satır sonu anlam taşır. */
+  function duz(ata, s){
+    s.split("\n").forEach(function(parca, i){
+      if (i) ata.appendChild(document.createElement("br"));
+      if (parca) ata.appendChild(document.createTextNode(parca));
+    });
+  }
+
+  /* kopya: index.html ↔ duyurular.html */
+  /* Biçimler iç içe geçmez (yeterli): bir işaret çifti bulununca içi düz metin
+     olur. URL seçeneği en başta: adresin içindeki "_" ya da "*" italik/kalın
+     başlatmasın diye soldan sağa tarayışta adres önce yakalanır. */
+  var BICIM = /(https?:\/\/\S+)|```([\s\S]+?)```|\*([^*\n]+)\*|_([^_\n]+)_|~([^~\n]+)~/g;
+  function waBicim(metin){
+    var frag = document.createDocumentFragment(), son = 0, m;
+    BICIM.lastIndex = 0;
+    while ((m = BICIM.exec(metin))){
+      var url = m[1];
+      if (url){
+        /* Cümle sonundaki noktalama adrese ait değil. */
+        var kes = /[.,;:!?)\]'"]+$/.exec(url);
+        if (kes){ url = url.slice(0, url.length - kes[0].length); BICIM.lastIndex = m.index + url.length; }
+        if (!/^https?:\/\/./i.test(url)){ BICIM.lastIndex = m.index + m[0].length; continue; }
+      }
+      if (m.index > son) duz(frag, metin.slice(son, m.index));
+      var el;
+      if (url){
+        el = document.createElement("a");
+        el.href = url; el.target = "_blank"; el.rel = "noopener noreferrer";
+        el.appendChild(document.createTextNode(url));
+        var g = document.createElement("span");
+        g.className = "gizli";
+        g.textContent = window.atilimai.t("yeni-sekme");
+        if (window.atilimai.dil === "en") g.lang = "en";
+        el.appendChild(g);
+      } else {
+        el = document.createElement(m[2] !== undefined ? "code" : m[3] !== undefined ? "strong" : m[4] !== undefined ? "em" : "s");
+        duz(el, m[2] !== undefined ? m[2] : m[3] !== undefined ? m[3] : m[4] !== undefined ? m[4] : m[5]);
+      }
+      frag.appendChild(el);
+      son = BICIM.lastIndex;
+    }
+    if (son < metin.length) duz(frag, metin.slice(son));
+    return frag;
+  }
+
+  /* kopya: index.html ↔ duyurular.html */
+  function medyaYaz(medya){
+    var kap = document.createElement("div");
+    kap.className = "duyuru-medya";
+    medya.forEach(function(m){
+      var el;
+      if (m.tur === "video"){
+        el = document.createElement("video");
+        el.controls = true; el.preload = "none"; el.setAttribute("playsinline", "");
+        el.src = m.src;
+      } else {
+        el = document.createElement("img");
+        el.alt = "";   /* anlamı metin taşıyor; WhatsApp görsele açıklama vermez */
+        el.loading = "lazy";
+        if (m.en && m.boy){ el.width = m.en; el.height = m.boy; }
+        el.onload = function(){ this.classList.add("yuklendi"); };
+        el.onerror = function(){ if (this.parentNode) this.parentNode.removeChild(this); };
+        el.src = m.src;
+      }
+      kap.appendChild(el);
+    });
+    return kap;
+  }
+
+  /* kopya: index.html ↔ duyurular.html (arşivde her duyuru medyalı kipte:
+     kısaltma ve arşiv bağlantısı yok, o yüzden index'teki medyali bağımsız
+     değişkeni ve arsivBag burada yok) */
+  function duyuruYaz(d){
+    var kap = document.createElement("article");
+    kap.className = "duyuru";
+    kap.id = d.capa;
+
+    var yan = document.createElement("div");
+    yan.className = "duyuru-yan";
+    var t = document.createElement("time");
+    t.className = "meta";
+    t.dateTime = d.zaman;
+    t.title = zamanYaz(d.zaman);
+    var gun = document.createElement("span");
+    gun.textContent = window.atilimai.tarih(d.zaman.slice(0, 10));
+    var saat = document.createElement("span");
+    saat.textContent = d.zaman.slice(11, 16);
+    t.appendChild(gun); t.appendChild(saat);
+    yan.appendChild(t);
+    if (d.sabit){
+      var e = document.createElement("span");
+      e.className = "etiket";
+      e.textContent = window.atilimai.t("duyuru.sabit");
+      yan.appendChild(e);
+    }
+
+    var govde = document.createElement("div");
+    if (d.metin){
+      var p = document.createElement("p");
+      p.className = "duyuru-metin";
+      p.appendChild(waBicim(d.metin));
+      window.atilimai.tr(p);
+      govde.appendChild(p);
+    }
+    if (d.medya.length) govde.appendChild(medyaYaz(d.medya));
+
+    kap.appendChild(yan); kap.appendChild(govde);
+    return kap;
+  }
+
+  /* Oklar sayfanın başındaki <symbol>'lerden çağrılır; ekran okuyucu görmez. */
+  function ikon(ad, bas){
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", bas ? "ok bas" : "ok");
+    svg.setAttribute("aria-hidden", "true");
+    var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#" + ad);
+    svg.appendChild(use);
+    return svg;
+  }
+
+  /* Bekleme her çıkışta biter: arşiv, boş arşiv ya da hata. */
+  function bitti(){ document.body.classList.remove("bekliyor"); }
+
+  function durum(metin){
+    bitti();
+    var p = document.createElement("p");
+    p.className = "durum";
+    p.textContent = metin;
+    liste.appendChild(p);
+    return p;
+  }
+
+  /* "Yeniden dene"ye basan kişinin odağı, düğme silindiğinde <body>'ye
+     düşüyordu; sonuç çizilince odak oraya taşınır. */
+  var odakIste = false;
+  function odakla(el){
+    if (!odakIste || !el) return;
+    odakIste = false;
+    if (!el.matches("a[href],button")) el.tabIndex = -1;
+    el.focus();
+  }
+
+  /* Ana sayfadan gelen bağlantı duyurular.html#d-xxxxxxxx: satırlar çizilince
+     o karta kaydır ve odakla. Tarayıcının kendi çapa kaydırması çizimden önce
+     çalışıp boşa düşüyor. Bilinmeyen çapa sessiz: sayfa başında kalır. */
+  function capayaGit(){
+    var id = window.location.hash.slice(1);
+    if (!CAPA.test(id)) return false;
+    var el = document.getElementById(id);
+    if (!el) return false;
+    el.tabIndex = -1;
+    /* behavior:"instant": html{scroll-behavior:smooth} animasyonu odak ve
+       düzen değişikliğiyle kesiliyordu, kart sayfa başına inmiyordu. Üst çubuk
+       yapışkan değil (kaydırınca gider), o yüzden kenar payı yalnızca 16px. */
+    el.scrollIntoView({block: "start", behavior: "instant"});
+    el.focus({preventScroll: true});
+    return true;
+  }
+
+  if (!window.fetch){
+    durum(window.atilimai.t("arsiv.desteklemiyor"));
+    return;
+  }
+
+  /* Ağ hatası boş arşivden ayrı bir durum ve ayrı bir cümle (haberler.html). */
+  function hataGoster(){
+    sayac.textContent = "";
+    liste.textContent = "";
+    durum(window.atilimai.t("arsiv.hata"));
+    var eylem = document.createElement("p");
+    eylem.className = "durum-eylem";
+    var tekrar = document.createElement("button");
+    tekrar.type = "button";
+    tekrar.className = "oku";
+    tekrar.textContent = window.atilimai.t("yeniden-dene");
+    /* disabled değil aria-disabled: devre dışı kalan düğme odağı bırakıyor. */
+    tekrar.addEventListener("click", function(){
+      if (istekVar) return;
+      tekrar.setAttribute("aria-disabled", "true");
+      tekrar.textContent = window.atilimai.t("deneniyor");
+      odakIste = true;
+      getir(true);
+    });
+    eylem.appendChild(tekrar);
+    var ana = document.createElement("a");
+    ana.className = "oku";
+    ana.href = "index.html";
+    ana.appendChild(ikon("i-geri", true));
+    ana.appendChild(document.createTextNode(window.atilimai.t("ana-sayfa")));
+    eylem.appendChild(ana);
+    liste.appendChild(eylem);
+    odakla(tekrar);
+  }
+
+  /* Askıda kalan istek: ilk bayt ZAMAN_ASIMI içinde gelmezse hata durumu
+     çizilir. fetch'e AbortSignal verilmiyor, bilerek (haberler.html'deki
+     gerekçe: panel önizlemesi ikinci argümanı nasıl ele alıyor bilinmiyor);
+     sonIstek yalnızca yerini yeni denemeye bırakmış eski isteği susturur. */
+  var ZAMAN_ASIMI = 10000;
+  var istekVar = false, sonIstek = 0;
+  function getir(yeniden){
+    if (istekVar) return;
+    istekVar = true;
+    var no = ++sonIstek, dustu = false;
+    if (!yeniden){
+      liste.textContent = "";
+      sayac.textContent = window.atilimai.t("arsiv.yukleniyor");
+      document.body.classList.add("bekliyor");
+    }
+    var sure = setTimeout(function(){
+      if (no !== sonIstek) return;
+      dustu = true; istekVar = false; hataGoster();
+    }, ZAMAN_ASIMI);
+
+    fetch("content/duyurular.json", { cache: "no-cache" })
+    .then(function(r){ clearTimeout(sure); if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(d){
+      if (no !== sonIstek) return;
+      istekVar = false;
+      liste.textContent = "";
+      var hepsi = [];
+      if (d && Array.isArray(d.duyurular)) d.duyurular.forEach(function(ham){
+        var k = temizDuyuru(ham);
+        if (k) hepsi.push(k);
+      });
+      if (!hepsi.length){
+        sayac.textContent = "";
+        odakla(durum(window.atilimai.t("arsiv.yok")));
+        return;
+      }
+      /* Dosya en yeni başta yazılıyor ama elle bozulabilir; sıralama ucuz. */
+      hepsi.sort(function(a, b){ return a.zaman < b.zaman ? 1 : a.zaman > b.zaman ? -1 : 0; });
+      sayac.textContent = window.atilimai.t(hepsi.length === 1 ? "arsiv.say1" : "arsiv.say", {n: hepsi.length});
+      hepsi.forEach(function(k){ liste.appendChild(duyuruYaz(k)); });
+      bitti();
+      if (!capayaGit()) odakla(sayac);
+    })
+    .catch(function(){
+      clearTimeout(sure);
+      if (no !== sonIstek || dustu) return;
+      istekVar = false; hataGoster();
+    });
+  }
+
+  getir();
+})();
+</script>
+<script>
+/* ============================================================
+   Görünüm denetimi (beş sayfada aynı: index, haberler, haber, katil, duyurular)
+
+   Tema canlı değişir: <html data-tema> ve kayıt. "Sistem" niteliği ve
+   kaydı kaldırır; CSS o zaman prefers-color-scheme'i izler. Dil değişince
+   sayfa yeniden yüklenir: her sayfanın betiği metnini tek dilde üretiyor,
+   açık kart ve odak gibi durumları canlı yeniden çizmek yerine yükleme
+   temiz bir sayfa veriyor. Odak yüklemeden sonra düğmeye döner, kaydırma
+   konumunu tarayıcı korur. Depo kullanılamıyorsa (panelin önizlemesi)
+   tema oturum boyunca çalışır, dil satırı gizlenir: yükleme seçimi
+   taşıyamaz.
+   ============================================================ */
+(function(){
+  "use strict";
+  var h = document.documentElement;
+  var btn = document.getElementById("ayarBtn");
+  var panel = document.getElementById("ayarPanel");
+  if (!btn || !panel) return;
+  var kutu = btn.parentNode;
+  var TEMA = "atilimai.tema", DIL = "atilimai.dil", ODAK = "atilimai.odak";
+  var acikSistem = window.matchMedia("(prefers-color-scheme: light)");
+
+  function yaz(k, v){ try { if (v === null) window.localStorage.removeItem(k); else window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  var depoVar = yaz("atilimai.deneme", "1") && yaz("atilimai.deneme", null);
+
+  function secim(){ var t = h.getAttribute("data-tema"); return t === "koyu" || t === "acik" ? t : "sistem"; }
+  function etkin(){ var t = secim(); return t === "sistem" ? (acikSistem.matches ? "acik" : "koyu") : t; }
+  var dil = h.lang === "en" ? "en" : "tr";
+
+  function guncelle(){
+    btn.querySelector(".ayar-kod").textContent = dil.toUpperCase();
+    btn.querySelector("use").setAttribute("href", etkin() === "acik" ? "#i-gunes" : "#i-ay");
+    var t = secim();
+    [].forEach.call(panel.querySelectorAll("[data-tema-sec]"), function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-tema-sec") === t ? "true" : "false"); });
+    [].forEach.call(panel.querySelectorAll("[data-dil-sec]"), function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-dil-sec") === dil ? "true" : "false"); });
+  }
+  function haberVer(){
+    var e; try { e = new CustomEvent("temadegisti"); } catch (x) { e = document.createEvent("Event"); e.initEvent("temadegisti", false, false); }
+    document.dispatchEvent(e);
+  }
+  function temaUygula(t){
+    h.classList.add("tema-degisiyor");
+    if (t === "sistem") h.removeAttribute("data-tema"); else h.setAttribute("data-tema", t);
+    yaz(TEMA, t === "sistem" ? null : t);
+    guncelle();
+    void getComputedStyle(document.body).backgroundColor;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ h.classList.remove("tema-degisiyor"); }); });
+    haberVer();
+  }
+  function ac(){ panel.hidden = false; btn.setAttribute("aria-expanded", "true"); }
+  function kapat(odakla){
+    if (panel.hidden) return;
+    panel.hidden = true; btn.setAttribute("aria-expanded", "false");
+    if (odakla) btn.focus();
+  }
+
+  btn.addEventListener("click", function(){ if (panel.hidden) ac(); else kapat(false); });
+  panel.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if (!b) return;
+    var t = b.getAttribute("data-tema-sec"), d = b.getAttribute("data-dil-sec");
+    if (t) temaUygula(t);
+    if (d && d !== dil && yaz(DIL, d === "en" ? "en" : null)) {
+      try { window.sessionStorage.setItem(ODAK, "ayar"); } catch (x) {}
+      window.location.reload();
+    }
+  });
+  /* Dışarı dokunmak kapatır (ana sayfada mobil menü de aynı kuralla kapanıyor,
+     ikisi birbirini kendiliğinden kapatır). Escape kapatıp odağı düğmeye verir.
+     Odak denetimden çıkınca kapanır; relatedTarget yoksa (Safari düğmeye
+     tıklayınca odağı taşımıyor) karar dışarı dokunmaya kalır. */
+  document.addEventListener("click", function(e){ if (!kutu.contains(e.target)) kapat(false); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !panel.hidden) kapat(true); });
+  kutu.addEventListener("focusout", function(e){ if (e.relatedTarget && !kutu.contains(e.relatedTarget)) kapat(false); });
+  var dinle = function(){ guncelle(); if (secim() === "sistem") haberVer(); };
+  document.addEventListener("temadegisti", guncelle);
+  if (acikSistem.addEventListener) acikSistem.addEventListener("change", dinle); else acikSistem.addListener(dinle);
+
+  if (!depoVar) document.getElementById("ayarDil").hidden = true;
+  guncelle();
+  btn.hidden = false;
+  try { if (window.sessionStorage.getItem(ODAK) === "ayar") { window.sessionStorage.removeItem(ODAK); btn.focus(); } } catch (x) {}
+})();
+</script>
+</body>
+</html>
