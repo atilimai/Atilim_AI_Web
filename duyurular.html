@@ -115,12 +115,9 @@ atilimai.ekle({
   "aciklama": [null, "Everything the Atılım AI society posts in its WhatsApp announcement channel: every announcement, with its images and videos."],
   "giris": [null, "What the society posts in its WhatsApp announcement channel is published here too."],
   "arsiv.yukleniyor": ["Duyurular yükleniyor…", "Loading announcements…"],
-  "arsiv.say": ["{n} duyuru", "{n} announcements"],
-  "arsiv.say1": ["{n} duyuru", "{n} announcement"],
   "arsiv.yok": ["Henüz duyuru yok.", "No announcements yet."],
   "arsiv.desteklemiyor": ["Tarayıcın bu sayfayı desteklemiyor. Güncel bir tarayıcıyla açmayı dene.", "Your browser does not support this page. Try opening it in an up-to-date browser."],
   "arsiv.hata": ["Duyurular şu an yüklenemedi. İnternet bağlantın kesilmiş ya da çok yavaş olabilir.", "Announcements could not be loaded right now. Your connection may be down or very slow."],
-  "duyuru.sabit": ["Sabit", "Pinned"]
 });
 </script>
 <title data-i18n="baslik">Duyurular — Atılım AI</title>
@@ -637,12 +634,6 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
     saat.textContent = d.zaman.slice(11, 16);
     t.appendChild(gun); t.appendChild(saat);
     yan.appendChild(t);
-    if (d.sabit){
-      var e = document.createElement("span");
-      e.className = "etiket";
-      e.textContent = window.atilimai.t("duyuru.sabit");
-      yan.appendChild(e);
-    }
 
     var govde = document.createElement("div");
     if (d.metin){
@@ -781,10 +772,10 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xl) 0 var(--sp-xxl)}
       }
       /* Dosya en yeni başta yazılıyor ama elle bozulabilir; sıralama ucuz. */
       hepsi.sort(function(a, b){ return a.zaman < b.zaman ? 1 : a.zaman > b.zaman ? -1 : 0; });
-      sayac.textContent = window.atilimai.t(hepsi.length === 1 ? "arsiv.say1" : "arsiv.say", {n: hepsi.length});
+      sayac.textContent = "";
       hepsi.forEach(function(k){ liste.appendChild(duyuruYaz(k)); });
       bitti();
-      if (!capayaGit()) odakla(sayac);
+      if (!capayaGit()) odakla(liste.firstElementChild);
     })
     .catch(function(){
       clearTimeout(sure);

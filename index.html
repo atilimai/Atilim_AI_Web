@@ -137,7 +137,6 @@ atilimai.ekle({
   "e1.yer": [null, "V!be İncek · 18:30"],
   "e1.metin": [null, "We're meeting up at V!be İncek on Friday evening. We'll be talking about this term's projects and our hackathon teams. If you want to hear about them, or maybe get involved, we'd love to have you there. After the meeting, let's spend a fun evening together over billiards, darts and board games. Even if you've never touched AI before, come along and say hi."],
   "duyurular.baslik": [null, "Latest from the society."],
-  "duyurular.giris": [null, "What the society posts in its WhatsApp announcement channel is published here too."],
   "butun-duyurular": [null, "All announcements"],
   "rapor.baslik": [null, "What happened in AI?"],
   "rapor.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
@@ -157,9 +156,6 @@ atilimai.ekle({
   "duyuru.yukleniyor": ["Duyurular yükleniyor…", "Loading announcements…"],
   "duyuru.yok": ["Henüz duyuru yok.", "No announcements yet."],
   "duyuru.hata": ["Duyurular şu an yüklenemedi.", "Announcements could not be loaded right now."],
-  "duyuru.kalan": ["Arşivde {n} duyuru daha.", "{n} more announcements in the archive."],
-  "duyuru.kalan1": ["Arşivde {n} duyuru daha.", "1 more announcement in the archive."],
-  "duyuru.sabit": ["Sabit", "Pinned"],
   "duyuru.devam": ["Devamı arşivde", "Read on in the archive"],
   "duyuru.gorsel": ["Görsel arşivde", "Image in the archive"],
   "duyuru.video": ["Video arşivde", "Video in the archive"],
@@ -821,7 +817,6 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <section id="duyurular"><div class="wrap">
   <h2 class="reveal" data-i18n="duyurular.baslik">Topluluktan son duyurular.</h2>
-  <p class="giris reveal" data-i18n="duyurular.giris">Topluluğun WhatsApp duyuru kanalında paylaşılanlar burada da yayımlanır.</p>
   <!-- Statik cümle betiğin boş durumuyla aynı; betik yoksa tek doğru cümle o
        (uydurma duyuru yayında kalmasın, PRODUCT.md İlke 4). -->
   <div class="reveal" id="duyuruList">
@@ -1406,12 +1401,6 @@ if ("IntersectionObserver" in window && !reduced){
     saat.textContent = d.zaman.slice(11, 16);
     t.appendChild(gun); t.appendChild(saat);
     yan.appendChild(t);
-    if (d.sabit){
-      var e = document.createElement("span");
-      e.className = "etiket";
-      e.textContent = window.atilimai.t("duyuru.sabit");
-      yan.appendChild(e);
-    }
 
     var govde = document.createElement("div");
     var kes = false;
@@ -1499,13 +1488,6 @@ if ("IntersectionObserver" in window && !reduced){
         var sec = secilenler(hepsi);
         duyuruList.textContent = "";
         sec.liste.forEach(function(k){ duyuruList.appendChild(duyuruYaz(k, sec.medyali)); });
-        var kalanSay = hepsi.length - sec.liste.length;
-        if (kalanSay > 0){
-          var kalan = document.createElement("p");
-          kalan.className = "feed-kalan";
-          kalan.textContent = T.t(kalanSay === 1 ? "duyuru.kalan1" : "duyuru.kalan", {n: kalanSay});
-          duyuruList.appendChild(kalan);
-        }
         odakla(duyuruList.querySelector("a[href]") || duyuruList.firstElementChild);
       })
       .catch(function(){

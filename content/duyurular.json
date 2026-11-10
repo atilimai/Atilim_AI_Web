@@ -47,7 +47,20 @@
       "zaman": "2026-11-06T20:52:00+03:00",
       "metin": "Bu akşam için hepinize teşekkürler!\nTanışma toplantımıza katılıp akşamı bizimle paylaşan herkese teşekkür ederiz. Sizinle tanışmak, fikirlerinizi dinlemek gerçekten çok keyifliydi 🙌\nDesteklerinden dolayı sponsorumuz Unicourse'a da ayrıca teşekkürler 💜\nBu akşam bizimle buluşamayan arkadaşlarımız, hiç dert etmeyin 😊 Sizlerle sonraki etkinliklerimizde ya da proje ekiplerimizde tanışmak için sabırsızlanıyoruz!\nYapay zekâyı birlikte öğrenmeye ve üretmeye devam ediyoruz 🚀\nYarın sınavı olanlara da şimdiden bol şans! 🍀",
       "sabit": false,
-      "medya": []
+      "medya": [
+        {
+          "tur": "gorsel",
+          "src": "images/duyurular/ae46751d922922f3.webp",
+          "en": 1200,
+          "boy": 1600
+        },
+        {
+          "tur": "gorsel",
+          "src": "images/duyurular/02fcfca82d2b8a22.webp",
+          "en": 1600,
+          "boy": 1200
+        }
+      ]
     },
     {
       "id": "imp-50a980eeef30becb",
@@ -171,6 +184,25 @@
       "medya": []
     },
     {
+      "id": "imp-a6978e1a8e573fec",
+      "capa": "d-09fd70a1",
+      "mesajlar": [
+        "imp-a6978e1a8e573fec"
+      ],
+      "kaynak": "aktarim",
+      "zaman": "2026-10-29T09:59:00+03:00",
+      "metin": "",
+      "sabit": false,
+      "medya": [
+        {
+          "tur": "gorsel",
+          "src": "images/duyurular/7ff5944028651fe0.webp",
+          "en": 1080,
+          "boy": 1440
+        }
+      ]
+    },
+    {
       "id": "imp-7fbcb322b3fbd278",
       "capa": "d-6a08ccf8",
       "mesajlar": [
@@ -181,6 +213,25 @@
       "metin": "Günaydın herkese, ilgilenebileceğiniz Tr yüzyüze veya online yurtdışı hackathonlar için inceleyebileceğiniz bağlantıları bırakıyorum. Katılım göstermek istediğiniz hackathonlara herhangi bir destek veya yardım için bizlere danışabilirsiniz. İyi haftalar...\n\nWater AI Hackathon : https://wilo.com/tr/tr/Water-AI-Hackathon-2026.html#wai-hakkinda\nYTÜ Startup House x Meta Student Hackathon :  https://ytustartuphouse.com.tr/blog/ytu-startup-house-ve-meta-dan-lisans-ogrencilerine-ucretsiz-yapay-zeka-egitimi-student-hackathon-egitim-serisi-basvurulari-acildi\nPaypal AI Hackathon : https://paypalaihackathon.devpost.com/\nAMD AI League : https://lablab.ai/ai-hackathons/amd-lablab-ai-academy-challenge\nNebius x NVIDIA Global AI Hackathon : https://nebiusglobalaihackathon.devpost.com/\nNASA Space Apps Challenge : https://www.spaceappschallenge.org/",
       "sabit": false,
       "medya": []
+    },
+    {
+      "id": "imp-37d6da67b3bc6987",
+      "capa": "d-ff15a981",
+      "mesajlar": [
+        "imp-37d6da67b3bc6987"
+      ],
+      "kaynak": "aktarim",
+      "zaman": "2026-10-25T12:27:00+03:00",
+      "metin": "",
+      "sabit": false,
+      "medya": [
+        {
+          "tur": "gorsel",
+          "src": "images/duyurular/e811715f6a53c529.webp",
+          "en": 900,
+          "boy": 1600
+        }
+      ]
     },
     {
       "id": "imp-239f069cc1ae1301",
