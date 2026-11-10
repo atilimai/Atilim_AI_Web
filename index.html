@@ -113,31 +113,31 @@ atilimai.ekle({
   "baslik": [null, "Atılım AI — AI Society"],
   "aciklama": [null, "The AI society of Atılım University. Workshops, open-source projects and a weekly AI report. No department requirement, no prerequisites."],
   "menu": [null, "Menu"],
-  "nav.s1": [null, "About"],
-  "nav.s2": [null, "Events"],
-  "nav.s3": [null, "Weekly report"],
-  "nav.s4": [null, "Projects"],
+  "nav.hakkimizda": [null, "About"],
+  "nav.etkinlikler": [null, "Events"],
+  "nav.rapor": [null, "Weekly report"],
+  "nav.projeler": [null, "Projects"],
   "h1a": [null, "Learning AI together, "],
   "h1b": [null, "building it together."],
   "giris": [null, "Workshops, open-source projects and a weekly AI report. Whatever you study, you can join."],
   "projelere": [null, "Browse the projects"],
-  "s1.baslik": [null, "From theory to a working model."],
-  "s1.p1": [null, "The society began in autumn 2023 on the engineering campus, with seven people who did not know each other. Classes covered the theory, but nobody was building a model from start to finish and getting it to run."],
-  "s1.p2": [null, "Any department is welcome; we have members from law and from psychology too."],
+  "hakkimizda.baslik": [null, "From theory to a working model."],
+  "hakkimizda.p1": [null, "The society began in autumn 2023 on the engineering campus, with seven people who did not know each other. Classes covered the theory, but nobody was building a model from start to finish and getting it to run."],
+  "hakkimizda.p2": [null, "Any department is welcome; we have members from law and from psychology too."],
   "olcum.proje": [null, "completed projects"],
   "olcum.etkinlik": [null, "completed events"],
   "olcum.yuruyen": [null, "ongoing projects"],
-  "s2.baslik": [null, "Upcoming events."],
-  "s2.bos": [null, "No events are scheduled right now."],
+  "etkinlikler.baslik": [null, "Upcoming events."],
+  "etkinlikler.bos": [null, "No events are scheduled right now."],
   "e1.tarih": [null, "6 Nov"],
   "e1.gun": [null, "Friday"],
   "e1.baslik": [null, "Meet and Greet"],
   "e1.yer": [null, "V!be İncek · 18:30"],
   "e1.metin": [null, "We're meeting up at V!be İncek on Friday evening. We'll be talking about this term's projects and our hackathon teams. If you want to hear about them, or maybe get involved, we'd love to have you there. After the meeting, let's spend a fun evening together over billiards, darts and board games. Even if you've never touched AI before, come along and say hi."],
-  "s3.baslik": [null, "What happened in AI?"],
-  "s3.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
+  "rapor.baslik": [null, "What happened in AI?"],
+  "rapor.giris": [null, "The weekly report comes out every Tuesday and gathers the AI news from the previous Tuesday up to that day. Its items are written in Turkish."],
   "butun-sayilar": [null, "All issues"],
-  "s4.baslik": [null, "Work by our members."],
+  "projeler.baslik": [null, "Work by our members."],
   "tamamlandi": [null, "Completed"],
   "p1.ad": [null, "Leaf disease classifier"],
   "p1.metin": [null, "Models that look at a photo of a leaf and recognise disease across 14 plant species. The data was split at the leaf level, so photos of the same leaf never end up in both training and testing."],
@@ -396,8 +396,8 @@ h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.015em;
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- hero ---------- */
-#s0{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
-#s0>.wrap{width:100%}
+#giris{min-height:88vh;display:flex;align-items:center;padding-top:var(--sp-xxl)}
+#giris>.wrap{width:100%}
 .eylem{display:flex;gap:var(--sp-sm);flex-wrap:wrap;margin-top:var(--sp-xxl)}
 
 /* ---------- düğme ---------- */
@@ -598,7 +598,7 @@ footer{border-top:1px solid var(--cizgi);padding:var(--sp-xxl) 0}
 /* ---------- belirme ---------- */
 /* Gizleme yalnızca JS varken uygulanır: betik çalışmazsa ya da tarayıcı
    sekmeyi kısarsa içerik görünür kalır, boş sayfa görünmez.
-   Kahraman (#s0) bilerek .reveal taşımıyor. Başlık, giriş ve "Topluluğa
+   Kahraman (#giris) bilerek .reveal taşımıyor. Başlık, giriş ve "Topluluğa
    katıl" her ziyarette opacity:0'dan başlayıp gözlemci geri çağrısı + 0,8 s
    bekliyordu: sayfanın LCP öğesi ve tek katılım yolu bir animasyonun
    arkasındaydı. İlk ekran dinlenik çizilir; belirme aşağıdaki bölümlerde. */
@@ -700,13 +700,13 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 <a class="atla" href="#icerik" data-i18n="atla">İçeriğe atla</a>
 
 <nav id="nav"><div class="wrap nav-in">
-  <a class="marka" href="#s0"><i aria-hidden="true"></i>ATILIM AI</a>
+  <a class="marka" href="#giris"><i aria-hidden="true"></i>ATILIM AI</a>
   <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="baglar" data-i18n="menu">Menü</button>
   <div class="baglar" id="baglar">
-    <a href="#s1" data-b="s1" data-i18n="nav.s1">Hakkımızda</a>
-    <a href="#s3" data-b="s3" data-i18n="nav.s3">Haftalık rapor</a>
-    <a href="#s2" data-b="s2" data-i18n="nav.s2">Etkinlikler</a>
-    <a href="#s4" data-b="s4" data-i18n="nav.s4">Projeler</a>
+    <a href="#hakkimizda" data-b="hakkimizda" data-i18n="nav.hakkimizda">Hakkımızda</a>
+    <a href="#rapor" data-b="rapor" data-i18n="nav.rapor">Haftalık rapor</a>
+    <a href="#etkinlikler" data-b="etkinlikler" data-i18n="nav.etkinlikler">Etkinlikler</a>
+    <a href="#projeler" data-b="projeler" data-i18n="nav.projeler">Projeler</a>
     <a class="kat" href="katil.html"><span data-i18n="katil">Topluluğa katıl</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
   </div>
   <div class="ayar">
@@ -734,12 +734,12 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <main id="icerik">
 
-<section id="s0"><div class="wrap">
+<section id="giris"><div class="wrap">
   <h1><span data-i18n="h1a">Yapay zekayı birlikte öğreniyor, </span><em data-i18n="h1b">birlikte üretiyoruz.</em></h1>
   <p class="giris" data-i18n="giris">Atölyeler, açık kaynak projeler ve haftalık bir yapay zeka raporu. Hangi bölümde okursan oku, katılabilirsin.</p>
   <div class="eylem">
     <a class="btn p" href="katil.html"><span data-i18n="katil">Topluluğa katıl</span><svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
-    <a class="btn s" href="#s4" data-i18n="projelere">Projelere göz at</a>
+    <a class="btn s" href="#projeler" data-i18n="projelere">Projelere göz at</a>
   </div>
 </div></section>
 <!-- İlk ekran (nav ve kahraman) ilk boyamadan önce çevrilsin. -->
@@ -747,18 +747,18 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s1"><div class="wrap iki">
+<section id="hakkimizda"><div class="wrap iki">
   <div>
-      <h2 class="reveal" data-i18n="s1.baslik">Teoriden çalışan modele.</h2>
+      <h2 class="reveal" data-i18n="hakkimizda.baslik">Teoriden çalışan modele.</h2>
   </div>
   <div>
-    <p class="giris reveal" data-i18n="s1.p1">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
-    <p class="giris reveal" data-i18n="s1.p2">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
+    <p class="giris reveal" data-i18n="hakkimizda.p1">Topluluk 2023 güzünde, mühendislik kampüsünde birbirini tanımayan yedi kişiyle başladı. Dersler teoriyi veriyordu ama kimse bir modeli baştan sona kurup çalıştırmıyordu.</p>
+    <p class="giris reveal" data-i18n="hakkimizda.p2">Bölüm ayrımı yok; hukuktan da psikolojiden de üyemiz var.</p>
     <!-- Rakamlar ekipten, 28 Eylül 2026. Değişince yalnızca .num içeriğini
          güncelle. Yürüyen proje sıfırken o satır bir yere götürmüyor; proje
-         başlayınca o da bir bağlantı olup #s4'e gidebilir. -->
+         başlayınca o da bir bağlantı olup #projeler'e gidebilir. -->
     <div class="olcum reveal">
-      <a href="#s4"><b class="num">3</b><span data-i18n="olcum.proje">tamamlanan proje</span><svg class="ok git" aria-hidden="true"><use href="#i-ileri"/></svg></a>
+      <a href="#projeler"><b class="num">3</b><span data-i18n="olcum.proje">tamamlanan proje</span><svg class="ok git" aria-hidden="true"><use href="#i-ileri"/></svg></a>
       <div><b class="num">11</b><span data-i18n="olcum.etkinlik">tamamlanan etkinlik</span></div>
       <div><b class="num">0</b><span data-i18n="olcum.yuruyen">yürüyen proje</span></div>
     </div>
@@ -767,9 +767,9 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s3"><div class="wrap">
-  <h2 class="reveal" data-i18n="s3.baslik">Yapay zekada neler oldu?</h2>
-  <p class="giris reveal" data-i18n="s3.giris">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler.</p>
+<section id="rapor"><div class="wrap">
+  <h2 class="reveal" data-i18n="rapor.baslik">Yapay zekada neler oldu?</h2>
+  <p class="giris reveal" data-i18n="rapor.giris">Haftalık rapor her salı yayımlanır ve önceki salıdan o güne kadarki yapay zeka haberlerini derler.</p>
   <p class="meta reveal" id="feedIssue"></p>
   <!-- Statik içerik, betiğin boş durumuyla aynı cümleyi söyler. Burada bir
        zamanlar üç örnek haber satırı duruyordu; veri dosyası boşaltılınca
@@ -783,8 +783,8 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s2"><div class="wrap">
-  <h2 class="reveal" data-i18n="s2.baslik">Yaklaşan etkinlikler.</h2>
+<section id="etkinlikler"><div class="wrap">
+  <h2 class="reveal" data-i18n="etkinlikler.baslik">Yaklaşan etkinlikler.</h2>
   <!-- Her etkinlik bir <li>. Bitiş günü (<li data-bitis="YYYY-AA-GG">, yoksa
        <time datetime>) geçince akordeon betiği satırı kaldırır; liste
        boşalırsa .tl-bos dipnotu açılır. Betik yoksa satırlar kalır, o yüzden
@@ -801,13 +801,13 @@ body.no-alan .gecis{min-height:var(--sp-sec)}
       <div class="detay" id="etkinlik-1"><div><p data-i18n="e1.metin">Cuma akşamı V!be İncek'te buluşuyoruz. Bu dönemki projelerimizi ve hackathon takımlarımızı orada konuşacağız. Bunlardan haberdar olmak, belki bir ucundan tutmak istiyorsan seni de aramızda görmek isteriz. Toplantımızdan sonra da bilardo, dart ve kutu oyunlarıyla birlikte güzel bir akşam geçirelim. Yapay zekayla daha önce hiç uğraşmadıysan da gel, tanışalım.</p></div></div>
     </li>
   </ul>
-  <p class="tl-bos reveal" id="tlBos" data-i18n="s2.bos" hidden>Şu an planlanmış bir etkinlik yok.</p>
+  <p class="tl-bos reveal" id="tlBos" data-i18n="etkinlikler.bos" hidden>Şu an planlanmış bir etkinlik yok.</p>
 </div></section>
 
 <div class="gecis" aria-hidden="true"></div>
 
-<section id="s4"><div class="wrap">
-  <h2 class="reveal" data-i18n="s4.baslik">Üyelerimizin yürüttüğü işler.</h2>
+<section id="projeler"><div class="wrap">
+  <h2 class="reveal" data-i18n="projeler.baslik">Üyelerimizin yürüttüğü işler.</h2>
   <!-- Kart metinleri depoların README dosyalarından alındı. Açıklama
        değişirse README'yi kaynak al, buraya bilgi uydurma. -->
   <div class="projeler">
@@ -1599,7 +1599,7 @@ function temizle(){
 /* Merceğin yeri okuma sütununun dışındaki rayın dış ucudur ve gerçek .wrap
    dikdörtgeninden hesaplanır. Temel dolgu clamp(20px,5vw,56px), .wrap ile
    birebir aynı. */
-var refWrap = document.querySelector("#s1 .wrap") || document.querySelector("main .wrap");
+var refWrap = document.querySelector("#hakkimizda .wrap") || document.querySelector("main .wrap");
 var menu = document.getElementById("nav");
 var MERCEK_TAVAN = 560;
 function mercekKutusu(){
@@ -1638,7 +1638,7 @@ function olc(){
      (d) cinsinden: yakala > acik > tam. Her yönde komşu bantla aradaki
      yarım mesafeyle sınırlanır, böylece aynı anda yalnızca bir bant merceği
      tutar. Eskiden hedef "ekranda en çok görünen bant"tı ve iki bant aynı
-     ekrana girince (#s2 kısa) hedef birinden ötekine sıçrıyordu. */
+     ekrana girince (#etkinlikler kısa) hedef birinden ötekine sıçrıyordu. */
   /* oncesi: mercek bandın üstündeyken (d > 0), sınırı bir önceki bant.
      sonrasi: mercek bandı geçmişken (d < 0), sınırı bir sonraki bant. */
   for (i=0;i<BANT.length;i++){

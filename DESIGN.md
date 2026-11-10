@@ -968,7 +968,7 @@ Before it, the row's only cue was `opacity: .78` on hover — invisible at rest,
 touch device invisible entirely. Every event description, including the repeated "önkoşul
 yok, laptop yeterli", sat behind a trigger nobody could see. The same problem and the same
 kind of fix applies to `.olcum`: its one interactive row — "4 tamamlanan proje", a link to
-`#s4` — ends in an arrow icon in `kagit-t` that goes `lamba` and shifts 3px on hover (reduced motion
+`#projeler` — ends in an arrow icon in `kagit-t` that goes `lamba` and shifts 3px on hover (reduced motion
 keeps the colour and drops the shift's transition), while the two plain `<div>` rows have
 none. Identical-looking rows where only some were interactive was a standards break, not a
 subtlety.
@@ -993,14 +993,14 @@ words** — a `.gizli` "(yeni sekmede açılır)" after the icon — since the i
 from assistive technology. That includes the project cards, which never had a visible icon.
 
 ### Events list
-**Below the weekly report since 2026-10-19** (team decision; the ids `#s2`/`#s3` kept their
-names so shared links still land). The list was empty from 2026-09-28 to 2026-10-19. When it
+**Below the weekly report since 2026-10-19** (team decision; since 2026-11-10 the section ids are named,
+`#rapor` and `#etkinlikler`). The list was empty from 2026-09-28 to 2026-10-19. When it
 empties, a `.tl-bos` footnote stands in its place: the feed's empty-row voice (mono 13px,
 `kagit-t`) plus the list's own top hairline and `xl` margin, so the section starts in the same
 place either way. The footnote now sits in the markup with `hidden`, and the accordion script
 removes every row whose last day (`data-bitis`, else `<time datetime>`) is before the
 visitor's today and reveals the footnote once none are left, so a past event never reads as
-upcoming. The row markup is kept as a comment inside `#s2`. The weekday sits in its own
+upcoming. The row markup is kept as a comment inside `#etkinlikler`. The weekday sits in its own
 `.gun` span next to the date span, so both can be translated: `cevir()` replaces an element's
 whole text, and a weekday nested inside the date would be wiped in English.
 
@@ -1192,8 +1192,8 @@ that showed as a 4.9px second difference at 5px per frame, against 1.5px with `t
 The zones are `yakala = 0.30·vh + band/2`, `acik = 0.34·vh` and `tam = 0.03·vh`, and on
 each side they stop at half the distance to the neighbouring band. Only one band can
 hold the lens at a time. The old rule picked the band with the most area on screen, and it
-jumped between two bands whenever both were visible, which `#s2`, 360px tall, guarantees.
-In the middle of `#s2` both bands sit exactly at half distance, so the attention matrix
+jumped between two bands whenever both were visible, which `#etkinlikler`, 360px tall, guarantees.
+In the middle of `#etkinlikler` both bands sit exactly at half distance, so the attention matrix
 rests in the rail.
 
 The scissor is a safety net, not the mechanism. If the rectangle has left the rail, its
@@ -1352,12 +1352,12 @@ the one place the field has nothing to say.
 ### Repository dialog — removed 2026-10-06
 
 The "4 tamamlanan proje" row used to open a dialog that listed the four repositories again,
-with language, star, fork and last-pushed figures from the GitHub API. The `#s4` cards already
+with language, star, fork and last-pushed figures from the GitHub API. The `#projeler` cards already
 link to the same four repositories, so the dialog was a second presentation of one list —
 and the most complex thing on the page: a focus trap, a scroll lock with scrollbar
 compensation, an unauthenticated API call capped at 60 per hour per campus IP, a 10s timeout
 and a failure note. Markup, styles and the script section went together; the row is now an
-`<a href="#s4">`, and the `xl` radius step left with the panel.
+`<a href="#projeler">`, and the `xl` radius step left with the panel.
 
 If an API-fed figure ever returns, the dialog's two lessons still bind: the value ships
 `hidden` and is unhidden only when the response arrives, never baked into markup as a

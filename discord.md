@@ -48,7 +48,7 @@ Kaldırılan:
 <a class="btn p" href="katil.html">Topluluğa katıl<svg class="ok" aria-hidden="true"><use href="#i-ileri"/></svg></a>
 ```
 
-## 3. `index.html` — haftalık rapor bölümünün girişi (`#s3 .giris`)
+## 3. `index.html` — haftalık rapor bölümünün girişi (`#rapor .giris`)
 
 Bul: `grep -n 'Haftalık rapor her salı' index.html`
 

@@ -71,7 +71,7 @@ published, but must not imply a longer history than the archive shows.
   2026-10-19 the weekly report sits above the events on the landing page (team decision).
 - **The digest publishes on Tuesdays and covers Tuesday to Tuesday** — each issue gathers
   the AI news from the previous Tuesday up to its own publication day. This is a team
-  decision, written onto the site on 2026-10-11 (the `#s3` intro on the landing page and
+  decision, written onto the site on 2026-10-11 (the `#rapor` intro on the landing page and
   the archive's intro). Issue 1 went out on a Wednesday (2026-09-23); the rule applies from
   issue 2 on. It is the one recurring schedule the site states; it does not license a
   recurring meeting.
@@ -164,7 +164,7 @@ issue once; a correction to an already-sent issue reaches the site but never Dis
   10 completed events, 0 ongoing projects. On 2026-10-17 the team dropped
   `Project1-browsertracker` and the project figure became 3. On 2026-11-03 the team counted
   the 20 October showcase day and the event figure became 11.
-- The three project cards in `#s4`, one per completed project, each linking to its public
+- The three project cards in `#projeler`, one per completed project, each linking to its public
   repository. Each takes its copy from the repository's README. Until
   2026-10-05 the fourth card was the publishing pipeline in this repository ("Bülten",
   marked live); the team replaced it with `EEG-Emotion-Models`, and on 2026-10-17 with
@@ -188,18 +188,18 @@ before it is confirmed, it goes back to a visible placeholder, never to a guess.
 
 Two consequences of those figures, both decided by the team on 2026-09-28:
 
-- **Zero ongoing projects.** The `#s4` cards used to describe two projects with no public
+- **Zero ongoing projects.** The `#projeler` cards used to describe two projects with no public
   repository (Kampüs Asistanı, Görü), one of them marked "in development", which the zero
   contradicted. They were replaced by the completed work, and the "0 yürüyen proje" row no
-  longer scrolls to `#s4`, since there is nothing ongoing to show there.
+  longer scrolls to `#projeler`, since there is nothing ongoing to show there.
 - **Three completed projects, three public repositories** (four until 2026-10-17, when the
-  team dropped `Project1-browsertracker`). Each `#s4` card links to one of
+  team dropped `Project1-browsertracker`). Each `#projeler` card links to one of
   them. Until 2026-10-05 this file said the fourth had no public repository; the team then
   named it — `atilimai/EEG-Emotion-Models`, corrected on 2026-10-17 to
   `atilimai/emg-ninapro-gesture-recognition`. A repository dialog, opened by the then "4 tamamlanan
   proje" row, listed the same four a second time with star and fork counts from the GitHub
   API. It was removed on 2026-10-06 as a duplicate of the cards, and the row now links to
-  `#s4`.
+  `#projeler`.
 
 The 2026-09-10 design review's open question still stands: whether a *count* is the
 evidence a student actually wants, or whether three sentences about what happened at the

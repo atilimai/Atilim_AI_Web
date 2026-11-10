@@ -61,10 +61,10 @@ hepsini `grep -n "^/\* ===" -A2 index.html` ile listeleyebilirsin:
 | **5 · Alan** | **Kaydırmayla değişen 3B model katmanı — ayrı `<script>`, dosyanın en büyük parçası** |
 | Görünüm denetimi | Dil ve tema paneli — ayrı `<script>`, dört sayfada aynı (bkz. "Tema ve dil") |
 
-**Bölüm sırası kimlik sırasıyla aynı değil:** kahraman `#s0`, Hakkımızda `#s1`,
-Haftalık rapor `#s3`, Etkinlikler `#s2`, Projeler `#s4`. Rapor 19 Ekim 2026'da
-etkinliklerin üstüne alındı (ekip kararı); paylaşılmış `#s2`/`#s3`
-bağlantıları kırılmasın diye kimlikler ve çeviri anahtarları yerinde kaldı.
+**Bölüm kimlikleri isimli:** kahraman `#giris`, Hakkımızda `#hakkimizda`,
+Haftalık rapor `#rapor`, Etkinlikler `#etkinlikler`, Projeler `#projeler`; çeviri
+anahtarları da aynı adları taşır (`nav.rapor`, `rapor.baslik`…). 10 Kasım 2026'ya
+kadar kimlikler `#s0`–`#s4` idi; eski `#sN` bağlantıları bilerek yönlendirilmedi.
 Menü de aynı sırada. Aktif bölüm işareti ve alan katmanı sıraya değil
 kimliğe ve bantlara bakıyor, o yüzden sırayı değiştirmek onları bozmaz.
 
@@ -612,7 +612,7 @@ HTML'i önbellekte tutabiliyor.
   takımları kısmı, mekândaki oyun alanı (kutu oyunları, bilardo, dart) ve yer
   ekipten — afişte yer henüz
   yoktu; bitiş saati verilmedi, bilerek yazılmadı).
-  Satır kalıbı `#s2`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
+  Satır kalıbı `#etkinlikler`'nin içinde yorum olarak duruyor. Açıklamanın altına isteğe bağlı bir
   fotoğraf şeridi konabiliyor (`figure.tl-foto`, üç kare): dosyalar
   `images/etkinlikler/` altında 640 px kare WebP, her birinin kendi `alt`
   metni ve İngilizcesi var (`data-i18n-nitelik="alt:…"`). Satır kalkınca
@@ -624,7 +624,7 @@ HTML'i önbellekte tutabiliyor.
   kalır; geçen etkinliği yine de listeden sil. Tarih ile gün adı ayrı
   `<span>`'lerde (gün adı `.gun`): çeviri öğenin bütün metnini değiştiriyor,
   gün adı tarihin içinde dursaydı İngilizcede silinirdi.
-- **Ölçüm rakamları ekipten geliyor.** `#s1`'deki üç rakam (3 tamamlanan
+- **Ölçüm rakamları ekipten geliyor.** `#hakkimizda`'deki üç rakam (3 tamamlanan
   proje, 10 tamamlanan etkinlik, 0 yürüyen proje) 28 Eylül 2026'da verildi;
   proje sayısı 17 Ekim 2026'da `Project1-browsertracker` çıkınca 4'ten 3'e indi,
   etkinlik sayısı 3 Kasım 2026'da 20 Ekim Tanıtım Günü sayılınca 10'dan 11'e
@@ -639,7 +639,7 @@ HTML'i önbellekte tutabiliyor.
 - **API'den gelen sayıyı biçimlendirmeye gömme.** Ana sayfada artık dış API
   çağrısı yok: GitHub'dan dil, yıldız ve çatal sayısı çeken depo penceresi
   6 Ekim 2026'da kaldırıldı, çünkü Projeler kartlarının zaten bağladığı
-  depoları ikinci kez listeliyordu. "3 tamamlanan proje" satırı artık `#s4`'e
+  depoları ikinci kez listeliyordu. "3 tamamlanan proje" satırı artık `#projeler`'e
   giden bir bağlantı. Böyle bir veri geri gelirse kural aynı: değer `hidden`
   gelir ve yalnızca yanıt ulaşınca açılır. Kimliksiz GitHub çağrısı saatte 60
   ile sınırlı ve kampüs ağı tek IP paylaşıyor; istek sessizce düşünce HTML'e
