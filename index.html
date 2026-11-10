@@ -1659,7 +1659,7 @@ function agYap(i,out){
    (ileri süreç tersten okunur). Gürültü kareyi aşmasın diye ±0.23'te kırpılır,
    yoksa komşu kareye taşıp şerit okunmaz. Karelerin altındaki ince çizgi
    zaman ekseni; etiket değil, yalnızca yönü söyler. */
-var AB = [0.0, 0.22, 0.5, 0.78, 1.0], KARE_ARA = 0.62, KARE_YAR = 0.23, HALKA_R = 0.17;
+var AB = [0.0, 0.5, 0.8, 0.95, 1.0], KARE_ARA = 0.62, KARE_YAR = 0.23, HALKA_R = 0.17;
 function difuzyonYap(i,out){
   if (Math.random() < 0.20){
     out[0]=ras(-1.45,1.45); out[1]=-0.42+cn()*0.004; out[2]=cn()*0.02; return;
@@ -1669,8 +1669,8 @@ function difuzyonYap(i,out){
     var a=Math.random()*6.2831853;
     sx=Math.cos(a)*(HALKA_R+cn()*0.004); sy=Math.sin(a)*(HALKA_R+cn()*0.004);
   } else { sx=cn()*0.03; sy=cn()*0.03; }
-  var g=Math.sqrt(1-ab), nx=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.3)),
-      ny=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.3));
+  var g=Math.sqrt(1-ab), nx=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.24)),
+      ny=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.24));
   out[0]=(f-2)*KARE_ARA + Math.sqrt(ab)*sx + g*nx;
   out[1]=Math.sqrt(ab)*sy + g*ny;
   out[2]=cn()*0.02;
