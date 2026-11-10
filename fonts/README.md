@@ -1,7 +1,7 @@
 # Yazı tipleri
 
 Site yazı tiplerini Google Fonts'tan çekmiyor; bu klasörden sunuyor. Üç
-ailenin beşi dosya, hepsi SIL Open Font License 1.1 altında. Telif satırı ve
+ailenin altı dosyası, hepsi SIL Open Font License 1.1 altında. Telif satırı ve
 lisans adresi her dosyanın `name` tablosunda duruyor.
 
 | Dosya | Aile | İçerik | Kaynak |
@@ -9,6 +9,7 @@ lisans adresi her dosyanın `name` tablosunda duruyor.
 | `newsreader.woff2` | Newsreader, düz | değişken: `wght` 300–400, `opsz` 6–72 | Newsreader Project Authors |
 | `newsreader-italik.woff2` | Newsreader, italik | değişken: `opsz` 36–72, `wght` 300 sabit | Newsreader Project Authors |
 | `public-sans.woff2` | Public Sans | değişken: `wght` 400–500 | Public Sans Project Authors (USWDS) |
+| `public-sans-700.woff2` | Public Sans 700 | statik; yalnız duyurudaki kalın yazı | Public Sans Project Authors (USWDS) |
 | `plex-mono-400.woff2` | IBM Plex Mono 400 | statik | IBM Corp. |
 | `plex-mono-500.woff2` | IBM Plex Mono 500 | statik | IBM Corp. |
 
@@ -22,6 +23,11 @@ değişken eksenler sayfaların kullandığı aralığa daraltıldı.
 
 Toplam ~430 KB'tan ~220 KB'a indi (ana sayfa); okuma sayfaları ~160 KB yükler,
 çünkü italik orada hiç çizilmiyor ve tarayıcı onu indirmiyor.
+
+**`public-sans-700.woff2` (10 Kasım 2026).** Aynı `text=` kümesiyle (mevcut
+dosyanın 346 kod noktası) Google'dan 700 ağırlık olarak istendi; Google `text=`
+ile değişken dosya vermediği için statik ve ayrı. Yalnız duyuru metnindeki
+`*kalın*` kullanıyor; 500 normal metinden ayırt edilmiyordu.
 
 **Plex Mono'ya dokunulmadı.** IBM Plex'in lisansı "Plex" adını ayrılmış ad
 olarak tutuyor; değiştirilmiş bir sürüm o adla dağıtılamaz. Bu iki dosya

@@ -162,6 +162,10 @@ atilimai.ekle({
 @font-face{font-family:"Public Sans";font-weight:400 500;font-style:normal;font-display:swap;
   src:url(fonts/public-sans.woff2) format("woff2"),
       url(https://atilimai.github.io/Atilim_AI_Web/fonts/public-sans.woff2) format("woff2")}
+/* Yalnız duyurudaki *kalın* için. */
+@font-face{font-family:"Public Sans";font-weight:700;font-style:normal;font-display:swap;
+  src:url(fonts/public-sans-700.woff2) format("woff2"),
+      url(https://atilimai.github.io/Atilim_AI_Web/fonts/public-sans-700.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;font-display:swap;
   src:url(fonts/plex-mono-400.woff2) format("woff2"),
       url(https://atilimai.github.io/Atilim_AI_Web/fonts/plex-mono-400.woff2) format("woff2")}
@@ -371,7 +375,7 @@ h1{font-size:clamp(2.75rem,6.4vw,4.6rem);line-height:1.05;letter-spacing:-.02em}
 .duyuru-metin{color:var(--metin);font-size:15px;line-height:1.6;max-width:66ch}
 /* Public Sans yalnızca 400–500 yüklü; 600 isteyen tarayıcı kalınlığı sahte
    üretirdi. Kalın = 500. */
-.duyuru-metin strong{font-weight:500}
+.duyuru-metin strong{font-weight:700}
 .duyuru-metin code{font-family:var(--mono);font-size:13px}
 .duyuru-metin a{border-bottom:1px solid var(--lamba-alt);transition:color .3s}
 .duyuru-metin a:hover{color:var(--lamba-iz-h)}
