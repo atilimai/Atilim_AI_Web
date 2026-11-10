@@ -1124,6 +1124,32 @@ the landing page; the remainder is stated, not silently dropped, by a `.feed-kal
 mono 13px `kagit-t` that takes the same 22px row rhythm and hairline. At the panel's legal
 ceiling of 25 items this is the difference between a 6,929px and a 9,955px page on a phone.
 
+### Announcement row
+
+A grid, not a card, and the news row's relative with a different job. WhatsApp
+announcements have no title: using the first line as one would invent a hierarchy the author
+never wrote, so the row is **date and time on the left, the message on the right, nothing
+else**. No signature, no avatar, no sender (the source is the society's channel and the
+page header says so). One hairline per row (`--cizgi`) and a top hairline on the first;
+no surface, no shadow. Same markup and CSS on `index.html` (`#duyuruList`) and
+`duyurular.html`; the renderers are copies (EKIP.md → Duyurular).
+
+| Part | Rule |
+|---|---|
+| Grid | `88px 1fr`, `gap: var(--sp-lg)`, `padding: 22px 0`. The column is 88px, not the news archive's 64px: *"September"* in 13px mono does not fit 64px and would break mid-word. |
+| Date column (`.duyuru-yan`) | Stacked day then time (`.meta`, mono 13px, `--metin-s`); the archive right-aligns it. A pinned row adds `.etiket` ("Sabit", mono 12px, 500, `--ekran-iz` — the screen colour, same role as a news category). The `<time>` carries the machine value in `datetime`. |
+| Text (`.duyuru-metin`) | Public Sans 15px / 1.6, `--metin`, `max-width: 66ch`. WhatsApp markup only: `strong` is **500, not 600** (the face is loaded at 400–500; a 600 request would be synthesised), `code` is mono 13px, links take a `--lamba-alt` underline and `--lamba-iz-h` on hover. |
+| Overflow | `.duyuru > * { min-width: 0; overflow-wrap: anywhere }`: a bot-forwarded 500-letter word must not stretch the row. |
+| Media (`.duyuru-medya`) | Under the text, one column, `max-width: 640px`, `gap: var(--sp-sm)`. Images carry `width`/`height` so nothing shifts, `max-height: 520px`, `object-fit: contain`, `--r-md`; the border is transparent until `load` and then `--cizgi` (see Images from the panel). Video reserves a `16/9` box on `--yuzey-2` so scroll position survives. |
+| Landing page | One pinned announcement is shown in full, with media. Two or three pinned, or none, show text only, cut at 420 characters; the cut row ends in a link to the archive row. Under the list: *"Arşivde N duyuru daha."* and the *Bütün duyurular* link. |
+| Archive target | `.duyuru:target` steps one surface up (`--yuzey`) with a negative inline margin and equal padding, so the text does not move; no animation. `scroll-margin-top: var(--sp-md)` (the top bar is not sticky). A keyboard landing on the row shows a 2px `--lamba-iz` focus ring. |
+| ≤ 760px | One column; the date row turns inline (day, time and tag on a wrapping line, aligned left). |
+
+Three states with three sentences, as the news feed: *"Duyurular yükleniyor…"*,
+*"Henüz duyuru yok."* (read, none yet; also the static markup, so no-script says the true
+thing) and *"Duyurular şu an yüklenemedi."* with **Yeniden dene**. The archive is empty on
+the day this shipped; the empty state is a real state, not a placeholder.
+
 ### The field
 
 The landing page's one instrument. **Raw WebGL, inside the page: no dependency, no build
@@ -1132,12 +1158,15 @@ GLSL ES 1.00, which both accept. 18,000 points, one `drawArrays`, device pixel r
 at 1.75. There is no smaller phone count any more: the field is only ever set up at 1152px
 and wider (see *Below 1152px* at the end of this section).
 
-**Five models, five vertex attributes.** Each point carries its position in all five
-targets (`a0`–`a4`) plus a size and a seed — seven attributes, inside WebGL1's guaranteed
-eight. The vertex shader mixes the targets by five weights, so a morph costs nothing but
-five uniforms. The sequence traces one machine: **monogram → sinir ağı → dikkat matrisi →
-belirteç akışı → gradyan inişi**. Five different geometric families on purpose; two models
-from the same family would read as a repeat.
+**Six models, six vertex attributes.** Each point carries its position in all six
+targets (`a0`–`a5`) plus a size and a seed — eight attributes, exactly WebGL1's guaranteed
+minimum, so setup reads `MAX_VERTEX_ATTRIBS` and turns the field off below eight. The vertex
+shader mixes the targets by six weights, so a morph costs nothing but six uniforms. The
+sequence traces one machine: **monogram → sinir ağı → difüzyon → dikkat matrisi → belirteç
+akışı → gradyan inişi**. Six different geometric families on purpose; two models from the
+same family would read as a repeat. Diffusion (added 2026-11-10 for the Duyurular band) is noise
+resolving into a shape across five frames. Bands map one to one to models 1–5: there are five bands, and the monogram is the
+resting model of the hero, not of a band.
 
 Every model is centred on its own bounding box at build time and scaled to the current
 rectangle, so it is filled the same way whatever that rectangle's aspect. **The extent that
@@ -1600,7 +1629,7 @@ These entries look like violations and are not; each is recorded so a reviewer d
 - **Don't** compute the field's fit from model-space extents. Project first, sweep the yaw
   range, and re-run the edge-ring audit; a deep model will be cut off otherwise.
 - **Don't** put a caption, a label, or any other text inside a `.gecis` band.
-- **Don't** add a sixth model from a family already in the sequence.
+- **Don't** add a seventh model from a family already in the sequence, and don't add one without a band to carry it (there are as many bands as models minus the resting monogram).
 - **Don't** put colour rules in `@media print`, and don't put the print block anywhere but the
   end of the stylesheet. Browsers already drop backgrounds; a media query adds no specificity.
 - **Don't** use `<time>` without a real `datetime`, and don't substitute a nearby date for a
