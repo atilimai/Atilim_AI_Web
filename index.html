@@ -1652,7 +1652,31 @@ function agYap(i,out){
   }
 }
 
-/* ---------- 2. dikkat matrisi ---------- */
+/* ---------- 2. difüzyon ---------- */
+/* Difüzyon makalelerinin bilinen şeridi: aynı şeklin beş karesi soldan sağa,
+   saf gürültüden temiz şekle. Şekil bilerek nötr: bir halka ve ortasında nokta.
+   Kare f için ab, kalan sinyal oranı: nokta = sqrt(ab)*şekil + sqrt(1-ab)*gürültü
+   (ileri süreç tersten okunur). Gürültü kareyi aşmasın diye ±0.23'te kırpılır,
+   yoksa komşu kareye taşıp şerit okunmaz. Karelerin altındaki ince çizgi
+   zaman ekseni; etiket değil, yalnızca yönü söyler. */
+var AB = [0.0, 0.22, 0.5, 0.78, 1.0], KARE_ARA = 0.62, KARE_YAR = 0.23, HALKA_R = 0.17;
+function difuzyonYap(i,out){
+  if (Math.random() < 0.20){
+    out[0]=ras(-1.45,1.45); out[1]=-0.42+cn()*0.004; out[2]=cn()*0.02; return;
+  }
+  var f=(Math.random()*5)|0, ab=AB[f], sx, sy;
+  if (Math.random() < 0.80){
+    var a=Math.random()*6.2831853;
+    sx=Math.cos(a)*(HALKA_R+cn()*0.004); sy=Math.sin(a)*(HALKA_R+cn()*0.004);
+  } else { sx=cn()*0.03; sy=cn()*0.03; }
+  var g=Math.sqrt(1-ab), nx=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.3)),
+      ny=Math.max(-KARE_YAR,Math.min(KARE_YAR,cn()*0.3));
+  out[0]=(f-2)*KARE_ARA + Math.sqrt(ab)*sx + g*nx;
+  out[1]=Math.sqrt(ab)*sy + g*ny;
+  out[2]=cn()*0.02;
+}
+
+/* ---------- 3. dikkat matrisi ---------- */
 /* Nedensel maske: bir belirteç yalnızca kendinden öncekilere bakabilir, bu
    yüzden üst üçgen boştur ve matris keskin bir köşegen kenarla okunur.
    Hücreler gaussian leke değil dolu kare yamalar; parlaklık ağırlıktan gelir. */
@@ -1682,7 +1706,7 @@ function matrisYap(i,out){
   out[2]=(Math.min(w,2.4)-0.7)*0.26 + cn()*0.012;
 }
 
-/* ---------- 3. belirteç akışı ---------- */
+/* ---------- 4. belirteç akışı ---------- */
 var TOK=34, tokY=new Float32Array(TOK), tokB=new Float32Array(TOK);
 (function(){
   for (var k=0;k<TOK;k++){
@@ -1706,7 +1730,7 @@ function akisYap(i,out){
   }
 }
 
-/* ---------- 4. gradyan inişi ---------- */
+/* ---------- 5. gradyan inişi ---------- */
 /* Hata yüzeyi tel kafes olarak çizilir, iniş yolu gerçek gradyan adımlarıyla
    üretilir: adımlar eğim azaldıkça kendiliğinden kısalır. Yol, adım sayısına
    göre değil yay uzunluğuna göre örneklenir — yoksa bütün parçacıklar
@@ -1760,18 +1784,20 @@ function inisYap(i,out){
   }
 }
 
-var yapici = [monogramYap, agYap, matrisYap, akisYap, inisYap];
+/* Sıra sayfadakiyle aynı: giriş, hakkımızda, duyurular, rapor, etkinlikler,
+   projeler. Bant i, p = i+1'de model i+1'e oturur. */
+var yapici = [monogramYap, agYap, difuzyonYap, matrisYap, akisYap, inisYap];
 
 /* ---------- shader ---------- */
 var VS =
-"attribute vec3 a0;attribute vec3 a1;attribute vec3 a2;attribute vec3 a3;attribute vec3 a4;"+
+"attribute vec3 a0;attribute vec3 a1;attribute vec3 a2;attribute vec3 a3;attribute vec3 a4;attribute vec3 a5;"+
 "attribute float aBoy;attribute float aTohum;"+
-"uniform float w0,w1,w2,w3,w4;"+
+"uniform float w0,w1,w2,w3,w4,w5;"+
 "uniform float uZaman,uEn,uDon,uSup,uSurukle,uSig,uNokta,uItme;"+
 "uniform vec2 uFare;uniform vec4 uKutu;"+
 "varying float vIsik;varying float vSol;"+
 "void main(){"+
-"  vec3 p = a0*w0+a1*w1+a2*w2+a3*w3+a4*w4;"+
+"  vec3 p = a0*w0+a1*w1+a2*w2+a3*w3+a4*w4+a5*w5;"+
 "  float f = aTohum*6.2831853;"+
 "  p += vec3(sin(uZaman*0.34+f),cos(uZaman*0.27+f*1.7),sin(uZaman*0.21+f*2.3))*(0.020*uSurukle);"+
 "  float c=cos(uDon), s=sin(uDon);"+
@@ -1813,13 +1839,13 @@ function derle(tip, kod){
 
 var prog = null, konum = {}, tampon = [];
 /* Her modelin gerçek yarı-genişliği: sığdırma bunlardan hesaplanır. */
-var sinirX = [1,1,1,1,1], sinirY = [1,1,1,1,1];
+var sinirX = [1,1,1,1,1,1], sinirY = [1,1,1,1,1,1];
 /* Çerçevenin ne kadarını dolduracağı modele göre: işaret kendinden emin
    durmalı, diyagramların ise nefes alacak kenar boşluğu olmalı. */
 /* Doluluk, sürüklenme payı ve nokta yarıçapı için kenarda boşluk bırakır;
    itme sırasında ayrıca küçülür (aşağıya bak), böylece parçacıklar çerçeveyi
    hiçbir durumda aşıp kırpılmaz. */
-var DOLGU = [0.925, 0.885, 0.900, 0.905, 0.890];
+var DOLGU = [0.925, 0.885, 0.900, 0.900, 0.905, 0.890];
 /* Modeli kendi sınırlayıcı kutusunun merkezine oturtur ve yarı-genişliklerini
    kaydeder. Sınırın mutlak değerden okunması, gradyan inişi gibi simetrik
    olmayan modelleri çerçevenin bir yarısına itiyordu. */
@@ -1859,7 +1885,7 @@ function ortala(dizi, k){
 /* sinirX/sinirY zaten izdüşüm birimindedir; burada ikinci bir 0.62 uygulanmaz. */
 function sigdir(w, en){
   var ex=0, ey=0, d=0;
-  for (var i=0;i<5;i++){ ex+=w[i]*sinirX[i]; ey+=w[i]*sinirY[i]; d+=w[i]*DOLGU[i]; }
+  for (var i=0;i<yapici.length;i++){ ex+=w[i]*sinirX[i]; ey+=w[i]*sinirY[i]; d+=w[i]*DOLGU[i]; }
   ex=Math.max(0.05,ex); ey=Math.max(0.05,ey); d=Math.max(0.2,d);
   return Math.min(d*en/ex, d/ey);
 }
@@ -1873,9 +1899,9 @@ function kur(){
   gl.useProgram(prog);
 
   var poz = [], boy = new Float32Array(SAYI), toh = new Float32Array(SAYI), t3=[0,0,0];
-  for (var b=0;b<5;b++) poz.push(new Float32Array(SAYI*3));
+  for (var b=0;b<yapici.length;b++) poz.push(new Float32Array(SAYI*3));
   for (var i=0;i<SAYI;i++){
-    for (var k=0;k<5;k++){
+    for (var k=0;k<yapici.length;k++){
       yapici[k](i,t3); poz[k][i*3]=t3[0]; poz[k][i*3+1]=t3[1]; poz[k][i*3+2]=t3[2];
     }
     /* i%4===0 her modelde yapısal öğedir: ağda düğüm, inişte yol.
@@ -1883,7 +1909,7 @@ function kur(){
     boy[i]=(i%4===0) ? ras(1.60,2.75) : ras(0.95,1.75);
     toh[i]=Math.random();
   }
-  for (b=0;b<5;b++) ortala(poz[b], b);
+  for (b=0;b<yapici.length;b++) ortala(poz[b], b);
 
   function bagla(ad, veri, boyut){
     var buf = gl.createBuffer();
@@ -1893,11 +1919,11 @@ function kur(){
     if (loc >= 0){ gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, boyut, gl.FLOAT, false, 0, 0); }
     tampon.push(buf);
   }
-  for (var q=0;q<5;q++) bagla("a"+q, poz[q], 3);
+  for (var q=0;q<yapici.length;q++) bagla("a"+q, poz[q], 3);
   bagla("aBoy", boy, 1);
   bagla("aTohum", toh, 1);
 
-  ["w0","w1","w2","w3","w4","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare","uKutu",
+  ["w0","w1","w2","w3","w4","w5","uZaman","uEn","uDon","uSup","uSurukle","uSig","uNokta","uItme","uFare","uKutu",
    "uSoguk","uSicak","uKazanc","uVurgu","uKip"].forEach(function(ad){ konum[ad]=gl.getUniformLocation(prog, ad); });
 
   gl.disable(gl.DEPTH_TEST);
@@ -2137,15 +2163,15 @@ function cizim(zaman){
   gl.enable(gl.SCISSOR_TEST);
   gl.scissor(gx, tuval.height - ga, gx1 - gx, ga - gu);
 
-  /* Duyurular bandı alanı 4'ten 5 banda çıkardı ama model hâlâ 5: p 4'ü
-     aşınca son model tutulur (aşağıdaki p >= 4). Altıncı model eklenince
-     bu yeniden bölünür. */
-  var idx = Math.max(0, Math.min(3, Math.floor(p)));
+  /* Model sayısı yapici'den: p bantlarla 0..bant sayısı arasında gezer, son
+     modelde kalır. Bant i, p = i+1'de model i+1'dir. */
+  var M = yapici.length;
+  var idx = Math.max(0, Math.min(M-2, Math.floor(p)));
   var f = daha(0, 1, p - idx);
-  var wt = [0,0,0,0,0];
+  var wt = []; for (i=0;i<M;i++) wt.push(0);
   wt[idx] = 1-f; wt[idx+1] = f;
-  if (p >= 4){ wt=[0,0,0,0,1]; }
-  for (i=0;i<5;i++) gl.uniform1f(konum["w"+i], wt[i]);
+  if (p >= M-1){ wt[idx] = 0; wt[idx+1] = 0; wt[M-1] = 1; }
+  for (i=0;i<M;i++) gl.uniform1f(konum["w"+i], wt[i]);
 
   gl.uniform1f(konum.uZaman, zaman);
   /* Yerleşim piksel altı: viewport bütün tuval, dikdörtgen gölgelendiriciye
@@ -2256,6 +2282,8 @@ function kurulum(){
                powerPreference:"high-performance"};
     gl = tuval.getContext("webgl2", sec) || tuval.getContext("webgl", sec);
   } catch(e){ gl = null; }
+  /* 6 model + boy + tohum = 8 öznitelik: WebGL1'in alt sınırı tam bu. */
+  if (gl && gl.getParameter(gl.MAX_VERTEX_ATTRIBS) < 8) gl = null;
   if (!gl || !kur()){ durum = -1; kapat(); return; }
   durum = 1;
   boyutla();

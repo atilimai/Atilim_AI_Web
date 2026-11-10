@@ -173,8 +173,12 @@ Discord bu sayfada yok, sitenin başka hiçbir yerinde de yok; ayrıntı aşağ�
 `grep -n "5. Alan" index.html` seni oraya götürür. **Kütüphane yok** — three.js
 bilerek kaldırıldı, yerine gölgelendirici ve model üreticileri elle yazıldı.
 
-Ne yapar: kaydırdıkça beş model arasında dönüşür — monogram, sinir ağı, dikkat
-matrisi, belirteç akışı, gradyan inişi. İki hali var: okuma sütununun sağındaki
+Ne yapar: kaydırdıkça altı model arasında dönüşür — monogram, sinir ağı, difüzyon
+(gürültüden şekle beş kare), dikkat matrisi, belirteç akışı, gradyan inişi.
+Bant i, `yapici[i+1]`'i gösterir; sıra sayfadakiyle aynı (giriş, hakkımızda,
+duyurular, rapor, etkinlikler, projeler). Model sayısı her yerde
+`yapici.length`'ten gelir; 6 model + boy + tohum = 8 öznitelik, WebGL1 alt
+sınırı, bu yüzden kurulumda `MAX_VERTEX_ATTRIBS` ölçülür. İki hali var: okuma sütununun sağındaki
 bölgede duran küçük **mercek**, bölümler arasındaki bandın içinde yatayda ortaya
 açılıp bantla birlikte kayan **levha**. Levha ekranı kaplamaz; en çok 800 × 500
 px'dir.
@@ -220,7 +224,7 @@ ekrana girince model birinden ötekine sıçrıyordu; tek karede 305 px ölçül
 
   1 Ekim 2026'ya kadar döngü yalnızca *çizmeyi* atlıyordu (`EN < 1152`
   guard'ı) ve geri dönebilmek için kare istemeye devam ediyordu. Telefon yine
-  de bağlamı açıp beş model için 7.500 parçacık üretiyor, sonra saniyede 60
+  de bağlamı açıp beş model için (o gün) 7.500 parçacık üretiyor, sonra saniyede 60
   kez uyanıp hiçbir şey çizmiyordu. 390 px'de, işlemci 4× yavaşlatılarak
   ölçüldü: alan kurulumu ~38 ms + logo görseli gelince ~15 ms (sayfanın kalan
   kurulum betiği ~3 ms), boştayken saniyede 4,4 ms ana iş parçacığı yükü.

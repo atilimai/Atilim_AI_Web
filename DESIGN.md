@@ -1,6 +1,6 @@
 ---
 name: Atılım AI
-description: "Design system extracted from the shipped implementation. Two worlds under one identity, chosen by theme since 2026-10-13: the dark theme is a warm near-black workbench (#100D0A) lit by two named sources — a lamp (#E8A33D) for action and a screen (#8FB4D6) for category — and the light theme is warm paper (#F2EDE3) with the deep lamp and screen. With no saved choice the operating system decides; the top bar stays the night room in both. Page surfaces call roles, never palette names. Reading surfaces keep a narrower 840px measure, because full text runs to 20,000 characters. Newsreader carries display and long-form reading, Public Sans the interface, IBM Plex Mono the labels, which never drop below 12px. Depth comes from stepped surfaces and three hairline levels; the codebase contains zero box-shadows. A dependency-free WebGL field carries five scroll-driven models, confined by a scissor rectangle that cannot reach text."
+description: "Design system extracted from the shipped implementation. Two worlds under one identity, chosen by theme since 2026-10-13: the dark theme is a warm near-black workbench (#100D0A) lit by two named sources — a lamp (#E8A33D) for action and a screen (#8FB4D6) for category — and the light theme is warm paper (#F2EDE3) with the deep lamp and screen. With no saved choice the operating system decides; the top bar stays the night room in both. Page surfaces call roles, never palette names. Reading surfaces keep a narrower 840px measure, because full text runs to 20,000 characters. Newsreader carries display and long-form reading, Public Sans the interface, IBM Plex Mono the labels, which never drop below 12px. Depth comes from stepped surfaces and three hairline levels; the codebase contains zero box-shadows. A dependency-free WebGL field carries six scroll-driven models, confined by a scissor rectangle that cannot reach text."
 
 colors:
   gece: "#100D0A"
@@ -218,7 +218,7 @@ rather than decorative. The landing page is a workbench at night: a warm near-bl
 lit by two named sources. The **lamp** is where people are — actions and focus.
 The **screen** is the cool light of a monitor left on: the colour of anything the page
 files rather than asks for. On the bench sits one instrument: a particle field that draws
-five models of how a model works, and changes shape as you scroll. It never shares space
+six models of how a model works (monogram, network, diffusion, attention, token stream, gradient descent), and changes shape as you scroll. It never shares space
 with text — see **The Field** under Components.
 
 Reading surfaces are the other world. The archive and article pages were designed on warm
